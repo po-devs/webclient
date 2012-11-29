@@ -163,6 +163,7 @@
                 } else if (cmd == "connected") {
                     displayMessage("Connected to server!");
                 } else if (cmd == "disconnected") {
+                    displayMessage("Disconnected from server!");
                 } else if (cmd == "msg" || cmd == "error") {
                     if (data[0] == "~") displayChatMessage(data);
                     else displayMessage(data);
