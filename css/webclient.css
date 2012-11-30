@@ -10,3 +10,16 @@
 .welcome-message {
     color: blue;
 }
+
+.announcement {
+    font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
+    border-radius: 2px;
+    border: 1px solid grey;
+    background: #ffffcd;
+    padding: 2px;
+    text-align: center;
+}
+
+.announcement span, .announcement td {
+    font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif;
+}

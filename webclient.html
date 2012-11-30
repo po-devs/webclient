@@ -24,6 +24,11 @@
         <p>
             <table>
                 <tr>
+                    <td colspan="2">
+                        <div id="announcement" class="announcement"></div>
+                    </td>
+                </tr>
+                <tr>
                     <td>
                         <div id="chatTextArea" class="textbox" style="width:400px;height:280px;"></div>
                     </td>
@@ -219,7 +224,7 @@
                     var hash = MD5(data+"@@"+pass);
                     websocket.send("auth|"+hash); */
                 } else if (cmd == "announcement") {
-
+                    $("#announcement").html(data);
                 }
             };
 
