@@ -186,6 +186,17 @@
                         displayChatMessage(params.message);
                     }
                 } else if (cmd == "challenge") {
+                    alertify.prompt("Please enter your password", function (e, str) {
+                        if (e) {
+                            // after clicking OK
+                            // str is the value from the textbox
+                            var hash = MD5(MD5(str)+data);
+                            websocket.send("auth|" + hash);
+                        } else {
+                            // after clicking Cancel
+                            stopWebsocket();
+                        }
+                    });
                     /* var pass = prompt("Please enter the webserver password");
                     var hash = MD5(data+"@@"+pass);
                     websocket.send("auth|"+hash); */
