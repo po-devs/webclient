@@ -1,0 +1,12 @@
+.textbox {
+    font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
+    background: none repeat scroll 0% 0% rgb(255, 255, 255);
+    border: 1px solid rgb(107, 145, 171);
+    padding: 4px 5px;
+    outline: 0px none;
+    overflow: auto;
+}
+
+.welcome-message {
+    color: blue;
+}

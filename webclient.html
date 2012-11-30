@@ -3,6 +3,7 @@
         <title>Websocket client test</title>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
         <link rel="stylesheet" href="libs/alertify.css" />
+        <link rel="stylesheet" href="css/webclient.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script src="libs/md5.js"></script>
@@ -21,8 +22,16 @@
             <button onClick="checkSocket();">State</button>
         </p>
         <p>
-            <textarea id="chatTextArea" style="width:400px;height:280px;"></textarea>
-            <textarea id="logTextArea" style="width:400px;height:280px;"></textarea>
+            <table>
+                <tr>
+                    <td>
+                        <div id="chatTextArea" class="textbox" style="width:400px;height:280px;"></div>
+                    </td>
+                    <td>
+                        <div id="logTextArea" class="textbox" style="width:400px;height:280px;"></div>
+                    </td>
+                </tr>
+            </table>
         </p>
         <p>
             <input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
@@ -35,10 +44,10 @@
             var logCount = 0;
             function displayMessage(message)
             {
-                logTextArea.value += message + "\n";
+                logTextArea.innerHTML += message + "<br/>\n";
                 /* Limit number of lines */
                 if (logCount++ % 500 == 0) {
-                    logTextArea.value = logTextArea.value.split("\n").slice(-500).join("\n");
+                    logTextArea.innerHTML = logTextArea.innerHTML.split("\n").slice(-500).join("\n");
                 }
                 logTextArea.scrollTop = logTextArea.scrollHeight;
             }
@@ -46,10 +55,10 @@
             var chatCount = 0;
             function displayChatMessage(message)
             {
-                chatTextArea.value += message + "\n";
+                chatTextArea.innerHTML += message + "<br/>\n";
                 /* Limit number of lines */
                 if (chatCount++ % 500 == 0) {
-                    chatTextArea.value = chatTextArea.value.split("\n").slice(-500).join("\n");
+                    chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
                 }
                 chatTextArea.scrollTop = chatTextArea.scrollHeight;
             }
@@ -154,6 +163,7 @@
                         if (e) {
                             // after clicking OK
                             // str is the value from the textbox
+                            if (str && str.indexOf(":") == -1) { str += ":5080"; }
                             websocket.send("connect|" + (str ? str.replace(relayIP, "localhost") : data));
                         } else {
                             // after clicking Cancel
@@ -180,10 +190,18 @@
                     else displayMessage(data);
                 } else if (cmd == "chat") {
                     var params = JSON.parse(data);
-                    if (params.channel == -1 && params.message[0] != "~" && !params.html) {
-                        displayMessage(params.message);
+                    var msg = params.message;
+
+                    if (msg.indexOf(":")!=-1 && !params.html) {
+                        var pref = msg.substr(0, msg.indexOf(":")+1);
+                        if (pref == "Welcome Message:") pref = "<span class='welcome-message'>" + pref + "</span>";
+                        msg = "<b>"+pref+"</b>"+msg.slice(msg.indexOf(":")+1);
+                    }
+
+                    if (params.channel == -1 && params.message[0] != "~") {
+                        displayMessage(msg);
                     } else {
-                        displayChatMessage(params.message);
+                        displayChatMessage(msg);
                     }
                 } else if (cmd == "challenge") {
                     alertify.prompt("Please enter your password", function (e, str) {
