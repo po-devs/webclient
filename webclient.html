@@ -209,7 +209,7 @@
                         displayChatMessage(msg);
                     }
                 } else if (cmd == "challenge") {
-                    alertify.prompt("Please enter your password", function (e, str) {
+                    alertify.pass("Please enter your password", function (e, str) {
                         if (e) {
                             // after clicking OK
                             // str is the value from the textbox
