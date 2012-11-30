@@ -56,7 +56,7 @@
 
             function sendMessage()
             {
-                var strToSend = "msg|" + $("#inputText").val();
+                var strToSend = "chat|" + JSON.stringify({channel: 0, message: $("#inputText").val()});
                 if ( websocket != null )
                 {
                     $("#inputText").val('');
@@ -162,17 +162,35 @@
                     });
                 } else if (cmd == "connected") {
                     displayMessage("Connected to server!");
+
+                    alertify.prompt("Username", function (e, str) {
+                        var data = {version: 1};
+
+                        if (e && str) {
+                            data.name = str;
+                        }
+
+                        /* Optionnal parameters: away, color, ladder */
+                        websocket.send("login|"+JSON.stringify(data));
+                    });
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
                 } else if (cmd == "msg" || cmd == "error") {
                     if (data[0] == "~") displayChatMessage(data);
                     else displayMessage(data);
                 } else if (cmd == "chat") {
-                    displayChatMessage(data);
+                    var params = JSON.parse(data);
+                    if (params.channel == -1 && params.message[0] != "~" && !params.html) {
+                        displayMessage(params.message);
+                    } else {
+                        displayChatMessage(params.message);
+                    }
                 } else if (cmd == "challenge") {
                     /* var pass = prompt("Please enter the webserver password");
                     var hash = MD5(data+"@@"+pass);
                     websocket.send("auth|"+hash); */
+                } else if (cmd == "announcement") {
+
                 }
             };
 
