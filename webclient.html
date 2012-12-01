@@ -9,6 +9,7 @@
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/channels.js"></script>
+        <script src="js/formatting.js"></script>
         <script>
             $(function() {
                 $("#channel-tabs").tabs();
@@ -210,7 +211,7 @@
                         channels.channel(params.channel).print(msg);
                     }
                 } else if (cmd == "challenge") {
-                    alertify.prompt("Please enter your password", function (e, str) {
+                    alertify.pass("Please enter your password", function (e, str) {
                         if (e) {
                             // after clicking OK
                             // str is the value from the textbox
@@ -223,6 +224,7 @@
                     });
                 } else if (cmd == "announcement") {
                     $("#announcement").html(data);
+                    format($("#announcement"));
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
