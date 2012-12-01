@@ -161,17 +161,22 @@
                         send localhost */
                     var server = data.replace("localhost", relayIP);
 
-                    alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
-                        if (e) {
-                            // after clicking OK
-                            // str is the value from the textbox
-                            if (str && str.indexOf(":") == -1) { str += ":5080"; }
-                            websocket.send("connect|" + (str ? str.replace(relayIP, "localhost") : data));
-                        } else {
-                            // after clicking Cancel
-                            stopWebsocket();
-                        }
-                    });
+                    var serverQuerystring = getQuerystring("server");
+                    if (serverQuerystring !== "") {
+                        websocket.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
+                    } else {
+                        alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
+                            if (e) {
+                                // after clicking OK
+                                // str is the value from the textbox
+                                if (str && str.indexOf(":") == -1) { str += ":5080"; }
+                                websocket.send("connect|" + (str ? str.replace(relayIP, "localhost") : data));
+                            } else {
+                                // after clicking Cancel
+                                stopWebsocket();
+                            }
+                        });
+                    }
                 } else if (cmd == "connected") {
                     displayMessage("Connected to server!");
 
