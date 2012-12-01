@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="css/webclient.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
-        <!--<script src="js/websocket.js"></script>-->
+        <script src="js/websocket.js"></script>
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/channels.js"></script>
@@ -57,6 +57,7 @@
             <button onClick="sendMessage();">Send</button>
         </p>
         <script type="text/javascript">
+
             var queryString = getQuerystring('relay');
             var Announcement = $("#announcement");
 
@@ -73,7 +74,7 @@
 
             function sendMessage()
             {
-                if (websocket !== null) {
+                if (ws.initialized) {
                     var $inputText = $("#inputText");
                     var message = $inputText.val().split("\n");
                     var currentChannel = channels.current().id;
@@ -85,7 +86,7 @@
 
                     for (; x < length; x++)  {
                         strToSend = "chat|" + JSON.stringify({channel: currentChannel, message: message[x]});
-                        websocket.send( strToSend );
+                        ws.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );
                     }
                 } else {
@@ -93,80 +94,77 @@
                 }
             }
 
-            var websocket = null;
+            var ws = new POWebSocket();
             var parseCommand;
             var relayIP;
 
             function initWebsocket()
             {
+                var url = $("#url").val();
                 try
                 {
-                    if ( typeof MozWebSocket == 'function' )
-                        WebSocket = MozWebSocket;
-                    if ( websocket && websocket.readyState == 1 )
-                        websocket.close();
-                    displayMessage("Connecting to " + $("#url").val());
+                    if (ws.state() === ws.states.connected) {
+                        ws.disconnect();
+                    }
+                    displayMessage("Connecting to " + url);
 
-                    relayIP = $('#url').val().slice(5); //remove 'ws://'
+                    relayIP = url.slice(5); //remove 'ws://'
                     relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-                    websocket = new WebSocket( $("#url").val() );
-                    websocket.onopen = function( evt ) {
-                        displayMessage( "CONNECTED" );
-                    };
-                    websocket.onclose = function( evt ) {
-                        displayMessage( "DISCONNECTED" );
-                    };
-                    websocket.onmessage = function( evt ) {
-                        console.log( "Message received :", evt.data );
+                    ws.connect(url);
 
-                        if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
-                    };
-                    websocket.onerror = function( evt ) {
-                        displayMessage( 'ERROR: ' + evt.data );
-                    };
+                    ws.on("open", function (event) {
+                        displayMessage("CONNECTED");
+                    }).on("close", function(event) {
+                        displayMessage( "DISCONNECTED" );
+                    }).on("message", function(event) {
+                        console.log( "Message received :", event.data );
+
+                        if (event.data.indexOf("|") != -1) {
+                            parseCommand(event.data);
+                        } else {
+                            displayMessage( event.data );
+                        }
+                    }).on("error", function(event) {
+                        displayMessage( 'ERROR: ' + event.data );
+                    });
                 }
                 catch( exception )
                 {
-                    displayMessage( 'ERROR: ' + exception );
+                    displayMessage( 'WebSocket Initialization - ERROR: ' + exception );
                 }
             }
 
             function stopWebsocket()
             {
-                if ( websocket ) {
-                    websocket.close();
-                }
+                ws.disconnect();
             }
 
             function checkSocket()
             {
-                if ( websocket != null )
+                var stateStr = "UNKNOWN", states = ws.states, state = ws.state;
+                if (ws.initialized)
                 {
-                    var stateStr;
-                    switch ( websocket.readyState )
+                    switch (state)
                     {
-                        case 0:
+                        case states.connecting:
                             stateStr = "CONNECTING";
                             break;
-                        case 1:
+                        case states.connected:
                             stateStr = "OPEN";
                             break;
-                        case 2:
+                        case states.closing:
                             stateStr = "CLOSING";
                             break;
-                        case 3:
+                        case states.closed:
                             stateStr = "CLOSED";
                             break;
-                        default:
-                            stateStr = "UNKNOW";
-                            break;
                     }
-                    displayMessage( "Websocket state = " + websocket.readyState + " ( " + stateStr + " )" );
+                    displayMessage( "Websocket state: " + state + " ( " + stateStr + " )" );
                 }
                 else
                 {
-                    displayMessage( "Websocket is null" );
+                    displayMessage( "Websocket is not initialized" );
                 }
             }
 
@@ -182,9 +180,9 @@
                     var serverQuerystring = getQuerystring("server");
                     if (serverQuerystring === "default") {
                         console.log("Message sent: '" + "connect|" + data + "'");
-                        websocket.send("connect|" + data);
+                        ws.send("connect|" + data);
                     } else if (serverQuerystring !== "") {
-                        websocket.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
+                        ws.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
                     } else {
                         alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
                             if (e) {
@@ -193,7 +191,7 @@
                                 if (str && str.indexOf(":") == -1) { str += ":5080"; }
                                 var strToSend = "connect|" + (str ? str.replace(relayIP, "localhost") : data);
                                 console.log("Message sent: '" + strToSend + "'");
-                                websocket.send(strToSend);
+                                ws.send(strToSend);
                             } else {
                                 // after clicking Cancel
                                 stopWebsocket();
@@ -206,7 +204,7 @@
                     var data = {version: 1};
                     if (getQuerystring("user")) {
                         data.name = getQuerystring("user");
-                        websocket.send("login|"+JSON.stringify(data));
+                        ws.send("login|"+JSON.stringify(data));
                     } else {
                         alertify.prompt("Username", function (e, str) {
 
@@ -216,7 +214,7 @@
                             }
 
                             /* Optionnal parameters: away, color, ladder */
-                            websocket.send("login|"+JSON.stringify(data));
+                            ws.send("login|"+JSON.stringify(data));
                         });
                     }
                 } else if (cmd == "disconnected") {
@@ -236,7 +234,9 @@
 
                     if (msg.indexOf(":")!=-1 && !params.html) {
                         var pref = msg.substr(0, msg.indexOf(":")+1);
-                        if (pref == "Welcome Message:") pref = "<span class='welcome-message'>" + pref + "</span>";
+                        if (pref == "Welcome Message:") {
+                            pref = "<span class='welcome-message'>" + pref + "</span>";
+                        }
                         msg = "<b>"+pref+"</b>"+msg.slice(msg.indexOf(":")+1);
                     }
 
@@ -251,7 +251,7 @@
                             // after clicking OK
                             // str is the value from the textbox
                             var hash = MD5(MD5(str)+data);
-                            websocket.send("auth|" + hash);
+                            ws.send("auth|" + hash);
                         } else {
                             // after clicking Cancel
                             stopWebsocket();
