@@ -7,7 +7,7 @@
         <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script src="libs/md5.js"></script>
-        <script src="libs/utils.js"></script>
+        <script src="libs/querystring.js"></script>
         <script src="js/channels.js"></script>
         <script>
             $(function() {
@@ -53,7 +53,8 @@
 
         <script type="text/javascript">
         
-            if (utils.getQuerystring('relay') !== '') $("#url").val("ws://" + utils.getQuerystring("relay"));
+            var queryString = getQuerystring('relay');
+            if (queryString !== '') $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
             
             var logTextArea = document.getElementById("logTextArea");
             var logCount = 0;
