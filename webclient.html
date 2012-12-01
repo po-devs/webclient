@@ -203,16 +203,22 @@
                 } else if (cmd == "connected") {
                     displayMessage("Connected to server!");
 
-                    alertify.prompt("Username", function (e, str) {
-                        var data = {version: 1};
-
-                        if (e && str) {
-                            data.name = str;
-                        }
-
-                        /* Optionnal parameters: away, color, ladder */
+                    var data = {version: 1};
+                    if (getQuerystring("user")) {
+                        data.name = getQuerystring("user");
                         websocket.send("login|"+JSON.stringify(data));
-                    });
+                    } else {
+                        alertify.prompt("Username", function (e, str) {
+
+
+                            if (e && str) {
+                                data.name = str;
+                            }
+
+                            /* Optionnal parameters: away, color, ladder */
+                            websocket.send("login|"+JSON.stringify(data));
+                        });
+                    }
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
                     Announcement.hide("slow");
