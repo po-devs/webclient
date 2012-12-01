@@ -116,7 +116,7 @@ function escapeHtml(toConvert)
     ret = ret.replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/\b((?:https?|ftp):\/\/\S+)/gi, "<a href='$1'>$1</a>")
+        .replace(/\b((?:https?|ftp):\/\/\S+)/gi, "<a href='$1' target='_blank'>$1</a>")
         .replace(/&amp;(?=[^\s<]*<\/a>)/gi, "&");
     /* Revert &amp;'s to &'s in URLs */
 
