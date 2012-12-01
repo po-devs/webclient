@@ -25,12 +25,10 @@
     </head>
     <body>
         <p>
-            <b>Relay Station:</b>
-            <br/>
+            Relay Station
             <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
-            <br/>
-            <button onClick="initWebsocket();">Connect</button> |
-            <button onClick="stopWebsocket();">Disconnect</button> |
+            <button onClick="initWebsocket();">Connect</button>
+            <button onClick="stopWebsocket();">Disconnect</button>
             <button onClick="checkSocket();">State</button>
         </p>
         <p class="client">
@@ -52,13 +50,11 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <textarea id="inputText" onkeydown="if(event.keyCode==13) { sendMessage(); }" cols="93" rows="1.5" placeholder="Message"></textarea>
-                        <button onClick="sendMessage();">Send</button>
-                    </td>
-                </tr>
             </table>
+        </p>
+        <p>
+            <input type="text" id="inputText" cols="40" onkeydown="if(event.keyCode==13)sendMessage();" placeholder="Type your message here..."/>
+            <button onClick="sendMessage();">Send</button>
         </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
@@ -229,10 +225,7 @@
                     if (!params.html) {
                         msg = escapeHtml(msg);
                     } else {
-                        var element = $("<div>");
-                        element.html(msg);
-                        format(element);
-                        msg = element.html();
+                        msg = format(msg);
                     }
 
                     if (msg.indexOf(":")!=-1 && !params.html) {
