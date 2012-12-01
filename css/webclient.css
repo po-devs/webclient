@@ -30,8 +30,13 @@ table {
     background: #ffffcd;
     padding: 2px;
     text-align: center;
+    visibility: hidden;
 }
 
 .announcement span, .announcement td {
     font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif;
 }
+/* Moves the client part into the centre:
+.client {
+    margin-left: 20%;
+}*/
