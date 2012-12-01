@@ -106,7 +106,11 @@ function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
 }
 
 /* Alias */
-format = convertPOLinks;
+function format(element) {
+    convertPOLinks(element);
+    /* Makes links open in a new window */
+    $(element).find("a").attr("target", "_blank");
+}
 
 /* Ported from PO */
 function escapeHtml(toConvert)

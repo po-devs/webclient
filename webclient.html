@@ -212,6 +212,11 @@
 
                     if (!params.html) {
                         msg = escapeHtml(msg);
+                    } else {
+                        var element = $("<div>");
+                        element.html(msg);
+                        format(element);
+                        msg = element.html();
                     }
 
                     if (msg.indexOf(":")!=-1 && !params.html) {
