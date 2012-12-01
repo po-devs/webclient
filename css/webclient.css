@@ -12,7 +12,7 @@
     width:800px;height:450px;
 }
 
-/* Without those, the channel tabs look messed up */
+/* Without those, the channel tabs look messed up on firefox */
 table {
     padding: 0;
     border-spacing: 0;
