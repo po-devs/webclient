@@ -12,6 +12,13 @@
     width:800px;height:450px;
 }
 
+/* Without those, the channel tabs look messed up */
+table {
+    padding: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
 .welcome-message {
     color: blue;
 }
