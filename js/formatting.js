@@ -79,6 +79,7 @@ function convertPOLinks(element) {
                 break;
             case "http":
             case "https":
+            case "data": /* base64 */
                 break;
             default:
                 console.log("Unknown protocol: " + proto);
@@ -101,7 +102,8 @@ function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
     } else if (gen == 5) {
         file = "black-white/{1}{3}{2}{0}.png".format(pokeid, back ? "back/" : "", gender == "female" ? "female/" : "", shiny ? "shiny/" : "");
     }
-    console.log("[pokemonPictureURl]: " + file);
+
+    console.log("Pokémon Image URL: " + BASE + file);
     return BASE + file;
 }
 

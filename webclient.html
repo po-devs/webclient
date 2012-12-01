@@ -21,13 +21,15 @@
     </head>
     <body>
         <p>
-            Relay station
-            <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"/>
-            <button onClick="initWebsocket();">Connect</button>
-            <button onClick="stopWebsocket();">Disconnect</button>
+            <b>Relay Station:</b>
+            <br/>
+            <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
+            <br/>
+            <button onClick="initWebsocket();">Connect</button> |
+            <button onClick="stopWebsocket();">Disconnect</button> |
             <button onClick="checkSocket();">State</button>
         </p>
-        <p>
+        <p class="client">
             <table>
                 <tr>
                     <td>
@@ -38,7 +40,7 @@
                     <td>
                         <div id="channel-tabs">
                             <ul>
-                                <li><a href="#channel-0">main channel</a></li>
+                                <li><a href="#channel-0">Console</a></li>
                             </ul>
                             <div id="channel-0">
                                 <div id="chatTextArea" class="textbox"></div>
@@ -46,21 +48,22 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <textarea id="inputText" onkeydown="if(event.keyCode==13) { sendMessage(); }" cols="93" rows="1.5" placeholder="Message"></textarea>
+                        <button onClick="sendMessage();">Send</button>
+                    </td>
+                </tr>
             </table>
         </p>
-        <p>
-            <input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
-            <button onClick="sendMessage();">Send</button>
-        </p>
-
-
         <script type="text/javascript">
-        
             var queryString = getQuerystring('relay');
-            if (queryString !== '') $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
-            
-            var logTextArea = document.getElementById("logTextArea");
-            var logCount = 0;
+            var Announcement = $("#announcement");
+
+            if (queryString !== '') {
+                $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
+            }
+
             function displayMessage(message)
             {
                 for (id in channels.channels) {
@@ -70,12 +73,23 @@
 
             function sendMessage()
             {
-                var strToSend = "chat|" + JSON.stringify({channel: channels.current().id, message: $("#inputText").val()});
-                if ( websocket != null )
-                {
-                    $("#inputText").val('');
-                    websocket.send( strToSend );
-                    console.log( "Message sent :", '"'+strToSend+'"' );
+                if (websocket !== null) {
+                    var $inputText = $("#inputText");
+                    var message = $inputText.val().split("\n");
+                    var currentChannel = channels.current().id;
+                    var x = 0,
+                        length = message.length,
+                        strToSend;
+
+                    $inputText.val("");
+
+                    for (; x < length; x++)  {
+                        strToSend = "chat|" + JSON.stringify({channel: currentChannel, message: message[x]});
+                        websocket.send( strToSend );
+                        console.log( "Message sent :", '"'+strToSend+'"' );
+                    }
+                } else {
+                    displayMessage("ERROR: Connect to the relay station before sending a message.");
                 }
             }
 
@@ -120,8 +134,9 @@
 
             function stopWebsocket()
             {
-                if ( websocket )
+                if ( websocket ) {
                     websocket.close();
+                }
             }
 
             function checkSocket()
@@ -195,6 +210,7 @@
                     });
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
+                    Announcement.hide("slow");
                 } else if (cmd == "msg" || cmd == "error") {
                     displayMessage(data);
                 } else if (cmd == "chat") {
@@ -229,10 +245,12 @@
                         }
                     });
                 } else if (cmd == "announcement") {
-                    var announcement = $("#announcement");
+                    Announcement.html(data);
+                    format($("#announcement"));
+                    Announcement = $("#announcement"); // Update
 
-                    announcement.html(data);
-                    format(announcement);
+                    Announcement.css("visibility", "visible");
+                    Announcement.show("slow");
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
