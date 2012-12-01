@@ -161,9 +161,9 @@
                         send localhost */
                     var server = data.replace("localhost", relayIP);
 
-                    var hostQuerystring = getQuerystring("host");
-                    if (hostQuerystring !== "") {
-                        websocket.send("connect|" + hostQuerystring + (!isNaN(hostQuerystring.split(":")[1]) ? '' : ':5080'));
+                    var serverQuerystring = getQuerystring("server");
+                    if (serverQuerystring !== "") {
+                        websocket.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
                     } else {
                         alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
                             if (e) {
