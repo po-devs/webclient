@@ -91,15 +91,15 @@ function convertPOLinks(element) {
 function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
     var BASE = "http://pokemon-online.eu/images/pokemon/",
         file;
-    if (gen === 1) {
+    if (gen == 1) {
         file = "yellow/{1}{0}.png".format(pokeid, back ? "back/" : "");
-    } else if (gen === 2) {
+    } else if (gen == 2) {
         file = "crystal/{1}{2}{0}.png".format(pokeid, back ? "back/" : "", shiny ? "shiny/" : "");
-    } else if (gen === 3) {
+    } else if (gen == 3) {
         file = "firered-leafgreen/{1}{2}{0}.png".format(pokeid, back ? "back/" : "", shiny ? "shiny/" : "");
-    } else if (gen === 4) {
+    } else if (gen == 4) {
         file = "heartgold-soulsilver/{1}{3}{2}{0}.png".format(pokeid, back ? "back/" : "", gender === "female" ? "female/" : "", shiny ? "shiny/" : "");
-    } else if (gen === 5) {
+    } else if ((gen||5) == 5) {
         file = "black-white/{1}{3}{2}{0}.png".format(pokeid, back ? "back/" : "", gender === "female" ? "female/" : "", shiny ? "shiny/" : "");
     }
 
@@ -109,13 +109,17 @@ function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
 
 /* Alias */
 function format(element) {
-    var el = typeof (element) === "object" ? element : $("<div>").html(element);
-    convertPOLinks(el);
-    /* Makes links open in a new window */
-    $(el).find("a").attr("target", "_blank");
-
-    if (typeof(element) === "string") {
-        return $(el).html();
+    if (typeof element === "object") {
+        convertPOLinks(element);
+        /* Makes links open in a new window */
+        $(element).find("a").attr("target", "_blank");
+    } else {
+        var el = $("<div>");
+        el.html(element);
+        convertPOLinks(el);
+        /* Makes links open in a new window */
+        el.find("a").attr("target", "_blank");
+        return el.html();
     }
 }
 
