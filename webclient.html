@@ -13,9 +13,13 @@
         <script src="js/channels.js"></script>
         <script src="js/formatting.js"></script>
         <script>
-        $(function() {
+            $(function() {
                 $("#channel-tabs").tabs();
                 channels = new Channels();
+
+                if (getQuerystring("autoconnect") === "true") {
+                    initWebsocket();
+                }
             });
         </script>
     </head>
@@ -165,7 +169,10 @@
                     var server = data.replace("localhost", relayIP);
 
                     var serverQuerystring = getQuerystring("server");
-                    if (serverQuerystring !== "") {
+                    if (serverQuerystring === "default") {
+                        console.log("Message sent: '" + "connect|" + data + "'");
+                        websocket.send("connect|" + data);
+                    } else if (serverQuerystring !== "") {
                         websocket.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
                     } else {
                         alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
@@ -173,7 +180,9 @@
                                 // after clicking OK
                                 // str is the value from the textbox
                                 if (str && str.indexOf(":") == -1) { str += ":5080"; }
-                                websocket.send("connect|" + (str ? str.replace(relayIP, "localhost") : data));
+                                var strToSend = "connect|" + (str ? str.replace(relayIP, "localhost") : data);
+                                console.log("Message sent: '" + strToSend + "'");
+                                websocket.send(strToSend);
                             } else {
                                 // after clicking Cancel
                                 stopWebsocket();
