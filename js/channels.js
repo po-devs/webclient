@@ -1,13 +1,45 @@
 function Channels () {
     this.channels = {"0": new Channel(0, "Main channel")};
+    this.names = {};
 }
 
 Channels.prototype.channel = function (id) {
     if (! (id in this.channels)) {
-        this.channels[id] = new Channel(id);
+        this.channels[id] = new Channel(id, this.names[id]);
     }
 
     return this.channels[id];
+}
+
+Channels.prototype.setNames = function (names) {
+    this.names = names;
+
+    /* Updating already existing channels if needed */
+    for (var i in this.channels) {
+        if ((i in names) && this.channel(i).name !== names[i]) {
+            this.channel(i).changeName(names[i]);
+        }
+    }
+}
+
+Channels.prototype.changeChannelName = function(id, name) {
+    this.names[id] = name;
+    if (id in this.channels) {
+        this.channels[id].changeName(name);
+    }
+}
+
+Channels.prototype.newChannel = function(id, name) {
+    this.names[id] = name;
+}
+
+Channels.prototype.removeChannel = function(id) {
+    if (id in this.channels) {
+        this.channels[id].close();
+        delete this.channels[id];
+    }
+
+    delete this.names[id];
 }
 
 Channels.prototype.current = function() {
@@ -47,4 +79,13 @@ Channel.prototype.print = function (message) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
     chatTextArea.scrollTop = chatTextArea.scrollHeight;
+}
+
+Channel.prototype.changeName = function(name) {
+    this.name = name;
+    $("#channel-tabs > ul a[href=\"#channel-"+ this.id+"\"]").html(name);
+}
+
+Channel.prototype.close = function() {
+    $('#channel-tabs').tabs("remove", "#channel-"+this.id);
 }

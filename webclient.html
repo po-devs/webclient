@@ -216,11 +216,19 @@
                             stopWebsocket();
                         }
                     });
-                    /* var pass = prompt("Please enter the webserver password");
-                    var hash = MD5(data+"@@"+pass);
-                    websocket.send("auth|"+hash); */
                 } else if (cmd == "announcement") {
                     $("#announcement").html(data);
+                } else if (cmd == "channels") {
+                    var params = JSON.parse(data);
+                    channels.setNames(params);
+                } else if (cmd == "newchannel") {
+                    var params = JSON.parse(data);
+                    channels.newChannel(params.id, params.name);
+                } else if (cmd == "removechannel") {
+                    channels.removeChannel(data);
+                } else if (cmd == "channelnamechange") {
+                    var params = JSON.parse(data);
+                    channels.changeChannelName(params.id, params.name);
                 }
             };
 
