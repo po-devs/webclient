@@ -7,10 +7,12 @@
         <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script src="libs/md5.js"></script>
+        <script src="js/channels.js"></script>
         <script>
-            /* $(function() {
-                $("#tabs").tabs();
-            });*/
+            $(function() {
+                $("#channel-tabs").tabs();
+                channels = new Channels();
+            });
         </script>
     </head>
     <body>
@@ -24,16 +26,20 @@
         <p>
             <table>
                 <tr>
-                    <td colspan="2">
+                    <td>
                         <div id="announcement" class="announcement"></div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <div id="chatTextArea" class="textbox" style="width:400px;height:280px;"></div>
-                    </td>
-                    <td>
-                        <div id="logTextArea" class="textbox" style="width:400px;height:280px;"></div>
+                        <div id="channel-tabs">
+                            <ul>
+                                <li><a href="#channel-0">main channel</a></li>
+                            </ul>
+                            <div id="channel-0">
+                                <div id="chatTextArea" class="textbox"></div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -49,28 +55,14 @@
             var logCount = 0;
             function displayMessage(message)
             {
-                logTextArea.innerHTML += message + "<br/>\n";
-                /* Limit number of lines */
-                if (logCount++ % 500 == 0) {
-                    logTextArea.innerHTML = logTextArea.innerHTML.split("\n").slice(-500).join("\n");
+                for (id in channels.channels) {
+                    channels.channel(id).print(message);
                 }
-                logTextArea.scrollTop = logTextArea.scrollHeight;
-            }
-            var chatTextArea = document.getElementById("chatTextArea");
-            var chatCount = 0;
-            function displayChatMessage(message)
-            {
-                chatTextArea.innerHTML += message + "<br/>\n";
-                /* Limit number of lines */
-                if (chatCount++ % 500 == 0) {
-                    chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-                }
-                chatTextArea.scrollTop = chatTextArea.scrollHeight;
             }
 
             function sendMessage()
             {
-                var strToSend = "chat|" + JSON.stringify({channel: 0, message: $("#inputText").val()});
+                var strToSend = "chat|" + JSON.stringify({channel: channels.current().id, message: $("#inputText").val()});
                 if ( websocket != null )
                 {
                     $("#inputText").val('');
@@ -191,8 +183,7 @@
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
                 } else if (cmd == "msg" || cmd == "error") {
-                    if (data[0] == "~") displayChatMessage(data);
-                    else displayMessage(data);
+                    displayMessage(data);
                 } else if (cmd == "chat") {
                     var params = JSON.parse(data);
                     var msg = params.message;
@@ -206,7 +197,7 @@
                     if (params.channel == -1 && params.message[0] != "~") {
                         displayMessage(msg);
                     } else {
-                        displayChatMessage(msg);
+                        channels.channel(params.channel).print(msg);
                     }
                 } else if (cmd == "challenge") {
                     alertify.pass("Please enter your password", function (e, str) {
