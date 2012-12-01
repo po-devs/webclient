@@ -8,8 +8,8 @@ in your server config.
 The host of the official PO relay station is ws://server.pokemon-online.eu:10508
 
 Libraries used:
-- jquery
-- jquery UI
+- jQuery
+- jQuery UI
 - https://github.com/fabien-d/alertify.js
 - http://www.webtoolkit.info/javascript-md5.html
 - http://www.bloggingdeveloper.com/post/JavaScript-QueryString-ParseGet-QueryString-with-Client-Side-JavaScript.aspx
