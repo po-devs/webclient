@@ -8,6 +8,10 @@
     border-radius: 2px;
 }
 
+#channel-tabs {
+    font-size: 13px;
+}
+
 #chatTextArea {
     width:800px;height:450px;
 }
