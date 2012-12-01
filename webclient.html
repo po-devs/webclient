@@ -9,6 +9,7 @@
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/channels.js"></script>
+        <script src="js/formatting.js"></script>
         <script>
             $(function() {
                 $("#channel-tabs").tabs();
@@ -223,6 +224,7 @@
                     });
                 } else if (cmd == "announcement") {
                     $("#announcement").html(data);
+                    format($("#announcement"));
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
