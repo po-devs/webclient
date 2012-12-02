@@ -90,11 +90,11 @@ Channel.prototype.print = function (message, html) {
             var id = users.id(pref);
 
             if (pref === "~~Server~~") {
-                pref = "<span class='server-message-begin'>" + pref + ":</span>";
+                pref = "<span class='server-message'>" + pref + ":</span>";
             } else if (pref === "Welcome Message") {
-                pref = "<span class='welcome-message-begin'>" + pref + ":</span>";
+                pref = "<span class='welcome-message'>" + pref + ":</span>";
             } else if (id === -1) {
-                pref = "<span class='script-message-begin'>" + pref + ":</span>";
+                pref = "<span class='script-message'>" + pref + ":</span>";
             } else {
                 pref = "<span class='player-message' style='color: " + users.color(id) + "'>" + pref + ":</span>";
             }
