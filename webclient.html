@@ -20,9 +20,15 @@
                 }
 
                 $(window).bind("beforeunload", function () {
-                    if (websocket && websocket.readyState === 1) {
+                    if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
                         return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?";
                     }
+                });
+
+                $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
+
+                $(window).unload(function () {
+                    localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
                 });
             });
         </script>
@@ -60,6 +66,10 @@
             <input type="text" id="inputText" cols="40" onkeydown="if(event.keyCode==13)sendMessage();" placeholder="Type your message here..."/>
             <button onClick="sendMessage();">Send</button>
         </p>
+        <p>
+            <input type="checkbox" id="option-ConfirmExit">
+            <label for="option-ConfirmExit">Confirm Exit Dialog when on a Server</label>
+        </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
             var announcement = $("#announcement");
@@ -68,14 +78,14 @@
                 $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
             }
 
-            function displayMessage(message, html)
+            function displayMessage(message, html, parseExtras)
             {
                 if (!html) {
                     html = false;
                 }
 
                 for (id in channels.channels) {
-                    channels.channel(id).print(message, html, true);
+                    channels.channel(id).print(message, html, !parseExtras);
                 }
             }
 
@@ -249,7 +259,7 @@
                             }
                         }
 
-                        displayMessage(msg, params.html);
+                        displayMessage(msg, params.html, true);
                     } else {
                         channels.channel(params.channel).print(msg, params.html);
                     }
