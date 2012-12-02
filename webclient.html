@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="css/webclient.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
-        <!--<script src="js/websocket.js"></script>-->
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/channels.js"></script>
@@ -208,6 +207,9 @@
                         data.name = getQuerystring("user");
                         websocket.send("login|"+JSON.stringify(data));
                     } else {
+                        var oldLabel = alertify.labels.cancel + '';
+
+                        alertify.labels.cancel = "Login as Guest";
                         alertify.prompt("Username", function (e, str) {
 
 
@@ -218,6 +220,8 @@
                             /* Optionnal parameters: away, color, ladder */
                             websocket.send("login|"+JSON.stringify(data));
                         });
+                        
+                        alertify.labels.cancel = oldLabel;
                     }
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
