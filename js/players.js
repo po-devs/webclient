@@ -4,20 +4,19 @@ function Players () {
 }
 
 Players.prototype.addPlayer = function (info) {
-    var id, player, name, x;
+    var player, name, x;
 
     for (x in info) {
-        id = +(x);
         player = info[x];
         name = player.name.toLowerCase();
 
-        player.id = id;
+        player.id = x;
 
-        if (!(id in players)) {
-            this.players[id] = player;
+        if (!(x in players)) {
+            this.players[x] = player;
         } else {
-            delete this.names[this.players[id].name.toLowerCase()]; // Delete old names.
-            this.players[id] = player;
+            delete this.names[this.players[x].name.toLowerCase()]; // Delete old names.
+            this.players[x] = player;
         }
 
         this.names[name] = player;
