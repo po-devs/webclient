@@ -19,35 +19,19 @@
                                 event.preventDefault();
                                 channels.joiningChannel = false;
                             } else {
-                                channels.leaveChannel(channels.current().id);
+                                this._leaveChannel = {id: channels.current().id, tabIndex: $(this).tabs("option", "selected")};
                             }
                         }
-                    }
-                })
-                        .find(".ui-tabs-nav")
-                        .sortable({
-                            axis: "x",
-                            stop: function() {
-                                $("#channel-tabs").tabs("refresh");
-                            }
-                        }); // Makes the channel tabs sortable.
+                    },
+                    activate: function (event, ui) { // This is needed to fix tabs merging.
+                        if (this._leaveChannel) {
+                            var index = this._leaveChannel.tabIndex;
+                            console.log(index);
+                            channels.leaveChannel(this._leaveChannel.id);
+                            delete this._leaveChannel;
 
-                $("#join-channel").autocomplete({
-                    source: function (request, response) {
-                        var channelNames = (Object.keys(channels.names).map(function (value, index, array) {
-                            return channels.names[value];
-                        }));
-
-                        var req = new RegExp($.ui.autocomplete.escapeRegex(request.term), "gi");
-                        var possibleChannels = [];
-
-                        channelNames.forEach(function (value, index, array) {
-                            if (req.test(value) && possibleChannels.length <= 29) { // Limits result to 30 channels.
-                                possibleChannels.push(value);
-                            }
-                        });
-
-                        response(possibleChannels);
+                            $(this).tabs("option", "active", index - 1);
+                        }
                     }
                 });
 
@@ -60,11 +44,11 @@
 
                 $(window).bind("beforeunload", function () {
                     if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
-                        return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
+                        return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?";
                     }
                 });
 
-                $("#option-ConfirmExit").attr("checked",  (localStorage.getItem("ConfirmExit") || "true") === "true");
+                $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
 
                 $(window).unload(function () {
                     localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
