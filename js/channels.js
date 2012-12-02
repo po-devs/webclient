@@ -70,15 +70,14 @@ Channel.prototype.chat = function () {
     return $("#channel-" + this.id + " #chatTextArea");
 }
 
-Channel.prototype.print = function (message, html, noParse) {
+Channel.prototype.print = function (msg, html, noParse) {
     var chatTextArea = this.chat().get(0);
-    var msg = message + "";
-    var action = false;
 
     if (!noParse) {
         if (html) {
             msg = format(msg) || msg;
         } else {
+            var action = false;
             msg = escapeHtml(msg);
 
             if (msg.substr(0, 3) === "***") {
@@ -86,7 +85,7 @@ Channel.prototype.print = function (message, html, noParse) {
                 action = true;
             }
 
-            if (msg.indexOf(":") != -1 && !action) {
+            if (msg.indexOf(":") !== -1 && !action) {
                 var pref = msg.substr(0, msg.indexOf(":"));
                 var id = players.id(pref);
 
@@ -95,6 +94,7 @@ Channel.prototype.print = function (message, html, noParse) {
                 } else if (pref === "Welcome Message") {
                     pref = "<span class='welcome-message'>" + pref + ":</span>";
                 } else if (id === -1) {
+                    alert("pref: " + pref);
                     pref = "<span class='script-message'>" + pref + ":</span>";
                 } else {
                     pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";

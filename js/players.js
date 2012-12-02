@@ -3,23 +3,25 @@ function Players () {
     this.names = {};
 }
 
-Players.prototype.addPlayer = function (info) {
-    var player, name, x;
+Players.prototype.addPlayer = function (players) {
+    for (var id in players) {
+        var player = players[id];
+        var name = player.name.toLowerCase();
 
-    for (x in info) {
-        player = info[x];
-        name = player.name.toLowerCase();
+        player.id = +(id);
 
-        player.id = x;
-
-        if (!(x in players)) {
-            this.players[x] = player;
+        if (!(id in this.players)) {
+            this.players[id] = player;
         } else {
-            delete this.names[this.players[x].name.toLowerCase()]; // Delete old names.
-            this.players[x] = player;
+            delete this.names[this.players[id].name.toLowerCase()]; // Delete old names.
+
+            /* Update only the new params */
+            for (var x in player) {
+                this.players[id][x] = player[x];
+            }
         }
 
-        this.names[name] = player;
+        this.names[name] = this.players[id];
     }
 };
 
@@ -45,9 +47,9 @@ Players.prototype.player = function (pid) {
 };
 
 Players.prototype.id = function (name) {
-    var player = this.player(name);
+    var player = this.names[name.toLowerCase()];
 
-    return player === null ? -1 : player.id;
+    return (name.toLowerCase() in this.names) ? this.names[name.toLowerCase()].id : -1;
 };
 
 Players.prototype.color = function (id) {
@@ -58,7 +60,8 @@ Players.prototype.color = function (id) {
     }
 
     var color = player.color;
-    if (color == '#000000') {
+    /* Players with the color black are screwed */
+    if (!color) {
         var namecolorlist = ['#5811b1', '#399bcd', '#0474bb', '#f8760d', '#a00c9e', '#0d762b', '#5f4c00', '#9a4f6d', '#d0990f', '#1b1390', '#028678', '#0324b1'];
         return namecolorlist[id % namecolorlist.length];
     }
