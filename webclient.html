@@ -346,13 +346,8 @@
                 } else if (cmd === "playerlogout") {
                     players.removePlayer(data);
                 } else if (cmd === "leave") {
-                    var channel = message.split("|")[1];
-
-                    if (Object.keys(channels.channels).length === 1) {
-                        if (channel in channels.channels) {
-                            players.removePlayer(message.split("|")[0]); // Removes the player from memory if they aren't known to us anymore.
-                        }
-                    }
+                    //var player =message.split("|")[0];
+                    //var channel = message.split("|")[1];
                 }
             };
 
