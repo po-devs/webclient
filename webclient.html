@@ -19,6 +19,12 @@
                 if (getQuerystring("autoconnect") === "true") {
                     initWebsocket();
                 }
+
+                $(window).bind("beforeunload", function () {
+                    if (websocket && websocket.readyState === 1) {
+                        return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?"
+                    }
+                });
             });
         </script>
     </head>
@@ -220,7 +226,7 @@
                             /* Optionnal parameters: away, color, ladder */
                             websocket.send("login|"+JSON.stringify(data));
                         });
-                        
+
                         alertify.labels.cancel = oldLabel;
                     }
                 } else if (cmd == "disconnected") {
