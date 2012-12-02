@@ -268,11 +268,9 @@
                     });
                 } else if (cmd == "announcement") {
                     announcement.html(data);
-                    format($("#announcement"));
-                    announcement = $("#announcement"); // Update
+                    format(announcement);
 
                     announcement.css("visibility", "visible");
-                    announcement.show("slow");
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
