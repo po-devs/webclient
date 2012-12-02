@@ -13,7 +13,7 @@ if (typeof MozWebSocket !== "undefined") {
  * public Object states [Connection states]
  * public Boolean initialized [If the socket has been initialized]
  *
- * public Function socket() [Returns private _WebSocket]
+ * public readonly Function socket() [Returns private _WebSocket]
  * public Function state() [Returns the socket's state]
  * public Function disconnect() [Closes the socket]
  * public Function connected() [Returns if the socket is connected to a WS server]
