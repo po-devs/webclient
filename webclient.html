@@ -35,7 +35,7 @@
     </head>
     <body>
         <p>
-            Relay Station
+            Relay station
             <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
             <button onClick="initWebsocket();">Connect</button>
             <button onClick="stopWebsocket();">Disconnect</button>
@@ -44,6 +44,14 @@
         <p class="client">
             <table>
                 <tr>
+                    <td rowspan="2" valign="top">
+                        <p>
+                            <input type="text" id="join-channel" onkeydown="if(event.keyCode==13)joinChannel();" placeholder="Join channel..."/>
+                        </p>
+                        <div id="player-list">
+                            Players...
+                        </div>
+                    </td>
                     <td>
                         <div id="announcement" class="announcement"></div>
                     </td>
@@ -68,7 +76,7 @@
         </p>
         <p>
             <input type="checkbox" id="option-ConfirmExit">
-            <label for="option-ConfirmExit">Confirm Exit Dialog when on a Server</label>
+            <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
         </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
@@ -106,6 +114,17 @@
                     });
                 } else {
                     displayMessage("ERROR: Connect to the relay station before sending a message.");
+                }
+            }
+
+            function joinChannel()
+            {
+                if (websocket)  {
+                    var $inputChannel = $("#join-channel");
+                    var channel = $inputChannel.val();
+
+                    $inputChannel.val("");
+                    websocket.send("join|"+channel);
                 }
             }
 
