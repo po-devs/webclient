@@ -1,23 +1,24 @@
 /* css for contents of the chat window */
 
-/* name of server message */
+/* name part of server message */
 .server-message {
     color: orange;
     font-weight: bold;
 }
 
-/* timestamp and name of welcome message */
+/* name part of welcome message */
 .welcome-message {
     color: blue;
     font-weight: bold;
 }
 
-/* timestamp and name of scripted message / unknown name */
+/* name part of scripted message / unknown name */
 .script-message {
     color: #318739;
     font-weight: bold;
 }
 
+/* name part of player message */
 .player-message {
     font-weight: bold;
 }
