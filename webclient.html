@@ -78,14 +78,14 @@
                 $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
             }
 
-            function displayMessage(message, html)
+            function displayMessage(message, html, parseExtras)
             {
                 if (!html) {
                     html = false;
                 }
 
                 for (id in channels.channels) {
-                    channels.channel(id).print(message, html, true);
+                    channels.channel(id).print(message, html, !parseExtras);
                 }
             }
 
@@ -260,7 +260,7 @@
                             }
                         }
 
-                        displayMessage(msg, params.html);
+                        displayMessage(msg, params.html, true);
                     } else {
                         channels.channel(params.channel).print(msg, params.html);
                     }
