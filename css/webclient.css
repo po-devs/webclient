@@ -41,7 +41,7 @@ table {
     margin-left: 20%;
 }*/
 
-/* timestamp and name of server message */
+/* name of server message */
 .server-message {
     color: orange;
     font-weight: bold;
@@ -66,4 +66,9 @@ table {
 /* line beginning with *** */
 .action {
     color: magenta;
+}
+
+/* Fix auto complete results being too big */
+li[role="presentation"] {
+    font-size: 11px;
 }

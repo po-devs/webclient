@@ -15,6 +15,33 @@
                 players = new Players();
                 channels = new Channels();
 
+                $("#join-channel").autocomplete({
+                    source: function (request, response) {
+                        var channelNames = (Object.keys(channels.names).map(function (value, index, array) {
+                            return channels.names[value];
+                        }));
+
+                        var req = new RegExp("^"+$.ui.autocomplete.escapeRegex(request.term), "gi");
+                        var possibleChannels = [];
+
+                        channelNames.forEach(function (value, index, array) {
+                            /* Limits result to 30 channels. In the future should not limit but instead css the
+                            autocomplete so that a long results list would be scrollable */
+                            if (req.test(value) && possibleChannels.length <= 29) {
+                                possibleChannels.push(value);
+                            }
+                        });
+                        possibleChannels.sort();
+
+                        response(possibleChannels);
+                    },
+                    /* Makes you join the channel as soon as element is selected */
+                    select: function(event, ui) {
+                        joinChannel(ui.item.value);
+                        return false;
+                    }
+                });
+
                 if (getQuerystring("autoconnect") === "true") {
                     initWebsocket();
                 }
@@ -117,11 +144,11 @@
                 }
             }
 
-            function joinChannel()
+            function joinChannel(chan)
             {
                 if (websocket)  {
                     var $inputChannel = $("#join-channel");
-                    var channel = $inputChannel.val();
+                    var channel = chan || $inputChannel.val();
 
                     $inputChannel.val("");
                     websocket.send("join|"+channel);
