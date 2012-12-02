@@ -15,7 +15,29 @@
         <script src="js/formatting.js"></script>
         <script>
             $(function() {
-                $("#channel-tabs").tabs()
+                $("#channel-tabs").tabs({
+                    collapsible: true,
+                    beforeActivate: function (event, ui) {
+                        if (ui.newTab.length === 0 && ui.newPanel.length === 0) { // Channel was collapsed.
+                            if (Object.keys(channels.channels).length === 1 && !channels.joiningChannel) {
+                                event.preventDefault();
+                                channels.joiningChannel = false;
+                            } else {
+                                this._leaveChannel = {id: channels.current().id, tabIndex: $(this).tabs("option", "selected")};
+                            }
+                        }
+                    },
+                    activate: function (event, ui) { // This is needed to fix tabs merging.
+                        if (this._leaveChannel) {
+                            var index = this._leaveChannel.tabIndex;
+                            console.log(index);
+                            channels.leaveChannel(this._leaveChannel.id);
+                            delete this._leaveChannel;
+
+                            $(this).tabs("option", "active", index - 1);
+                        }
+                    }
+                })
                         .find(".ui-tabs-nav")
                         .sortable({
                             axis: "x",
@@ -164,6 +186,8 @@
                     $inputChannel.val("");
                     websocket.send("join|"+channel);
                 }
+
+                channels.joiningChannel = false;
             }
 
             var websocket = null;
@@ -345,12 +369,12 @@
                 } else if (cmd === "playerlogout") {
                     players.removePlayer(data);
                 } else if (cmd === "join") {
-                    var player =message.split("|")[0];
+                    var player = message.split("|")[0];
                     var channel = message.split("|")[1];
 
-                    channels.channel(channel).addPlayer(player);
+                    channels.channel(channel).newPlayer(player);
                 } else if (cmd === "leave") {
-                    var player =message.split("|")[0];
+                    var player = message.split("|")[0];
                     var channel = message.split("|")[1];
 
                     channels.channel(channel).removePlayer(player);
