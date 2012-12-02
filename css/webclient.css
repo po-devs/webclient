@@ -41,33 +41,6 @@ table {
     margin-left: 20%;
 }*/
 
-/* name of server message */
-.server-message {
-    color: orange;
-    font-weight: bold;
-}
-
-/* timestamp and name of welcome message */
-.welcome-message {
-    color: blue;
-    font-weight: bold;
-}
-
-/* timestamp and name of scripted message / unknown name */
-.script-message {
-    color: #318739;
-    font-weight: bold;
-}
-
-.player-message {
-    font-weight: bold;
-}
-
-/* line beginning with *** */
-.action {
-    color: magenta;
-}
-
 /* Fix auto complete results being too big */
 li[role="presentation"] {
     font-size: 11px;
