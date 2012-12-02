@@ -85,9 +85,9 @@ Channel.prototype.print = function (message, html) {
             action = true;
         }
 
-        if (msg.indexOf(":") != -1) {
+        if (msg.indexOf(":") != -1 && !action) {
             var pref = msg.substr(0, msg.indexOf(":"));
-            var id = users.id(pref);
+            var id = players.id(pref);
 
             if (pref === "~~Server~~") {
                 pref = "<span class='server-message'>" + pref + ":</span>";
@@ -96,10 +96,10 @@ Channel.prototype.print = function (message, html) {
             } else if (id === -1) {
                 pref = "<span class='script-message'>" + pref + ":</span>";
             } else {
-                pref = "<span class='player-message' style='color: " + users.color(id) + "'>" + pref + ":</span>";
+                pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
             }
 
-            msg = "<b>" + pref + "</b> " + msg.slice(msg.indexOf(":") + 1);
+            msg = pref + msg.slice(msg.indexOf(":") + 1);
         }
     }
 

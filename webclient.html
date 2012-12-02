@@ -7,12 +7,12 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script src="libs/querystring.js"></script>
-        <script src="js/users.js"></script>
+        <script src="js/players.js"></script>
         <script src="js/channels.js"></script>
         <script>
             $(function() {
                 $("#channel-tabs").tabs();
-                users = new Users();
+                psers = new Psers();
                 channels = new Channels();
 
                 if (getQuerystring("autoconnect") === "true") {
@@ -284,9 +284,20 @@
                 } else if (cmd == "channelnamechange") {
                     var params = JSON.parse(data);
                     channels.changeChannelName(params.id, params.name);
-                } else if (cmd === "playerslist") {
+                } else if (cmd === "players") {
+                    /* Can contain multiple players */
                     var params = JSON.parse(data);
-                    users.addUser(params);
+                    players.addPlayer(params);
+                } else if (cmd === "playerlogout") {
+                    players.removePlayer(data);
+                } else if (cmd === "leave") {
+                    var channel = message.split("|")[1];
+
+                    if (Object.keys(channels.channels).length === 1) {
+                        if (channel in channels.channels) {
+                            players.removePlayer(message.split("|")[0]); // Removes the player from memory if they aren't known to us anymore.
+                        }
+                    }
                 }
             };
 
