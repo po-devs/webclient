@@ -12,7 +12,7 @@
         <script>
             $(function() {
                 $("#channel-tabs").tabs();
-                psers = new Psers();
+                players = new Players();
                 channels = new Channels();
 
                 if (getQuerystring("autoconnect") === "true") {
@@ -62,7 +62,7 @@
         </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
-            var Announcement = $("#announcement");
+            var announcement = $("#announcement");
 
             if (queryString !== '') {
                 $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
@@ -234,7 +234,7 @@
                     }
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
-                    Announcement.hide("slow");
+                    announcement.hide("slow");
                 } else if (cmd == "msg" || cmd == "error") {
                     displayMessage(data);
                 } else if (cmd == "chat") {
@@ -267,12 +267,12 @@
                         }
                     });
                 } else if (cmd == "announcement") {
-                    Announcement.html(data);
+                    announcement.html(data);
                     format($("#announcement"));
-                    Announcement = $("#announcement"); // Update
+                    announcement = $("#announcement"); // Update
 
-                    Announcement.css("visibility", "visible");
-                    Announcement.show("slow");
+                    announcement.css("visibility", "visible");
+                    announcement.show("slow");
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
