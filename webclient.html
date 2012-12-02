@@ -3,17 +3,16 @@
         <meta charset="utf-8">
         <title>Pokémon Online Webclient</title>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
-        <link rel="stylesheet" href="libs/alertify.css" />
         <link rel="stylesheet" href="css/webclient.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
-        <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
+        <script src="js/players.js"></script>
         <script src="js/channels.js"></script>
-        <script src="js/formatting.js"></script>
         <script>
             $(function() {
                 $("#channel-tabs").tabs();
+                players = new Players();
                 channels = new Channels();
 
                 if (getQuerystring("autoconnect") === "true") {
@@ -26,11 +25,11 @@
                     }
                 });
 
-                $(window).bind("unload", function () {
-                    localStorage.setItem("Options-ConfirmExit", $("#option-ConfirmExit").is(":checked"));
-                });
+                $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
 
-                $("#option-ConfirmExit").attr("checked", localStorage.getItem("#option-ConfirmExit") === "true" ? "checked" : "unchecked");
+                $(window).unload(function () {
+                    localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
+                });
             });
         </script>
     </head>
@@ -68,21 +67,25 @@
             <button onClick="sendMessage();">Send</button>
         </p>
         <p>
-            <input type="checkbox" id="options-ConfirmExit">
-            <label for="options-ConfirmExit">Confirm</label>
+            <input type="checkbox" id="option-ConfirmExit">
+            <label for="option-ConfirmExit">Confirm Exit Dialog when on a Server</label>
         </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
-            var Announcement = $("#announcement");
+            var announcement = $("#announcement");
 
             if (queryString !== '') {
                 $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
             }
 
-            function displayMessage(message)
+            function displayMessage(message, html)
             {
+                if (!html) {
+                    html = false;
+                }
+
                 for (id in channels.channels) {
-                    channels.channel(id).print(message);
+                    channels.channel(id).print(message, html, true);
                 }
             }
 
@@ -233,7 +236,7 @@
                                 data.name = str;
                             }
 
-                            /* Optionnal parameters: away, color, ladder */
+                            /* Optional parameters: away, color, ladder */
                             websocket.send("login|"+JSON.stringify(data));
                         });
 
@@ -241,29 +244,25 @@
                     }
                 } else if (cmd == "disconnected") {
                     displayMessage("Disconnected from server!");
-                    Announcement.hide("slow");
+                    announcement.hide("slow");
                 } else if (cmd == "msg" || cmd == "error") {
                     displayMessage(data);
                 } else if (cmd == "chat") {
                     var params = JSON.parse(data);
                     var msg = params.message;
 
-                    if (!params.html) {
-                        msg = escapeHtml(msg);
-                    } else {
-                        msg = format(msg);
-                    }
+                    if (params.channel == -1 && params.message.charAt(0) != "~") {
+                        if (msg !== "<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum.") {
+                            if (!params.html) {
+                                msg = escapeHtml(msg);
+                            } else {
+                                msg = format(msg) || msg;
+                            }
+                        }
 
-                    if (msg.indexOf(":")!=-1 && !params.html) {
-                        var pref = msg.substr(0, msg.indexOf(":")+1);
-                        if (pref == "Welcome Message:") pref = "<span class='welcome-message'>" + pref + "</span>";
-                        msg = "<b>"+pref+"</b>"+msg.slice(msg.indexOf(":")+1);
-                    }
-
-                    if (params.channel == -1 && params.message[0] != "~") {
-                        displayMessage(msg);
+                        displayMessage(msg, params.html);
                     } else {
-                        channels.channel(params.channel).print(msg);
+                        channels.channel(params.channel).print(msg, params.html);
                     }
                 } else if (cmd == "challenge") {
                     alertify.pass("Please enter your password", function (e, str) {
@@ -278,12 +277,10 @@
                         }
                     });
                 } else if (cmd == "announcement") {
-                    Announcement.html(data);
-                    format($("#announcement"));
-                    Announcement = $("#announcement"); // Update
+                    announcement.html(data);
+                    format(announcement);
 
-                    Announcement.css("visibility", "visible");
-                    Announcement.show("slow");
+                    announcement.css("visibility", "visible");
                 } else if (cmd == "channels") {
                     var params = JSON.parse(data);
                     channels.setNames(params);
@@ -295,10 +292,27 @@
                 } else if (cmd == "channelnamechange") {
                     var params = JSON.parse(data);
                     channels.changeChannelName(params.id, params.name);
+                } else if (cmd === "players") {
+                    /* Can contain multiple players */
+                    var params = JSON.parse(data);
+                    players.addPlayer(params);
+                } else if (cmd === "playerlogout") {
+                    players.removePlayer(data);
+                } else if (cmd === "leave") {
+                    var channel = message.split("|")[1];
+
+                    if (Object.keys(channels.channels).length === 1) {
+                        if (channel in channels.channels) {
+                            players.removePlayer(message.split("|")[0]); // Removes the player from memory if they aren't known to us anymore.
+                        }
+                    }
                 }
             };
 
         </script>
     </body>
+    <link rel="stylesheet" href="libs/alertify.css" />
     <script src="libs/alertify.min.js"></script>
+    <script src="js/formatting.js"></script>
+    <script src="libs/md5.js"></script>
 </html>
