@@ -94,7 +94,6 @@ Channel.prototype.print = function (msg, html, noParse) {
                 } else if (pref === "Welcome Message") {
                     pref = "<span class='welcome-message'>" + pref + ":</span>";
                 } else if (id === -1) {
-                    alert("pref: " + pref);
                     pref = "<span class='script-message'>" + pref + ":</span>";
                 } else {
                     pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
