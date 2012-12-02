@@ -44,12 +44,12 @@ Channels.prototype.removeChannel = function (id) {
 
 Channels.prototype.leaveChannel = function (id) {
     if (id in this.channels && Object.keys(this.channels).length !== 1) { // The player must have a channel open at all times.
-        this.channels[id].close();
-        delete this.channels[id];
-
         if (websocket) {
             websocket.send("leave|" + id);
         }
+
+        this.channels[id].close();
+        delete this.channels[id];
     }
 }
 
@@ -70,17 +70,17 @@ function Channel(id, name, initialChannel) {
 
     this.chatCount = 0;
 
-    if ($("#channel-" + id).length === 0 || (initialChannel === true)) {
-        if (initialChannel === true) {
-            this.close();
-        }
+    if (initialChannel === true) {
+        this.close();
+    }
 
+    if ($("#channel-" + id).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id)) + '<a href="javascript: void(channels.leaveChannel(' + id + '));" class="leavechannel">×</a>');
+        $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
                                       +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button> |'
+                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button>'
                                          +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
     }
 }

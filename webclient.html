@@ -10,11 +10,19 @@
         <script src="js/players.js"></script>
         <script src="js/channels.js"></script>
         <script>
-            var players;
-            var channels;
-
             $(function() {
-                $("#channel-tabs").tabs()
+                $("#channel-tabs").tabs({
+                    collapsible: true,
+                    beforeActivate: function (event, ui) {
+                        if (ui.newTab.length === 0 && ui.newPanel.length === 0) { // Channel was collapsed.
+                            if (Object.keys(channels.channels).length === 1) {
+                                event.preventDefault();
+                            } else {
+                                channels.leaveChannel(channels.current().id);
+                            }
+                        }
+                    }
+                })
                         .find(".ui-tabs-nav")
                         .sortable({
                             axis: "x",
@@ -91,7 +99,7 @@
                     <td>
                         <div id="channel-tabs">
                             <ul>
-                                <!--<li><a href="#channel-0">Console</a></li>-->
+                                <li><a href="#channel-0">Console</a></li>
                             </ul>
                             <div id="channel-0">
                                 <div id="chatTextArea" class="textbox"></div>
