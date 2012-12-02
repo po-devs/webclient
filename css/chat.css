@@ -1,0 +1,28 @@
+/* css for contents of the chat window */
+
+/* name of server message */
+.server-message {
+    color: orange;
+    font-weight: bold;
+}
+
+/* timestamp and name of welcome message */
+.welcome-message {
+    color: blue;
+    font-weight: bold;
+}
+
+/* timestamp and name of scripted message / unknown name */
+.script-message {
+    color: #318739;
+    font-weight: bold;
+}
+
+.player-message {
+    font-weight: bold;
+}
+
+/* line beginning with *** */
+.action {
+    color: magenta;
+}
