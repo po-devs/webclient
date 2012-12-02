@@ -70,36 +70,38 @@ Channel.prototype.chat = function () {
     return $("#channel-" + this.id + " #chatTextArea");
 }
 
-Channel.prototype.print = function (message, html) {
+Channel.prototype.print = function (message, html, noParse) {
     var chatTextArea = this.chat().get(0);
     var msg = message + "";
     var action = false;
 
-    if (html) {
-        msg = format(msg) || msg;
-    } else {
-        msg = escapeHtml(msg);
+    if (!noParse) {
+        if (html) {
+            msg = format(msg) || msg;
+        } else {
+            msg = escapeHtml(msg);
 
-        if (msg.substr(0, 3) === "***") {
-            msg = "<span class='action'>" + msg + "</span>";
-            action = true;
-        }
-
-        if (msg.indexOf(":") != -1 && !action) {
-            var pref = msg.substr(0, msg.indexOf(":"));
-            var id = players.id(pref);
-
-            if (pref === "~~Server~~") {
-                pref = "<span class='server-message'>" + pref + ":</span>";
-            } else if (pref === "Welcome Message") {
-                pref = "<span class='welcome-message'>" + pref + ":</span>";
-            } else if (id === -1) {
-                pref = "<span class='script-message'>" + pref + ":</span>";
-            } else {
-                pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
+            if (msg.substr(0, 3) === "***") {
+                msg = "<span class='action'>" + msg + "</span>";
+                action = true;
             }
 
-            msg = pref + msg.slice(msg.indexOf(":") + 1);
+            if (msg.indexOf(":") != -1 && !action) {
+                var pref = msg.substr(0, msg.indexOf(":"));
+                var id = players.id(pref);
+
+                if (pref === "~~Server~~") {
+                    pref = "<span class='server-message'>" + pref + ":</span>";
+                } else if (pref === "Welcome Message") {
+                    pref = "<span class='welcome-message'>" + pref + ":</span>";
+                } else if (id === -1) {
+                    pref = "<span class='script-message'>" + pref + ":</span>";
+                } else {
+                    pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
+                }
+
+                msg = pref + msg.slice(msg.indexOf(":") + 1);
+            }
         }
     }
 
