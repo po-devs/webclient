@@ -344,9 +344,20 @@
                     players.addPlayer(params);
                 } else if (cmd === "playerlogout") {
                     players.removePlayer(data);
+                } else if (cmd === "join") {
+                    var player =message.split("|")[0];
+                    var channel = message.split("|")[1];
+
+                    channels.channel(channel).addPlayer(player);
                 } else if (cmd === "leave") {
-                    //var player =message.split("|")[0];
-                    //var channel = message.split("|")[1];
+                    var player =message.split("|")[0];
+                    var channel = message.split("|")[1];
+
+                    channels.channel(channel).removePlayer(player);
+                    players.testPlayerOnline(player);
+                } else if (cmd === "channelplayers") {
+                    var params = JSON.parse(data);
+                    channels.channel(params.channel).setPlayers(params.players);
                 }
             };
 

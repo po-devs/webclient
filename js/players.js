@@ -52,6 +52,16 @@ Players.prototype.id = function (name) {
     return (name.toLowerCase() in this.names) ? this.names[name.toLowerCase()].id : -1;
 };
 
+Players.prototype.testPlayerOnline = function(player) {
+    for (var i in channels.channels) {
+        if (player in channels.channel(i).players) {
+            return;
+        }
+    }
+
+    removePlayer(player);
+}
+
 Players.prototype.color = function (id) {
     var player = this.player(id);
 

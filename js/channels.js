@@ -56,6 +56,7 @@ Channels.prototype.idFromIndex = function (index) {
 function Channel(id, name) {
     this.id = id;
     this.name = name;
+    this.players = {};
 
     this.chatCount = 0;
 
@@ -67,6 +68,21 @@ function Channel(id, name) {
                                       +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
                                          +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button></p>');
     }
+}
+
+Channel.prototype.setPlayers = function(players) {
+    this.players = {};
+    for (var i = 0; i < players.length; i++) {
+        this.players[i] = true;
+    }
+}
+
+Channel.prototype.newPlayer = function(player) {
+    this.players[player] = true;
+}
+
+Channel.prototype.removePlayer = function(player) {
+    delete this.players[player];
 }
 
 Channel.prototype.chat = function () {
@@ -123,4 +139,8 @@ Channel.prototype.changeName = function (name) {
 
 Channel.prototype.close = function () {
     $('#channel-tabs').tabs("remove", "#channel-" + this.id);
+
+    var pl = this.players;
+    this.players = {};
+    pl.forEach(function(val) {players.testPlayerOnline(val)});
 }
