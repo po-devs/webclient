@@ -1,6 +1,8 @@
 function Channels() {
-    this.channels = {"0": new Channel(0, "Main channel")};
+    this.channels = {"0": new Channel(0, "Console", true)};
     this.names = {};
+
+    this.joiningChannel = false;
 }
 
 Channels.prototype.channel = function (id) {
@@ -33,6 +35,17 @@ Channels.prototype.newChannel = function (id, name) {
     this.names[id] = name;
 }
 
+Channels.prototype.leaveChannel = function (id) {
+    if (id in this.channels && Object.keys(this.channels).length !== 1) { // The player must have a channel open at all times.
+        if (websocket) {
+            websocket.send("leave|" + id);
+        }
+
+        this.channels[id].close();
+        delete this.channels[id];
+    }
+}
+
 Channels.prototype.removeChannel = function (id) {
     if (id in this.channels) {
         this.channels[id].close();
@@ -53,20 +66,25 @@ Channels.prototype.idFromIndex = function (index) {
     return hrefid.substr(hrefid.indexOf("-") + 1);
 }
 
-function Channel(id, name) {
+function Channel(id, name, initialChannel) {
     this.id = id;
     this.name = name;
     this.players = {};
 
     this.chatCount = 0;
 
+    if (initialChannel === true) {
+        this.close();
+    }
+
     if ($("#channel-" + id).length === 0) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button></p>');
+            +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
+            +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button>'
+            +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
     }
 }
 
@@ -142,5 +160,8 @@ Channel.prototype.close = function () {
 
     var pl = this.players;
     this.players = {};
-    pl.forEach(function(val) {players.testPlayerOnline(val)});
+
+    for (var x in pl) {
+        players.testPlayerOnline(x);
+    }
 }

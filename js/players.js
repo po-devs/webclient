@@ -59,7 +59,7 @@ Players.prototype.testPlayerOnline = function(player) {
         }
     }
 
-    removePlayer(player);
+    this.removePlayer(player);
 }
 
 Players.prototype.color = function (id) {
