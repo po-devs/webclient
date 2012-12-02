@@ -1,5 +1,5 @@
 function Channels() {
-    this.channels = {"0": new Channel(0, "Main channel")};
+    this.channels = {"0": new Channel(0, "Console", true)};
     this.names = {};
 }
 
@@ -42,6 +42,17 @@ Channels.prototype.removeChannel = function (id) {
     delete this.names[id];
 }
 
+Channels.prototype.leaveChannel = function (id) {
+    if (id in this.channels && Object.keys(this.channels).length !== 1) { // The player must have a channel open at all times.
+        this.channels[id].close();
+        delete this.channels[id];
+
+        if (websocket) {
+            websocket.send("leave|" + id);
+        }
+    }
+}
+
 Channels.prototype.current = function () {
     var index = $("#channel-tabs").tabs("option", "active");
     return this.channel(this.idFromIndex(index));
@@ -53,19 +64,24 @@ Channels.prototype.idFromIndex = function (index) {
     return hrefid.substr(hrefid.indexOf("-") + 1);
 }
 
-function Channel(id, name) {
+function Channel(id, name, initialChannel) {
     this.id = id;
     this.name = name;
 
     this.chatCount = 0;
 
-    if ($("#channel-" + id).length === 0) {
+    if ($("#channel-" + id).length === 0 || (initialChannel === true)) {
+        if (initialChannel === true) {
+            this.close();
+        }
+
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
+        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id)) + '<a href="javascript: void(channels.leaveChannel(' + id + '));" class="leavechannel">×</a>');
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
                                       +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button></p>');
+                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button> |'
+                                         +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
     }
 }
 

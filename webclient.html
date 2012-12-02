@@ -10,8 +10,38 @@
         <script src="js/players.js"></script>
         <script src="js/channels.js"></script>
         <script>
+            var players;
+            var channels;
+
             $(function() {
-                $("#channel-tabs").tabs();
+                $("#channel-tabs").tabs()
+                        .find(".ui-tabs-nav")
+                        .sortable({
+                            axis: "x",
+                            stop: function() {
+                                $("#channel-tabs").tabs("refresh");
+                            }
+                        }); // Makes the channel tabs sortable.
+
+                $("#join-channel").autocomplete({
+                    source: function (request, response) {
+                        var channelNames = (Object.keys(channels.names).map(function (value, index, array) {
+                            return channels.names[value];
+                        }));
+
+                        var req = new RegExp($.ui.autocomplete.escapeRegex(request.term), "gi");
+                        var possibleChannels = [];
+
+                        channelNames.forEach(function (value, index, array) {
+                            if (req.test(value) && possibleChannels.length <= 29) { // Limits result to 30 channels.
+                                possibleChannels.push(value);
+                            }
+                        });
+
+                        response(possibleChannels);
+                    }
+                });
+
                 players = new Players();
                 channels = new Channels();
 
@@ -21,15 +51,16 @@
 
                 $(window).bind("beforeunload", function () {
                     if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
-                        return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?";
+                        return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
                     }
                 });
 
-                $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
+                $("#option-ConfirmExit").attr("checked",  (localStorage.getItem("ConfirmExit") || "true") === "true");
 
                 $(window).unload(function () {
                     localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
                 });
+
             });
         </script>
     </head>
@@ -60,7 +91,7 @@
                     <td>
                         <div id="channel-tabs">
                             <ul>
-                                <li><a href="#channel-0">Console</a></li>
+                                <!--<li><a href="#channel-0">Console</a></li>-->
                             </ul>
                             <div id="channel-0">
                                 <div id="chatTextArea" class="textbox"></div>
@@ -268,6 +299,7 @@
                     var msg = params.message;
 
                     if (params.channel == -1 && params.message.charAt(0) != "~") {
+                        // Welcome message is annoying to deal with..
                         if (msg !== "<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum.") {
                             if (!params.html) {
                                 msg = escapeHtml(msg);

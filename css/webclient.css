@@ -67,3 +67,12 @@ table {
 .action {
     color: magenta;
 }
+
+.leavechannel {
+    text-decoration: none;
+}
+
+/* Fix auto complete results being too big */
+li[role="presentation"] {
+    font-size: 11px;
+}
