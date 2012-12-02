@@ -192,7 +192,9 @@
                         displayMessage( "DISCONNECTED" );
                     };
                     websocket.onmessage = function( evt ) {
-                        console.log( "Message received :", evt.data );
+                        if (evt.data.length < 100) {
+                            console.log( "Message received :", evt.data );
+                        }
 
                         if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
                     };
