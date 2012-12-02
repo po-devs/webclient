@@ -306,14 +306,6 @@
                     var msg = params.message;
 
                     if (params.channel == -1 && params.message.charAt(0) != "~") {
-                        if (msg !== "<font color=blue><b>Welcome Message:</b></font> The updates are available at <a href=\"http://pokemon-online.eu/\">pokemon-online.eu</a>. Report any bugs on the forum.") {
-                            if (!params.html) {
-                                msg = escapeHtml(msg);
-                            } else {
-                                msg = format(msg) || msg;
-                            }
-                        }
-
                         displayMessage(msg, params.html, true);
                     } else {
                         channels.channel(params.channel).print(msg, params.html);
