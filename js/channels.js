@@ -81,9 +81,7 @@ function Channel(id, name) {
 
 Channel.prototype.setPlayers = function(players) {
     this.players = {};
-    for (var i = 0; i < players.length; i++) {
-        this.players[i] = true;
-    }
+    players.forEach(function(id) {this.players[id] = true;}, this);
 
     if (channels.currentId() == this.id) {
         this.generatePlayerList();
@@ -166,6 +164,6 @@ Channel.prototype.generatePlayerList = function() {
         return players.name(a).toLowerCase().localeCompare(players.name(b).toLowerCase());
     });
     playerIds.forEach(function(id) {
-        $plist.append($("<li class='player'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id))));
+        $plist.append($("<li class='player' id='player-"+id+"'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id))));
     });
 }

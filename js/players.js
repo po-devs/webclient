@@ -74,7 +74,7 @@ Players.prototype.color = function (id) {
     }
 
     var color = player.color;
-    /* Players with the color black are screwed */
+
     if (!color) {
         var namecolorlist = ['#5811b1', '#399bcd', '#0474bb', '#f8760d', '#a00c9e', '#0d762b', '#5f4c00', '#9a4f6d', '#d0990f', '#1b1390', '#028678', '#0324b1'];
         return namecolorlist[id % namecolorlist.length];
