@@ -23,8 +23,21 @@
                                 $("#channel-tabs").tabs("refresh");
                             }
                          }); // Makes the channel tabs sortable.
+                $("#channel-tabs").bind('tabsselect', function(event, ui) {
+                    // Objects available in the function context:
+                    var hrefid = $(ui.tab).attr("href");
+
+                    if (/^#channel-/.test(hrefid)) {
+                        currentChannel = hrefid.substr(hrefid.indexOf("-")+1);
+                        /* Update player list when switching channels */
+                        channels.channel(currentChannel).generatePlayerList();
+                    } else {
+                        currentChannel = -1;
+                    }
+                });
                 players = new Players();
                 channels = new Channels();
+                currentChannel = 0;
 
                 $("#join-channel").autocomplete({
                     source: function (request, response) {

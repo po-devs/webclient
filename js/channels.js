@@ -4,6 +4,10 @@ function Channels() {
 }
 
 Channels.prototype.channel = function (id) {
+    if (id == -1) {
+        return null;
+    }
+
     if (!(id in this.channels)) {
         this.channels[id] = new Channel(id, this.names[id]);
     }
@@ -43,13 +47,13 @@ Channels.prototype.removeChannel = function (id) {
 }
 
 Channels.prototype.current = function () {
-    var index = $("#channel-tabs").tabs("option", "active");
     return this.channel(this.currentId());
 }
 
 Channels.prototype.currentId = function() {
-    var index = $("#channel-tabs").tabs("option", "active");
-    return this.idFromIndex(index);
+//    var index = $("#channel-tabs").tabs("option", "active");
+//    return this.idFromIndex(index);
+    return currentChannel;
 }
 
 Channels.prototype.idFromIndex = function (index) {
