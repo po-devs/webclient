@@ -62,7 +62,10 @@ function Channel(id, name) {
     if ($("#channel-" + id).length === 0) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
-        $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>');
+        /* Cleaner solution would be appreciated */
+        $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
+                                      +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
+                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button></p>');
     }
 }
 

@@ -56,15 +56,15 @@
                             </ul>
                             <div id="channel-0">
                                 <div id="chatTextArea" class="textbox"></div>
+                                <p>
+                                    <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
+                                    <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
+                                </p>
                             </div>
                         </div>
                     </td>
                 </tr>
             </table>
-        </p>
-        <p>
-            <input type="text" id="inputText" cols="40" onkeydown="if(event.keyCode==13)sendMessage();" placeholder="Type your message here..."/>
-            <button onClick="sendMessage();">Send</button>
         </p>
         <p>
             <input type="checkbox" id="option-ConfirmExit">
@@ -89,23 +89,21 @@
                 }
             }
 
-            function sendMessage()
+            function sendMessage(sender)
             {
                 if (websocket !== null) {
-                    var $inputText = $("#inputText");
+                    var $inputText = $(sender);
                     var message = $inputText.val().split("\n");
-                    var currentChannel = channels.current().id;
-                    var x = 0,
-                        length = message.length,
-                        strToSend;
+                    var idsender = $inputText.attr("id");
+                    var channel = idsender.substr(idsender.lastIndexOf("-")+1);
 
                     $inputText.val("");
 
-                    for (; x < length; x++)  {
-                        strToSend = "chat|" + JSON.stringify({channel: currentChannel, message: message[x]});
+                    message.forEach(function(msg) {
+                        var strToSend = "chat|" + JSON.stringify({"channel": channel, message: msg});
                         websocket.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );
-                    }
+                    });
                 } else {
                     displayMessage("ERROR: Connect to the relay station before sending a message.");
                 }
