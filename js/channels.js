@@ -1,6 +1,8 @@
 function Channels() {
     this.channels = {"0": new Channel(0, "Console", true)};
     this.names = {};
+
+    this.joiningChannel = false;
 }
 
 Channels.prototype.channel = function (id) {
