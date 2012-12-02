@@ -23,10 +23,6 @@ table {
     border-collapse: collapse;
 }
 
-.welcome-message {
-    color: blue;
-}
-
 .announcement {
     font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
     border-radius: 2px;
@@ -44,3 +40,30 @@ table {
 .client {
     margin-left: 20%;
 }*/
+
+/* timestamp and name of server message */
+.server-message {
+    color: orange;
+    font-weight: bold;
+}
+
+/* timestamp and name of welcome message */
+.welcome-message {
+    color: blue;
+    font-weight: bold;
+}
+
+/* timestamp and name of scripted message / unknown name */
+.script-message {
+    color: #3daa68;
+    font-weight: bold;
+}
+
+.player-message {
+    font-weight: bold;
+}
+
+/* line beginning with *** */
+.action {
+    color: magenta;
+}
