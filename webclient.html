@@ -21,10 +21,16 @@
                 }
 
                 $(window).bind("beforeunload", function () {
-                    if (websocket && websocket.readyState === 1) {
-                        return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?"
+                    if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
+                        return "You are currently connected to a server.\nAre you sure that you want to close the Pokémon Online Webclient?";
                     }
                 });
+
+                $(window).bind("unload", function () {
+                    localStorage.setItem("Options-ConfirmExit", $("#option-ConfirmExit").is(":checked"));
+                });
+
+                $("#option-ConfirmExit").attr("checked", localStorage.getItem("#option-ConfirmExit") === "true" ? "checked" : "unchecked");
             });
         </script>
     </head>
@@ -60,6 +66,10 @@
         <p>
             <input type="text" id="inputText" cols="40" onkeydown="if(event.keyCode==13)sendMessage();" placeholder="Type your message here..."/>
             <button onClick="sendMessage();">Send</button>
+        </p>
+        <p>
+            <input type="checkbox" id="options-ConfirmExit">
+            <label for="options-ConfirmExit">Confirm</label>
         </p>
         <script type="text/javascript">
             var queryString = getQuerystring('relay');
