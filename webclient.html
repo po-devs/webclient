@@ -86,8 +86,9 @@
                         <p>
                             <input type="text" id="join-channel" onkeydown="if(event.keyCode==13)joinChannel();" placeholder="Join channel..."/>
                         </p>
-                        <div id="player-list">
-                            Players...
+                        <div class="player-list">
+                            <ul id="player-list">
+                            </ul>
                         </div>
                     </td>
                     <td>
@@ -348,7 +349,7 @@
                     var player =message.split("|")[0];
                     var channel = message.split("|")[1];
 
-                    channels.channel(channel).addPlayer(player);
+                    channels.channel(channel).newPlayer(player);
                 } else if (cmd === "leave") {
                     var player =message.split("|")[0];
                     var channel = message.split("|")[1];

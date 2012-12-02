@@ -36,6 +36,12 @@ table {
 .announcement span, .announcement td {
     font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif;
 }
+
+.player-list {
+    overflow: auto;
+    height: 600px;
+}
+
 /* Moves the client part into the centre:
 .client {
     margin-left: 20%;

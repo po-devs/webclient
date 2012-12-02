@@ -44,12 +44,21 @@ Channels.prototype.removeChannel = function (id) {
 
 Channels.prototype.current = function () {
     var index = $("#channel-tabs").tabs("option", "active");
-    return this.channel(this.idFromIndex(index));
+    return this.channel(this.currentId());
+}
+
+Channels.prototype.currentId = function() {
+    var index = $("#channel-tabs").tabs("option", "active");
+    return this.idFromIndex(index);
 }
 
 Channels.prototype.idFromIndex = function (index) {
     var queryIndex = index + 1;
     var hrefid = $("#channel-tabs > ul li:nth-child( " + queryIndex + ") a").attr("href");
+
+    if (!/^#channel-/.test(hrefid)) {
+        return -1;
+    }
     return hrefid.substr(hrefid.indexOf("-") + 1);
 }
 
@@ -74,6 +83,10 @@ Channel.prototype.setPlayers = function(players) {
     this.players = {};
     for (var i = 0; i < players.length; i++) {
         this.players[i] = true;
+    }
+
+    if (channels.currentId() == this.id) {
+        this.generatePlayerList();
     }
 }
 
@@ -142,5 +155,17 @@ Channel.prototype.close = function () {
 
     var pl = this.players;
     this.players = {};
-    pl.forEach(function(val) {players.testPlayerOnline(val)});
+    for(var id in pl) {players.testPlayerOnline(id)};
+}
+
+Channel.prototype.generatePlayerList = function() {
+    var $plist = $("#player-list").html('');
+    /* Could be optimized, but later */
+    var playerIds = Object.keys(this.players);
+    playerIds.sort(function(a, b) {
+        return players.name(a).toLowerCase().localeCompare(players.name(b).toLowerCase());
+    });
+    playerIds.forEach(function(id) {
+        $plist.append($("<li class='player'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id))));
+    });
 }

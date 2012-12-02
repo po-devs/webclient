@@ -46,6 +46,10 @@ Players.prototype.player = function (pid) {
     return null;
 };
 
+Players.prototype.name = function(pid) {
+    return ((pid in this.players) ? this.players[pid].name : "~Unknown~");
+}
+
 Players.prototype.id = function (name) {
     var player = this.names[name.toLowerCase()];
 
@@ -59,7 +63,7 @@ Players.prototype.testPlayerOnline = function(player) {
         }
     }
 
-    removePlayer(player);
+    this.removePlayer(player);
 }
 
 Players.prototype.color = function (id) {
