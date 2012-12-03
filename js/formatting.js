@@ -98,14 +98,15 @@ function convertPOLinks(element) {
 
 function parsePOLinks(element, msg) {
     return $(element, msg).find("a[href^=\"po:\"]").click(function (event) {
-        var po = $(this)[0].pathname.split("/"); // Somewhat of a hack because this isn't documented.
+        event.preventDefault();
+
+        var po = $(this).attr("href").slice(3).split("/"); // Somewhat of a hack because this isn't documented.
         var command = po[0];
         var data = po[1];
 
         // Add other commands here..
         if (command === "join") {
             joinChannel(data);
-            event.preventDefault();
         }
     }).html();
 }
