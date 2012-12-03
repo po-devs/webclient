@@ -126,40 +126,35 @@ function format(element) {
     }
 }
 
-function addChannelLinks(line2) { // Ported from PO
-    // * Optimize/clean this up
-
-    line2 = line2.toString(); // Just to be sure.
-
-    // Channels don't have to be collected if there are no channel links
-    // Strips html because tags can have hex colors.
-    if (stripHtml(line2).indexOf("#") === -1) {
-        return line2;
+/* Ported from PO */
+function addChannelLinks(line) {
+    if (line.indexOf('#') === -1) {
+        return line;
     }
 
-    // make a mutable copy
-    var line = line2;
     /* scan for channel links */
-    var pos = 0;
-    pos = line.indexOf('#', pos);
+    var pos = line.indexOf('#', pos);
+    var channelNames = channels.channelsByName();
 
-    while (pos != -1) {
+    while (pos !== -1) {
         ++pos;
         var longestName = "";
-        var longestChannelName = "";
-        channels.channelsByName().forEach(function (name, index, array) {
-            var channelName = line.substr(pos, name.length).toString();
-            var res = channelName.toLowerCase() == name.toLowerCase();
-            if (res && longestName.length < channelName.length) {
+
+        channelNames.forEach(function (channelName) {
+            if (channelName.length <= longestName.length) {
+                return;
+            }
+
+            var name = line.substr(pos, channelName.length).toString();
+
+            if (channelName.toLowerCase() === name.toLowerCase()) {
                 longestName = name;
-                longestChannelName = channelName;
             }
         });
         if (longestName) {
-            var html = "<a href=\"po:join/" + escapeSlashes(longestName) + "\">#" + longestChannelName + "</a>";
+            var html = "<a href=\"po:join/" + escapeSlashes(longestName) + "\">#" + longestName + "</a>";
             line = line.splice(pos - 1, longestName.length + 1, html);
             pos += html.length - 1;
-            console.log("Line: ", line);
         }
         pos = line.indexOf('#', pos);
     }
@@ -181,7 +176,6 @@ function escapeHtml(toConvert)
 
     return ret;
 }
-
 
 function stripHtml(str)
 {
