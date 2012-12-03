@@ -15,6 +15,10 @@ Channels.prototype.channel = function (id) {
     return this.channels[id];
 }
 
+Channels.prototype.hasChannel = function(id) {
+    return id in this.channels;
+}
+
 Channels.prototype.setNames = function (names) {
     this.names = names;
 
@@ -39,7 +43,8 @@ Channels.prototype.newChannel = function (id, name) {
 
 Channels.prototype.removeChannel = function (id) {
     if (id in this.channels) {
-        this.channels[id].close();
+        this.channel(id).print("<i>This channel was destroyed.</i>", true);
+        this.channel(id).disconnect();
         delete this.channels[id];
     }
 
@@ -168,12 +173,16 @@ Channel.prototype.changeName = function (name) {
     $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html(name);
 }
 
-Channel.prototype.close = function () {
-    $('#channel-tabs').tabs("remove", "#channel-" + this.id);
-
+Channel.prototype.disconnect = function() {
     var pl = this.players;
     this.players = {};
     for(var id in pl) {players.testPlayerOnline(id)};
+}
+
+Channel.prototype.close = function () {
+    $('#channel-tabs').tabs("remove", "#channel-" + this.id);
+
+    this.disconnect();
 }
 
 Channel.prototype.playerIds = function() {
