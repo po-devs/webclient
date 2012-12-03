@@ -3,6 +3,11 @@ function Players () {
     this.names = {};
 }
 
+Players.prototype.login = function(id, info) {
+    this.addPlayer({id: info});
+    this.myid = id;
+}
+
 Players.prototype.addPlayer = function (players) {
     for (var id in players) {
         var player = players[id];

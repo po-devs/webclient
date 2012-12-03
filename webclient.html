@@ -121,6 +121,7 @@
                                 <p>
                                     <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
                                     <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
+                                    <button onClick="channels.leaveChannel(0);">Leave Channel</button>
                                 </p>
                             </div>
                         </div>
@@ -133,6 +134,7 @@
             <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
         </p>
         <script type="text/javascript">
+            websocket = null;
             var queryString = getQuerystring('relay');
             var announcement = $("#announcement");
 
@@ -182,7 +184,6 @@
                 }
             }
 
-            var websocket = null;
             var parseCommand;
             var relayIP;
 
@@ -376,6 +377,9 @@
                 } else if (cmd === "channelplayers") {
                     var params = JSON.parse(data);
                     channels.channel(params.channel).setPlayers(params.players);
+                } else if (cmd === "login") {
+                    var params = JSON.parse(data);
+                    players.login(params.id, params.info);
                 }
             };
 

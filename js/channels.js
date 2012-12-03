@@ -41,11 +41,24 @@ Channels.prototype.newChannel = function (id, name) {
     this.names[id] = name;
 }
 
+Channels.prototype.leaveChannel = function(chanid) {
+    if (!this.hasChannel(chanid) || this.channel(chanid).closable & 1) {
+        $('#channel-tabs').tabs("remove", "#channel-" + chanid);
+    } else {
+        this.channel(chanid).closable |= 2;
+        websocket.send("leave|"+chanid);
+    }
+}
+
 Channels.prototype.removeChannel = function (id) {
     if (id in this.channels) {
-        this.channel(id).print("<i>This channel was destroyed.</i>", true);
-        this.channel(id).disconnect();
-        delete this.channels[id];
+        if (this.channel(id).closable & 2) {
+            this.channel(id).close();
+        } else {
+            this.channel(id).print("<i>This channel was destroyed.</i>", true);
+            this.channel(id).disconnect();
+            delete this.channels[id];
+        }
     }
 
     delete this.names[id];
@@ -75,6 +88,11 @@ function Channel(id, name) {
     this.id = id;
     this.name = name;
     this.players = {};
+    /* We can close a channel tab only if the client decided to close the channel,
+      and the server kicked us out of the channel / destroyed the channel.
+
+      We keep track with this variable. */
+    this.closable = 0; //1 = Server close, 2=Player close
 
     this.chatCount = 0;
 
@@ -84,11 +102,15 @@ function Channel(id, name) {
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
                                       +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button></p>');
+                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button>'
+                                         +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
     }
 }
 
 Channel.prototype.setPlayers = function(players) {
+    /* The server 'unclosed' us, so removing server close if there */
+    this.closable &= ~1;
+
     this.players = {};
     players.forEach(function(id) {this.players[id] = true;}, this);
 
@@ -114,6 +136,15 @@ Channel.prototype.removePlayer = function(player) {
 
     if (this.isCurrent()) {
         playerList.removePlayer(player);
+    }
+
+    if (player == players.myid) {
+        if (this.closable & 2) {
+            this.close();
+        } else {
+            this.closable |= 1;
+            this.print("<i>You were removed from this channel</i>", true)
+        }
     }
 }
 
@@ -183,6 +214,7 @@ Channel.prototype.close = function () {
     $('#channel-tabs').tabs("remove", "#channel-" + this.id);
 
     this.disconnect();
+    delete channels.channels[this.id];
 }
 
 Channel.prototype.playerIds = function() {
