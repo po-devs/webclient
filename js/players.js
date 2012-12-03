@@ -4,8 +4,11 @@ function Players () {
 }
 
 Players.prototype.login = function(id, info) {
-    this.addPlayer({id: info});
     this.myid = id;
+
+    var obj = {};
+    obj[id] = info;
+    this.addPlayer(obj);
 }
 
 Players.prototype.addPlayer = function (players) {
@@ -93,6 +96,8 @@ Players.prototype.color = function (id) {
 
 /* Fast index search in a sorted array */
 Array.prototype.dichotomy = function(func) {
+    if (this.length === 0) return 0;
+
     var min = 0;
     var max = this.length-1;
 
