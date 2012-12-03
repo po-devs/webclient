@@ -47,13 +47,8 @@ defineOn(String.prototype, {
                 ;
         });
     },
-    splice: function (pos1, pos2, replace) { // QString QString::replace(int, int, QString)
-        var str = this;
-        var returnStr = str;
-        var sub = str.substr(pos1, pos2);
-        returnStr = returnStr.replace(sub, replace);
-
-        return returnStr;
+    splice: function (pos1, n, replace) {
+        return this.slice(0, pos1) + replace + this.slice(pos1+n);
     }
 });
 
