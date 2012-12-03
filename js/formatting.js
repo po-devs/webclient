@@ -47,7 +47,7 @@ defineOn(String.prototype, {
                 ;
         });
     },
-    replaceBetween: function (pos1, pos2, replace) { // QString QString::replace(int, int, QRegExp)
+    splice: function (pos1, pos2, replace) { // QString QString::replace(int, int, QRegExp)
         return this.slice(0,pos1) + replace + this.slice(pos2);
     }
 });
@@ -187,7 +187,7 @@ function addChannelLinks(line2) { // Ported from PO
         if (longestName) {
             console.log("Channel found:", longestChannelName);
             var html = "<a href=\"po:join/" + escapeSlashes(longestName) + "\">#" + longestChannelName + "</a>";
-            line = line.replaceBetween(pos - 1, longestName.length + 1, html);
+            line = line.splice(pos - 1, longestName.length + 1, html);
             pos += html.length - 1;
             console.log("Line: ", line);
         }
