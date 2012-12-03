@@ -36,16 +36,21 @@
                         }
                     }
                 });
-                $("a[href^=\"po:\"]").live("click", function (event) {
-                    event.preventDefault();
+                $(document).on("click", "a", function (event) {
+                    var href = this.href;
 
-                    var hrefid = $(this).attr("href").slice(3);
-                    var command = hrefid.slice(0, hrefid.indexOf("/"));
-                    var data = hrefid.slice(hrefid.indexOf("/")+1);
+                    if (/^po:/.test(href)) {
+                        event.preventDefault();
 
-                    // Add other commands here..
-                    if (command === "join") {
-                        joinChannel(data);
+                        var params = [href.slice(3, href.indexOf("/")), href.slice(href.indexOf("/")+1)];
+
+                        // Add other commands here..
+                        if (params[0] === "join") {
+                            joinChannel(params[1]);
+                        }
+                    } else {
+                        /* Make sure link opens in a new window */
+                        this.target = "_blank";
                     }
                 });
                 playerList = new PlayerList();

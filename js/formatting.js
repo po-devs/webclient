@@ -114,14 +114,10 @@ function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
 function format(element) {
     if (typeof element === "object") {
         convertPOLinks(element);
-        /* Makes links open in a new window */
-        $(element).find("a").attr("target", "_blank");
     } else {
         var el = $("<div>");
         el.html(element);
         convertPOLinks(el);
-        /* Makes links open in a new window */
-        el.find("a").attr("target", "_blank");
         return el.html();
     }
 }
