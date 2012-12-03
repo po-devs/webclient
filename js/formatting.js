@@ -47,21 +47,6 @@ defineOn(String.prototype, {
                 ;
         });
     },
-    midRef: function (position, n) { // QStringRef QString::midRef
-        if (n == null || typeof n != "number")
-            n = -1;
-
-        var str = this;
-        var strlen = str.length - 1;
-        if (position > strlen)
-            return "";
-
-        var substri = str.substr(position);
-        if (n > strlen || n == -1)
-            return substri;
-
-        return substri.substr(0, n);
-    },
     replaceBetween: function (pos1, pos2, replace) { // QString QString::replace(int, int, QRegExp)
         var str = this;
         var returnStr = str;
@@ -197,7 +182,7 @@ function addChannelLinks(line2) { // Ported from PO
         var longestName = "";
         var longestChannelName = "";
         channels.channelsByName().forEach(function (name, index, array) {
-            var channelName = line.midRef(pos, name.length).toString();
+            var channelName = line.substr(pos, name.length).toString();
             var res = channelName.toLowerCase() == name.toLowerCase();
             if (res && longestName.length < channelName.length) {
                 longestName = name;
