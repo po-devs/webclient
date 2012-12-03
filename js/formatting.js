@@ -47,8 +47,13 @@ defineOn(String.prototype, {
                 ;
         });
     },
-    splice: function (pos1, pos2, replace) { // QString QString::replace(int, int, QRegExp)
-        return this.slice(0,pos1) + replace + this.slice(pos2);
+    splice: function (pos1, pos2, replace) { // QString QString::replace(int, int, QString)
+        var str = this;
+        var returnStr = str;
+        var sub = str.substr(pos1, pos2);
+        returnStr = returnStr.replace(sub, replace);
+
+        return returnStr;
     }
 });
 
@@ -92,30 +97,15 @@ function convertPOLinks(element) {
 }
 
 function parsePOLinks(element, msg) {
-    return $(element, msg).find("a").each(function (index, url) {
-        url = $(url);
-        if (!url.attr("href")) {
-            return;
-        }
+    return $(element, msg).find("a[href^=\"po:\"]").click(function (event) {
+        var po = $(this)[0].pathname.split("/"); // Somewhat of a hack because this isn't documented.
+        var command = po[0];
+        var data = po[1];
 
-        var proto = url.attr("href").split(":")[0],
-            query = url.attr("href").split(":")[1];
-
-        switch (proto) {
-            case "po":
-                var po = query.split("/");
-                var command = po[0];
-                var data = po[1];
-
-                console.log(po, command, data);
-                // Add other commands here..
-                if (command === "join") {
-                    url.click(function (event) {
-                        joinChannel(data);
-                        event.preventDefault();
-                    });
-                }
-                break;
+        // Add other commands here..
+        if (command === "join") {
+            joinChannel(data);
+            event.preventDefault();
         }
     }).html();
 }
@@ -185,7 +175,6 @@ function addChannelLinks(line2) { // Ported from PO
             }
         });
         if (longestName) {
-            console.log("Channel found:", longestChannelName);
             var html = "<a href=\"po:join/" + escapeSlashes(longestName) + "\">#" + longestChannelName + "</a>";
             line = line.splice(pos - 1, longestName.length + 1, html);
             pos += html.length - 1;
