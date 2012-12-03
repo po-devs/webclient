@@ -46,6 +46,14 @@ defineOn(String.prototype, {
                 : match
                 ;
         });
+    },
+    splice: function (pos1, pos2, replace) { // QString QString::replace(int, int, QString)
+        var str = this;
+        var returnStr = str;
+        var sub = str.substr(pos1, pos2);
+        returnStr = returnStr.replace(sub, replace);
+
+        return returnStr;
     }
 });
 
@@ -53,7 +61,7 @@ function convertPOLinks(element) {
     $(element).find("img").each(function (index, img) {
         img = $(img);
         var proto = img.attr("src").split(":")[0],
-            query = img.attr("src").split(":")[1]
+            query = img.attr("src").split(":")[1];
 
         switch (proto) {
             case "pokemon":
@@ -86,6 +94,20 @@ function convertPOLinks(element) {
                 break;
         }
     });
+}
+
+function parsePOLinks(element, msg) {
+    return $(element, msg).find("a[href^=\"po:\"]").click(function (event) {
+        var po = $(this)[0].pathname.split("/"); // Somewhat of a hack because this isn't documented.
+        var command = po[0];
+        var data = po[1];
+
+        // Add other commands here..
+        if (command === "join") {
+            joinChannel(data);
+            event.preventDefault();
+        }
+    }).html();
 }
 
 function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
@@ -123,6 +145,46 @@ function format(element) {
     }
 }
 
+function addChannelLinks(line2) { // Ported from PO
+    // * Optimize/clean this up
+
+    line2 = line2.toString(); // Just to be sure.
+
+    // Channels don't have to be collected if there are no channel links
+    // Strips html because tags can have hex colors.
+    if (stripHtml(line2).indexOf("#") === -1) {
+        return line2;
+    }
+
+    // make a mutable copy
+    var line = line2;
+    /* scan for channel links */
+    var pos = 0;
+    pos = line.indexOf('#', pos);
+
+    while (pos != -1) {
+        ++pos;
+        var longestName = "";
+        var longestChannelName = "";
+        channels.channelsByName().forEach(function (name, index, array) {
+            var channelName = line.substr(pos, name.length).toString();
+            var res = channelName.toLowerCase() == name.toLowerCase();
+            if (res && longestName.length < channelName.length) {
+                longestName = name;
+                longestChannelName = channelName;
+            }
+        });
+        if (longestName) {
+            var html = "<a href=\"po:join/" + escapeSlashes(longestName) + "\">#" + longestChannelName + "</a>";
+            line = line.splice(pos - 1, longestName.length + 1, html);
+            pos += html.length - 1;
+            console.log("Line: ", line);
+        }
+        pos = line.indexOf('#', pos);
+    }
+    return line;
+}
+
 /* Ported from PO */
 function escapeHtml(toConvert)
 {
@@ -137,4 +199,18 @@ function escapeHtml(toConvert)
 
 
     return ret;
+}
+
+
+function stripHtml(str)
+{
+    return str.replace(/<\/?[^>]*>/g, "");
+}
+
+function escapeSlashes(str) {
+    return str.replace(/'/g, "&apos;").replace(/"/g, '&quot;');
+}
+
+function unescapeSlashes(str) {
+    return str.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
 }

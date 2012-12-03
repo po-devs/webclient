@@ -84,6 +84,14 @@ Channels.prototype.idFromIndex = function (index) {
     return hrefid.substr(hrefid.indexOf("-") + 1);
 }
 
+Channels.prototype.channelsByName = function () {
+    var that = this;
+
+    return Object.keys(this.names).map(function (value, index, array) {
+        return that.names[value];
+    })
+}
+
 function Channel(id, name) {
     this.id = id;
     this.name = name;
@@ -185,12 +193,16 @@ Channel.prototype.print = function (msg, html, noParse) {
                     pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
                 }
 
-                msg = pref + msg.slice(msg.indexOf(":") + 1);
+                msg = pref + addChannelLinks(msg.slice(msg.indexOf(":") + 1));
             }
         }
     }
 
     chatTextArea.innerHTML += msg + "<br/>\n";
+
+    if (!html) {
+        parsePOLinks(chatTextArea, msg);
+    }
 
     /* Limit number of lines */
     if (this.chatCount++ % 500 === 0) {
