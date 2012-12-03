@@ -22,6 +22,10 @@ Players.prototype.addPlayer = function (players) {
         }
 
         this.names[name] = this.players[id];
+
+        if (currentChannel != -1 && channels.current().hasPlayer(id)) {
+            playerList.updatePlayer(id);
+        }
     }
 };
 
@@ -81,3 +85,85 @@ Players.prototype.color = function (id) {
     }
     return color;
 };
+
+/* Fast index search in a sorted array */
+Array.prototype.dichotomy = function(func) {
+    var min = 0;
+    var max = this.length-1;
+
+    while (1) {
+        var half = Math.floor(min+(max-min)/2);
+
+        var cmp = func(this[half]);
+        if (min === max) {
+            return half + (cmp > 0 ? 1 : 0);
+        }
+
+        if (cmp < 0) {
+            max = half;
+        } else if (cmp > 0) {
+            min = (min === half ? max : half);
+        } else {
+            return half;
+        }
+
+    }
+}
+
+/* The list of players */
+function PlayerList () {
+    this.ids = [];
+}
+
+PlayerList.prototype.setPlayers = function(playerIds) {
+    var list = $("#player-list").html("");
+    /* Could be optimized, but later */
+    playerIds.sort(function(a, b) {
+        return players.name(a).toLowerCase().localeCompare(players.name(b).toLowerCase());
+    });
+    playerIds.forEach(function(id) {
+        list.append(this.createPlayerItem(id));
+    }, this);
+    this.ids = playerIds;
+}
+
+PlayerList.prototype.createPlayerItem = function(id) {
+    return $("<li class='player-list-item' id='player-"+id+"'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id)));
+}
+
+PlayerList.prototype.addPlayer = function(id) {
+    var name = players.name(id);
+    var lname = name.toLowerCase();
+
+    /* Find the place where to put the name - dichotomy */
+    var pos = this.ids.dichotomy(function(id) {
+        return lname.localeCompare(players.name(id).toLowerCase());
+    });
+
+    /* Add the graphical element */
+    var item = this.createPlayerItem(id);
+    if (pos === this.ids.length) {
+        $("#player-list").append(item);
+    } else {
+        /* Inserts the item before the player at pos */
+        $(".player-list-item#player-"+this.ids[pos]).before(item);
+    }
+
+    this.ids.splice(pos, 0, id);
+}
+
+PlayerList.prototype.removePlayer = function(id) {
+    var pos = this.ids.indexOf(id);
+    if (pos !== -1) {
+        this.ids.splice(pos, 1);
+    }
+    /* Remove the graphical element */
+    $(".player-list-item#player-"+id).remove();
+}
+
+PlayerList.prototype.updatePlayer = function(id) {
+    if (this.ids.indexOf(id) !== -1) {
+        this.removePlayer(id);
+        this.addPlayer(id);
+    }
+}

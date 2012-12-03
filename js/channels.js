@@ -92,12 +92,28 @@ Channel.prototype.setPlayers = function(players) {
     }
 }
 
+Channel.prototype.isCurrent = function() {
+    return this.id == channels.currentId();
+}
+
 Channel.prototype.newPlayer = function(player) {
     this.players[player] = true;
+
+    if (this.isCurrent()) {
+        playerList.addPlayer(player);
+    }
 }
 
 Channel.prototype.removePlayer = function(player) {
     delete this.players[player];
+
+    if (this.isCurrent()) {
+        playerList.removePlayer(player);
+    }
+}
+
+Channel.prototype.hasPlayer = function(player) {
+    return player in this.players;
 }
 
 Channel.prototype.chat = function () {
@@ -160,14 +176,10 @@ Channel.prototype.close = function () {
     for(var id in pl) {players.testPlayerOnline(id)};
 }
 
+Channel.prototype.playerIds = function() {
+    return Object.keys(this.players);
+}
+
 Channel.prototype.generatePlayerList = function() {
-    var $plist = $("#player-list").html('');
-    /* Could be optimized, but later */
-    var playerIds = Object.keys(this.players);
-    playerIds.sort(function(a, b) {
-        return players.name(a).toLowerCase().localeCompare(players.name(b).toLowerCase());
-    });
-    playerIds.forEach(function(id) {
-        $plist.append($("<li class='player' id='player-"+id+"'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id))));
-    });
+    playerList.setPlayers(this.playerIds());
 }

@@ -35,6 +35,7 @@
                         currentChannel = -1;
                     }
                 });
+                playerList = new PlayerList();
                 players = new Players();
                 channels = new Channels();
                 currentChannel = 0;
@@ -361,13 +362,13 @@
                 } else if (cmd === "playerlogout") {
                     players.removePlayer(data);
                 } else if (cmd === "join") {
-                    var player =message.split("|")[0];
-                    var channel = message.split("|")[1];
+                    var channel = data.split("|")[0];
+                    var player = data.split("|")[1];
 
                     channels.channel(channel).newPlayer(player);
                 } else if (cmd === "leave") {
-                    var player =message.split("|")[0];
-                    var channel = message.split("|")[1];
+                    var channel = data.split("|")[0];
+                    var player = data.split("|")[1];
 
                     channels.channel(channel).removePlayer(player);
                     players.testPlayerOnline(player);
