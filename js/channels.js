@@ -200,10 +200,6 @@ Channel.prototype.print = function (msg, html, noParse) {
 
     chatTextArea.innerHTML += msg + "<br/>\n";
 
-    if (!html) {
-        parsePOLinks(chatTextArea, msg);
-    }
-
     /* Limit number of lines */
     if (this.chatCount++ % 500 === 0) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");

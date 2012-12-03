@@ -91,21 +91,6 @@ function convertPOLinks(element) {
     });
 }
 
-function parsePOLinks(element, msg) {
-    return $(element, msg).find("a[href^=\"po:\"]").click(function (event) {
-        event.preventDefault();
-
-        var po = $(this).attr("href").slice(3).split("/"); // Somewhat of a hack because this isn't documented.
-        var command = po[0];
-        var data = po[1];
-
-        // Add other commands here..
-        if (command === "join") {
-            joinChannel(data);
-        }
-    }).html();
-}
-
 function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
     var BASE = "http://pokemon-online.eu/images/pokemon/",
         file;

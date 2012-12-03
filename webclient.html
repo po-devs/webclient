@@ -36,6 +36,18 @@
                         }
                     }
                 });
+                $("a[href^=\"po:\"]").live("click", function (event) {
+                    event.preventDefault();
+
+                    var po = $(this).attr("href").slice(3).split("/"); // Somewhat of a hack because this isn't documented.
+                    var command = po[0];
+                    var data = po[1];
+
+                    // Add other commands here..
+                    if (command === "join") {
+                        joinChannel(data);
+                    }
+                });
                 playerList = new PlayerList();
                 players = new Players();
                 channels = new Channels();
