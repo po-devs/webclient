@@ -10,8 +10,22 @@ PMs.prototype.pm = function(pid) {
     return this.pms[pid];
 }
 
+PMs.prototype.playerLogout = function (pid) {
+    if (pid in this.pms) {
+        this.pm(pid).disconnect();
+    }
+}
+
+/* In case of reconnect */
+PMs.prototype.playerLogin = function(pid) {
+    if (pid in this.pms) {
+        this.pm(pid).reconnect();
+    }
+}
+
 function PM(pid) {
     this.id = pid;
+    this.disconnected = false;
     players.addFriend(pid);
 
     var name = players.name(pid);
@@ -28,6 +42,33 @@ function PM(pid) {
     }
 }
 
+PM.prototype.players = function() {
+    var ret = [players.myid];
+    if (!this.disconnected) {
+        ret.push(this.id);
+    }
+    return ret;
+}
+
+PM.prototype.disconnect = function() {
+    if (this.disconnected) {
+        return;
+    }
+
+    this.print(-1, "<i>"+players.name(this.id)+ " is no longer connected.</i>");
+    this.disconnected = true;
+}
+
+PM.prototype.reconnect = function() {
+    if (!this.disconnected) {
+        return;
+    }
+
+    players.addFriend(this.id);
+    this.print(-1, "<i>"+players.name(this.id)+ " came back.</i>");
+    this.disconnected = false;
+}
+
 PM.prototype.chat = function () {
     return $("#pm-" + this.id + " #chatTextArea");
 }
@@ -36,9 +77,11 @@ PM.prototype.chat = function () {
 PM.prototype.print = function(pid, msg) {
     var chatTextArea = this.chat().get(0);
 
-    msg = escapeHtml(msg);
-    var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
-    msg = pref + " " + addChannelLinks(msg);
+    if (pid !== -1) {
+        msg = escapeHtml(msg);
+        var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
+        msg = pref + " " + addChannelLinks(msg);
+    }
 
     chatTextArea.innerHTML += msg + "<br/>\n";
 

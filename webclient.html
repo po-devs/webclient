@@ -37,7 +37,7 @@
                         }
                     } else if (/^#pm-/.test(hrefid)) {
                         var pid = hrefid.substr(hrefid.indexOf("-")+1);
-                        playerList.setPlayers([players.myid, pid]);
+                        playerList.setPlayers(pms.pm(pid).players());
                     }
                 });
                 $(document).on("click", "a", function (event) {
@@ -198,11 +198,11 @@
                     message.forEach(function(msg) {
                         if (/^send-channel-/.test(idsender)) {
                             /* Temporary until interface is improved */
-                            if (/\^/pm/i.test(msg)) {
+                            if (/^\/pm/i.test(msg)) {
                                 var pid = players.id(msg.slice(4));
                                 if (pid !== -1) {
                                     pms.pm(pid);
-                                    continue;
+                                    return;
                                 }
                             }
                             var strToSend = "chat|" + JSON.stringify({"channel": targetid, message: msg});

@@ -36,6 +36,7 @@ Players.prototype.addPlayer = function (players) {
         if (currentChannel != -1 && channels.current().hasPlayer(id)) {
             playerList.updatePlayer(id);
         }
+        pms.playerLogin(id);
     }
 };
 
@@ -51,12 +52,13 @@ Players.prototype.removePlayer = function (id) {
         return;
     }
 
-    delete this.names[player.name.toLowerCase()];
-    delete this.players[id];
-
     if (this.friends.indexOf(id) !== -1) {
         this.friends.splice(this.friends.indexOf(id), 1);
+        pms.playerLogout(id);
     }
+
+    delete this.names[player.name.toLowerCase()];
+    delete this.players[id];
 };
 
 Players.prototype.player = function (pid) {
