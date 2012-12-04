@@ -16,13 +16,6 @@
     width:800px;height:450px;
 }
 
-/* Without those, the channel tabs look messed up on firefox */
-table {
-    padding: 0;
-    border-spacing: 0;
-    border-collapse: collapse;
-}
-
 .announcement {
     font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
     border-radius: 2px;
@@ -31,10 +24,12 @@ table {
     padding: 2px;
     text-align: center;
     visibility: hidden;
+    margin: auto;
 }
 
-.announcement span, .announcement td {
+.announcement span, .announcement td, .announcement table, .announcement img {
     font: 11px Tahoma,Calibri,Verdana,Geneva,sans-serif;
+    margin: auto;
 }
 
 .player-list {
