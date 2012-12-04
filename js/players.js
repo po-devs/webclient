@@ -1,6 +1,8 @@
 function Players () {
     this.players = {};
     this.names = {};
+
+    this.friends = [];
 }
 
 Players.prototype.login = function(id, info) {
@@ -37,6 +39,11 @@ Players.prototype.addPlayer = function (players) {
     }
 };
 
+Players.prototype.addFriend = function(id) {
+    if (this.friends.indexOf(id) === -1) this.friends.push(id);
+    if (id in this.players) this.players[id].friend = true;
+}
+
 Players.prototype.removePlayer = function (id) {
     var player = this.players[id];
 
@@ -46,6 +53,10 @@ Players.prototype.removePlayer = function (id) {
 
     delete this.names[player.name.toLowerCase()];
     delete this.players[id];
+
+    if (this.friends.indexOf(id) !== -1) {
+        this.friends.splice(this.friends.indexOf(id), 1);
+    }
 };
 
 Players.prototype.player = function (pid) {
@@ -59,7 +70,7 @@ Players.prototype.player = function (pid) {
 };
 
 Players.prototype.name = function(pid) {
-    return ((pid in this.players) ? this.players[pid].name : "~Unknown~");
+    return ((pid in this.players) ? this.players[pid].name : "???");
 }
 
 Players.prototype.id = function (name) {
@@ -69,6 +80,10 @@ Players.prototype.id = function (name) {
 };
 
 Players.prototype.testPlayerOnline = function(player) {
+    if (this.friends.indexOf(player) !== -1) {
+        return;
+    }
+
     for (var i in channels.channels) {
         if (player in channels.channel(i).players) {
             return;

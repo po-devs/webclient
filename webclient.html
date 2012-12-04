@@ -11,6 +11,7 @@
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/players.js"></script>
+        <script src="js/pms.js"></script>
         <script src="js/channels.js"></script>
         <script src="js/formatting.js"></script>
         <script>
@@ -34,6 +35,9 @@
                             /* Update player list when switching channels */
                             channels.channel(currentChannel).generatePlayerList();
                         }
+                    } else if (/^#pm-/.test(hrefid)) {
+                        var pid = hrefid.substr(hrefid.indexOf("-")+1);
+                        playerList.setPlayers([players.myid, pid]);
                     }
                 });
                 $(document).on("click", "a", function (event) {
@@ -55,6 +59,7 @@
                 });
                 playerList = new PlayerList();
                 players = new Players();
+                pms = new PMs();
                 channels = new Channels();
                 currentChannel = 0;
 
@@ -187,12 +192,16 @@
                     var $inputText = $(sender);
                     var message = $inputText.val().split("\n");
                     var idsender = $inputText.attr("id");
-                    var channel = idsender.substr(idsender.lastIndexOf("-")+1);
-
                     $inputText.val("");
+                    var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
 
                     message.forEach(function(msg) {
-                        var strToSend = "chat|" + JSON.stringify({"channel": channel, message: msg});
+                        if (/^send-channel-/.test(idsender)) {
+                            var strToSend = "chat|" + JSON.stringify({"channel": targetid, message: msg});
+                        } else if (/^send-pm-/.test(idsender)) {
+                            var strToSend = "pm|" + JSON.stringify({"to": targetid, message: msg});
+                            pms.pm(targetid).print(players.myid, msg);
+                        }
                         websocket.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );
                     });
@@ -410,6 +419,9 @@
                     players.login(params.id, params.info);
                 } else if (cmd == "unregistered") {
                     $("#register").attr("disabled", false);
+                } else if (cmd == "pm") {
+                    var params = JSON.parse(data);
+                    pms.pm(params.src).print(params.src, params.message);
                 }
             };
 
