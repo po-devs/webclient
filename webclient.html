@@ -138,6 +138,7 @@
                                 <p>
                                     <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
                                     <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
+                                    <button id="register" onClick="wannaRegister()">Register</button>
                                     <button onClick="channels.leaveChannel(0);">Leave Channel</button>
                                 </p>
                             </div>
@@ -151,6 +152,16 @@
             <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
         </p>
         <script type="text/javascript">
+            // Make register button disabled
+            $("#register").attr("disabled", true);
+            
+            function wannaRegister() {
+                if (!(websocket && websocket.readyState === 1)) {
+                    return;
+                }
+                websocket.send("register|");
+            }
+            
             websocket = null;
             var queryString = getQuerystring('relay');
             var announcement = $("#announcement");
@@ -397,6 +408,8 @@
                 } else if (cmd === "login") {
                     var params = JSON.parse(data);
                     players.login(params.id, params.info);
+                } else if (cmd == "unregistered") {
+                    $("#register").attr("disabled", false);
                 }
             };
 
