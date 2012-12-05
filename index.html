@@ -65,6 +65,34 @@
                         this.target = "_blank";
                     }
                 });
+                $(document).on("keydown", "input[type=text]", function (event) {
+                    var elem = event.currentTarget,
+                        maxHistSize = 100;
+                    elem.hist = elem.hist || [];
+                    elem.histIndex = elem.histIndex || 0;
+                    if (event.which == 38) { // Up
+                        if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
+                            elem.hist.push(elem.value);
+                            if (elem.hist.length > maxHistSize) {
+                                elem.hist.shift();
+                            }
+                        }
+                        if (elem.histIndex > 0) {
+                            elem.value = elem.hist[--elem.histIndex];
+                        }
+                    } else if (event.which == 40) { // Down
+                        if (elem.histIndex < elem.hist.length) {
+                           elem.value = elem.hist[++elem.histIndex] || "";
+                        }
+                    } else if (event.which == 13) { // Return
+                        elem.hist.push(elem.value);
+                        if (elem.hist.length > maxHistSize) {
+                            elem.hist.shift();
+                        }
+                        elem.histIndex = elem.hist.length;
+                        elem.value = "";
+                    }
+                });
                 playerList = new PlayerList();
                 players = new Players();
                 pms = new PMs();
@@ -190,7 +218,6 @@
                     var $inputText = $(sender);
                     var message = $inputText.val().split("\n");
                     var idsender = $inputText.attr("id");
-                    $inputText.val("");
                     var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
 
                     message.forEach(function(msg) {
