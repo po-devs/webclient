@@ -48,6 +48,10 @@
                     var hrefid = $(ui.tab).attr("href");
                     $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-44);
                 });
+                $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
+                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val()}));
+                    }
+                });
                 $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
                 $("#chatTextArea").height($("#channel-tabs").height()-$("#chatTextArea").position().top-44);
                 $(document).on("click", "a", function (event) {
@@ -148,7 +152,10 @@
                             <button id="register" onClick="wannaRegister()">Register</button>
                             <button onClick="channels.leaveChannel(0);">Leave Channel</button>
                             <button id="color" name="color" onclick="openColorPicker()"/>Color</button>
-                            <div id="colorPicker" style="display:none";></div>
+                            <div id="colorDialog" title="Trainer name &amp; color">
+                                Name <input type="text" id="trainer-name" />
+                                <div id="colorPicker"></div>
+                            </div>
                         </p>
                     </div>
                 </div>
@@ -172,40 +179,11 @@
             colorPickerTriggered = false;
             var colorPickerColor;
             function openColorPicker() {
+                $("#colorDialog").dialog("open");
                 var colorPicker = $("#colorPicker");
-                colorPicker.css({
-                    "position":"absolute",
-                    "top": ($("#color").position().top - 200) + "px",
-                    "left": ($("#color").position().left-70) + "px",
-                    "display": "block"
-                });
-                if (!colorPickerTriggered) {
-                    colorPicker.farbtastic(function(color) {colorPickerColor = color;});
-                    colorPickerTriggered = true;
-                }
+                colorPicker.farbtastic(function(color) {colorPickerColor = color;});
 
-                var firstTrigger = true;
-
-                var colorFunc = function(event, object) {
-                    if (firstTrigger) {firstTrigger = false; return;}
-                    var x = colorPicker.position().left;
-                    var y = colorPicker.position().top;
-                    var maxx = x + colorPicker.width();
-                    var maxy = y + colorPicker.height();
-
-                    if (event.pageX >= x && event.pageX < maxx && event.pageY >= y && event.pageY < maxy) {
-                        /* click inside the color picker */
-                    } else {
-                        /* If we click outside the color picker, we make it disappear */
-                        event.preventDefault();
-                        colorPicker.css({"display":"none"});
-                        $(document).off("click", colorFunc);
-
-                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor}));
-                    }
-                }
-
-                $(document).on("click", colorFunc);
+                $("#trainer-name").val(players.name(players.myid));
             }
             
             websocket = null;

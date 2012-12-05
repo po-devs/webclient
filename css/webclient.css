@@ -4,7 +4,16 @@ html, body, .container, .sidebar, #channel-tabs {
 
 body {
     font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
-    font-weight: 300;
+    /* font-weight: 300; */
+}
+
+.ui-dialog {
+    font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+}
+
+#colorPicker .farbtastic {
+    margin: auto;
 }
 
 .left { float: left; }
