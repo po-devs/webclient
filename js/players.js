@@ -155,11 +155,6 @@ Array.prototype.dichotomy = function(func) {
 /* The list of players */
 function PlayerList () {
     this.ids = [];
-    $("#player-dialog").dialog({
-        autoOpen: false,
-        modal: true,
-        resizeable: false
-    });
 }
 
 PlayerList.prototype.setPlayers = function(playerIds) {
@@ -172,35 +167,6 @@ PlayerList.prototype.setPlayers = function(playerIds) {
         list.append(this.createPlayerItem(id));
     }, this);
     this.ids = playerIds;
-
-    // TODO: maybe not the correct place for this?
-    $("#player-list").off("click");
-    $("#player-list").on("click", "li", function(event) {
-        var id = event.currentTarget.id.split("-")[1];
-        var dialog = $("#player-dialog");
-        dialog.dialog("option", "title", players.name(id));
-        var buttons = [
-            {
-                text: "Send Private Message",
-                click: function() { pms.pm(id); }
-            }
-        ];
-        if (players.isIgnored(id)) {
-            buttons.push({
-                text: "Unignore",
-                click: function() { players.removeIgnore(id); $(this).dialog("close"); }
-            });
-        } else {
-            buttons.push({
-                text: "Ignore",
-                click: function() { players.addIgnore(id); $(this).dialog("close"); }
-            });
-        }
-        dialog.dialog("option", "buttons", buttons);
-        dialog.dialog("option", "position", [event.pageX, event.pageY]);
-        dialog.dialog("open");
-
-    });
 }
 
 PlayerList.prototype.createPlayerItem = function(id) {

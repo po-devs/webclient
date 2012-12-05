@@ -200,6 +200,38 @@
             <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
         </p> -->
         <script type="text/javascript">
+            $("#player-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                resizeable: false
+             });
+
+            $("#player-list").on("click", "li", function(event) {
+                var id = event.currentTarget.id.split("-")[1];
+                var dialog = $("#player-dialog");
+                dialog.dialog("option", "title", players.name(id));
+                var buttons = [
+                    {
+                        text: "Send Private Message",
+                        click: function() { pms.pm(id); dialog.dialog("close"); }
+                    }
+                ];
+                if (players.isIgnored(id)) {
+                    buttons.push({
+                        text: "Unignore",
+                        click: function() { players.removeIgnore(id); dialog.dialog("close"); }
+                    });
+                } else {
+                    buttons.push({
+                        text: "Ignore",
+                        click: function() { players.addIgnore(id); dialog.dialog("close"); }
+                    });
+                }
+                dialog.dialog("option", "buttons", buttons);
+                dialog.dialog("option", "position", [event.pageX, event.pageY]);
+                dialog.dialog("open");
+            });
+
             // Make register button disabled
             $("#register").attr("disabled", true);
             
