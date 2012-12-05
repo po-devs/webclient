@@ -3,6 +3,7 @@ function Players () {
     this.names = {};
 
     this.friends = [];
+    this.ignores = {};
 }
 
 Players.prototype.login = function(id, info) {
@@ -43,6 +44,20 @@ Players.prototype.addPlayer = function (players) {
 Players.prototype.addFriend = function(id) {
     if (this.friends.indexOf(id) === -1) this.friends.push(id);
     if (id in this.players) this.players[id].friend = true;
+}
+
+Players.prototype.addIgnore = function(id) {
+    this.ignores[id] = true;
+    if (id in this.players) this.players[id].ignored = true;
+}
+
+Players.prototype.removeIgnore = function(id) {
+    delete this.ignores[id];
+    if (id in this.players) this.players[id].ignored = false;
+}
+
+Players.prototype.isIgnored = function(id) {
+    return id in this.players && this.players[id].ignored;
 }
 
 Players.prototype.removePlayer = function (id) {
