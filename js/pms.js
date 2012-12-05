@@ -6,6 +6,8 @@ PMs.prototype.pm = function(pid) {
     if (pid in this.pms) {
         return this.pms[pid];
     }
+    if (players.isIgnored(pid))
+        return;
     this.pms[pid] = new PM(pid);
     return this.pms[pid];
 }

@@ -3,6 +3,7 @@ function Players () {
     this.names = {};
 
     this.friends = [];
+    this.ignores = {};
 }
 
 Players.prototype.login = function(id, info) {
@@ -43,6 +44,20 @@ Players.prototype.addPlayer = function (players) {
 Players.prototype.addFriend = function(id) {
     if (this.friends.indexOf(id) === -1) this.friends.push(id);
     if (id in this.players) this.players[id].friend = true;
+}
+
+Players.prototype.addIgnore = function(id) {
+    this.ignores[id] = true;
+    if (id in this.players) this.players[id].ignored = true;
+}
+
+Players.prototype.removeIgnore = function(id) {
+    delete this.ignores[id];
+    if (id in this.players) this.players[id].ignored = false;
+}
+
+Players.prototype.isIgnored = function(id) {
+    return id in this.players && this.players[id].ignored;
 }
 
 Players.prototype.removePlayer = function (id) {
@@ -140,6 +155,11 @@ Array.prototype.dichotomy = function(func) {
 /* The list of players */
 function PlayerList () {
     this.ids = [];
+    $("#player-dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        resizeable: false
+    });
 }
 
 PlayerList.prototype.setPlayers = function(playerIds) {
@@ -152,6 +172,35 @@ PlayerList.prototype.setPlayers = function(playerIds) {
         list.append(this.createPlayerItem(id));
     }, this);
     this.ids = playerIds;
+
+    // TODO: maybe not the correct place for this?
+    $("#player-list").off("click");
+    $("#player-list").on("click", "li", function(event) {
+        var id = event.currentTarget.id.split("-")[1];
+        var dialog = $("#player-dialog");
+        dialog.title(players.name(id));
+        var buttons = [
+            {
+                text: "Send Private Message",
+                click: function() { pms.pm(id); }
+            }
+        ];
+        if (players.isIgnored(id)) {
+            buttons.push({
+                text: "Unignore",
+                click: function() { players.removeIgnore(id); $(this).dialog("close"); }
+            });
+        } else {
+            buttons.push({
+                text: "Ignore",
+                click: function() { players.addIgnore(id); $(this).dialog("close"); }
+            });
+        }
+        dialog.dialog("option", "buttons", buttons);
+        dialog.dialog("option", "position", [event.pageX, event.pageY]);
+        dialog.dialog("open");
+
+    });
 }
 
 PlayerList.prototype.createPlayerItem = function(id) {

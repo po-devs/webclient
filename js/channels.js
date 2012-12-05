@@ -182,6 +182,8 @@ Channel.prototype.print = function (msg, html, noParse) {
             if (msg.indexOf(":") !== -1 && !action) {
                 var pref = msg.substr(0, msg.indexOf(":"));
                 var id = players.id(pref);
+                if (players.isIgnored(id))
+                    return;
 
                 if (pref === "~~Server~~") {
                     pref = "<span class='server-message'>" + pref + ":</span>";
