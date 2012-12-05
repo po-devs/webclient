@@ -60,6 +60,10 @@ body {
     padding-bottom: 0;
 }
 
+#channel-tabs input[type="text"] {
+    width: 500px;
+}
+
 #chatTextArea {
 
 }
