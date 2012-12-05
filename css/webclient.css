@@ -47,6 +47,7 @@ body {
     background: none repeat scroll 0% 0% rgb(255, 255, 255);
     border: 1px solid rgb(107, 145, 171);
     padding: 4px 5px;
+    margin-bottom: 4px;
     outline: 0px none;
     overflow: auto;
     border-radius: 2px;
