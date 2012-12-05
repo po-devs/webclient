@@ -49,7 +49,7 @@
                     $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-44);
                 });
                 $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
-                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val()}));
+                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.name(players.myid)}));
                     }
                 });
                 $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
