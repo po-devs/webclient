@@ -178,7 +178,7 @@ PlayerList.prototype.setPlayers = function(playerIds) {
     $("#player-list").on("click", "li", function(event) {
         var id = event.currentTarget.id.split("-")[1];
         var dialog = $("#player-dialog");
-        dialog.title(players.name(id));
+        dialog.dialog("option", "title", players.name(id));
         var buttons = [
             {
                 text: "Send Private Message",
