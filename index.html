@@ -197,7 +197,7 @@
                             <button onClick="channels.leaveChannel(0);">Leave Channel</button>
                             <button id="color" name="color" onclick="openColorPicker()"/>Color</button>
                             <div id="colorDialog" title="Trainer name &amp; color">
-                                Name <input type="text" id="trainer-name" />
+                                Name <input type="text" id="trainer-name" onkeydown="if(event.keyCode==13){event.stopPropagation(); $('#colorDialog').dialog('close');}"/>
                                 <div id="colorPicker"></div>
                             </div>
                         </p>
