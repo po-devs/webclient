@@ -44,10 +44,10 @@
                 });
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
                     var hrefid = $(ui.tab).attr("href");
-                    $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-40);
+                    $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-44);
                 });
                 $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
-                $("#chatTextArea").height($("#channel-tabs").height()-$("#chatTextArea").position().top-40);
+                $("#chatTextArea").height($("#channel-tabs").height()-$("#chatTextArea").position().top-44);
                 $(document).on("click", "a", function (event) {
                     var href = this.href;
 
