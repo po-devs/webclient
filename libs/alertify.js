@@ -31,6 +31,7 @@
 				cancel : "<a href=\"#\" class=\"alertify-button alertify-button-cancel\" id=\"aCancel\">{{cancel}}</a>"
 			},
 			input   : "<input type=\"text\" class=\"alertify-text\" id=\"aText\">",
+			pass    : "<input type=\"password\" class=\"alertify-text\" id=\"aText\">",
 			message : "<p class=\"alertify-message\">{{message}}</p>",
 			log     : "<article class=\"alertify-log{{class}}\">{{message}}</article>"
 		};
@@ -160,17 +161,18 @@
 
 			html += "<div class=\"alertify-dialog\">";
 
-			if (type === "prompt") html += "<form id=\"aForm\">";
+			if (type === "prompt" || type === "pass") html += "<form id=\"aForm\">";
 
 			html += "<article class=\"alertify-inner\">";
 			html += dialogs.message.replace("{{message}}", message);
 
 			if (type === "prompt") html += dialogs.input;
+			if (type === "pass") html += dialogs.pass;
 
 			html += dialogs.buttons.holder;
 			html += "</article>";
 
-			if (type === "prompt") html += "</form>";
+			if (type === "prompt" || type === "pass") html += "</form>";
 
 			html += "<a id=\"aResetFocus\" class=\"alertify-resetFocus\" href=\"#\">Reset Focus</a>";
 			html += "</div>";
@@ -181,6 +183,7 @@
 				html = html.replace("{{ok}}", this.labels.ok).replace("{{cancel}}", this.labels.cancel);
 				break;
 			case "prompt":
+			case "pass":
 				html = html.replace("{{buttons}}", dialogs.buttons.cancel + dialogs.buttons.submit);
 				html = html.replace("{{ok}}", this.labels.ok).replace("{{cancel}}", this.labels.cancel);
 				break;
@@ -388,6 +391,7 @@
 			init    : init,
 			log     : function (message, type, wait) { log.call(this, message, type, wait); return this; },
 			prompt  : function (message, fn) { dialog.call(this, message, "prompt", fn); return this; },
+			pass  : function (message, fn) { dialog.call(this, message, "pass", fn); return this; },
 			success : function (message, wait) { log.call(this, message, "success", wait); return this; },
 			error   : function (message, wait) { log.call(this, message, "error", wait); return this; },
 			delay   : delay,

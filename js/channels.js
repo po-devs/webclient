@@ -109,7 +109,7 @@ function Channel(id, name) {
         $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" id="send-channel-'+id+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
+                                      +'<p><input type="text" id="send-channel-'+id+'" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
                                          +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button>'
                                          +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
     }
