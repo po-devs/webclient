@@ -5,10 +5,12 @@
         <link rel="stylesheet" href="css/reset.css" />
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
         <link rel="stylesheet" href="libs/alertify.css" />
+        <link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />
         <link rel="stylesheet" href="css/webclient.css" />
         <link rel="stylesheet" href="css/chat.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+        <script src="libs/farbtastic.js" type="text/javascript"></script>
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
         <script src="js/players.js"></script>
@@ -145,6 +147,8 @@
                             <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
                             <button id="register" onClick="wannaRegister()">Register</button>
                             <button onClick="channels.leaveChannel(0);">Leave Channel</button>
+                            <button id="color" name="color" onclick="openColorPicker()"/>Color</button>
+                            <div id="colorPicker" style="display:none";></div>
                         </p>
                     </div>
                 </div>
@@ -163,6 +167,45 @@
                     return;
                 }
                 websocket.send("register|");
+            }
+
+            colorPickerTriggered = false;
+            var colorPickerColor;
+            function openColorPicker() {
+                var colorPicker = $("#colorPicker");
+                colorPicker.css({
+                    "position":"absolute",
+                    "top": ($("#color").position().top - 200) + "px",
+                    "left": ($("#color").position().left-70) + "px",
+                    "display": "block"
+                });
+                if (!colorPickerTriggered) {
+                    colorPicker.farbtastic(function(color) {colorPickerColor = color;});
+                    colorPickerTriggered = true;
+                }
+
+                var firstTrigger = true;
+
+                var colorFunc = function(event, object) {
+                    if (firstTrigger) {firstTrigger = false; return;}
+                    var x = colorPicker.position().left;
+                    var y = colorPicker.position().top;
+                    var maxx = x + colorPicker.width();
+                    var maxy = y + colorPicker.height();
+
+                    if (event.pageX >= x && event.pageX < maxx && event.pageY >= y && event.pageY < maxy) {
+                        /* click inside the color picker */
+                    } else {
+                        /* If we click outside the color picker, we make it disappear */
+                        event.preventDefault();
+                        colorPicker.css({"display":"none"});
+                        $(document).off("click", colorFunc);
+
+                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor}));
+                    }
+                }
+
+                $(document).on("click", colorFunc);
             }
             
             websocket = null;
