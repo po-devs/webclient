@@ -1,3 +1,47 @@
+html, body, .container, .sidebar, #channel-tabs {
+    height: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+}
+
+.left { float: left; }
+.right { float: right; }
+.clear { clear: both; }
+
+.container {
+    width: 100%;
+    background-color: #eeeeee;
+}
+
+.sidebar {
+    background: #191919;
+    /*float: left;*/
+    width: 200px;
+}
+
+.contents {
+    height: 100%;
+    /*margin-left: 207px;*/margin-left: 7px;
+    background-color: #FFF;
+    border-left: 1px solid #e2e2e2;
+}
+
+.logo {
+    font-size: 50px;
+    font-weight: 100;
+    color: #4c4c4c;
+    margin: 20px 10px;
+    text-align: right;
+}
+
+/*.logo:before {
+    content: "[BETA]";
+    position: relative;
+}*/
+
 .textbox {
     font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
     background: none repeat scroll 0% 0% rgb(255, 255, 255);
@@ -10,10 +54,11 @@
 
 #channel-tabs {
     font-size: 13px;
+    height: 100%;
 }
 
 #chatTextArea {
-    width:800px;height:450px;
+
 }
 
 .announcement {
@@ -33,8 +78,19 @@
 }
 
 .player-list {
+    /*height: 600px;*/
     overflow: auto;
-    height: 600px;
+}
+
+.player-list-item {
+    font-size: 13px;
+    color: #616161;
+    line-height: 2;
+    padding-left: 18px;
+}
+
+.player-list-item:hover, .player-list-item.selected {
+    background-color: #252525;
 }
 
 /* Moves the client part into the centre:

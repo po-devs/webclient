@@ -17,6 +17,7 @@
         <script src="js/formatting.js"></script>
         <script>
             $(function() {
+                $("#player-list").height($(window).height()-$("#player-list").offset().top);
                 $("#channel-tabs").tabs()
                     .find(".ui-tabs-nav")
                     .sortable({
@@ -41,6 +42,12 @@
                         playerList.setPlayers(pms.pm(pid).players());
                     }
                 });
+                $("#channel-tabs").bind('tabsshow', function(event, ui) {
+                    var hrefid = $(ui.tab).attr("href");
+                    $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-40);
+                });
+                $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
+                $("#chatTextArea").height($("#channel-tabs").height()-$("#chatTextArea").position().top-40);
                 $(document).on("click", "a", function (event) {
                     var href = this.href;
 
@@ -110,53 +117,43 @@
         </script>
     </head>
     <body>
-        <p>
+        <p style="display: none;">
             Relay station
             <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
             <button onClick="initWebsocket();">Connect</button>
             <button onClick="stopWebsocket();">Disconnect</button>
             <button onClick="checkSocket();">State</button>
         </p>
-        <p class="client">
-            <table>
-                <tr>
-                    <td rowspan="2" valign="top">
+
+            <table class="container"><tr style="height: 100%"><td class="sidebar" style="vertical-align: top;">
+                <div class="logo">PO</div>
+                <p style="display: none">
+                    <input type="text" id="join-channel" onkeydown="if(event.keyCode==13)joinChannel();" placeholder="Join channel..."/>
+                </p>
+                    <ul class="player-list" id="player-list">
+                    </ul>
+            </td><td class="contents" style="vertical-align: top;">
+                <!--<div id="announcement" class="announcement"></div>-->
+                <div id="channel-tabs">
+                    <ul>
+                        <li><a href="#channel-0">Console</a></li>
+                    </ul>
+                    <div id="channel-0">
+                        <div id="chatTextArea" class="textbox"></div>
                         <p>
-                            <input type="text" id="join-channel" onkeydown="if(event.keyCode==13)joinChannel();" placeholder="Join channel..."/>
+                            <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
+                            <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
+                            <button id="register" onClick="wannaRegister()">Register</button>
+                            <button onClick="channels.leaveChannel(0);">Leave Channel</button>
                         </p>
-                        <div class="player-list">
-                            <ul id="player-list">
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="announcement" class="announcement"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="channel-tabs">
-                            <ul>
-                                <li><a href="#channel-0">Console</a></li>
-                            </ul>
-                            <div id="channel-0">
-                                <div id="chatTextArea" class="textbox"></div>
-                                <p>
-                                    <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
-                                    <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
-                                    <button id="register" onClick="wannaRegister()">Register</button>
-                                    <button onClick="channels.leaveChannel(0);">Leave Channel</button>
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </p>
-        <p>
+                    </div>
+                </div>
+            </td></tr></table>
+
+        <!-- /* Will be done later in user controls */ <p>
             <input type="checkbox" id="option-ConfirmExit">
             <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
-        </p>
+        </p> -->
         <script type="text/javascript">
             // Make register button disabled
             $("#register").attr("disabled", true);

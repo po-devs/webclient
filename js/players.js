@@ -155,7 +155,7 @@ PlayerList.prototype.setPlayers = function(playerIds) {
 }
 
 PlayerList.prototype.createPlayerItem = function(id) {
-    return $("<li class='player-list-item' id='player-"+id+"'>").append($("<span style='color:"+players.color(id)+"'>").html(players.name(id)));
+    return $("<li class='player-list-item' id='player-"+id+"'>").html(players.name(id));
 }
 
 PlayerList.prototype.addPlayer = function(id) {
