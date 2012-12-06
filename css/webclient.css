@@ -103,6 +103,15 @@ body {
     color: #616161;
     line-height: 2;
     padding-left: 18px;
+    cursor: pointer;
+
+    /* Can't be selected */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .player-list-item:hover, .player-list-item.selected {
