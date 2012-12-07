@@ -10,7 +10,8 @@ The host of the official PO relay station is ws://server.pokemon-online.eu:10508
 Libraries used:
 - jQuery
 - jQuery UI
-- https://github.com/fabien-d/alertify.js
-- http://www.webtoolkit.info/javascript-md5.html
-- http://www.bloggingdeveloper.com/post/JavaScript-QueryString-ParseGet-QueryString-with-Client-Side-JavaScript.aspx
-- http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
+- alertify https://github.com/fabien-d/alertify.js
+- md5 function http://www.webtoolkit.info/javascript-md5.html
+- getQueryString function http://www.bloggingdeveloper.com/post/JavaScript-QueryString-ParseGet-QueryString-with-Client-Side-JavaScript.aspx
+- farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
+- Pokemon Showdown http://play.pokemonshowdown.com/
