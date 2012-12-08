@@ -356,7 +356,7 @@
                         displayMessage( "DISCONNECTED" );
                     };
                     websocket.onmessage = function( evt ) {
-                        if (!/^players/.test(evt.data) || evt.data.length < 100) {
+                        if (evt.data.length < 120) {
                             console.log( "Message received :", evt.data );
                         }
 
