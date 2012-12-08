@@ -97,4 +97,5 @@ PM.prototype.print = function(pid, msg) {
 
 PM.prototype.close = function() {
     $('#channel-tabs').tabs("remove", "#pm-" + this.id);
+    delete pms.pms[this.id];
 }
