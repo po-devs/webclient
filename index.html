@@ -12,7 +12,7 @@
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script src="libs/farbtastic.js" type="text/javascript"></script>
         <script src="libs/md5.js"></script>
-        <script src="libs/querystring.js"></script>
+        <script src="libs/utilities.js"></script>
         <script src="js/battles.js"></script>
         <script src="js/players.js"></script>
         <script src="js/pms.js"></script>
@@ -86,6 +86,7 @@
                             }
                         } else if (params[0] == "watch") {
                             var bid = params[1];
+                            initBattleData();
                             websocket.send("watch|"+bid);
                         }
                         // TODO: watchbattle(id/name), reconnect(void)
@@ -172,6 +173,34 @@
                     localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
                 });
             });
+
+            var dataInitiated = false;
+            initBattleData = function() {
+                if (dataInitiated) {
+                    return;
+                }
+                /* Loading PS files */
+                /* TODO: Show a loading image for the time it takes to load all this */
+                dataInitiated = 'loading';
+
+                loadjscssfile("libs/ps/js/battledata.js", "js");
+                loadjscssfile("libs/ps/data/pokedex-mini.js", "js");
+                loadjscssfile("libs/ps/js/battle.js", "js");
+                /* <script src="/js/sim.js?v0.7.18.4"></script>*/
+                /* loadjscssfile("libs/ps/data/learnsets.js", "js"); */
+                loadjscssfile("libs/ps/data/graphics.js", "js");
+                loadjscssfile("libs/ps/data/pokedex.js", "js");
+                loadjscssfile("libs/ps/formats-data.js", "js");
+                loadjscssfile("libs/data/moves.js", "js");
+                loadjscssfile("libs/data/items.js", "js");
+                loadjscssfile("libs/data/abilities.js", "js");
+                loadjscssfile("libs/data/formats.js", "js");
+                loadjscssfile("libs/data/items.js", "js");
+                /* loadjscssfile("libs/data/typechart.js", "js"); */
+                loadjscssfile("libs/js/utilichart.js", "js");
+                /* loadjscssfile("libs/data/aliases.js", "js"); */
+                dataInitiated = true;
+            };
         </script>
     </head>
     <body>

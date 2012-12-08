@@ -8,7 +8,7 @@ PMs.prototype.pm = function(pid) {
     }
     if (players.isIgnored(pid))
         return;
-    this.pms[pid] = new PM(pid);
+    new PM(pid);
     return this.pms[pid];
 }
 

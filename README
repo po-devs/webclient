@@ -14,4 +14,5 @@ Libraries used:
 - md5 function http://www.webtoolkit.info/javascript-md5.html
 - getQueryString function http://www.bloggingdeveloper.com/post/JavaScript-QueryString-ParseGet-QueryString-with-Client-Side-JavaScript.aspx
 - farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
+- loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
 - Pokemon Showdown http://play.pokemonshowdown.com/

@@ -15,10 +15,12 @@ Battles.prototype.watchBattle = function(bid, conf) {
         console.log("Already watching battle " + bid + " with conf " + JSON.stringify(conf));
         return;
     }
-    this.battles[bid] = new Battle(bid, conf);
+    new Battle(bid, conf);
 }
 
 function Battle(pid, conf) {
+    initBattleData();
+
     this.id = pid;
     this.conf = conf;
 
