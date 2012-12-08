@@ -40,6 +40,7 @@ function PM(pid) {
                                       +'<p><input type="text" id="send-pm-'+pid+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
                                       +' <button onClick="sendMessage(document.getElementById(\'send-pm-'+pid+'\'));">Send</button>'
                                       +' <button onClick="pms.pm(' + pid + ').close();">Close</button></p>');
+        pms.pm[pid] = this;
         $('#channel-tabs').tabs("select", "#pm-"+pid);
     }
 }

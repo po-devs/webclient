@@ -13,6 +13,7 @@
         <script src="libs/farbtastic.js" type="text/javascript"></script>
         <script src="libs/md5.js"></script>
         <script src="libs/querystring.js"></script>
+        <script src="js/battles.js"></script>
         <script src="js/players.js"></script>
         <script src="js/pms.js"></script>
         <script src="js/channels.js"></script>
@@ -42,6 +43,9 @@
                     } else if (/^#pm-/.test(hrefid)) {
                         var pid = hrefid.substr(hrefid.indexOf("-")+1);
                         playerList.setPlayers(pms.pm(pid).players());
+                    } else if (/^#battle-/.test(hrefid)) {
+                        var pid = hrefid.substr(hrefid.indexOf("-")+1);
+                        playerList.setPlayers(battles.battle(pid).players());
                     }
                 });
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
@@ -63,9 +67,9 @@
                         var params = [href.slice(3, href.indexOf("/")), href.slice(href.indexOf("/")+1)];
 
                         // Add other commands here..
-                        var pid = players.id(params[2]);
+                        var pid = players.id(params[1]);
                         if (pid === -1)
-                            pid = parseInt(params[2]);
+                            pid = parseInt(params[1]);
                         if (params[0] === "join") {
                             joinChannel(params[1]);
                         } else if (params[0] == "pm") {
@@ -80,8 +84,11 @@
                                     players.removeIgnore(pid);
                                 }
                             }
+                        } else if (params[0] == "watch") {
+                            var bid = params[1];
+                            websocket.send("watch|"+bid);
                         }
-                        // TODO: watch(id), watchbattle(id/name), reconnect(void)
+                        // TODO: watchbattle(id/name), reconnect(void)
                     } else {
                         /* Make sure link opens in a new window */
                         this.target = "_blank";
@@ -119,6 +126,7 @@
                 players = new Players();
                 pms = new PMs();
                 channels = new Channels();
+                battles = new Battles();
                 currentChannel = 0;
 
                 $("#join-channel").autocomplete({
@@ -348,7 +356,7 @@
                         displayMessage( "DISCONNECTED" );
                     };
                     websocket.onmessage = function( evt ) {
-                        if (evt.data.length < 100) {
+                        if (!/^players/.test(evt.data) || evt.data.length < 100) {
                             console.log( "Message received :", evt.data );
                         }
 
@@ -520,11 +528,15 @@
                 } else if (cmd === "login") {
                     var params = JSON.parse(data);
                     players.login(params.id, params.info);
-                } else if (cmd == "unregistered") {
+                } else if (cmd === "unregistered") {
                     $("#register").attr("disabled", false);
-                } else if (cmd == "pm") {
+                } else if (cmd === "pm") {
                     var params = JSON.parse(data);
                     pms.pm(params.src).print(params.src, params.message);
+                } else if (cmd === "watchbattle") {
+                    var id = data.split("|")[0];
+                    var params = JSON.parse(data.slice(id.length+1));
+                    battles.watchBattle(+(id), params);
                 }
             };
 
