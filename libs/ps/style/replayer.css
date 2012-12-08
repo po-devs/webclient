@@ -4,22 +4,22 @@ License: GPLv2
   <http://www.gnu.org/licenses/gpl-2.0.html>
 
 */
-
+/*
 html, body
 {
-	margin: 0;
-	padding: 0;
-	text-align: center; /* lol, I don't support ie6 anyway */
-	font-family: Verdana, sans-serif;
-	font-size: 11pt;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-family: Verdana, sans-serif;
+    font-size: 11pt;
 }
 body
 {
-	position: relative;
-	background: #FAFCFE;
-}
+    position: relative;
+    background: #FAFCFE;
+}*/
 
-.header {
+/*.header {
 	margin: 0;
 	background: #E1E8F2;
 
@@ -35,7 +35,7 @@ body
 .header-inner {
 	max-width: 550px;
 	margin: 0 auto;
-}
+}*/
 .nav, .nav li, .nav-play, .nav-play li {
 	display: block;
 	list-style: none;

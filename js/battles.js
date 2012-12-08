@@ -15,10 +15,10 @@ Battles.prototype.watchBattle = function(bid, conf) {
         console.log("Already watching battle " + bid + " with conf " + JSON.stringify(conf));
         return;
     }
-    new Battle(bid, conf);
+    new BattleTab(bid, conf);
 }
 
-function Battle(pid, conf) {
+function BattleTab(pid, conf) {
     initBattleData();
 
     this.id = pid;
@@ -30,10 +30,8 @@ function Battle(pid, conf) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#battle-" + pid, name);
         /* Cleaner solution would be appreciated */
-        $("#battle-" + pid).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" disabled="true" id="send-battle-'+pid+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                      +' <button onClick="sendMessage(document.getElementById(\'send-pm-'+pid+'\'));">Send</button>'
-                                      +' <button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
+        $("#battle-" + pid).html('<div class="battlewrapper"><div class="battle">Battle is here</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">Connecting...</div><div class="replay-controls"></div></div>'
+                                 +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
         $('#channel-tabs').tabs("select", "#battle-"+pid);
     }
@@ -41,16 +39,16 @@ function Battle(pid, conf) {
     this.print(JSON.stringify(conf));
 }
 
-Battle.prototype.players = function() {
+BattleTab.prototype.players = function() {
     return this.conf.players;
 }
 
-Battle.prototype.chat = function () {
+BattleTab.prototype.chat = function () {
     return $("#battle-" + this.id + " #chatTextArea");
 }
 
 
-Battle.prototype.print = function(msg) {
+BattleTab.prototype.print = function(msg) {
     var chatTextArea = this.chat().get(0);
 
     chatTextArea.innerHTML += msg + "<br/>\n";
@@ -62,7 +60,8 @@ Battle.prototype.print = function(msg) {
     chatTextArea.scrollTop = chatTextArea.scrollHeight;
 }
 
-Battle.prototype.close = function() {
+BattleTab.prototype.close = function() {
+    delete battles.battles[this.id];
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
     websocket.send("stopwatching|"+this.id);
 }
