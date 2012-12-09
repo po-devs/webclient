@@ -166,6 +166,7 @@ Channel.prototype.chat = function () {
 
 Channel.prototype.print = function (msg, html, noParse) {
     var chatTextArea = this.chat().get(0);
+    var scrollDown = chatTextArea.scrollTop >= chatTextArea.scrollHeight - chatTextArea.offsetHeight;
 
     if (!noParse) {
         if (html) {
@@ -206,7 +207,9 @@ Channel.prototype.print = function (msg, html, noParse) {
     if (this.chatCount++ % 500 === 0) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
+    if (scrollDown) {
+        chatTextArea.scrollTop = chatTextArea.scrollHeight;
+    }
 }
 
 Channel.prototype.changeName = function (name) {
