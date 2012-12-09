@@ -5,12 +5,24 @@ License: GPLv2
 
 */
 
+/******************/
+/** Added for PO **/
+/******************/
+.battlewrapper
+{
+    height: 400px;
+    position: relative;
+}
+/******************/
+/* End of PO code */
+/******************/
+
 .battle
 {
 	position: absolute;
 	text-align: left;
-	top: 9px;
-	left: -1px;
+    top: 9px;
+    left: -1px;
 	border: 1px solid #AAAAAA;
 	background: #CFD5DA;
 	width: 640px;
@@ -25,8 +37,8 @@ License: GPLv2
 	width: 700px;
 	height: 500px;
 	position: absolute;
-	top: -90px;
-	left: -50px;
+    top: -90px;
+    left: -50px;
 	background: transparent url(/fx/bg-beach.png) no-repeat scroll left top;
 	opacity: 0.6;
 }
@@ -50,8 +62,8 @@ License: GPLv2
 	text-align: left;
 	border: 1px solid #AAAAAA;
 	background: #EEF2F5;
-	top: 369px;
-	left: 640px;
+    top: 369px;
+    left: 640px;
 	right: -1px;
 
 	font-family: Verdana, sans-serif;
@@ -63,8 +75,8 @@ License: GPLv2
 	text-align: left;
 	border: 1px solid #AAAAAA;
 	background: #EEF2F5;
-	top: 9px;
-	left: 640px;
+    top: 9px;
+    left: 640px;
 	right: -1px;
 	height: 360px;
 
@@ -135,8 +147,8 @@ License: GPLv2
 {
 	position: absolute;
 	display: block;
-	top: 160px;
-	left: 0;
+    top: 160px;
+    left: 0;
 	right: 0;
 	text-align: center;
 }
@@ -149,8 +161,8 @@ License: GPLv2
 {
 	position: absolute;
 	display: none;
-	top: 0;
-	left: 0;
+    top: 0;
+    left: 0;
 	bottom: 0;
 	right: 0;
 }
@@ -210,7 +222,7 @@ License: GPLv2
 	font-size: 9px;
 	width: 32px;
 	height: 12px;
-	top: -1px;
+    top: -1px;
 	text-align: center;
 }
 .statbar .hpbar .hptextborder
@@ -220,7 +232,7 @@ License: GPLv2
 	border-top: 1px solid #777777;
 	border-bottom: 1px solid #777777;
 	width: 4px;
-	top: -1px;
+    top: -1px;
 	height: 10px;
 }
 .rstatbar .hpbar .hptext
@@ -308,8 +320,8 @@ License: GPLv2
 .leftbar
 {
 	position: absolute;
-	top: 0;
-	left: 0;
+    top: 0;
+    left: 0;
 	height: 450px;
 	width: 100px;
 	background-color: #CCCCCC;
@@ -320,7 +332,7 @@ License: GPLv2
 .rightbar
 {
 	position: absolute;
-	top: 0;
+    top: 0;
 	right: 0;
 	height: 450px;
 	width: 100px;
@@ -375,8 +387,8 @@ License: GPLv2
 {
 	position: absolute;
 	display: none;
-	top: 10px;
-	left: 110px;
+    top: 10px;
+    left: 110px;
 	font-size: 13pt;
 	font-weight: bold;
 	margin: 0;
@@ -391,7 +403,7 @@ License: GPLv2
 	position: absolute;
 	display: none;
 	bottom: 10px;
-	left: 110px;
+    left: 110px;
 	right: 110px;
 	color: #CCCCCC;
 	background: #222222;
@@ -419,8 +431,8 @@ License: GPLv2
 {
 	position: absolute;
 	display: none;
-	top: 0;
-	left: 0;
+    top: 0;
+    left: 0;
 	right: 0;
 	bottom: 0;
 }
@@ -586,8 +598,8 @@ License: GPLv2
 	position: absolute;
 	height: 27px;
 	width: 66px;
-	top: -1px;
-	left: -1px;
+    top: -1px;
+    left: -1px;
 }
 .swf_timedout#sm2-container .inner,
 .movieContainer#sm2-container .inner
@@ -604,8 +616,8 @@ License: GPLv2
 	position: absolute;
 	height: 27px;
 	width: 27px;
-	top: -1px;
-	left: -87px;
+    top: -1px;
+    left: -87px;
 }
 #sm2-container .inner,
 .swf_loaded#sm2-container .inner
