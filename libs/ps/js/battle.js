@@ -3817,23 +3817,19 @@ function Battle(frame, logFrame, noPreload) {
 		if (name.substr(0, 4) === 'p2: ' || name === 'p2') {
 			siden = self.p2.n;
 			name = name.substr(4);
-			species = name;
 		} else if (name.substr(0, 4) === 'p1: ' || name === 'p1') {
 			siden = self.p1.n;
 			name = name.substr(4);
-			species = name;
 		} else if (name.substr(0, 2) === 'p2' && name.substr(3, 2) === ': ') {
 			slot = slotChart[name.substr(2,1)];
 			siden = self.p2.n;
 			name = name.substr(5);
 			pokemonid = 'p2: '+name;
-			species = name;
 		} else if (name.substr(0, 2) === 'p1' && name.substr(3, 2) === ': ') {
 			slot = slotChart[name.substr(2,1)];
 			siden = self.p1.n;
 			name = name.substr(5);
 			pokemonid = 'p1: '+name;
-			species = name;
 		}
 
 		if (!slot) slot = 0;

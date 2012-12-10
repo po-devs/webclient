@@ -474,11 +474,12 @@ var Tools = {
 			"kyuremblack": 739,
 			"kyuremwhite": 740,
 			"keldeoresolution": 741
-		};*/
+		};
 		if (altNums[id]) {
 			num = altNums[id];
 		}
-/*		if (pokemon && pokemon.gender === 'F') {
+
+		if (pokemon && pokemon.gender === 'F') {
 			if (id === 'unfezant') num = 708;
 			else if (id === 'frillish') num = 721;
 			else if (id === 'jellicent') num = 722;

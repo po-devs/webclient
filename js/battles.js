@@ -30,7 +30,7 @@ function BattleTab(pid, conf) {
     if ($("#battle-" + pid).length === 0) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#battle-" + pid, name);
-        /* Cleaner solution would be appreciated */
+        /* Cleaner solution to create the tab would be appreciated */
         var $content = $("#battle-" + pid);
         $content.html('<div class="battlewrapper"><div class="battle">Battle is here</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">Connecting...</div><div class="replay-controls"></div></div>'
                                  +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
@@ -47,17 +47,22 @@ function BattleTab(pid, conf) {
         this.joinElem = null;
         this.foeHintElem = elem.find('.foehint');
 */
-        /* Showdown battle window */
+        /* Create a showdown battle window */
         this.battle = new Battle($battle, $chatFrame);
 
         this.battle.runMajor(["player", "p1", players.name(conf.players[0])]);
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
         this.battle.runMajor(["start"]);
         this.battle.runMajor(["tier", "Wifi OU"]);
+        if (conf.rated) {
+            this.battle.runMajor(["rated"]);
+        }
         this.battle.runMajor(["turn", "0"]);
-        this.battle.runMajor(["turn", "1"]);
-        this.battle.runMajor(["turn", "2"]);
-        this.battle.runMajor(["turn", "3"]);
+        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
+        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
+        //this.battle.runMajor(["turn", "1"]);
+        //this.battle.runMajor(["turn", "2"]);
+        //this.battle.runMajor(["turn", "3"]);
     }
 
     this.print(JSON.stringify(conf));
