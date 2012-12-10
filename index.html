@@ -30,6 +30,8 @@
                             $("#channel-tabs").tabs("refresh");
                         }
                      }); // Makes the channel tabs sortable.
+
+                /* Gets the current object owning a tab from the hrefid of the tab */
                 var objFromId = function(hrefid) {
                     var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
                     if (/^#channel-/.test(hrefid)) {
