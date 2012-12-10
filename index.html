@@ -186,7 +186,7 @@
                     }
                 });
 
-                if (getQuerystring("autoconnect") === "true") {
+                if (getQueryString("autoconnect") === "true") {
                     initWebsocket();
                 }
 
@@ -334,7 +334,7 @@
             }
             
             websocket = null;
-            var queryString = getQuerystring('relay');
+            var queryString = getQueryString('relay');
             var announcement = $("#announcement");
 
             if (queryString !== '') {
@@ -481,7 +481,7 @@
                         send localhost */
                     var server = data.replace("localhost", relayIP);
 
-                    var serverQuerystring = getQuerystring("server");
+                    var serverQuerystring = getQueryString("server");
                     if (serverQuerystring === "default") {
                         console.log("Message sent: '" + "connect|" + data + "'");
                         websocket.send("connect|" + data);
@@ -506,8 +506,13 @@
                     displayMessage("Connected to server!");
 
                     var data = {version: 1};
-                    if (getQuerystring("user")) {
-                        data.name = getQuerystring("user");
+                    if (getQueryString("user")) {
+                        data.name = getQueryString("user");
+                        data.default = getQueryString("channel");
+                        data.autojoin = getQueryString("autojoin");
+                        if (data.autojoin) {
+                            data.autojoin = data.autojoin.split(",");
+                        }
                         websocket.send("login|"+JSON.stringify(data));
                     } else {
                         var oldLabel = alertify.labels.cancel + '';

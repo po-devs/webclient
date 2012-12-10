@@ -1,5 +1,4 @@
-function getQuerystring(key, default_,query_) {
-    if (default_==null) default_="";
+function getQueryString(key, default_,query_) {
     if (query_===undefined) query_=window.location.href;
     key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
     var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");

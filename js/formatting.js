@@ -61,11 +61,11 @@ function convertPOLinks(element) {
         switch (proto) {
             case "pokemon":
                 var poke = query.split("&")[0] || "1",
-                    gen = getQuerystring("gen", "5", query),
-                    shiny = getQuerystring("shiny", "false", query) === "true",
-                    gender = getQuerystring("gender", "male", query),
-                    back = getQuerystring("back", "false", query) === "true",
-                    cropped = getQuerystring("cropped", "false", query) === "true";
+                    gen = getQueryString("gen", "5", query),
+                    shiny = getQueryString("shiny", "false", query) === "true",
+                    gender = getQueryString("gender", "male", query),
+                    back = getQueryString("back", "false", query) === "true",
+                    cropped = getQueryString("cropped", "false", query) === "true";
                 img.error(function () {
                     if (gender == "female") {
                         gender = "male";

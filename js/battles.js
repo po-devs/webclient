@@ -31,10 +31,24 @@ function BattleTab(pid, conf) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#battle-" + pid, name);
         /* Cleaner solution would be appreciated */
-        $("#battle-" + pid).html('<div class="battlewrapper"><div class="battle">Battle is here</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">Connecting...</div><div class="replay-controls"></div></div>'
+        var $content = $("#battle-" + pid);
+        $content.html('<div class="battlewrapper"><div class="battle">Battle is here</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">Connecting...</div><div class="replay-controls"></div></div>'
                                  +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
         $('#channel-tabs').tabs("select", "#battle-"+pid);
+
+        var $battle = $content.find('.battle');
+        //this.controlsElem = elem.find('.replay-controls');
+        var $chatFrame = $content.find('.battle-log');
+/*
+        this.chatElem = null;
+        this.chatAddElem = elem.find('.battle-log-add');
+        this.chatboxElem = null;
+        this.joinElem = null;
+        this.foeHintElem = elem.find('.foehint');
+*/
+        /* Showdown battle window */
+        this.battle = new Battle($battle, $chatFrame);
     }
 
     this.print(JSON.stringify(conf));
