@@ -4490,6 +4490,8 @@ function Battle(frame, logFrame, noPreload) {
 		//self.preloadAudio('audio/bw-trainer-battle.mp3');
 	}
 	this.preloadAudio = function (url, autoplay) {
+        return; /**** PO Edit: no sounds ****/
+
 		if (noPreload) return;
 		var token = url.replace(/\.(wav|mp3)$/, '').replace(/\//g, '-');
 		if (self.preloadCache[token]) {
@@ -4627,6 +4629,8 @@ function Battle(frame, logFrame, noPreload) {
 	// 1 = playing
 	// 2 = paused
 	this.soundStart = function () {
+        return; /**** PO Edit: no sounds ****/
+
 		if (self.mute) return;
 		if (self.soundState === 0) {
 			self.soundState = 1;
@@ -4639,10 +4643,14 @@ function Battle(frame, logFrame, noPreload) {
 		}
 	};
 	this.soundStop = function () {
+        return; /**** PO Edit: no sounds ****/
+
 		soundManager.stopAll();
 		self.soundState = 0;
 	};
 	this.soundPause = function () {
+        return; /**** PO Edit: no sounds ****/
+
 		if (self.soundState === 1) {
 			if (self.bgm) self.bgm.pause();
 			self.soundState = 2;
