@@ -49,6 +49,15 @@ function BattleTab(pid, conf) {
 */
         /* Showdown battle window */
         this.battle = new Battle($battle, $chatFrame);
+
+        this.battle.runMajor(["player", "p1", players.name(conf.players[0])]);
+        this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
+        this.battle.runMajor(["start"]);
+        this.battle.runMajor(["tier", "Wifi OU"]);
+        this.battle.runMajor(["turn", "0"]);
+        this.battle.runMajor(["turn", "1"]);
+        this.battle.runMajor(["turn", "2"]);
+        this.battle.runMajor(["turn", "3"]);
     }
 
     this.print(JSON.stringify(conf));
