@@ -13,6 +13,7 @@
         <script src="libs/farbtastic.js" type="text/javascript"></script>
         <script src="libs/md5.js"></script>
         <script src="libs/utilities.js"></script>
+        <script src="js/channeltab.js"></script>
         <script src="js/battles.js"></script>
         <script src="js/players.js"></script>
         <script src="js/pms.js"></script>
@@ -20,8 +21,8 @@
         <script src="js/formatting.js"></script>
         <script>
             $(function() {
-                $("#player-list").height($(window).height()-$("#player-list").offset().top);
-                $("#channel-tabs").tabs()
+                $('#player-list').height($(window).height()-$("#player-list").offset().top);
+                $('#channel-tabs').tabs()
                     .find(".ui-tabs-nav")
                     .sortable({
                         axis: "x",
@@ -29,31 +30,55 @@
                             $("#channel-tabs").tabs("refresh");
                         }
                      }); // Makes the channel tabs sortable.
+                var objFromId = function(hrefid) {
+                    var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
+                    if (/^#channel-/.test(hrefid)) {
+                        return channels.hasChannel(id) ? channels.channel(id) : undefined;
+                    } else if (/^#pm-/.test(hrefid)) {
+                        return pms.pm(id);
+                    } else if (/^#battle-/.test(hrefid)) {
+                        return battles.battle(id);
+                    }
+                }
+
+                currentTabObject = null;
+                currentChannel = -1;
+
                 $("#channel-tabs").bind('tabsselect', function(event, ui) {
                     var hrefid = $(ui.tab).attr("href");
+                    var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
 
+                    /* Changes the current object in memory */
+                    currentTabObject = objFromId(hrefid);
                     currentChannel = -1;
+
                     if (/^#channel-/.test(hrefid)) {
-                        var chan = hrefid.substr(hrefid.indexOf("-")+1);
-                        if (channels.hasChannel(chan)) {
-                            currentChannel = chan;
+                        if (channels.hasChannel(id)) {
+                            currentChannel = id;
                             /* Update player list when switching channels */
                             channels.channel(currentChannel).generatePlayerList();
                         }
                     } else if (/^#pm-/.test(hrefid)) {
-                        var pid = hrefid.substr(hrefid.indexOf("-")+1);
-                        playerList.setPlayers(pms.pm(pid).players());
+                        playerList.setPlayers(pms.pm(id).players());
                     } else if (/^#battle-/.test(hrefid)) {
-                        var pid = hrefid.substr(hrefid.indexOf("-")+1);
-                        playerList.setPlayers(battles.battle(pid).players());
+                        playerList.setPlayers(battles.battle(id).players());
                     }
                 });
+
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
                     var hrefid = $(ui.tab).attr("href");
+
+                    /* Resizes channel tabs, if window height changed */
                     $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
+                    /* Resizes chat area in funciton of the height of the channel tab */
                     $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-44);
+                    /* Scrolls down the chat of the current tab */
                     $(hrefid+" #chatTextArea").get(0).scrollTop = $(hrefid+" #chatTextArea").get(0).scrollHeight;
+
+                    /* The tab is selected now, so any unseen activity is removed */
+                    $(ui.tab).removeClass("tab-active tab-flashing");
                 });
+
                 $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
                         websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.name(players.myid)}));
                     }
@@ -238,7 +263,7 @@
                             <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
                             <button id="register" onClick="wannaRegister()">Register</button>
                             <button onClick="channels.leaveChannel(0);">Leave Channel</button>
-                            <button id="color" name="color" onclick="openColorPicker()"/>Color</button>
+                            <button id="color" name="color" onclick="openColorPicker()">Color</button>
                             <div id="colorDialog" title="Trainer name &amp; color">
                                 Name <input type="text" id="trainer-name" onkeydown="if(event.keyCode==13){event.stopPropagation(); $('#colorDialog').dialog('close');}"/>
                                 <div id="colorPicker"></div>

@@ -26,6 +26,7 @@ PMs.prototype.playerLogin = function(pid) {
 }
 
 function PM(pid) {
+    this.shortHand = "pm";
     this.id = pid;
     this.disconnected = false;
     players.addFriend(pid);
@@ -44,6 +45,8 @@ function PM(pid) {
         $('#channel-tabs').tabs("select", "#pm-"+pid);
     }
 }
+
+PM.inherits(ChannelTab);
 
 PM.prototype.players = function() {
     var ret = [players.myid];
@@ -84,6 +87,8 @@ PM.prototype.print = function(pid, msg) {
         msg = escapeHtml(msg);
         var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
         msg = pref + " " + addChannelLinks(msg);
+
+        this.activateTab();
     }
 
     chatTextArea.innerHTML += msg + "<br/>\n";

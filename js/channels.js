@@ -12,6 +12,12 @@ Channels.prototype.channel = function (id) {
         this.channels[id] = new Channel(id, this.names[id]);
     }
 
+    /* Hack to detect when the first channel is opened */
+    if (Object.keys(this.channels).length === 1) {
+        currentTabObject = this.channels[id];
+        currentChannel = id;
+    }
+
     return this.channels[id];
 }
 
@@ -93,6 +99,7 @@ Channels.prototype.channelsByName = function () {
 }
 
 function Channel(id, name) {
+    this.shortHand = "channel";
     this.id = id;
     this.name = name;
     this.players = {};
@@ -115,6 +122,8 @@ function Channel(id, name) {
     }
 }
 
+Channel.inherits(ChannelTab);
+
 Channel.prototype.setPlayers = function(players) {
     /* The server 'unclosed' us, so removing server close if there */
     this.closable &= ~1;
@@ -125,10 +134,6 @@ Channel.prototype.setPlayers = function(players) {
     if (channels.currentId() == this.id) {
         this.generatePlayerList();
     }
-}
-
-Channel.prototype.isCurrent = function() {
-    return this.id == channels.currentId();
 }
 
 Channel.prototype.newPlayer = function(player) {
@@ -194,6 +199,7 @@ Channel.prototype.print = function (msg, html, noParse) {
                     pref = "<span class='script-message'>" + pref + ":</span>";
                 } else {
                     pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
+                    this.activateTab();
                 }
 
                 msg = pref + addChannelLinks(msg.slice(msg.indexOf(":") + 1));

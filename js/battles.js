@@ -21,6 +21,7 @@ Battles.prototype.watchBattle = function(bid, conf) {
 function BattleTab(pid, conf) {
     initBattleData();
 
+    this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
 
@@ -38,6 +39,8 @@ function BattleTab(pid, conf) {
 
     this.print(JSON.stringify(conf));
 }
+
+BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.players = function() {
     return this.conf.players;

@@ -12,6 +12,11 @@ body {
     font-size: 13px;
 }
 
+/* Activity in the tab (new message etc.) */
+.ui-state-default a.tab-active {
+    color: #2a56fd; /* need a better color */
+}
+
 #colorPicker .farbtastic {
     margin: auto;
 }
