@@ -549,7 +549,7 @@ button.closebutton i
 	cursor: pointer;
 	width: 15px;
 	height: 15px;
-	background: transparent url(/fx/closebuttonsheet.png) no-repeat scroll 0px -16px;
+	background: transparent url(../fx/closebuttonsheet.png) no-repeat scroll 0px -16px;
 	z-index: 10;
 }
 #leftbar div .close2
@@ -566,7 +566,7 @@ button.closebutton i
 }
 #leftbar div .close:hover
 {
-	background: transparent url(/fx/closebuttonsheet.png) no-repeat scroll 0px 0px;
+	background: transparent url(../fx/closebuttonsheet.png) no-repeat scroll 0px 0px;
 }
 #leftbar small
 {
