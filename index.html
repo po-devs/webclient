@@ -70,6 +70,8 @@
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
                     var hrefid = $(ui.tab).attr("href");
 
+                    /* Resizes the player list */
+                    $('#player-list').height($(window).height()-$("#player-list").offset().top);
                     /* Resizes channel tabs, if window height changed */
                     $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
                     /* Resizes chat area in funciton of the height of the channel tab */
