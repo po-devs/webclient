@@ -604,6 +604,11 @@
                     var id = data.split("|")[0];
                     var params = JSON.parse(data.slice(id.length+1));
                     battles.watchBattle(+(id), params);
+                } else if (cmd === "battlecommand") {
+                    var battleid = data.split("|")[0];
+                    if (battleid in battles.battles) {
+                        battles.battle(battleid).dealWithCommand(JSON.parse(data.slice(battleid.length+1)));
+                    }
                 }
             };
 
