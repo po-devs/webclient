@@ -419,7 +419,7 @@
                     };
                     websocket.onmessage = function( evt ) {
                         if (evt.data.length < 120) {
-                            console.log( "Message received :", evt.data );
+                            //console.log( "Message received :", evt.data );
                         }
 
                         if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );

@@ -107,6 +107,66 @@ BattleTab.prototype.dealWithCommand = function(params) {
     }
 };
 
+/* dealWithXxxx functions are all called from dealWithCommand */
 BattleTab.prototype.dealWithTurn = function(params) {
     this.battle.runMajor(["turn", params.turn]);
 };
+
+/*
+    0 -> "p1"
+    1 -> "p2"
+ */
+BattleTab.prototype.spotToPlayer = function(spot) {
+    return "p"+ (String.fromCharCode("1".charCodeAt(0) + spot));
+};
+
+BattleTab.prototype.pokemonToPS = function(pokemon) {
+    var str = Tools.getSpecies(pokemon.num);
+    if (pokemon.level != 100) {
+        str += ", L" + pokemon.level;
+    }
+    if (pokemon.gender) {
+        str += ", " + (pokemon.gender == 1 ? "M" : "F");
+    }
+    if (pokemon.shiny) {
+        str += ", shiny";
+    }
+
+    return str;
+};
+
+/* Converts PO pokemon to PS pokemon details that are like '(95/100 par)' */
+BattleTab.prototype.pokemonDetails = function(pokemon) {
+    var str = "(" + pokemon.percent + "/100";
+
+    if (pokemon.status) {
+        /* Koed = 31,
+         Fine = 0,
+         Paralysed = 1,
+         Asleep = 2,
+         Frozen = 3,
+         Burnt = 4,
+         Poisoned = 5,
+         */
+        str += " ";
+        if (pokemon.status == 1) {
+            str += "par";
+        } else if (pokemon.status == 2) {
+            str += "slp";
+        } else if (pokemon.status == 3) {
+            str += "frz";
+        } else if (pokemon.status == 4) {
+            str += "brn";
+        } else if (pokemon.status == 5) {
+            str += "psn";
+        } else if (pokemon.status == 31) {
+            str += "fnt";
+        }
+    }
+    return str + ")";
+};
+
+BattleTab.prototype.dealWithSend = function(params) {
+    var poke = params.pokemon;
+    this.battle.runMajor(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
+}

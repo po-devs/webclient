@@ -522,5 +522,9 @@ var Tools = {
 	getTypeIcon: function(type, b) { // b is just for utilichart.js
 		sanitizedType = type.replace(/\?/g,'%3f');
 		return '<img src="/sprites/types/'+sanitizedType+'.png" alt="'+type+'" height="14" width="32"'+(b?' class="b"':'')+' />';
-	}
+	},
+
+    getSpecies: function(num) {
+        return exports.BattlePokedex.nums[num];
+    }
 };

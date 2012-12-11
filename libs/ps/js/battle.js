@@ -4004,6 +4004,7 @@ function Battle(frame, logFrame, noPreload) {
 		}
 	};
 	this.runMajor = function(args, kwargs, preempt) {
+        console.log("arguments: " + JSON.stringify(args));
         kwargs = (kwargs || {});
 		switch (args[0]) {
 		case 'start':
