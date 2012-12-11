@@ -194,7 +194,7 @@ BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
     /* Stores the pokemon in memory */
     this.pokes[params.spot] = poke;
-    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(params.spot)]);
+    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
@@ -252,7 +252,7 @@ BattleTab.prototype.dealWithBoost = function(params) {
 };
 
 BattleTab.prototype.dealWithStatus = function(params) {
-    var status = this.statuses[params.status];
+    var status = BattleTab.statuses[params.status];
     if (!status || status == "fnt") {
         return;
     }
