@@ -210,7 +210,7 @@ BattleTab.prototype.dealWithHpchange = function(params) {
     var current = this.pokes[params.spot].percent;
     this.pokes[params.spot].percent = params.newHP;
     /* Is it healing or damage? */
-    if (params.newHP > current || current == 100) {
+    if (params.newHP > current || params.newHP == 100) {
         this.addCommand(["-heal", this.spotToPlayer(params.spot), (params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
     } else {
         this.addCommand(["-damage", this.spotToPlayer(params.spot), -(params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
