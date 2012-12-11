@@ -54,6 +54,7 @@ function BattleTab(pid, conf) {
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
 
         this.battle.runMajor(["start"]);
+        this.battle.play();
 //        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
 //        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
 //        this.battle.runMajor(["switch","p1a: Toxicroak","Toxicroak","(100/100)"]);
@@ -100,6 +101,10 @@ BattleTab.prototype.close = function() {
     websocket.send("stopwatching|"+this.id);
 };
 
+/* Receives a PO command, and translates it in PS language.
+
+    PS language: |a|b|c|[xx=y]|[zz=ff] -> battle.runMinor/Major([a,b,c],{xx=y,zz=ff})
+ */
 BattleTab.prototype.dealWithCommand = function(params) {
     var funcName = "dealWith"+params.command[0].toUpperCase() + params.command.slice(1);
     if (funcName in BattleTab.prototype) {
@@ -107,9 +112,17 @@ BattleTab.prototype.dealWithCommand = function(params) {
     }
 };
 
+BattleTab.prototype.addCommand = function(args, kwargs) {
+    kwargs = kwargs||{};
+    for (var x in kwargs) {
+        args.push("["+x+"="+kwargs[x]+"]");
+    }
+    this.battle.add("|"+args.join("|"));
+}
+
 /* dealWithXxxx functions are all called from dealWithCommand */
 BattleTab.prototype.dealWithTurn = function(params) {
-    this.battle.runMajor(["turn", params.turn]);
+    this.addCommand(["turn",  params.turn]);
 };
 
 /*
@@ -168,5 +181,5 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
 
 BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
-    this.battle.runMajor(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
+    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
 }
