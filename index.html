@@ -339,7 +339,7 @@
             var queryString = getQueryString('relay');
             var announcement = $("#announcement");
 
-            if (queryString !== '') {
+            if (queryString) {
                 $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
             }
 
