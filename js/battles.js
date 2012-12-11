@@ -24,6 +24,7 @@ function BattleTab(pid, conf) {
     this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
+    this.pokes = {};
 
     var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
 
@@ -179,9 +180,21 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
     return str + ")";
 };
 
+BattleTab.statuses = {
+    0: "",
+    1: "par",
+    2: "slp",
+    3: "frz",
+    4: "brn",
+    5: "psn",
+    31: "fnt"
+};
+
 BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
-    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
+    /* Stores the pokemon in memory */
+    this.pokes[params.spot] = poke;
+    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(params.spot)]);
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
@@ -190,4 +203,61 @@ BattleTab.prototype.dealWithKo = function(params) {
 
 BattleTab.prototype.dealWithMove = function(params) {
     this.addCommand(["move", this.spotToPlayer(params.spot), Tools.getMoveName(params.move)]);
+};
+
+BattleTab.prototype.dealWithHpchange = function(params) {
+    /* Checks & updates the pokemon in memory's life percent */
+    var current = this.pokes[params.spot].percent;
+    this.pokes[params.spot].percent = params.newHP;
+    /* Is it healing or damage? */
+    if (params.newHP > current || current == 100) {
+        this.addCommand(["-heal", this.spotToPlayer(params.spot), (params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
+    } else {
+        this.addCommand(["-damage", this.spotToPlayer(params.spot), -(params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
+    }
+};
+
+BattleTab.prototype.dealWithHitcount = function(params) {
+    this.addCommand(["-hitcount", this.spotToPlayer(params.spot), params.hitcount]);
+};
+
+BattleTab.prototype.dealWithEffectiveness = function(params) {
+    if (params.effectiveness > 4) {
+        this.addCommand(["-supereffective", this.spotToPlayer(params.spot)]);
+    } else if (params.effectiveness < 4 && params.effectiveness > 0) {
+        this.addCommand(["-resisted", this.spotToPlayer(params.spot)]);
+    } else if (params.effectiveness == 0) {
+        this.addCommand(["-immune", this.spotToPlayer(params.spot)]);
+    }
+};
+
+BattleTab.prototype.dealWithCriticalhit = function(params) {
+    this.addCommand(["-crit", this.spotToPlayer(params.spot)]);
+};
+
+BattleTab.prototype.dealWithMiss = function(params) {
+    this.addCommand(["-miss", this.spotToPlayer(params.spot)]);
+};
+
+BattleTab.prototype.dealWithAvoid = function(params) {
+    this.addCommand(["-avoid", this.spotToPlayer(params.spot)], {"msg":true});
+};
+
+BattleTab.prototype.dealWithBoost = function(params) {
+    if (params.boost > 0) {
+        this.addCommand(["-boost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), params.boost]);
+    } else if (params.boost < 0) {
+        this.addCommand(["-unboost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), -params.boost]);
+    }
+};
+
+BattleTab.prototype.dealWithStatus = function(params) {
+    var status = this.statuses[params.status];
+    if (!status || status == "fnt") {
+        return;
+    }
+    if (status == "psn" && params.multiple) {
+        status = "tox";
+    }
+    this.addCommand(["-status", this.spotToPlayer(params.spot), status]);
 };

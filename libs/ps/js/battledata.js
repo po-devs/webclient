@@ -195,7 +195,18 @@ var POStatNames = { // PO style
 	def: 'Def',
 	spa: 'SAtk',
 	spd: 'SDef',
-	spe: 'Spd'
+	spe: 'Spd',
+    /* improper style go */
+    nums: {
+        0: "hp",
+        1: "atk",
+        2: "def",
+        3: "spa",
+        4: "spd",
+        5: "spe",
+        6: "accuracy",
+        7: "evasion"
+    }
 };
 var StatNames = { // proper style
 	hp: 'HP',
@@ -530,5 +541,9 @@ var Tools = {
 
     getMoveName: function(num) {
         return exports.BattleMovedex.nums[num];
+    },
+
+    getStatName : function (num) {
+        return POStatNames.nums[num];
     }
 };
