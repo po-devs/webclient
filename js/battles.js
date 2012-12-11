@@ -52,17 +52,29 @@ function BattleTab(pid, conf) {
 
         this.battle.runMajor(["player", "p1", players.name(conf.players[0])]);
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
-        this.battle.runMajor(["start"]);
+        this.battle.runMajor(["poke", "p1", "Toxicroak"]);
+        this.battle.runMajor(["poke", "p1", "Jirachi"]);
+        this.battle.runMajor(["poke", "p2", "Toxicroak"]);
+        this.battle.runMajor(["poke", "p2", "Jirachi"]);
         this.battle.runMajor(["tier", "Wifi OU"]);
         if (conf.rated) {
             this.battle.runMajor(["rated"]);
         }
+        this.battle.runMajor(["start"]);
         this.battle.runMajor(["turn", "0"]);
-        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
-        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
-        //this.battle.runMajor(["turn", "1"]);
-        //this.battle.runMajor(["turn", "2"]);
-        //this.battle.runMajor(["turn", "3"]);
+        //this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
+        //this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
+        this.battle.runMajor(["switch","p1a: Toxicroak","Toxicroak","(100/100)"]);
+        this.battle.runMajor(["switch","p1a: Toxicroak","Toxicroak","(100/100)"]);
+        this.battle.runMajor(["switch","p2a: Jirachi","Jirachi","(90/100)"]);
+        this.battle.runMajor(["switch","p2a: Jirachi","Jirachi","(90/100)"]);
+        this.battle.runMajor(["turn", "1"]);
+        this.battle.runMajor(["switch","p2a: Toxicroak","Toxicroak","(100/100)"]);
+        this.battle.runMajor(["switch","p2a: Toxicroak","Toxicroak","(100/100)"]);
+        this.battle.runMajor(["switch","p1a: Jirachi","Jirachi","(100/100)"]);
+        this.battle.runMajor(["switch","p1a: Jirachi","Jirachi","(100/100)"]);
+        this.battle.runMajor(["turn", "2"]);
+        this.battle.runMajor(["turn", "3"]);
     }
 
     this.print(JSON.stringify(conf));

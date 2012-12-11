@@ -394,6 +394,7 @@ var Tools = {
 	
 	getSpriteData: function(pokemon, siden) {
 		pokemon = Tools.getTemplate(pokemon);
+        var padd = function(num) {return ("00"+num).slice(-3);};
 		var isBack = !siden;
 		var back = (siden?'':'back/');
         var shiny = pokemon.shiny ? "shiny/" : "";
@@ -407,7 +408,7 @@ var Tools = {
 			cryurl = '/audio/cries/' + num + '.wav';
 		}
 		if (window.BattlePokemonSprites && BattlePokemonSprites[pokemon.speciesid] && BattlePokemonSprites[pokemon.speciesid][facing]) {
-			var url = 'http://pokemon-online.eu/images/pokemon/black-white/animated/'+ back + shiny + spriteid + '.gif';
+			var url = 'http://pokemon-online.eu/images/pokemon/black-white/animated/'+ back + shiny + padd(pokemon.num) + '.gif';
 			var spriteType = 'ani';
 			if (BattlePokemonSprites[pokemon.speciesid][facing]['anif'] && pokemon.gender === 'F') {
 /*				url += '-f';
@@ -425,11 +426,11 @@ var Tools = {
 		return {
 			w: 96,
 			h: 96,
-			url: 'http://pokemon-online.eu/images/pokemon/black-white/'+ back + shiny + spriteid + '.png',
+			url: 'http://pokemon-online.eu/images/pokemon/black-white/'+ back + shiny + pokemon.num + '.png',
 			cryurl: cryurl,
 			isBackSprite: isBack
 		};
-        return 'background-image:url(http://pokemon-online.eu/images/pokemon/black-white/'+shiny+id+'.png)';
+        return 'background-image:url(http://pokemon-online.eu/images/pokemon/black-white/'+shiny+pokemon.num+'.png)';
 	},
 
 	getIcon: function(pokemon) {
@@ -486,7 +487,7 @@ var Tools = {
 		}*/
 
 		var fainted = (pokemon && pokemon.fainted?';opacity:.4':'');
-		return 'background:transparent url(http://pokemon-online.eu/images/poke_img/' + num + ') no-repeat ' + fainted;
+		return 'background:transparent url(http://pokemon-online.eu/images/poke_img/' + num + '.png) no-repeat ' + fainted;
 	},
 
 	getTeambuilderSprite: function(pokemon) {

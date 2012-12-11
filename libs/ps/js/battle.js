@@ -4004,6 +4004,7 @@ function Battle(frame, logFrame, noPreload) {
 		}
 	};
 	this.runMajor = function(args, kwargs, preempt) {
+        kwargs = (kwargs || {});
 		switch (args[0]) {
 		case 'start':
 			self.teamPreview(false);
