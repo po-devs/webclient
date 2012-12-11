@@ -182,4 +182,12 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
 BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
     this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
-}
+};
+
+BattleTab.prototype.dealWithKo = function(params) {
+    this.addCommand(["faint", this.spotToPlayer(params.spot)]);
+};
+
+BattleTab.prototype.dealWithMove = function(params) {
+    this.addCommand(["move", this.spotToPlayer(params.spot), Tools.getMoveName(params.move)]);
+};

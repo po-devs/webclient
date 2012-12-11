@@ -526,5 +526,9 @@ var Tools = {
 
     getSpecies: function(num) {
         return exports.BattlePokedex.nums[num];
+    },
+
+    getMoveName: function(num) {
+        return exports.BattleMovedex.nums[num];
     }
 };
