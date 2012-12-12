@@ -25,6 +25,11 @@ function BattleTab(pid, conf) {
     this.id = pid;
     this.conf = conf;
     this.pokes = {};
+    this.spectators = {};
+    /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
+        together with the damage done to the Showdown window.
+     */
+    this.damageCause={};
 
     var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
 
@@ -77,7 +82,15 @@ function BattleTab(pid, conf) {
 BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.players = function() {
-    return this.conf.players;
+    var array = [];
+    for (var i = 0; i < this.conf.players.length; i++) {
+        array.push(this.conf.players[i]);
+    };
+    for (var x in this.spectators) {
+        array.push(x);
+    }
+
+    return array;
 };
 
 BattleTab.prototype.chat = function () {
@@ -211,14 +224,15 @@ BattleTab.prototype.dealWithHpchange = function(params) {
     this.pokes[params.spot].percent = params.newHP;
     /* Is it healing or damage? */
     if (params.newHP > current || params.newHP == 100) {
-        this.addCommand(["-heal", this.spotToPlayer(params.spot), (params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
+        this.addCommand(["-heal", this.spotToPlayer(params.spot), (params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
     } else {
-        this.addCommand(["-damage", this.spotToPlayer(params.spot), -(params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])]);
+        this.addCommand(["-damage", this.spotToPlayer(params.spot), -(params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
     }
+    this.damageCause = {};
 };
 
 BattleTab.prototype.dealWithHitcount = function(params) {
-    this.addCommand(["-hitcount", this.spotToPlayer(params.spot), params.hitcount]);
+    this.addCommand(["-hitcount", this.spotToPlayer(params.spot), params.count]);
 };
 
 BattleTab.prototype.dealWithEffectiveness = function(params) {
@@ -260,4 +274,57 @@ BattleTab.prototype.dealWithStatus = function(params) {
         status = "tox";
     }
     this.addCommand(["-status", this.spotToPlayer(params.spot), status]);
+};
+
+BattleTab.prototype.dealWithStatusdamage = function(params) {
+    this.damageCause.from = BattleTab.statuses[params.status];
+};
+
+BattleTab.prototype.dealWithFail = function(params) {
+    /* Third argument should be what the fail is about */
+    this.addCommand(["-fail", this.spotToPlayer(params.spot)]);
+};
+
+BattleTab.prototype.dealWithPlayerchat = function(params) {
+    var name = this.conf.ids[params.spot];
+    this.addCommand(["chat", name, params.message]);
+};
+
+BattleTab.prototype.dealWithSpectatorjoin = function(params) {
+    this.spectators[params.id] = params.name;
+    this.addCommand(["join", params.name]);
+
+    if (this.isCurrent()) {
+        playerList.addPlayer(params.id);
+    }
+};
+
+BattleTab.prototype.dealWithSpectatorleave = function(params) {
+    this.addCommand(["leave", this.spectators[params.id]]);
+    delete this.spectators[params.id];
+
+    if (this.isCurrent()) {
+        playerList.removePlayer(params.id);
+    }
+};
+
+BattleTab.prototype.dealWithSpectatorchat = function(params) {
+    var name = this.spectators[params.id];
+    this.addCommand(["chat", name, params.message]);
+};
+
+BattleTab.prototype.dealWithNotarget = function(params) {
+    this.addCommand(["-notarget"]);
+};
+
+BattleTab.prototype.dealWithFlinch = function(params) {
+    this.addCommand(["cant", this.spotToPlayer(params.spot), "flinch"]);
+};
+
+BattleTab.prototype.dealWithRecoil = function(params) {
+    this.damageCause.from = "recoil";
+};
+
+BattleTab.prototype.dealWithDrain = function(params) {
+    this.damageCause.from = "drain";
 };
