@@ -335,6 +335,7 @@ BattleTab.prototype.dealWithStatus = function(params) {
     if (status == "psn" && params.multiple) {
         status = "tox";
     }
+    this.pokes[params.spot].status = params.status;
     this.addCommand(["-status", this.spotToPlayer(params.spot), status]);
 };
 
