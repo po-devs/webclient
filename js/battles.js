@@ -12,7 +12,6 @@ Battles.prototype.addBattle = function (battles) {
     for (var id in battles) {
         var battle = battles[id];
         battle.id = id;
-        console.log("battle: " + JSON.stringify(battle));
         this.battleList[id] = battle;
         if (!(battle.ids[0] in this.battlesByPlayer)) {
             this.battlesByPlayer[battle.ids[0]] = {};
@@ -29,6 +28,7 @@ Battles.prototype.addBattle = function (battles) {
 };
 
 Battles.prototype.battleEnded = function(battleid, result) {
+    //console.log("battle ended");
     var ids = this.battleList[battleid].ids;
     this.removeBattle(battleid);
 
@@ -42,9 +42,7 @@ Battles.prototype.battleEnded = function(battleid, result) {
 Battles.prototype.removePlayer = function(pid) {
     /* If both players are not in memory for a battle, removes the battle from memory */
     for (var battleid in this.battlesByPlayer[pid]) {
-        console.log ("battleid in removeplayer: " + battleid + ", player id: " + pid);
         var battle = this.battlesByPlayer[pid][battleid];
-        console.log ("battle corresponding: " + JSON.stringify(battle));
         var ids = battle.ids;
         if (! players.hasPlayer(ids[0] == pid ? ids[1] : ids[0])) {
             this.removeBattle(battleid);

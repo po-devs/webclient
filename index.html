@@ -292,6 +292,16 @@
             $("#player-list").on("click", "li", function(event) {
                 var id = event.currentTarget.id.split("-")[1];
                 var dialog = $("#player-dialog");
+                dialog.html('');
+                /* Show the list of battles in the player info */
+                if (battles.isBattling(id)) {
+                    for (var bid in battles.battlesByPlayer[id]) {
+                        var battle = battles.battlesByPlayer[id][bid];
+                        var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
+                        dialog.append($("<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against "
+                                + escapeHtml(players.name(opp)) +"</div>"));
+                    }
+                }
                 dialog.dialog("option", "title", players.name(id));
                 var buttons = [
                     {
@@ -619,8 +629,9 @@
                     battles.addBattle(obj);
                 } else if (cmd === "channelbattle") {
                     var chanid = data.split("|")[0];
-                    var battleid = data.split("|")[1];
-                    var battle = JSON.parse(data.slice(battleid.length+1+chanid.length+1));
+                    var params = JSON.parse(data.slice(chanid.length+1));
+                    var battleid = params.battleid;
+                    var battle = params.battle;
                     var obj = {};
                     obj[battleid] = battle;
                     battles.addBattle(obj);
