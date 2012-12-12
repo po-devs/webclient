@@ -12,7 +12,11 @@ Players.prototype.login = function(id, info) {
     var obj = {};
     obj[id] = info;
     this.addPlayer(obj);
-}
+};
+
+Players.prototype.hasPlayer = function(pid) {
+    return pid in this.players;
+};
 
 Players.prototype.addPlayer = function (players) {
     for (var id in players) {
@@ -44,21 +48,21 @@ Players.prototype.addPlayer = function (players) {
 Players.prototype.addFriend = function(id) {
     if (this.friends.indexOf(id) === -1) this.friends.push(id);
     if (id in this.players) this.players[id].friend = true;
-}
+};
 
 Players.prototype.addIgnore = function(id) {
     this.ignores[id] = true;
     if (id in this.players) this.players[id].ignored = true;
-}
+};
 
 Players.prototype.removeIgnore = function(id) {
     delete this.ignores[id];
     if (id in this.players) this.players[id].ignored = false;
-}
+};
 
 Players.prototype.isIgnored = function(id) {
     return id in this.players && this.players[id].ignored;
-}
+};
 
 Players.prototype.removePlayer = function (id) {
     var player = this.players[id];
@@ -74,6 +78,8 @@ Players.prototype.removePlayer = function (id) {
 
     delete this.names[player.name.toLowerCase()];
     delete this.players[id];
+
+    battles.removePlayer(id);
 };
 
 Players.prototype.player = function (pid) {
@@ -88,7 +94,7 @@ Players.prototype.player = function (pid) {
 
 Players.prototype.name = function(pid) {
     return ((pid in this.players) ? this.players[pid].name : "???");
-}
+};
 
 Players.prototype.id = function (name) {
     var player = this.names[name.toLowerCase()];
@@ -108,7 +114,7 @@ Players.prototype.testPlayerOnline = function(player) {
     }
 
     this.removePlayer(player);
-}
+};
 
 Players.prototype.color = function (id) {
     var player = this.player(id);
@@ -150,7 +156,7 @@ Array.prototype.dichotomy = function(func) {
         }
 
     }
-}
+};
 
 /* The list of players */
 function PlayerList () {
@@ -167,11 +173,15 @@ PlayerList.prototype.setPlayers = function(playerIds) {
         list.append(this.createPlayerItem(id));
     }, this);
     this.ids = playerIds;
-}
+};
 
 PlayerList.prototype.createPlayerItem = function(id) {
-    return $("<li class='player-list-item' id='player-"+id+"'>").html(players.name(id));
-}
+    var ret = $("<li class='player-list-item' id='player-"+id+"'>").html(players.name(id));
+    if (battles.isBattling(id)) {
+        ret.addClass('player-battling');
+    }
+    return ret;
+};
 
 PlayerList.prototype.addPlayer = function(id) {
     var name = players.name(id);
@@ -192,7 +202,7 @@ PlayerList.prototype.addPlayer = function(id) {
     }
 
     this.ids.splice(pos, 0, id);
-}
+};
 
 PlayerList.prototype.removePlayer = function(id) {
     var pos = this.ids.indexOf(id);
@@ -201,11 +211,11 @@ PlayerList.prototype.removePlayer = function(id) {
     }
     /* Remove the graphical element */
     $(".player-list-item#player-"+id).remove();
-}
+};
 
 PlayerList.prototype.updatePlayer = function(id) {
     if (this.ids.indexOf(id) !== -1) {
         this.removePlayer(id);
         this.addPlayer(id);
     }
-}
+};

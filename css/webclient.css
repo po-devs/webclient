@@ -119,6 +119,10 @@ body {
     user-select: none;
 }
 
+.player-list-item.player-battling {
+    color: #5d838c;
+}
+
 .player-list-item:hover, .player-list-item.selected {
     background-color: #252525;
 }

@@ -421,7 +421,7 @@
                     };
                     websocket.onmessage = function( evt ) {
                         if (evt.data.length < 120) {
-                            //console.log( "Message received :", evt.data );
+                            console.log( "Message received :", evt.data );
                         }
 
                         if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
@@ -611,6 +611,27 @@
                     if (battleid in battles.battles) {
                         battles.battle(battleid).dealWithCommand(JSON.parse(data.slice(battleid.length+1)));
                     }
+                } else if (cmd === "battlestarted") {
+                    var battleid = data.split("|")[0];
+                    var battle = JSON.parse(data.slice(battleid.length+1));
+                    var obj = {};
+                    obj[battleid] = battle;
+                    battles.addBattle(obj);
+                } else if (cmd === "channelbattle") {
+                    var chanid = data.split("|")[0];
+                    var battleid = data.split("|")[1];
+                    var battle = JSON.parse(data.slice(battleid.length+1+chanid.length+1));
+                    var obj = {};
+                    obj[battleid] = battle;
+                    battles.addBattle(obj);
+                } else if (cmd === "channelbattlelist") {
+                    var chanid = data.split("|")[0];
+                    var batt = JSON.parse(data.slice(chanid.length+1));
+                    battles.addBattle(batt);
+                } else if (cmd === "battlefinished") {
+                    var battleid = data.split("|")[0];
+                    var result = JSON.parse(data.slice(battleid.length+1));
+                    battles.battleEnded(battleid, result);
                 }
             };
 
