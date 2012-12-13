@@ -4479,8 +4479,8 @@ function Battle(frame, logFrame, noPreload) {
 			if (BattleEffects[i].url) self.preloadImage(BattleEffects[i].url);
 		}
 		self.preloadImage('libs/ps/fx/weather-raindance.jpg'); // rain is used often enough to precache
-		self.preloadImage('/sprites/bw/substitute.png');
-		self.preloadImage('/sprites/bw-back/substitute.png');
+//		self.preloadImage('libs/ps/sprites/bw/substitute.png');
+//		self.preloadImage('libs/ps/sprites/bw-back/substitute.png');
 		//self.preloadImage('libs/ps/fx/bg.jpg');
 	};
 	this.preloadSounds = function () {

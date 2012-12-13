@@ -434,7 +434,7 @@ BattleTab.prototype.dealWithWeatherhurt = function(params) {
 };
 
 BattleTab.prototype.dealWithSubstitute = function(params) {
-    this.addCommand([params.substitute?"-start":"-end", this.playerToSpot(params.spot), "move: Substitute"]);
+    this.addCommand([params.substitute?"-start":"-end", this.spotToPlayer(params.spot), "Substitute"]);
 };
 
 BattleTab.prototype.dealWithTier = function(params) {

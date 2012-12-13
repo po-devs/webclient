@@ -404,6 +404,8 @@ var Tools = {
 	},
 	
 	getSpriteData: function(pokemon, siden) {
+        /*** PO change ***/
+        var sub = pokemon === "substitute";
 		pokemon = Tools.getTemplate(pokemon);
         var padd = function(num) {return ("00"+num).slice(-3);};
 		var isBack = !siden;
@@ -412,6 +414,10 @@ var Tools = {
 		var facing = (siden?'front':'back');
 		var cryurl = '';
 		var spriteid = pokemon.spriteid;
+        /*** PO change ***/
+        if (sub) {
+            pokemon.num = "substitute";
+        }
 		if (window.BattlePokemonSprites && BattlePokemonSprites[pokemon.speciesid]) {
 			var num = '' + BattlePokemonSprites[pokemon.speciesid].num;
 			if (num.length < 3) num = '0' + num;
