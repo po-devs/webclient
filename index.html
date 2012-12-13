@@ -313,7 +313,7 @@
                     $(function() {
                         $('#search_filter').filterFor('#player-list', {caseSensitive : false});
                         /* The Player list also needs to know the filter, when it adds new elements whether to show them or not */
-                        $('#search_filter').keyup(function(){playerList.filter=$(this).val();});
+                        $('#search_filter').keyup(function(){playerList.filter=$(this).val().toLowerCase();});
                     });
                 </script>
             </td><td class="contents" style="vertical-align: top;">

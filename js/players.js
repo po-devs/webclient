@@ -183,7 +183,7 @@ PlayerList.prototype.createPlayerItem = function(id) {
         ret.addClass('player-battling');
     }
     /* If there's a filter and it's no match, hide the player name */
-    if (this.filter && name.toLowerCase().indexOf(this.filter.toLowerCase()) === -1) {
+    if (this.filter && name.toLowerCase().indexOf(this.filter) === -1) {
         ret.hide();
     }
     return ret;
