@@ -191,7 +191,7 @@ BattleTab.prototype.dealWithCommand = function(params) {
 BattleTab.prototype.addCommand = function(args, kwargs) {
     kwargs = kwargs||{};
     for (var x in kwargs) {
-        args.push("["+x+"="+kwargs[x]+"]");
+        args.push("["+x+"]"+kwargs[x]);
     }
     this.battle.add("|"+args.join("|"));
 }
@@ -403,4 +403,32 @@ BattleTab.prototype.dealWithFeelstatus = function(params) {
 
 BattleTab.prototype.dealWithFreestatus = function(params) {
     this.addCommand(["-curestatus", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+};
+
+BattleTab.weathers = {
+    0: "none",
+    1: "hail",
+    2: "raindance",
+    3: "sandstorm",
+    4: "sunnyday"
+};
+
+BattleTab.prototype.dealWithWeatherstart = function(params) {
+    var kwargs = {};
+    if (params.permanent) {
+        kwargs.of = this.spotToPlayer(params.spot);
+    }
+    this.addCommand(["-weather", BattleTab.weathers[params.weather]], kwargs);
+};
+
+BattleTab.prototype.dealWithFeelweather = function(params) {
+    this.addCommand(["-weather", BattleTab.weathers[params.weather]], {"upkeep": true});
+};
+
+BattleTab.prototype.dealWithWeatherend = function(params) {
+    this.addCommand(["-weather", "none"]);
+};
+
+BattleTab.prototype.dealWithWeatherhurt = function(params) {
+    this.damageCause.from = BattleTab.weathers[params.weather];
 };
