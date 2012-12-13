@@ -121,7 +121,6 @@ function BattleTab(pid, conf) {
         this.battle.runMajor(["player", "p1", players.name(conf.players[0])]);
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
 
-        this.battle.runMajor(["start"]);
         this.battle.play();
 //        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
 //        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
@@ -436,4 +435,40 @@ BattleTab.prototype.dealWithWeatherhurt = function(params) {
 
 BattleTab.prototype.dealWithSubstitute = function(params) {
     this.addCommand([params.substitute?"-start":"-end", this.playerToSpot(params.spot), "move: Substitute"]);
+};
+
+BattleTab.prototype.dealWithTier = function(params) {
+    this.addCommand(["tier", params.tier]);
+};
+
+BattleTab.clauses = {
+    0: "Sleep Clause",
+    1: "Freeze Clause",
+    2: "Disallow Spects",
+    3: "Item Clause",
+    4: "Challenge Cup",
+    5: "No Timeout",
+    6: "Species Clause",
+    7: "Wifi Battle",
+    8: "Self-KO Clause"
+};
+
+BattleTab.prototype.dealWithRated = function(params) {
+    if (params.rated) {
+        this.addCommand(["rated", params.rated]);
+    }
+
+    /* Print the clauses, convert flags to actual clause numbers */
+    var clauses = this.conf.clauses;
+    var i = 0;
+
+    while (clauses > 0) {
+        if (clauses % 2) {
+            this.addCommand(["rule", BattleTab.clauses[i]]);
+        }
+        clauses = Math.floor(clauses/2);
+        i = i+1;
+    }
+
+    this.addCommand(["start"]);
 };
