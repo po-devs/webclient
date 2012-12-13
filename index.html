@@ -11,6 +11,48 @@
         <link rel="stylesheet" href="css/chat.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+        (function($) {
+            $.fn.extend({
+                filterFor: function(listSelector) {
+                    var   self = this
+                        , $titles = $(listSelector)
+                      // The list with keys to skip (esc, arrows, return, etc)
+                      // 8 is backspace, you might want to remove that for better usability
+                          , keys = [13, 27, 32, 37, 38, 39, 40 /*,8*/ ]
+                          , cache = {}
+                    ;
+         
+                    if ($titles.length !== 0) {            
+                        if(!$titles.is('ul,ol')){
+                           $titles = $titles.find('ul,ol');
+                        }
+                        $titles = $titles.find('li');
+                        $titles.each(function(index, node) {
+                            cache[index] = $(node);                
+                        });
+         
+                        this.each(function(index, element) {
+                            var $element = $(element);
+                            $element.keyup(function(e) {
+                                if ($.inArray(e.keyCode, keys) === -1) {
+                                    $.each(cache, function(index, $node) {
+                                        if ($node.find(':contains("' + $element.attr('value') + '")').length === 0) {
+                                            $node.hide();
+                                        } else {
+                                            $node.show();
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+         
+                    return this;  
+                }
+            });
+        }(jQuery));
+        </script>
         <script src="libs/farbtastic.js" type="text/javascript"></script>
         <script src="libs/md5.js"></script>
         <script src="libs/utilities.js"></script>
@@ -260,13 +302,20 @@
                 </ul>
                 <div class="filter-users">
                     <span>Users</span><br>
-                    <input type="text" value="Filter" />
+                    <input name="filter" id="search_filter" type="text" />
                 </div>
                 <p style="display: none">
                     <input type="text" id="join-channel" onkeydown="if(event.keyCode==13)joinChannel();" placeholder="Join channel..."/>
                 </p>
+                <div id="titles">
                     <ul class="player-list" id="player-list">
                     </ul>
+                </div>
+                <script type="text/javascript">
+                $(function() {
+                    $('#search_filter').filterFor('#player-list', {caseSensitive : false});
+                });
+                </script>
             </td><td class="contents" style="vertical-align: top;">
                 <!--<div id="announcement" class="announcement"></div>-->
                 <div id="channel-tabs">
@@ -279,7 +328,7 @@
                             <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
                             <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
                             <button id="register" onClick="wannaRegister()">Register</button>
-                            <button onClick="channels.leaveChannel(0);">Leave Channel</button>
+                            <button onClick="channels.leaveChannel(0);" class="leave-chan">Leave Channel</button>
                             <button id="color" name="color" onclick="openColorPicker()">Color</button>
                             <div id="colorDialog" title="Trainer name &amp; color">
                                 Name <input type="text" id="trainer-name" onkeydown="if(event.keyCode==13){event.stopPropagation(); $('#colorDialog').dialog('close');}"/>
