@@ -98,14 +98,10 @@
                     if (/^#channel-/.test(hrefid)) {
                         if (channels.hasChannel(id)) {
                             currentChannel = id;
-                            /* Update player list when switching channels */
-                            channels.channel(currentChannel).generatePlayerList();
                         }
-                    } else if (/^#pm-/.test(hrefid)) {
-                        playerList.setPlayers(pms.pm(id).players());
-                    } else if (/^#battle-/.test(hrefid)) {
-                        playerList.setPlayers(battles.battle(id).players());
                     }
+                    /* Update player list when switching channels */
+                    playerList.setPlayers(currentTabObject.playerIds());
                 });
 
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
@@ -701,6 +697,11 @@
                     var chanid = data.split("|")[0];
                     var batt = JSON.parse(data.slice(chanid.length+1));
                     battles.addBattle(batt);
+
+                    /* Update whole player list */
+                    if (chanid == currentChannel) {
+                        playerList.setPlayers(currentTabObject.playerIds());
+                    }
                 } else if (cmd === "battlefinished") {
                     var battleid = data.split("|")[0];
                     var result = JSON.parse(data.slice(battleid.length+1));

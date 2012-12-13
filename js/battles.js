@@ -143,7 +143,7 @@ function BattleTab(pid, conf) {
 
 BattleTab.inherits(ChannelTab);
 
-BattleTab.prototype.players = function() {
+BattleTab.prototype.playerIds = function() {
     var array = [];
     for (var i = 0; i < this.conf.players.length; i++) {
         array.push(this.conf.players[i]);

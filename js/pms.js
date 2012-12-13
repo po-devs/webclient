@@ -48,7 +48,7 @@ function PM(pid) {
 
 PM.inherits(ChannelTab);
 
-PM.prototype.players = function() {
+PM.prototype.playerIds = function() {
     var ret = [players.myid];
     if (!this.disconnected) {
         ret.push(this.id);
