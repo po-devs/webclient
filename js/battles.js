@@ -391,6 +391,7 @@ BattleTab.prototype.dealWithRecoil = function(params) {
 
 BattleTab.prototype.dealWithDrain = function(params) {
     this.damageCause.from = "drain";
+    this.damageCause.of = this.spotToPlayer(params.spot);
 };
 
 BattleTab.prototype.dealWithAlreadystatus = function(params) {
@@ -431,4 +432,8 @@ BattleTab.prototype.dealWithWeatherend = function(params) {
 
 BattleTab.prototype.dealWithWeatherhurt = function(params) {
     this.damageCause.from = BattleTab.weathers[params.weather];
+};
+
+BattleTab.prototype.dealWithSubstitute = function(params) {
+    this.addCommand([params.substitute?"-start":"-end", this.playerToSpot(params.spot), "move: Substitute"]);
 };
