@@ -167,7 +167,7 @@
                         this.target = "_blank";
                     }
                 });
-                $(document).on("keydown", "input[type=text]", function (event) {
+                $(document).on("keydown", "input[history=true]", function (event) {
                     var elem = event.currentTarget,
                         maxHistSize = 100;
                     elem.hist = elem.hist || [];
@@ -325,7 +325,7 @@
                     <div id="channel-0">
                         <div id="chatTextArea" class="textbox"></div>
                         <p>
-                            <input type="text" id="send-channel-0" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
+                            <input type="text" id="send-channel-0" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
                             <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
                             <button id="register" onClick="wannaRegister()">Register</button>
                             <button onClick="channels.leaveChannel(0);" class="leave-chan">Leave Channel</button>
@@ -709,7 +709,7 @@
             };
 
         </script>
-    <script src="libs/alertify.min.js"></script>
+    <script src="libs/alertify.js"></script>
     <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
     <script src="libs/ps/js/battledata.js"></script>
     <script src="libs/ps/data/pokedex-mini.js"></script>

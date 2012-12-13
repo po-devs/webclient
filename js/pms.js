@@ -38,7 +38,7 @@ function PM(pid) {
         $('#channel-tabs').tabs("add", "#pm-" + pid, name === "???" ? "Player " + pid : name);
         /* Cleaner solution would be appreciated */
         $("#pm-" + pid).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" id="send-pm-'+pid+'" cols="40" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
+                                      +'<p><input type="text" id="send-pm-'+pid+'" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
                                       +' <button onClick="sendMessage(document.getElementById(\'send-pm-'+pid+'\'));">Send</button>'
                                       +' <button onClick="pms.pm(' + pid + ').close();">Close</button></p>');
         pms.pms[pid] = this;
