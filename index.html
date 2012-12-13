@@ -241,7 +241,7 @@
     <body>
         <p style="display: none;">
             Relay station
-            <input type="text" id="url" value="server.pokemon-online.eu" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
+            <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
             <button onClick="initWebsocket();">Connect</button>
             <button onClick="stopWebsocket();">Disconnect</button>
             <button onClick="checkSocket();">State</button>
