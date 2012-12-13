@@ -49,22 +49,28 @@ body {
     color: #4c4c4c;
     margin: 20px 10px;
     text-align: right;
+    position: relative;
 }
 
-/*.logo:before {
+.logo:before {
     content: "[BETA]";
-    position: relative;
-}*/
+    position: absolute;
+    right: 65px;
+    top: 8px;
+    color: red;
+    font-size: 11px;
+}
 
 .textbox {
-    font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;
+    /*font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;*/
     background: none repeat scroll 0% 0% rgb(255, 255, 255);
-    border: 1px solid rgb(107, 145, 171);
+    border: 0 !important;
     padding: 4px 5px;
     margin-bottom: 4px;
     outline: 0px none;
     overflow: auto;
     border-radius: 2px;
+    line-height: 18px;
 }
 
 #channel-tabs {
@@ -101,6 +107,7 @@ body {
 .player-list {
     /*height: 600px;*/
     overflow: auto;
+    margin-top: 200px;
 }
 
 .player-list-item {
@@ -136,4 +143,32 @@ body {
 /* Fix auto complete results being too big */
 li[role="presentation"] {
     font-size: 11px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    background: #111;
+}
+
+.find-battle {
+    margin: 20px 0 0 35px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #1087da;
+    color: #FFF;
+    font-size: 16px;
+    border-radius: 2px;
+    padding: 10px 15px;
+    display: inline-block;
+    text-decoration: none;
 }
