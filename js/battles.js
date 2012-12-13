@@ -256,6 +256,7 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
 };
 
 BattleTab.statuses = {
+    "-1": "confusion",
     0: "",
     1: "par",
     2: "slp",
@@ -307,7 +308,7 @@ BattleTab.prototype.dealWithEffectiveness = function(params) {
     }
 };
 
-BattleTab.prototype.dealWithCriticalhit = function(params) {
+BattleTab.prototype.dealWithCritical = function(params) {
     this.addCommand(["-crit", this.spotToPlayer(params.spot)]);
 };
 
@@ -349,7 +350,7 @@ BattleTab.prototype.dealWithFail = function(params) {
 };
 
 BattleTab.prototype.dealWithPlayerchat = function(params) {
-    var name = this.conf.ids[params.spot];
+    var name = players.name(this.conf.players[params.spot]);
     this.addCommand(["chat", name, params.message]);
 };
 
@@ -390,4 +391,16 @@ BattleTab.prototype.dealWithRecoil = function(params) {
 
 BattleTab.prototype.dealWithDrain = function(params) {
     this.damageCause.from = "drain";
+};
+
+BattleTab.prototype.dealWithAlreadystatus = function(params) {
+    this.addCommand(["-fail", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+};
+
+BattleTab.prototype.dealWithFeelstatus = function(params) {
+    this.addCommand(["-cant", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+};
+
+BattleTab.prototype.dealWithFreestatus = function(params) {
+    this.addCommand(["-curestatus", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
 };
