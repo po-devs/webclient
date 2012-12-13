@@ -106,7 +106,8 @@ body {
 .player-list-item {
     font-size: 13px;
     color: #616161;
-    line-height: 2;
+    height: 40px;
+    line-height: 40px;
     padding-left: 18px;
     cursor: pointer;
 
