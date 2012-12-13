@@ -161,6 +161,7 @@ Array.prototype.dichotomy = function(func) {
 /* The list of players */
 function PlayerList () {
     this.ids = [];
+    this.filter = '';
 }
 
 PlayerList.prototype.setPlayers = function(playerIds) {
@@ -176,9 +177,14 @@ PlayerList.prototype.setPlayers = function(playerIds) {
 };
 
 PlayerList.prototype.createPlayerItem = function(id) {
-    var ret = $("<li class='player-list-item' id='player-"+id+"'>").html(players.name(id));
+    var name = players.name(id);
+    var ret = $("<li class='player-list-item' id='player-"+id+"'>").html(name);
     if (battles.isBattling(id)) {
         ret.addClass('player-battling');
+    }
+    /* If there's a filter and it's no match, hide the player name */
+    if (this.filter && name.toLowerCase().indexOf(this.filter.toLowerCase()) === -1) {
+        ret.hide();
     }
     return ret;
 };
