@@ -107,11 +107,15 @@ body {
 .player-list {
     /*height: 600px;*/
     overflow: auto;
-    margin-top: 200px;
 }
 
-.player-list-item {
-    font-size: 13px;
+.controls-list {
+    margin-top: 20px;
+    border-bottom: 1px solid #222222;
+}
+
+.player-list-item, .controls-list li {
+    font-size: 15px;
     color: #616161;
     height: 40px;
     line-height: 40px;
@@ -131,8 +135,12 @@ body {
     color: #5d838c;
 }
 
-.player-list-item:hover, .player-list-item.selected {
+.player-list-item:hover, .player-list-item.selected, .controls-list li:hover {
     background-color: #252525;
+}
+
+.controls-list li:hover {
+    color: #FFF;
 }
 
 /* Moves the client part into the centre:
@@ -145,16 +153,16 @@ li[role="presentation"] {
     font-size: 11px;
 }
 
-::-webkit-scrollbar {
+.sidebar ::-webkit-scrollbar {
     width: 12px;
 }
  
-::-webkit-scrollbar-track {
+.sidebar ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     border-radius: 10px;
 }
  
-::-webkit-scrollbar-thumb {
+.sidebar ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
     background: #111;
@@ -171,4 +179,26 @@ li[role="presentation"] {
     padding: 10px 15px;
     display: inline-block;
     text-decoration: none;
+}
+
+.filter-users {
+    padding-left: 18px;
+    margin: 15px 0;
+}
+
+.filter-users span {
+    text-transform: uppercase;
+    color: #3b3a3a;
+    font-size: 12px;
+}
+
+.filter-users input {
+    background: #111111 url(../images/posearch.png) no-repeat center right;
+    border: 0;
+    border-radius: 2px;
+    color: #252525;
+    margin-top: 10px;
+    padding: 10px;
+    width: 130px;
+    font-size: 16px;
 }
