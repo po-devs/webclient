@@ -5,18 +5,6 @@ License: GPLv2
 
 */
 
-/******************/
-/** Added for PO **/
-/******************/
-.battlewrapper
-{
-    height: 400px;
-    position: relative;
-}
-/******************/
-/* End of PO code */
-/******************/
-
 .battle
 {
 	position: absolute;

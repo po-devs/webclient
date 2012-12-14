@@ -120,6 +120,7 @@ function BattleTab(pid, conf) {
 
         this.battle.runMajor(["player", "p1", players.name(conf.players[0])]);
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
+        this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
         this.battle.play();
 //        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
