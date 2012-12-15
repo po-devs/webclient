@@ -1,0 +1,14 @@
+<!-- Returns the trainer info passed in "content" query param, iframe is used to invoke this page to block XSS attempts -->
+<html>
+    <head>
+        <script type="text/javascript" src="libs/utilities.js"></script>
+    </head>
+    <body></body>
+    <script>
+        var css = window.atob(getQueryString("css"));
+        var info = window.atob(getQueryString("content"));
+
+        loadjscssfile(css, "css");
+        document.body.innerHTML = info;
+    </script>
+</html>
