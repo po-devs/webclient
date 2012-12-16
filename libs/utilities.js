@@ -1,12 +1,6 @@
 function getQueryString(key, default_,query_) {
-    if (query_===undefined) query_=window.location.href;
-    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-    var qs = regex.exec(query_);
-    if(qs == null)
-        return default_;
-    else
-        return qs[1];
+    if (query_===undefined) query_=window.location.search;
+    return decodeURI(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 }
 
 function loadjscssfile(filename, filetype){

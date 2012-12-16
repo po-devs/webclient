@@ -61,6 +61,10 @@ body {
     font-size: 11px;
 }
 
+#player-dialog .avatar {
+    float: left;
+}
+
 .textbox {
     /*font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;*/
     background: none repeat scroll 0% 0% rgb(255, 255, 255);
