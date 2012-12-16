@@ -473,3 +473,24 @@ BattleTab.prototype.dealWithRated = function(params) {
 
     this.addCommand(["start"]);
 };
+
+BattleTab.prototype.dealWithChoiceselection = function(params) {
+    this.addCommand(["callback", "decision"]);
+};
+
+/*
+ Forfeit,
+ Win,
+ Tie,
+ Close
+ */
+BattleTab.prototype.dealWithBattleend = function(params) {
+    if (params.result == 0 || params.result == 1) {
+        this.addCommand(["win", players.name(this.conf.players[params.winner])]);
+    } else if (params.result == 2) {
+        this.addCommand(["tie"]);
+    } else if (params.result == 3) {
+        this.addCommand(["leave", players.name(this.conf.players[0])]);
+        this.addCommand(["leave", players.name(this.conf.players[1])]);
+    }
+};
