@@ -65,6 +65,15 @@ body {
     float: left;
 }
 
+#player-dialog .trainer-info, #player-dialog .trainer-info iframe {
+    width: 100%;
+}
+
+/* Trainer info when it's in an iframe (still inherits body and so on) */
+.iframe-trainer-info {
+    font-size: 13px;
+}
+
 .textbox {
     /*font: 13px Tahoma,Calibri,Verdana,Geneva,sans-serif !important;*/
     background: none repeat scroll 0% 0% rgb(255, 255, 255);
