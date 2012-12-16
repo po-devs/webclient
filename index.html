@@ -370,20 +370,21 @@
                     if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
                         var path = window.location.pathname;
                         var dir = path.substr(0, path.lastIndexOf("/"));
-                        $("#player-dialog .info").html("<iframe src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
+                        info = "<div class='iframe-trainer-info'>"+info+"</div>"
+                        $("#player-dialog .trainer-info").html("<iframe src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
                                 + window.btoa(window.location.protocol + "//" + window.location.hostname + dir + "/css/webclient.css") + "'></iframe>");
                     } else {
-                        $("#player-dialog .info").text(info);
+                        $("#player-dialog .trainer-info").text(info);
                     }
                 } else {
-                    $("#player-dialog .info").text(info);
+                    $("#player-dialog .trainer-info").text(info);
                 }
             };
             $("#player-list").on("click", "li", function(event) {
                 var id = event.currentTarget.id.split("-")[1];
                 currentOpenPlayer = id;
                 var dialog = $("#player-dialog");
-                dialog.html('<div class="avatar"></div><div class="info">loading...</div>');
+                dialog.html('<div class="avatar"></div><div class="trainer-info">loading...</div>');
                 var player = players.id(id);
 
                 if (player.hasOwnProperty("info")) {
