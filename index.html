@@ -163,34 +163,36 @@
                         this.target = "_blank";
                     }
                 });
-                $(document).on("keydown", "input[history=true]", function (event) {
-                    var elem = event.currentTarget,
-                        maxHistSize = 100;
-                    elem.hist = elem.hist || [];
-                    elem.histIndex = elem.histIndex || 0;
-                    if (event.which == 38) { // Up
-                        if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
+                if (!mobileBrowser) {
+                    $(document).on("keydown", "input[history=true]", function (event) {
+                        var elem = event.currentTarget,
+                            maxHistSize = 100;
+                        elem.hist = elem.hist || [];
+                        elem.histIndex = elem.histIndex || 0;
+                        if (event.which == 38) { // Up
+                            if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
+                                elem.hist.push(elem.value);
+                                if (elem.hist.length > maxHistSize) {
+                                    elem.hist.shift();
+                                }
+                            }
+                            if (elem.histIndex > 0) {
+                                elem.value = elem.hist[--elem.histIndex];
+                            }
+                        } else if (event.which == 40) { // Down
+                            if (elem.histIndex < elem.hist.length) {
+                               elem.value = elem.hist[++elem.histIndex] || "";
+                            }
+                        } else if (event.which == 13) { // Return
                             elem.hist.push(elem.value);
                             if (elem.hist.length > maxHistSize) {
                                 elem.hist.shift();
                             }
+                            elem.histIndex = elem.hist.length;
+                            elem.value = "";
                         }
-                        if (elem.histIndex > 0) {
-                            elem.value = elem.hist[--elem.histIndex];
-                        }
-                    } else if (event.which == 40) { // Down
-                        if (elem.histIndex < elem.hist.length) {
-                           elem.value = elem.hist[++elem.histIndex] || "";
-                        }
-                    } else if (event.which == 13) { // Return
-                        elem.hist.push(elem.value);
-                        if (elem.hist.length > maxHistSize) {
-                            elem.hist.shift();
-                        }
-                        elem.histIndex = elem.hist.length;
-                        elem.value = "";
-                    }
-                });
+                    });
+                }
                 playerList = new PlayerList();
                 players = new Players();
                 pms = new PMs();
@@ -341,16 +343,49 @@
             <label for="option-ConfirmExit">Confirm exit dialog when on a server</label>
         </p> -->
         <script type="text/javascript">
+            /* Player that is shown in the trainer window */
+            currentOpenPlayer = -1;
             $("#player-dialog").dialog({
                 autoOpen: false,
                 modal: true,
-                resizeable: false
+                resizeable: false,
+                close: function() {
+                    currentOpenPlayer = -1;
+                }
              });
 
+            var updatePlayerInfo = function(player) {
+                $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
+                var info = player.info || '';
+                if (info.indexOf("<") != -1) {
+                    /* If there's even the slightest risk of XSS attack, use an iframe to protect ourselves */
+                    var remotepage = "http://coyotte508.github.com/webclient/trainerinfo.html";
+
+                    /* Make sure to use a different domain to block XSS */
+                    if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
+                        var path = window.location.pathname;
+                        var dir = path.substr(0, path.lastIndexOf("/"));
+                        $("#player-dialog .info").html("<iframe src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
+                                + window.btoa(window.location.protocol + "//" + window.location.hostname + dir + "/css/webclient.css") + "'></iframe>");
+                    } else {
+                        $("#player-dialog .info").text(info);
+                    }
+                } else {
+                    $("#player-dialog .info").text(info);
+                }
+            };
             $("#player-list").on("click", "li", function(event) {
                 var id = event.currentTarget.id.split("-")[1];
+                currentOpenPlayer = id;
                 var dialog = $("#player-dialog");
-                dialog.html('');
+                dialog.html('<div class="avatar"></div><div class="info">loading...</div>');
+                var player = players.id(id);
+
+                if (player.hasOwnProperty("info")) {
+                    updatePlayerInfo(player);
+                } else {
+                    websocket.send("player|"+id);
+                }
                 /* Show the list of battles in the player info */
                 if (battles.isBattling(id)) {
                     for (var bid in battles.battlesByPlayer[id]) {
@@ -646,6 +681,10 @@
                     /* Can contain multiple players */
                     var params = JSON.parse(data);
                     players.addPlayer(params);
+
+                    if (currentOpenPlayer !== -1 && currentOpenPlayer in params && "info" in params[currentOpenPlayer]) {
+                        updatePlayerInfo(params[currentOpenPlayer]);
+                    }
                 } else if (cmd === "playerlogout") {
                     players.removePlayer(data);
                 } else if (cmd === "join") {
