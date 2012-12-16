@@ -5,8 +5,8 @@
     </head>
     <body></body>
     <script>
-        var css = window.atob(getQueryString("css"));
-        var info = window.atob(getQueryString("content"));
+        var css = window.atob(getQueryString("css")||'');
+        var info = window.atob(getQueryString("content")||'');
 
         loadjscssfile(css, "css");
         document.body.innerHTML = info;
