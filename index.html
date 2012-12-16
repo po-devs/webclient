@@ -485,6 +485,8 @@
                         } else if (/^send-pm-/.test(idsender)) {
                             var strToSend = "pm|" + JSON.stringify({"to": targetid, message: msg});
                             pms.pm(targetid).print(players.myid, msg);
+                        } else if (/^send-battle-/.test(idsender)) {
+                            var strToSend = "spectatingchat|" + targetid + "|"+ msg;
                         }
                         websocket.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );

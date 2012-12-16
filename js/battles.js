@@ -101,7 +101,8 @@ function BattleTab(pid, conf) {
         /* Cleaner solution to create the tab would be appreciated */
         var $content = $("#battle-" + pid);
         var myname = players.name(players.myid);
-        var chatElem = '<form onsubmit="return false" class="chatbox"><label style="' + hashColor(toId(myname)) + '">' + sanitize(myname) + ':</label> <textarea class="ps-textbox" type="text" size="70" history="true" autofocus="true"></textarea></form>';
+        var chatElem = '<form onsubmit="return false" class="chatbox"><label style="' + hashColor(toId(myname)) + '">' + sanitize(myname) +
+            ':</label> <textarea class="ps-textbox" type="text" size="70" history="true" autofocus="true" id="send-battle-'+this.id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" ></textarea></form>';
         $content.html('<div class="battlewrapper"><div class="battle">Battle is here</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div><div class="replay-controls"></div></div>'
                                  +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
