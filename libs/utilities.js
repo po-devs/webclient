@@ -62,3 +62,5 @@ Function.method('inherits', function (parent) {
     });
     return this;
 });
+
+mobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
