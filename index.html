@@ -358,8 +358,13 @@
                 $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
                 var info = player.info || '';
                 if (info.indexOf("<") != -1) {
+
                     /* If there's even the slightest risk of XSS attack, use an iframe to protect ourselves */
+                    /* Use two different domain names depending on where the webclient is hosted */
                     var remotepage = "http://coyotte508.github.com/webclient/trainerinfo.html";
+                    if (window.location.protocol !== "file:" && remotepage.indexOf(document.domain) !== -1) {
+                        remotepage = "http://pokemon-online.eu/webclient/trainerinfo.html";
+                    }
 
                     /* Make sure to use a different domain to block XSS */
                     if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
