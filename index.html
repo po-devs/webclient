@@ -164,7 +164,7 @@
                     }
                 });
 
-                $(document).on("keydown", "input[history=true]", function (event) {
+                $(document).on("keydown", "input[history=true],textarea[history=true]", function (event) {
                     var elem = event.currentTarget,
                         maxHistSize = 100;
                     elem.hist = elem.hist || [];
@@ -467,7 +467,7 @@
             {
                 if (websocket !== null) {
                     var $inputText = $(sender);
-                    var message = $inputText.val().split("\n");
+                    var message = $.trim($inputText.val()).split("\n");
                     var idsender = $inputText.attr("id");
                     var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
 
@@ -532,7 +532,7 @@
                     };
                     websocket.onmessage = function( evt ) {
                         if (evt.data.length < 120) {
-                            console.log( "Message received :", evt.data );
+                            //console.log( "Message received :", evt.data );
                         }
 
                         if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );

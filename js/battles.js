@@ -191,13 +191,17 @@ BattleTab.prototype.dealWithCommand = function(params) {
     }
 };
 
-BattleTab.prototype.addCommand = function(args, kwargs) {
+BattleTab.prototype.addCommand = function(args, kwargs, preempt) {
     kwargs = kwargs||{};
     for (var x in kwargs) {
         args.push("["+x+"]"+kwargs[x]);
     }
-    this.battle.add("|"+args.join("|"));
-}
+    if (!preempt) {
+        this.battle.add("|"+args.join("|"));
+    } else {
+        this.battle.instantAdd("|"+args.join("|"));
+    }
+};
 
 /* dealWithXxxx functions are all called from dealWithCommand */
 BattleTab.prototype.dealWithTurn = function(params) {
@@ -259,13 +263,13 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
 };
 
 BattleTab.statuses = {
-    "-1": "confusion",
     0: "",
     1: "par",
     2: "slp",
     3: "frz",
     4: "brn",
     5: "psn",
+    6: "confusion",
     31: "fnt"
 };
 
@@ -325,10 +329,11 @@ BattleTab.prototype.dealWithAvoid = function(params) {
 
 BattleTab.prototype.dealWithBoost = function(params) {
     if (params.boost > 0) {
-        this.addCommand(["-boost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), params.boost]);
+        this.addCommand(["-boost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), params.boost], this.damageCause);
     } else if (params.boost < 0) {
-        this.addCommand(["-unboost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), -params.boost]);
+        this.addCommand(["-unboost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), -params.boost], this.damageCause);
     }
+    this.damageCause = {};
 };
 
 BattleTab.prototype.dealWithStatus = function(params) {
@@ -354,12 +359,12 @@ BattleTab.prototype.dealWithFail = function(params) {
 
 BattleTab.prototype.dealWithPlayerchat = function(params) {
     var name = players.name(this.conf.players[params.spot]);
-    this.addCommand(["chat", name, params.message]);
+    this.addCommand(["chat", name, params.message], undefined, true);
 };
 
 BattleTab.prototype.dealWithSpectatorjoin = function(params) {
     this.spectators[params.id] = params.name;
-    this.addCommand(["join", params.name]);
+    this.addCommand(["join", params.name], undefined, true);
 
     if (this.isCurrent()) {
         playerList.addPlayer(params.id);
@@ -367,7 +372,7 @@ BattleTab.prototype.dealWithSpectatorjoin = function(params) {
 };
 
 BattleTab.prototype.dealWithSpectatorleave = function(params) {
-    this.addCommand(["leave", this.spectators[params.id]]);
+    this.addCommand(["leave", this.spectators[params.id]], undefined, true);
     delete this.spectators[params.id];
 
     if (this.isCurrent()) {
@@ -377,7 +382,7 @@ BattleTab.prototype.dealWithSpectatorleave = function(params) {
 
 BattleTab.prototype.dealWithSpectatorchat = function(params) {
     var name = this.spectators[params.id];
-    this.addCommand(["chat", name, params.message]);
+    this.addCommand(["chat", name, params.message], undefined, true);
 };
 
 BattleTab.prototype.dealWithNotarget = function(params) {
@@ -402,7 +407,11 @@ BattleTab.prototype.dealWithAlreadystatus = function(params) {
 };
 
 BattleTab.prototype.dealWithFeelstatus = function(params) {
-    this.addCommand(["-cant", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+    if (params.status == 6) { //confusion
+        this.addCommand(["-activate", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+    } else {
+        this.addCommand(["cant", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
+    }
 };
 
 BattleTab.prototype.dealWithFreestatus = function(params) {
@@ -496,4 +505,45 @@ BattleTab.prototype.dealWithBattleend = function(params) {
         this.addCommand(["leave", players.name(this.conf.players[0])]);
         this.addCommand(["leave", players.name(this.conf.players[1])]);
     }
+};
+
+BattleTab.itemsToPS = {
+    3: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: White herb"])},
+    4: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Focus Band"])},
+    5: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Focus Sash"])},
+    7: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Mental Herb"])},
+    11: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Power Herb"])},
+    12: function() {this.damageCause.from = "item: Leftovers"},
+    16: function() {this.damageCause.from = "item: Black Sludge"},
+    17: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Quick Claw"])},
+    18: function() {this.damageCause.from = "item: Berry Juice"},
+    19: [function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Flame Orb"])},
+        function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Toxic Orb"])}],
+    21: function() {this.damageCause.from = "item: Life Orb"},
+    24: function() {this.damageCause.from = "item: Shell Bell"},
+    29: function() {this.damageCause.from = "item: Sticky Barb"},
+    34: function(params) {this.damageCause.from = "item: Rocky Helmet"; this.damageCause.of = this.spotToPlayer(params.spot);},
+    35: [function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Air Balloon"])},
+        function(params) {this.addCommand(["-item", this.spotToPlayer(params.spot), "item: Air Balloon"])}],
+    36: function(params) {this.damageCause.from = "item: " + Tools.getItemName(params.berry); },
+    37: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: " + Tools.getItemName(params.berry)], {from: "gem", move: Tools.getMoveName(params.other)});},
+    38: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Red Card"], {of: this.spotToPlayer(params.foe)});},
+    39: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Eject Button"])},
+    40: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Berserk Gene"])},
+    41: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Destiny Knot"])}
+//    41: %s's Destiny Knot activated, %f is in love!
+};
+
+BattleTab.prototype.dealWithItemmessage = function(params) {
+    var f = BattleTab.itemsToPS[params.item];
+    if (!f) {
+        return;
+    }
+    if (Array.isArray(f)) {
+        f = f[params.part];
+    }
+    if (!f) {
+        return;
+    }
+    f.call(this, params);
 };
