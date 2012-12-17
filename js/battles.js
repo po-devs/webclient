@@ -647,38 +647,74 @@ BattleTab.movesToPS = {
 //    59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
     59: [function(params) {this.addCommand(["-start", params.foepoke, "healblock"])},
         function(params) {this.addCommand(["cant", params.srcpoke, "healblock", Tools.getMoveName(params.other)])},
-        function(params) {this.addCommand(["-end", params.foepoke, "healblock"])}],
-
+        function(params) {this.addCommand(["-end", params.srcpoke, "healblock"])}],
 //    60 %s regained health!
 //    61 %s regained health!|The healing wish came true!|It became cloaked in mystical moonlight!
+    61: [undefined, function(){this.damageCause.from="healingwish"}, function(){this.damageCause.from="lunardance"}],
 //    62 %s swapped its defense and attack!
+    62: function(params) {this.addCommand(["-start", params.srcpoke, "powertrick"])},
 //    63 %s is ready to help %f!
 //    64 %s kept going and crashed!
 //    67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
+    67: [function(params){this.addCommand(["-start", params.srcpoke, "imprison"])}, function(params){this.addCommand(["cant", params.srcpoke, "imprison", Tools.getMoveName(params.other)])}],
 //68 %s levitated with electromagnetism!|%s electromagnetism wore off!
+    68: function(params){this.addCommand([params.part == 0 ? "-start" : "-end", params.srcpoke, "magnetrise"])},
 //    70 %s knocked off %f's %i!
+    70: function(params){this.addCommand(["-enditem", params.foepoke, Tools.getItemName(params.other)], {from: "knockoff"})},
 //72 It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
+    72: [undefined, function(params){this.addCommand("-start", params.srcpoke, "leechseed")}, function(){this.damageCause.from="leechseed"}],
 //73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
+    73: function(params) {
+        var part = params.part;
+        this.addCommand([part < 4 ? "-sidestart" : "-sideend", params.srcpoke, part % 2 ? "lightscreen" : "reflect"]);
+    },
 //    74 %s took aim at %f!
 //    75 %ts's team is protected from critical hits!|%ts's Lucky Chant wore off!
+    75: function(params) {this.addCommand([params.part == 0 ? "-start":"-end", params.srcpoke, "luckychant"])},
 //    76 %s shrouded itself with Magic Coat!|%s's %m was bounced back by Magic Coat!|%s's %m was bounced back by Magic Mirror!
+    76: [function(params){this.addCommand(["-singleturn", params.srcpoke, "magiccoat"])},
+        function(params) {this.addCommand(["-activate", params.foepoke, "magiccoat", Tools.getMoveName(params.other)], {of: params.srcpoke})},
+        function(params) {this.addCommand(["-activate", params.foepoke, "magicmirror", Tools.getMoveName(params.other)], {of: params.srcpoke})}],
 //    77 %s cleared the field around %tf's team!|%s cleared the field!
+    77: undefined, //defog
 //78 Magnitude %d!
+    78: function(params){this.addCommand(["-activate", params.srcpoke, "magnitude", params.other])},
 //    81 %s learned %m!
+    81: function(params){this.addCommand(["-activate", params.srcpoke, "sketch", Tools.getMoveName(params.other)])},
 //    82 But nothing happened!
+    82: function(params){this.addCommand(["-nothing", params.srcpoke])},
 //    84 %s identified %f!
+    84: function(params){this.addCommand(["-start", params.foepoke, "foresight"])},
 //    86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
+    86: function(params){
+        var part = params.part;
+        var effects = ["-sidestart", "-sideend", "-activate"];
+        var poke = [params.srcpoke, params.srcpoke, params.foepoke];
+        this.addCommand([effects[part], poke[part], "mist"]);
+    },
 //    87 %s regained health!|%s regained a lot of health!|%s regained little health!
 //    88 Electric's power has been weakened!|Fire's power has been weakened!
+    88: function(params) { this.addCommand(["-start", params.srcpoke, params.part == 0 ? "mudsport" : "watersport"]);},
 //    92 %s began having a nightmare!|%s is locked in a nightmare!
+    90: [function(params){this.addCommand(["-start", params.srcpoke, "nightmare"])},
+        function(){this.damageCause.from = "nightmare"}],
 //    93 %s calmed down!|%s became confused due to fatigue!
 //    94 The battlers shared their pain!
+//    94: function(){this.damageCause.from = "painsplit"},
 //    95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+    95: [function(){this.addCommand(["-fieldactivate", "perishsong"])},
+        function(params){this.addCommand(["-start", params.srcpoke, "perish"+params.other])}],
 //96 %s's present healed %f some HP!
+    96: function(){this.damageCause.from = "move: Present"},
 //97 %s copied %f's stat changes!
 //98 %s moved its status onto %f!
+    98: function(params){this.addCommand(["-curestatus", params.srcpoke, "psychoshift"], {from: params.foepoke})},
 //    102 %s's rage is building!
 //103 %s got free of %f's %m!|%s blew away Leech Seed!|%s blew away Spikes!|%s blew away Toxic Spikes!|%s blew away Stealth Rock!
+    103: function(params) {
+        var effects = ["partiallytrapped", "leechseed", "spikes", "toxicspikes", "stealthrock"];
+        this.addCommand(["-end", params.srcpoke, effects[params.part]], {from: "rapidspin"});
+    },
 //104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!
 //    105 %s recycled %i!
 //    106 %s went to sleep and became healthy!
