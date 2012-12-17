@@ -347,7 +347,8 @@ BattleTab.prototype.dealWithStatus = function(params) {
         status = "tox";
     }
     this.pokes[params.spot].status = params.status;
-    this.addCommand(["-status", this.spotToPlayer(params.spot), status]);
+    this.addCommand(["-status", this.spotToPlayer(params.spot), status], this.damageCause);
+    this.damageCause = {};
 };
 
 BattleTab.prototype.dealWithStatusdamage = function(params) {
@@ -680,7 +681,7 @@ BattleTab.movesToPS = {
 //78 Magnitude %d!
     78: function(params){this.addCommand(["-activate", params.srcpoke, "magnitude", params.other])},
 //    81 %s learned %m!
-    81: function(params){this.addCommand(["-activate", params.srcpoke, "sketch", Tools.getMoveName(params.other)])},
+    81: function(params){this.addCommand(["-activate", params.srcpoke, "mimic", Tools.getMoveName(params.other)])},
 //    82 But nothing happened!
     82: function(params){this.addCommand(["-nothing", params.srcpoke])},
 //    84 %s identified %f!
@@ -716,37 +717,92 @@ BattleTab.movesToPS = {
         this.addCommand(["-end", params.srcpoke, effects[params.part]], {from: "rapidspin"});
     },
 //104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbed light!|%s became cloaked in a freezing light!|%s became cloaked in freezing air!
+    104: function(params){this.addCommand(["-prepare", params.srcpoke, "move: "+Tools.getMoveName(params.other)]);},
 //    105 %s recycled %i!
+    105: function(params){this.addCommand(["-item", params.srcpoke, Tools.getItemName(params.other)], {from: "recycle"})},
 //    106 %s went to sleep and became healthy!
+    106: function(){this.damageCause.from="rest"},
 //    107 %s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
 //    108 %s copied %f's %a!
+    108: function(params){this.addCommand(["-ability", params.srcpoke, Tools.getAbilityName(params.other)], {from: "roleplay", of: params.foepoke})},
 //109 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
+    109: function(params){
+        var part = params.part;
+        var effects = ["-sidestart", "-sideend", "-activate"];
+        var poke = [params.srcpoke, params.srcpoke, params.foepoke];
+        this.addCommand([effects[part], poke[part], "safeguard"]);
+    },
 //    111 %s sketched %m!
+    111: function(params){this.addCommand(["-activate", params.srcpoke, "sketch", Tools.getMoveName(params.other)])},
 //    112 %s swapped abilities with its target!
+    112: function(params){this.addCommand(["-activate", params.srcpoke, "skillswap"])},
 //    114 %s's Damp prevents it from working!
 //118 %s snatched %f's move!|%s waits for a target to make a move!
+    118: function(params){this.addCommand(["-activate", params.srcpoke, "snatch"], {of:params.foepoke})},
 //121 Spikes were scattered all around the feet of %tf's team!|%s is hurt by spikes!
+    121: [function(params){this.addCommand(["-sidestart", params.foepoke, "spikes"])},
+        function(){this.damageCause.from = "spikes"}],
 //122 %s released!
 //    123 It reduced the PP of %f's %m by 4!
+    123: function(params){this.addCommand(["-activate", params.foepoke, "spite", Tools.getMoveName(params.other), 4])},
 //124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
+    124: [function(params){this.addCommand(["-sidestart", params.foepoke, "stealthrock"])},
+        function(){this.damageCause.from = "steathrock"}],
 //125 %s stockpiled %d!
+    125: function(params){this.addCommand(["-start", params.srcpoke, "stockpile"+params.other])},
 //    127 %s is hit with recoil!
 //    128 %s already has a substitute.|%s's substitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!|%s made a substitute!
+    128: [function(params){this.addCommand(["-start", params.foepoke, "substitute"], {akready:true})}, undefined,
+        function(params){this.addCommand(["-start", params.foepoke, "substitute"], {block:true})},
+        function(params){this.addCommand(["-start", params.foepoke, "substitute"], {damage:true})}, undefined],
 //131 %s swallowed!
 //    132 %s switched items with %f!|%s obtained one %i!
+    132: [function(params){this.addCommand(["-activate", params.srcpoke, "trick"], {of: params.foepoke})},
+          function(params){this.addCommand(["-item", params.srcpoke, Tools.getItemName(params.other)])}],
 //    133 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
+    133: function(params){this.addCommand([params.part == 0 ? "-sidestart":"-sideend", params.srcpoke, "tailwind"])},
 //    134 %s can't use %m after the taunt!|%f fell for the taunt!|%s's taunt ended!
+    134: function(params) {
+        if (params.part == 0) {
+            this.addCommand(["cant", params.srcpoke, "taunt", Tools.getMoveName(params.other)]);
+        } else if (params.part == 1) {
+            this.addCommand(["-start", params.foepoke, "taunt"]);
+        } else {
+            this.addCommand(["-end", params.foepoke, "taunt"]);
+        }
+    },
 //    135 %f is now tormented!
+    135: function(params) {this.addCommand(["-start", params.foepoke, "torment"]);},
 //    136 Poison spikes were scattered all around the feet of %tf's team!|The poison spikes disappeared around %s's feet!
+    136: [function(params){this.addCommand([params.part == 0 ? "-sidestart" : "-sideend", params.part == 0 ? params.foepoke : params.srcpoke, "stealthrock"])}],
 //    137 %s transformed into %p!
+    137: function(params){this.addCommand(["-transform", params.srcpoke, params.foepoke])},
 //    138 %s twisted the dimensions!|The twisted dimensions returned to normal!
+    138: function(params){this.addCommand([params.part==0?"-fieldstart":"-fieldend", params.srcpoke, "trickroom"])},
 //    141 %s caused an uproar!|%s is making an uproar!|%s calmed down!|%s woke up!|%s stays awake because of the uproar!
+    141: function(params) {
+        if (params.part == 0) {
+            this.addCommand(["-start", params.srcpoke, "uproar"]);
+        } else if (params.part == 2) {
+            this.addCommand(["-end", params.srcpoke, "uproar"]);
+        } else if (params.part == 3) {
+            this.damageCause.from="uproar";
+        } else if (params.part == 4) {
+            this.addCommand(["-activate", params.srcpoke, "uproar"]);
+        }
+    },
 //    142 %q's wish came true!
+    142: function(params){this.damageCause.from = "wish"; this.damgeCause.wisher=params.data},
 //143 %f now has %a!
+    143: function(params){this.addCommand(["-ability", params.foepoke, Tools.getAbilityName(params.other)])},
 //    144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
+    144: [function(params) {this.addCommand(["-start", params.foepoke, "yawn"])},undefined,undefined],
 //149 All stat changes were eliminated!|%f's stat changes were eliminated!|Haze wafted through the field!
+    149: [function(){this.addCommand(["-clearallboost"])}, function(params){this.addCommand(["-clearboost", params.foepoke])}],
 //150 %s landed on the ground!
+    150: [function(){this.damageCause.from="roost"}],
 //    151 %s planted its roots!|%s absorbed nutrients with its roots!
+    151: [function(params){this.addCommand(["-start", params.srcpoke, "ingrain"])}, function(){this.damageCause.from = "ingrain"}],
 //    155 %s and %f had their power shared!|%s and %f had their defenses shared!
 //    156 %s cancelled the items' effects!|The items are now working again!
 //157 %s became of the Water type!
@@ -771,7 +827,7 @@ BattleTab.movesToPS = {
 };
 
 BattleTab.prototype.dealWithMovemessage = function(params) {
-    var f = BattleTab.movesToPS[params.item];
+    var f = BattleTab.movesToPS[params.move];
     if (!f) {
         return;
     }
