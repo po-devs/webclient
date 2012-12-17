@@ -60,7 +60,8 @@ function convertPOLinks(element) {
 
         switch (proto) {
             case "pokemon":
-                var poke = query.split("&")[0] || "1",
+                query = "?" + query;
+                var poke = getQueryString("num", query.slice(1).split("&")[0], query) || "1",
                     gen = getQueryString("gen", "5", query),
                     shiny = getQueryString("shiny", "false", query) === "true",
                     gender = getQueryString("gender", "male", query),
