@@ -624,7 +624,7 @@ BattleTab.movesToPS = {
 //    51 %f's %a was suppressed!
     48: function(params) {this.addCommand(['-endability', params.srcpoke, Tools.getAbilityName(params.other)], {from: "Gastro Acid"})},
 //53 Gravity intensified!|Gravity returned to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
-    43: function(params) {
+    53: function(params) {
         var part = params.part;
         if (part < 2) {
             this.addCommand([part == 0 ? "-fieldstart":"fieldend", "gravity"]);
@@ -805,17 +805,29 @@ BattleTab.movesToPS = {
     151: [function(params){this.addCommand(["-start", params.srcpoke, "ingrain"])}, function(){this.damageCause.from = "ingrain"}],
 //    155 %s and %f had their power shared!|%s and %f had their defenses shared!
 //    156 %s cancelled the items' effects!|The items are now working again!
+    156: function(params){this.addCommand([params.part==0?"-fieldstart":"-fieldend", params.srcpoke, "magicroom"])},
 //157 %s became of the Water type!
+    157: function(params) {this.addCommand(["-start", params.srcpoke, "typechange", "Water"])},
 //    158 %f gained %a!
+    158: function(params){this.addCommand(["-ability", params.foepoke, Tools.getAbilityName(params.other)])},
 //    160 %f's %i burned!
+    160: function(params){this.addCommand(["-enditem", params.foepoke, Tools.getItemName(params.other)], {from:"incinerate"})},
 //162 %s gave %f its %i!
+    162: function(params){
+        this.addCommand(["-enditem", params.srcpoke, Tools.getItemName(params.other)], {from:"bestow"});
+        this.addCommand(["-item", params.foepoke, Tools.getItemName(params.other)], {from:"bestow"});
+    },
 //    164 %s's status cleared!
 //168 %s swapped the Sp. Def. and the Defense of all the pokemon!|The Sp. Def and Defense of the pokemon went back to normal!
-//    169 %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
+    168: function(params){this.addCommand([params.part==0?"-fieldstart":"-fieldend", params.srcpoke, "wonderroom"])},
+    //169:  %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
+    169: function(params){this.addCommand([params.part==0?"-start":"-end", params.srcpoke, "wideguard"])},
 //    170 %ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
+    170: function(params){this.addCommand([params.part==0?"-start":"-end", params.srcpoke, "quickguard"])},
 //    171 %s is being sent back!
 //    172 %s type changed to match %f's types!
 //174 %f was hurled into the air!|%s was freed from the telekinesis!
+    174: function(params){this.addCommand([params.part==0?"-start":"-end", params.part==0?params.foepoke: params.srcpoke, "telekinesis"])},
 //    175 %s fell straight down!
     175: function(params){this.addCommand(["-start", params.srcpoke, "smackdown"])}
 //    178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
