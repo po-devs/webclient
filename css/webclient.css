@@ -271,7 +271,7 @@ li[role="presentation"] {
 .chatbox textarea
 {
     display: block;
-    height: 1.1em;
+    height: 1.2em;
     width: 98%; /** PO edited, orig 100% */
     resize: none;
     font-size: 9pt;
