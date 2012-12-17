@@ -2325,6 +2325,7 @@ function Battle(frame, logFrame, noPreload) {
 		}
 	};
 	this.runMinor = function (args, kwargs) {
+        console.log("arguments: " + JSON.stringify(args) + ", " + JSON.stringify(kwargs));
 		var actions = '';
 		var hiddenactions = '';
 		var minors = self.minorQueue;
@@ -4004,7 +4005,7 @@ function Battle(frame, logFrame, noPreload) {
 		}
 	};
 	this.runMajor = function(args, kwargs, preempt) {
-        console.log("arguments: " + JSON.stringify(args));
+        console.log("arguments: " + JSON.stringify(args) + ", " + JSON.stringify(kwargs));
 		switch (args[0]) {
 		case 'start':
 			self.teamPreview(false);

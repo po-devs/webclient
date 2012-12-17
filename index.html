@@ -132,7 +132,7 @@
                     if (/^po:/.test(href)) {
                         event.preventDefault();
 
-                        var params = [href.slice(3, href.indexOf("/")), href.slice(href.indexOf("/")+1)];
+                        var params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
 
                         // Add other commands here..
                         var pid = players.id(params[1]);
@@ -163,36 +163,36 @@
                         this.target = "_blank";
                     }
                 });
-                if (!mobileBrowser) {
-                    $(document).on("keydown", "input[history=true]", function (event) {
-                        var elem = event.currentTarget,
-                            maxHistSize = 100;
-                        elem.hist = elem.hist || [];
-                        elem.histIndex = elem.histIndex || 0;
-                        if (event.which == 38) { // Up
-                            if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
-                                elem.hist.push(elem.value);
-                                if (elem.hist.length > maxHistSize) {
-                                    elem.hist.shift();
-                                }
-                            }
-                            if (elem.histIndex > 0) {
-                                elem.value = elem.hist[--elem.histIndex];
-                            }
-                        } else if (event.which == 40) { // Down
-                            if (elem.histIndex < elem.hist.length) {
-                               elem.value = elem.hist[++elem.histIndex] || "";
-                            }
-                        } else if (event.which == 13) { // Return
+
+                $(document).on("keydown", "input[history=true],textarea[history=true]", function (event) {
+                    var elem = event.currentTarget,
+                        maxHistSize = 100;
+                    elem.hist = elem.hist || [];
+                    elem.histIndex = elem.histIndex || 0;
+                    if (event.which == 38) { // Up
+                        if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
                             elem.hist.push(elem.value);
                             if (elem.hist.length > maxHistSize) {
                                 elem.hist.shift();
                             }
-                            elem.histIndex = elem.hist.length;
-                            elem.value = "";
                         }
-                    });
-                }
+                        if (elem.histIndex > 0) {
+                            elem.value = elem.hist[--elem.histIndex];
+                        }
+                    } else if (event.which == 40) { // Down
+                        if (elem.histIndex < elem.hist.length) {
+                           elem.value = elem.hist[++elem.histIndex] || "";
+                        }
+                    } else if (event.which == 13) { // Return
+                        elem.hist.push(elem.value);
+                        if (elem.hist.length > maxHistSize) {
+                            elem.hist.shift();
+                        }
+                        elem.histIndex = elem.hist.length;
+                        elem.value = "";
+                    }
+                });
+
                 playerList = new PlayerList();
                 players = new Players();
                 pms = new PMs();
@@ -467,7 +467,7 @@
             {
                 if (websocket !== null) {
                     var $inputText = $(sender);
-                    var message = $inputText.val().split("\n");
+                    var message = $.trim($inputText.val()).split("\n");
                     var idsender = $inputText.attr("id");
                     var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
 
@@ -485,6 +485,8 @@
                         } else if (/^send-pm-/.test(idsender)) {
                             var strToSend = "pm|" + JSON.stringify({"to": targetid, message: msg});
                             pms.pm(targetid).print(players.myid, msg);
+                        } else if (/^send-battle-/.test(idsender)) {
+                            var strToSend = "spectatingchat|" + targetid + "|"+ msg;
                         }
                         websocket.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );
@@ -530,7 +532,7 @@
                     };
                     websocket.onmessage = function( evt ) {
                         if (evt.data.length < 120) {
-                            console.log( "Message received :", evt.data );
+                            //console.log( "Message received :", evt.data );
                         }
 
                         if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );

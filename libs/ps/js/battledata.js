@@ -453,11 +453,11 @@ var Tools = {
 	getIcon: function(pokemon) {
 		var num = 0;
 		if (pokemon === 'pokeball') {
-			return 'background:transparent url(/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -0px -8px';
+			return 'background:transparent url(libs/ps/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -0px -0px';
 		} else if (pokemon === 'pokeball-statused') {
-			return 'background:transparent url(/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -32px -8px';
+			return 'background:transparent url(libs/ps/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -32px -0px';
 		} else if (pokemon === 'pokeball-none') {
-			return 'background:transparent url(/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -64px -8px';
+			return 'background:transparent url(libs/ps/sprites/bwicons-pokeball-sheet.png) no-repeat scroll -64px -0px';
 		}
 		var id = toId(pokemon);
 		if (pokemon && pokemon.species) id = toId(pokemon.species);
@@ -533,12 +533,12 @@ var Tools = {
 
 		var top = Math.floor(num / 16) * 24;
 		var left = (num % 16) * 24;
-		return 'background:transparent url(/sprites/itemicons-sheet.png) no-repeat scroll -' + left + 'px -' + top + 'px';
+		return 'background:transparent url(libs/ps/sprites/itemicons-sheet.png) no-repeat scroll -' + left + 'px -' + top + 'px';
 	},
 
 	getTypeIcon: function(type, b) { // b is just for utilichart.js
 		sanitizedType = type.replace(/\?/g,'%3f');
-		return '<img src="/sprites/types/'+sanitizedType+'.png" alt="'+type+'" height="14" width="32"'+(b?' class="b"':'')+' />';
+		return '<img src="libs/ps/sprites/types/'+sanitizedType+'.png" alt="'+type+'" height="14" width="32"'+(b?' class="b"':'')+' />';
 	},
 
     getSpecies: function(num) {
@@ -551,5 +551,38 @@ var Tools = {
 
     getStatName : function (num) {
         return POStatNames.nums[num];
+    },
+
+    getItemName : function(num) {
+        return exports.BattleItems.nums[num];
+    },
+
+    getTypeName : function(num) {
+        /* inefficient but w/e */
+        var types = [
+            "Normal",
+            "Fighting",
+            "Flying",
+            "Poison",
+            "Ground",
+            "Rock",
+            "Bug",
+            "Ghost",
+            "Steel",
+            "Fire",
+            "Water",
+            "Grass",
+            "Electric",
+            "Psychic",
+            "Ice",
+            "Dragon",
+            "Dark",
+            "???"
+        ];
+        return types[num];
+    },
+
+    getAbilityName : function(num) {
+        return exports.BattleAbilities.nums[num]
     }
 };
