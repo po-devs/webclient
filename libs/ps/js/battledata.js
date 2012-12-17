@@ -580,5 +580,9 @@ var Tools = {
             "???"
         ];
         return types[num];
+    },
+
+    getAbilityName : function(num) {
+        return exports.BattleAbilities.nums[num]
     }
 };

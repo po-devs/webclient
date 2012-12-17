@@ -603,23 +603,52 @@ BattleTab.movesToPS = {
 //    29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
     29: [function(params){this.addCommand(["-end", params.srcpoke, "move: " + Tools.getMoveName(params.other)])},
         function(params){this.addCommand(["-start", params.srcpoke, "Future Sight"])},
-        function(params){this.addCommand(["-start", params.srcpoke, "Doom Desire"])}]
+        function(params){this.addCommand(["-start", params.srcpoke, "Doom Desire"])}],
 //    31 It doesn't affect %s!
 //32 %f can't use items anymore!|%s can use items again!
+    32: function(params){this.addCommand([params.part == 0 ? "-start" : "-end", params.part == 0 ? params.foepoke :params.srcpoke, "embargo"])},
 //33 %s's Encore ended!|%f received an encore!
+    33: function(params){this.addCommand([params.part == 1 ? "-start" : "-end", params.part == 1 ? params.foepoke :params.srcpoke, "encore"])},
 //35 %s endured the hit!|%s braced itself!
+    35: function(params){this.addCommand([params.part == 1 ? "-singleturn" : "-activate", params.srcpoke, "activate"])},
 //    43 %f's Sturdy made the attack fail!|It's a one hit KO!
+    43: [function(params){this.addCommand(["-activate", params.foepoke, "sturdy"])}, function(){this.addCommand(["-ohko"])}],
 //    45 %s flung its %i!
+    45: function(params){this.addCommand(["-enditem", params.srcpoke, Tools.getItemName(params.other)], {from: "fling"})},
 //    46 %s is getting pumped!
+    46: function(params){this.addCommand(["-start", params.srcpoke, "focusenergy"])},
 //    47 %s lost its focus!|%s is tightening its focus!
+    47: [function(params){this.addCommand(["cant", params.srcpoke, "Focus Punch"])}, function(params){this.addCommand(["-singleturn", params.srcpoke, "focuspunch"])}],
 //    48 %s became the center of attention!
 //    51 %f's %a was suppressed!
+    48: function(params) {this.addCommand(['-endability', params.srcpoke, Tools.getAbilityName(params.other)], {from: "Gastro Acid"})},
 //53 Gravity intensified!|Gravity returned to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
+    43: function(params) {
+        var part = params.part;
+        if (part < 2) {
+            this.addCommand([part == 0 ? "-fieldstart":"fieldend", "gravity"]);
+        } else if (part == 3) {
+            this.addCommand(["-activate", params.srcpoke, "gravity"]);
+        } else if (part == 4) {
+
+        } else if (part == 5) {
+            this.addCommand(["cant", params.srcpoke, "gravity", Tools.getMoveName(params.other)])
+        }
+    },
 //54 %f's %m lost all its PP because of %s' Grudge!
+    54: function(params) {this.addCommand(["-activate", params.foepoke, "grudge", Tools.getMoveName(params.other)])},
 //    55 %s swapped its boosts with %f!
+    55: function(params) {this.addCommand(["-swapboost", params.srcpoke, params.foepoke])},
 //    57 A hailstorm brewed!|It started to rain!|A sandstorm brewed!|The sunlight turned harsh!
 //    58 %s is in love with %f!|%f fell in love!|%s is immobilized by love!
+    58: [function(params) {this.addCommand(["-activate", params.srcpoke, "attract"], {of: params.foepoke})},
+        function(params) {this.addCommand(["-start", params.foepoke, "attract"])},
+        function(params) {this.addCommand(["cant", params.srcpoke, "attract"])}],
 //    59 %f was prevented from healing!|%s can't use %m because of Heal Block!|%s's heal block wore off!
+    59: [function(params) {this.addCommand(["-start", params.foepoke, "healblock"])},
+        function(params) {this.addCommand(["cant", params.srcpoke, "healblock", Tools.getMoveName(params.other)])},
+        function(params) {this.addCommand(["-end", params.foepoke, "healblock"])}],
+
 //    60 %s regained health!
 //    61 %s regained health!|The healing wish came true!|It became cloaked in mystical moonlight!
 //    62 %s swapped its defense and attack!
@@ -696,6 +725,7 @@ BattleTab.movesToPS = {
 //    172 %s type changed to match %f's types!
 //174 %f was hurled into the air!|%s was freed from the telekinesis!
 //    175 %s fell straight down!
+    175: function(params){this.addCommand(["-start", params.srcpoke, "smackdown"])}
 //    178 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is standing on a burning field!|%s is hurt by the sea of fire!
 //179 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is floundering in a swamp!
 //180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
