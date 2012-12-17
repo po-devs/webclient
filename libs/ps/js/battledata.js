@@ -555,5 +555,30 @@ var Tools = {
 
     getItemName : function(num) {
         return exports.BattleItems.nums[num];
+    },
+
+    getTypeName : function(num) {
+        /* inefficient but w/e */
+        var types = [
+            "Normal",
+            "Fighting",
+            "Flying",
+            "Poison",
+            "Ground",
+            "Rock",
+            "Bug",
+            "Ghost",
+            "Steel",
+            "Fire",
+            "Water",
+            "Grass",
+            "Electric",
+            "Psychic",
+            "Ice",
+            "Dragon",
+            "Dark",
+            "???"
+        ];
+        return types[num];
     }
 };
