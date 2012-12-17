@@ -132,7 +132,7 @@
                     if (/^po:/.test(href)) {
                         event.preventDefault();
 
-                        var params = [href.slice(3, href.indexOf("/")), href.slice(href.indexOf("/")+1)];
+                        var params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
 
                         // Add other commands here..
                         var pid = players.id(params[1]);
