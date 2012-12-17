@@ -747,7 +747,7 @@ BattleTab.movesToPS = {
     123: function(params){this.addCommand(["-activate", params.foepoke, "spite", Tools.getMoveName(params.other), 4])},
 //124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
     124: [function(params){this.addCommand(["-sidestart", params.foepoke, "stealthrock"])},
-        function(){this.damageCause.from = "steathrock"}],
+        function(){this.damageCause.from = "stealthrock"}],
 //125 %s stockpiled %d!
     125: function(params){this.addCommand(["-start", params.srcpoke, "stockpile"+params.other])},
 //    127 %s is hit with recoil!
