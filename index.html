@@ -322,17 +322,15 @@
                     </ul>
                     <div id="channel-0">
                         <div id="chatTextArea" class="textbox"></div>
-                        <p>
-                            <input type="text" id="send-channel-0" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
-                            <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
-                            <button id="register" onClick="wannaRegister()">Register</button>
-                            <button onClick="channels.leaveChannel(0);" class="leave-chan">Leave Channel</button>
-                            <button id="color" name="color" onclick="openColorPicker()">Color</button>
-                            <div id="colorDialog" title="Trainer name &amp; color">
-                                Name <input type="text" id="trainer-name" onkeydown="if(event.keyCode==13){event.stopPropagation(); $('#colorDialog').dialog('close');}"/>
-                                <div id="colorPicker"></div>
-                            </div>
-                        </p>
+.                        <input type="text" id="send-channel-0" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>
+                        <button onClick="sendMessage(document.getElementById('send-channel-0'));">Send</button>
+                        <button id="register" onClick="wannaRegister()">Register</button>
+                        <button onClick="channels.leaveChannel(0);" class="leave-chan">Leave Channel</button>
+                        <button id="color" name="color" onclick="openColorPicker()">Color</button>
+                        <div id="colorDialog" title="Trainer name &amp; color">
+                            Name <input type="text" id="trainer-name" onkeydown="if(event.keyCode==13){event.stopPropagation(); $('#colorDialog').dialog('close');}"/>
+                            <div id="colorPicker"></div>
+                        </div>
                     </div>
                 </div>
             </td></tr></table>
