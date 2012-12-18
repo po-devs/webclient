@@ -2,7 +2,7 @@ Webclient for Pokémon Online
 
 It connects to a relay station, which in turns connects to a PO server. If
 you want multiple webclients to be able to connect to your server through
-a relay station, you'd better add the relay station to the proxy servers 
+a relay station, you'd better add the relay stat ion to the proxy servers
 in your server config.
 
 The host of the official PO relay station is ws://server.pokemon-online.eu:10508
