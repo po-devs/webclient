@@ -1,6 +1,7 @@
 function getQueryString(key, default_,query_) {
-    if (query_===undefined) query_=window.location.search;
-    return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    var match = RegExp('[?&]' + key + '=([^&]*)')
+        .exec(query_ || window.location.search);
+    return (match && decodeURIComponent(match[1].replace(/\+/g, ' '))) || default_;
 }
 
 function loadjscssfile(filename, filetype){
