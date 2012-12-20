@@ -411,6 +411,7 @@ var Tools = {
 		var isBack = !siden;
 		var back = (siden?'':'back/');
         var shiny = pokemon.shiny ? "shiny/" : "";
+        var female = BattlePokemonSprites[pokemon.speciesid][facing]['anif'] && pokemon.gender === 'F' ? "female/":"";
 		var facing = (siden?'front':'back');
 		var cryurl = '';
 		var spriteid = pokemon.spriteid;
@@ -425,12 +426,9 @@ var Tools = {
 			cryurl = '/audio/cries/' + num + '.wav';
 		}
 		if (window.BattlePokemonSprites && BattlePokemonSprites[pokemon.speciesid] && BattlePokemonSprites[pokemon.speciesid][facing]) {
-			var url = 'http://pokemon-online.eu/images/pokemon/black-white/animated/'+ back + shiny + padd(pokemon.num) + '.gif';
+			var url = 'http://pokemon-online.eu/images/pokemon/black-white/animated/'+ back + shiny + female + padd(pokemon.num) + '.gif';
 			var spriteType = 'ani';
-			if (BattlePokemonSprites[pokemon.speciesid][facing]['anif'] && pokemon.gender === 'F') {
-/*				url += '-f';
-				spriteType = 'anif';*/
-			}
+
 			return {
 				w: BattlePokemonSprites[pokemon.speciesid][facing][spriteType].w,
 				h: BattlePokemonSprites[pokemon.speciesid][facing][spriteType].h,
