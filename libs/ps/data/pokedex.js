@@ -1344,6 +1344,31 @@ genesectchill:{num:649,species:"Genesect-Chill",basespecies:"Genesect",forme:"Ch
         646: "Kyurem",
         647: "Keldeo",
         648: "Meloetta",
-        649: "Genesect"
+        649: "Genesect",
+        formes: {
+            201: 'a b c d e f g h i j k l m n o p q r s t u v w x y z exclamation question',
+            351: "normal snowy rainy sandy sunny",
+            386: "normal attack defense speed",
+            412: "plant sandy trash",
+            413: "plant sandy trash",
+            421: "overcast sunshine",
+            422: "west east",
+            423: "west east",
+            479: "normal mow heat frost wash fan",
+            487: "altered origin",
+            492: "land sky",
+            493: "normal fighting flying poison ground rock bug ghost steel fire water grass electric psychic ice dragon dark",
+            550: "red blue",
+            555: "standard zen",
+            585: "spring summer autumn winter",
+            586: "spring summer autumn winter",
+            641: "incarnate therian",
+            642: "incarnate therian",
+            645: "incarnate therian",
+            646: "normal white black",
+            647: "regular resolution",
+            648: "aria pirouette",
+            649: "normal douse shock burn chill"
+        }
     }
 };
