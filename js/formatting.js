@@ -49,6 +49,20 @@ defineOn(String.prototype, {
     },
     splice: function (pos1, n, replace) {
         return this.slice(0, pos1) + replace + this.slice(pos1+n);
+    },
+    /* Converts xx-yy-zz into Xx-Yy-Zz */
+    tu: function() {
+        var s = this;
+        var prevLetter=false;
+        for (var i=0; i < s.length; i++) {
+            if (/[a-zA-Z]/.test(s[i])) {
+                if (!prevLetter){s[i] = s[i].toUpperCase()}
+                prevLetter = true;
+            } else {
+                prevLetter = false;
+            }
+        }
+        return s;
     }
 });
 
