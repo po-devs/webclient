@@ -359,7 +359,7 @@
 
                     /* If there's even the slightest risk of XSS attack, use an iframe to protect ourselves */
                     /* Use two different domain names depending on where the webclient is hosted */
-                    var remotepage = "http://coyotte508.github.com/webclient/trainerinfo.html";
+                    var remotepage = "http://po-devs.github.com/webclient/trainerinfo.html";
                     if (window.location.protocol !== "file:" && remotepage.indexOf(document.domain) !== -1) {
                         remotepage = "http://pokemon-online.eu/webclient/trainerinfo.html";
                     }
