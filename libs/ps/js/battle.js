@@ -2924,6 +2924,7 @@ function Battle(frame, logFrame, noPreload) {
 					self.resultAnim(poke, item.name, 'neutral', animDelay);
 					break;
 				case 'thief':
+                case 'pickpocket':
 				case 'covet':
 					actions += '' + poke.getName() + ' stole ' + ofpoke.getLowerName() + "'s item!";
 					self.resultAnim(poke, item.name, 'neutral', animDelay);

@@ -857,3 +857,283 @@ BattleTab.prototype.dealWithMovemessage = function(params) {
     }
     f.call(this, params);
 };
+
+BattleTab.abilitiesToPS = {
+//        2 %s's Aftermath damages %f!
+    2: function(params) {
+        this.damageCause.from = "ability: Aftermath";
+        this.damageCause.of = params.srcpoke;
+    },
+//        3 %s is extremely pissed off!
+    3: function() {
+        this.damageCause.from = "ability: Angerpoint";
+    },
+//    4 %s's Anticipation makes it shiver!
+    4: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Anticipation"]);
+    },
+//6 %f has bad dreams!
+    6: function() {
+        this.damageCause.from = "ability: Bad Dreams";
+    },
+//    9 %s's Color Change changes its type to %t!
+    9: function(params) {
+        this.addCommand(["-start", params.srcpoke, "typechange", Tools.getTypeName(params.type)], {from: "ability: Color Change"});
+    },
+//11 %s's Cute Charm infatuated %f!
+    11: function(params) {
+        this.addCommand(["-activate", params.foepoke, "attract"], {of: params.srcpoke});
+    },
+//12 %s won't flinch because of its Inner Focus!
+    12: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Inner Focus"]);
+    },
+//13 %s's Download activates!
+    13: function() {
+        this.damageCause.from = "ability: Download";
+    },
+//14 %s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sand Stream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
+//15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
+    15: function() {
+        this.damageCause.from = "ability: Dry Skin";
+    },
+//16 %s's Effect Spore activates!
+    16: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Effect Spore"]);
+    },
+//18 %s's %a activates!
+    18: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+    },
+//19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
+    19: function(params) {
+        this.addCommand(["-start", params.srcpoke, "ability: Flash Fire"]);
+    },
+//    21 %s changed its type to %t!
+    21: function(params) {
+        this.addCommand(["-start", params.srcpoke, "typechange", Tools.getTypeName(params.type)], {from: "ability: Forecast"});
+    },
+//    22 %s's Forewarn makes it wary of %m!
+    22: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "forewarn", Tools.getMoveName(params.other)]);
+    },
+//23 %s knows its foe holds %i because of Frisk!
+    23: function(params) {
+        this.addCommand(["-item", params.foepoke, Tools.getItemName(params.other)], {of: params.srcpoke, from: "ability: Frisk"});
+    },
+//    24 %s's Shield Dust blocked the secondary effects!
+    24: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Shield Dust"]);
+    },
+//29 %s's Hydration heals its status!
+    29: function() {
+        this.damageCause.from = "ability: Hydration";
+    },
+//30 %s's %a prevents its stat from being lowered!
+    30: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params)]);
+    },
+//31 %s's %a prevented its stats from being lowered!
+    31: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params)]);
+    },
+//32 %s's %a heals it!
+    32: function(params) {
+        this.damageCause.from = "ability: " + Tools.getAbilityName(params.other);
+    },
+//33 %s's %a cures it!|%s didn't get paralyzed because of its %a!|%s stayed awake because of its %a!|%s didn't get frozen because of its %a!|%s didn't get burnt because of its %a!|%s didn't get poisoned because of its %a!
+    33: function(params) {
+        if (params.part == 0) {
+            this.damageCause.from = "ability: " + Tools.getAbilityName(params.other);
+        } else {
+            this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+        }
+    },
+//34 %s intimidates %f!|%f's substitute suppressed %s's Intimidate!
+    34: function(params) {
+        if (params.part == 0) {
+            this.addCommand(["-ability", params.srcpoke, "Intimidate"], {of: params.foepoke});
+        }
+    },
+//    37 %s's Leaf Guard prevents it from being affected by any status from the opponent!
+    37: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Leafguard"]);
+    },
+//38 %s's %a took the attack!|%s's %a raised its special attack!|%s's %a made the attack useless!
+    38: function(params) {
+        if (params.part == 0 || params.part == 2) {
+            this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+        } else {
+            this.damageCause.from = "ability: " + Tools.getAbilityName(params.other);
+        }
+    },
+//40 %s has %a!
+    40: function(params) {
+        this.addCommand(["-ability", params.srcpoke, Tools.getAbilityName(params.other)]);
+    },
+//    41 %s's Motor Drive raises its speed!
+    41: function() {
+        this.damageCause.from = "ability: Motor Drive";
+    },
+//44 %s's Own Tempo cures its confusion!|%s's Own Tempo prevented it from getting confused!
+    44: function(params) {
+        if (params.part == 0) {
+            this.damageCause.from = "ability: Own Tempo";
+        } else {
+            this.addCommand(["-activate", params.srcpoke, "ability: Own Tempo"]);
+        }
+    },
+//    45 %s restored HP using its Poison Heal!
+    45: function() {
+        this.damageCause.from = "ability: Poison Heal";
+    },
+//    46 %s is exerting its Pressure!
+    46: function(params) {
+        this.addCommand(["-ability", params.srcpoke, "Pressure"]);s
+    },
+//    47 %s's ability became Mummy!
+    47: function(params) {
+        this.addCommand(["-ability", params.srcpoke, "Mummy"]);
+    },
+//50 %s's %a hurts %f
+    50: function(params) {
+        this.damageCause.from = "ability: " + Tools.getAbilityName(params.ability);
+        this.damageCause.of = params.srcpoke;
+    },
+//54 %s's Shed Skin heals its status!
+    54: function() {
+        this.damageCause.from = "ability: Shed Skin";
+    },
+//55 %s can't get it going because of it's Slow Start!|%s finally got its act together!
+    55: function(params) {
+        this.addCommand(["-start", params.srcpoke, "ability: Slow Start"]);
+    },
+//    56 %s lost some HP because of Solar Power!
+    56: function() {
+        this.damageCause.from = "ability: Solar Power";
+    },
+//    57 %s's Sound Proof blocks the attack!
+    57: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Sound Proof"]);
+    },
+//58 %s's Speed Boost increases its speed!|%s's Justice Heart increases its attack!
+    58: function(params) {
+        this.damageCause.from = (params.part == 0 ? "ability: Speed Boost": "ability: Justice Heart");
+    },
+//    60 %s's SteadFast increases its speed!
+    60: function() {
+        this.damageCause.from = "ability: SteadFast";
+    },
+//61 %s's Synchronize changes the status of %f!
+    61: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Synchronize"]);
+    },
+//66 %s traced %f's %a!
+    66: function(params) {
+        this.addCommand(["-ability", params.srcpoke, Tools.getAbilityName(params.other)], {from: "Ability: Trace", of: params.foepoke});
+    },
+//67 %s is carelessly slacking off!
+    67: function(params) {
+        this.addCommand(["cant", params.srcpoke, "ability: Truant"]);
+    },
+//    68 %s's %a raised its attack!|%s's %a made the attack useless!
+    68: function(params) {
+        if (params.part == 0) {
+            this.damageCause.from = Tools.getAbilityName(params.other);
+        } else {
+            this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+        }
+    },
+//    70 %s's %a absorbs the attack!|%s's %a made the attack useless!
+    70: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+    },
+//    71 %s's Wonder Guard evades the attack!
+    71: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: " + Tools.getAbilityName(params.other)]);
+    },
+//74 %s lost part of its armor!
+    74: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Battle Armor"]);
+    },
+//    78 %s stole %f's %i!
+    78: function(params) {
+        this.addCommand(["-item", params.srcpoke, Tools.getItemName(params.other)], {of: params.foepoke, from: "ability: Pickpocket"});
+        this.addCommand(["-enditem", params.foepoke, Tools.getItemName(params.other)], {silent: true, from: "ability: Pickpocket"});
+    },
+//80 %s's Defiant sharply raised its Attack!
+    80: function() {
+        this.damageCause.from = "ability: Defiant";
+    },
+//81 %s transformed into %p!
+    81: function(params) {
+        this.addCommand(["transform", params.srcpoke, params.foepoke]);
+    },
+//    85 %s avoided %f's attack thanks to its Telepathy!
+    85: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Telepathy"], {of: params.foepoke});
+    },
+//86 %s regains health with its Regenerator!
+    86: function() {
+        this.damageCause.from = "ability: Regenerator";
+    },
+//    88 %s's gained a %i thanks to its Harvest!
+    88: function(params) {
+        this.addCommand(["-item", params.srcpoke, Tools.getItemName(params.other)], {from: "ability: Harvest"});
+    },
+//90 %s's Miracle Skin protected it from status!
+//91 %s held on thanks to Sturdy!
+    91: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Sturdy"]);
+    },
+//    93 %s picked up the %i!
+    93: function(params) {
+        this.addCommand(["-item", params.srcpoke, Tools.getItemName(params.other), {from: "ability: Pickup"}]);
+    },
+//    94 %s's Justice Heart raises its attack!
+    94: function() {
+        this.damageCause.from = "ability: Justice Heart";
+    },
+//95 %s's Moody sharply raises its %st!|%s's Moody lowers its %st!
+    95: function() {
+        this.damageCause.from = "ability: Moody";
+    },
+//    96 %s's Cursed Body activates!
+    96: function(params) {
+        this.addCommand(["-activate", params.srcpoke, "ability: Cursed Body"]);
+    },
+//97 %s raised its Speed in fear!
+    97: function() {
+        this.damageCause.from = "ability: Rattled";
+    },
+//    99 %s's Healing Heart cured %f's status!
+    99: function(params) {
+        this.damageCause.from = "ability: Healing Heart";
+        this.damageCause.of = params.srcpoke;
+    },
+//    102 %s makes %tf's team too nervous to eat Berries!
+    102: function(params) {
+        this.addCommand(["-ability", params.srcpoke, Tools.getAbilityName(params.other), players.name(this.conf.ids[params.foe])]);
+    }
+};
+
+
+BattleTab.prototype.dealWithAbilitymessage = function(params) {
+    var f = BattleTab.abilitiesToPS[params.ability];
+    if (!f) {
+        return;
+    }
+    if (Array.isArray(f)) {
+        f = f[params.part];
+    }
+    if (!f) {
+        return;
+    }
+    if (params.spot != -1) {
+        params.srcpoke = this.spotToPlayer(params.spot);
+    }
+    if (params.foe != -1) {
+        params.foepoke = this.spotToPlayer(params.foe);
+    }
+    f.call(this, params);
+};
