@@ -96,6 +96,10 @@ Players.prototype.name = function(pid) {
     return ((pid in this.players) ? this.players[pid].name : "???");
 };
 
+Players.prototype.myname = function() {
+    return this.name(this.myid);
+};
+
 Players.prototype.id = function (name) {
     var player = this.names[name.toLowerCase()];
 

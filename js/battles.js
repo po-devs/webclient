@@ -81,7 +81,15 @@ Battles.prototype.watchBattle = function(bid, conf) {
 };
 
 function BattleTab(pid, conf) {
-    initBattleData();
+    /* me and meIdent are needed by PS stuff */
+    this.me = {
+        name: players.myname()
+    };
+
+    this.meIdent = {
+        name: this.me.name,
+        named: 'init'
+    };
 
     this.shortHand = "battle";
     this.id = pid;
@@ -108,16 +116,17 @@ function BattleTab(pid, conf) {
         battles.battles[pid] = this;
         $('#channel-tabs').tabs("select", "#battle-"+pid);
 
-        var $battle = $content.find('.battle');
-        //this.controlsElem = elem.find('.replay-controls');
-        var $chatFrame = $content.find('.battle-log');
+        var $battle;
+        this.battleElem = $battle = $content.find('.battle');
+        this.controlsElem = $content.find('.replay-controls');
+        var $chatFrame = this.chatFrameElem = $content.find('.battle-log');
 /*
-        this.chatElem = null;
-        this.chatAddElem = elem.find('.battle-log-add');
-        this.chatboxElem = null;
-        this.joinElem = null;
-        this.foeHintElem = elem.find('.foehint');
-*/
+        this.chatElem = null;*/
+        this.chatAddElem = $content.find('.battle-log-add');
+        /*this.chatboxElem = null;
+        this.joinElem = null;*/
+        this.foeHintElem = $content.find('.foehint');
+
         /* Create a showdown battle window */
         this.battle = new Battle($battle, $chatFrame);
 
@@ -125,7 +134,7 @@ function BattleTab(pid, conf) {
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
         this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
-        this.battle.play();
+        this.initPSBattle();
 //        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
 //        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
 //        this.battle.runMajor(["switch","p1a: Toxicroak","Toxicroak","(100/100)"]);
@@ -142,6 +151,38 @@ function BattleTab(pid, conf) {
     }
 
     this.print(JSON.stringify(conf));
+}
+
+BattleTab.prototype.initPSBattle = function(data)
+{
+    if (this.battle.activityQueue) {
+        // re-initialize
+        this.battleEnded = false;
+        this.battle = new Battle(this.battleElem, this.chatFrameElem);
+
+        if (widthClass !== 'tiny-layout') {
+            this.battle.messageSpeed = 80;
+        }
+
+        this.battle.setMute(me.mute);
+        this.battle.customCallback = this.callback;
+        this.battle.startCallback = this.updateJoinButton;
+        this.battle.stagnateCallback = this.updateJoinButton;
+        this.battle.endCallback = this.updateJoinButton;
+        this.chatFrameElem.find('.inner').html('');
+        this.controlsElem.html('');
+    }
+    this.battle.play();
+    if (data && data.battlelog) {
+        for (var i = 0; i < data.battlelog.length; i++) {
+            this.battle.add(data.battlelog[i]);
+        }
+        this.battle.fastForwardTo(-1);
+    }
+    this.updateMe();
+    if (this.chatElem) {
+        this.chatFrameElem.scrollTop(this.chatElem.height());
+    }
 }
 
 BattleTab.inherits(ChannelTab);
@@ -1117,7 +1158,6 @@ BattleTab.abilitiesToPS = {
     }
 };
 
-
 BattleTab.prototype.dealWithAbilitymessage = function(params) {
     var f = BattleTab.abilitiesToPS[params.ability];
     if (!f) {
@@ -1137,3 +1177,474 @@ BattleTab.prototype.dealWithAbilitymessage = function(params) {
     }
     f.call(this, params);
 };
+
+BattleTab.prototype.callback = function (battle, type) {
+    if (!battle) battle = this.battle;
+    this.notifying = false;
+    if (type === 'restart') {
+        this.me.callbackWaiting = false;
+        this.battleEnded = true;
+        return;
+    }
+
+    var myPokemon = this.battle.mySide.active[0];
+    var yourPokemon = this.battle.yourSide.active[0];
+    var text = '';
+    if (myPokemon) {
+        text += '<div style="position:absolute;top:210px;left:130px;width:180px;height:160px;"' + tooltipAttrs(myPokemon.ident, 'pokemon', true, true) + '></div>';
+    }
+    if (yourPokemon) {
+        text += '<div style="position:absolute;top:90px;left:390px;width:100px;height:100px;"' + tooltipAttrs(yourPokemon.ident, 'pokemon', true, 'foe') + '></div>';
+    }
+    this.foeHintElem.html(text);
+
+    if (!this.me.request) {
+        this.controlsElem.html('<div class="controls"><em>Waiting for players...</em></div>');
+        return;
+    }
+    if (this.me.request.side) {
+        this.updateSide(this.me.request.side, true);
+    }
+    this.me.callbackWaiting = true;
+    var active = this.battle.mySide.active[0];
+    if (!active) active = {};
+    this.controlsElem.html('<div class="controls"><em>Waiting for opponent...</em></div>');
+    var act = '';
+    var switchables = [];
+
+    if (this.me.request) {
+        act = this.me.request.requestType;
+        if (this.me.request.side) {
+            switchables = this.battle.mySide.pokemon;
+        }
+    }
+    switch (act) {
+        case 'move':
+        {
+            if (type !== 'move2') this.choices = [];
+            var pos = this.choices.length;
+            var hpbar = '';
+            {
+                if (switchables[pos].hp * 5 / switchables[pos].maxhp < 1) {
+                    hpbar = '<small class="critical">';
+                } else if (switchables[pos].hp * 2 / switchables[pos].maxhp < 1) {
+                    hpbar = '<small class="weak">';
+                } else {
+                    hpbar = '<small class="healthy">';
+                }
+                hpbar += ''+switchables[pos].hp+'/'+switchables[pos].maxhp+'</small>';
+            }
+            var active = this.me.request;
+            if (active.active) active = active.active[pos];
+            var moves = active.moves;
+            var trapped = active.trapped;
+
+            var controls = '<div class="controls"><div class="whatdo">';
+            if (type === 'move2') {
+                controls += '<button onclick="battles.battle(\'' + this.id + '\').callback(null,\'move\')">Back</button> ';
+            }
+            controls += 'What will <strong>' + sanitize(switchables[pos].name) + '</strong> do? '+hpbar+'</div>';
+            var hasMoves = false;
+            var hasDisabled = false;
+            controls += '<div class="movecontrols"><div class="moveselect"><button onclick="battles.battle(\'' + this.id + '\').formSelectMove()">Attack</button></div><div class="movemenu">';
+            var movebuttons = '';
+            for (var i = 0; i < moves.length; i++) {
+                var moveData = moves[i];
+                var move = Tools.getMove(moves[i].move);
+                if (!move) {
+                    move = {
+                        name: moves[i].move,
+                        id: moves[i].move,
+                        type: ''
+                    };
+                }
+                var name = move.name;
+                var pp = moveData.pp + '/' + moveData.maxpp;
+                if (!moveData.maxpp) pp = '&ndash;';
+                if (move.id === 'Struggle' || move.id === 'Recharge') pp = '&ndash;';
+                if (move.id === 'Recharge') move.type = '&ndash;';
+                if (name.substr(0, 12) === 'Hidden Power') name = 'Hidden Power';
+                if (moveData.disabled) {
+                    movebuttons += '<button disabled="disabled"' + tooltipAttrs(moveData.move, 'move') + '>';
+                    hasDisabled = true;
+                } else {
+                    movebuttons += '<button class="type-' + move.type + '" onclick="battles.battle(\'' + this.id + '\').formUseMove(\'' + moveData.move.replace(/'/g, '\\\'') + '\')"' + tooltipAttrs(moveData.move, 'move') + '>';
+                    hasMoves = true;
+                }
+                movebuttons += name + '<br /><small class="type">' + move.type + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
+            }
+            if (!hasMoves) {
+                controls += '<button class="movebutton" onclick="battles.battle(\'' + this.id + '\').formUseMove(\'Struggle\')">Struggle<br /><small class="type">Normal</small> <small class="pp">&ndash;</small>&nbsp;</button> ';
+            } else {
+                controls += movebuttons;
+            }
+            controls += '<div style="clear:left"></div>';
+            if (hasDisabled) {
+                // controls += '<small>(grayed out moves have been disabled by Disable, Encore, or something like that)</small>';
+            }
+            controls += '</div></div><div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + this.id + '\').formSelectSwitch()">Switch</button></div><div class="switchmenu">';
+            if (trapped) {
+                controls += '<em>You are trapped and cannot switch!</em>';
+            } else {
+                controls += '';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[i];
+                    pokemon.name = pokemon.ident.substr(4);
+                    if (pokemon.zerohp || i < this.battle.mySide.active.length) {
+                        controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+                    } else {
+                        controls += '<button onclick="battles.battle(\'' + this.id + '\').formSwitchTo(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                    }
+                }
+                if (this.battle.mySide.pokemon.length > 6) {
+                    //controls += '<small>Pokeball data corrupt. Please copy the text from this button: <button onclick="prompt(\'copy this text\', curRoom.battle.activityQueue.join(\' :: \'));return false">[click here]</button> and tell aesoft.</small>';
+                }
+            }
+            controls += '</div></div></div>';
+            this.controlsElem.html(controls);
+        }
+            this.notifying = true;
+            break;
+        case 'switch':
+            this.choices = [];
+            var controls = '<div class="controls"><div class="whatdo">';
+            controls += 'Switch to:</div>';
+            controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + this.id + '\').formSelectSwitch()">Switch</button></div><div class="switchmenu">';
+            for (var i = 0; i < switchables.length; i++) {
+                var pokemon = switchables[i];
+                if (i >= 6) {
+                    //controls += '<small>Pokeball data corrupt. Please copy the text from this button: <button onclick="prompt(\'copy this text\', curRoom.battle.activityQueue.join(\' :: \'));return false">[click here]</button> and tell aesoft.</small>';
+                    break;
+                }
+                if (pokemon.zerohp || i == 0) {
+                    controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+                } else {
+                    controls += '<button onclick="battles.battle(\'' + this.id + '\').formSwitchTo(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                }
+            }
+            controls += '</div></div></div>';
+            this.controlsElem.html(controls);
+            this.formSelectSwitch();
+            this.notifying = true;
+            break;
+        case 'team':
+            var controls = '<div class="controls"><div class="whatdo">';
+            if (type !== 'team2') {
+                this.teamPreviewChoice = [1,2,3,4,5,6].slice(0,switchables.length);
+                this.teamPreviewDone = 0;
+                this.teamPreviewHasIllusion = false;
+                controls += 'How will you start the battle?</div>';
+                controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + this.id + '\').formSelectSwitch()">Choose Lead</button></div><div class="switchmenu">';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[i];
+                    if (i >= 6) {
+                        break;
+                    }
+                    if (toId(pokemon.ability) === 'illusion') this.teamPreviewHasIllusion = true;
+                    controls += '<button onclick="battles.battle(\'' + this.id + '\').formTeamPreviewSelect(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
+                }
+                controls += '</div>';
+            } else {
+                controls += '<button onclick="battles.battle(\'' + this.id + '\').callback(null,\'team\')">Back</button> What about the rest of your team?</div>';
+                controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + this.id + '\').formSelectSwitch()">Choose a pokemon for slot '+(this.teamPreviewDone+1)+'</button></div><div class="switchmenu">';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[this.teamPreviewChoice[i]-1];
+                    if (i >= 6) {
+                        break;
+                    }
+                    if (i < this.teamPreviewDone) {
+                        controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
+                    } else {
+                        controls += '<button onclick="battles.battle(\'' + this.id + '\').formTeamPreviewSelect(' + i + ')"' + tooltipAttrs(this.teamPreviewChoice[i]-1, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
+                    }
+                }
+                controls += '</div>';
+            }
+            controls += '</div></div>';
+            this.controlsElem.html(controls);
+            this.formSelectSwitch();
+            this.notifying = true;
+            break;
+    }
+};
+
+
+BattleTab.prototype.add = function (log) {
+    if (typeof log === 'string') log = log.split('\n');
+    this.update({updates:log});
+};
+
+BattleTab.prototype.updateJoinButton = function()
+{
+
+}
+
+BattleTab.prototype.update = function (update) {
+    if (update.updates) {
+        var updated = false;
+        for (var i = 0; i < update.updates.length; i++) {
+            if (!updated && (update.updates[i] === '')) {
+                this.me.callbackWaiting = false;
+                updated = true;
+                this.controlsElem.html('');
+            }
+            if (update.updates[i] === 'RESET') {
+                this.foeHintElem.html('');
+                var blog = this.chatFrameElem.find('.inner').html();
+                delete this.me.side;
+                this.battleEnded = false;
+                this.battle = new Battle(this.battleElem, this.chatFrameElem);
+
+                if (widthClass !== 'tiny-layout') {
+                    this.battle.messageSpeed = 80;
+                }
+
+                this.battle.setMute(me.mute);
+                this.battle.customCallback = this.callback;
+                this.battle.startCallback = this.updateJoinButton;
+                this.battle.stagnateCallback = this.updateJoinButton;
+                this.battle.endCallback = this.updateJoinButton;
+                this.chatFrameElem.find('.inner').html(blog + '<h2>NEW GAME</h2>');
+                this.chatFrameElem.scrollTop(this.chatFrameElem.find('.inner').height());
+                this.controlsElem.html('');
+                this.battle.play();
+                this.updateJoinButton();
+                break;
+            }
+            if (update.updates[i].substr(0, 6) === '|chat|' || update.updates[i].substr(0, 9) === '|chatmsg|') {
+                this.battle.instantAdd(update.updates[i]);
+            } else {
+                if (update.updates[i].substr(0,10) === '|callback|') this.controlsElem.html('');
+                if (update.updates[i].substr(0,12) === '| callback | ') this.controlsElem.html('');
+                this.battle.add(update.updates[i]);
+            }
+        }
+    }
+    if (update.request) {
+        this.me.request = update.request;
+        this.me.request.requestType = 'move';
+        if (this.me.request.forceSwitch) {
+            this.me.request.requestType = 'switch';
+            notify({
+                type: 'yourSwitch',
+                room: this.id,
+                user: this.battle.yourSide.name
+            });
+            this.notifying = true;
+            updateRoomList();
+        } else if (this.me.request.teamPreview) {
+            this.me.request.requestType = 'team';
+            notify({
+                type: 'yourSwitch',
+                room: this.id,
+                user: this.battle.yourSide.name
+            });
+            this.notifying = true;
+            updateRoomList();
+        } else if (this.me.request.wait) {
+            this.me.request.requestType = 'wait';
+        } else {
+            notify({
+                type: 'yourMove',
+                room: this.id,
+                user: this.battle.yourSide.name
+            });
+            this.notifying = true;
+            updateRoomList();
+        }
+        //if (this.me.callbackWaiting) this.callback();
+    }
+    if (typeof update.active !== 'undefined') {
+        if (!update.active && this.me.side) {
+            this.controlsElem.html('<div class="controls"><button onclick="return battles.battle(\'' + this.id + '\').formLeaveBattle()">Leave this battle</button></div>');
+        }
+    }
+    if (update.side) {
+        if (update.side === 'none') {
+            $('#controls').html('');
+            delete this.me.side;
+        } else {
+            this.me.side = update.side;
+        }
+    }
+    if (update.sideData) {
+        this.updateSide(update.sideData, update.midBattle);
+    }
+    this.updateMe();
+};
+
+BattleTab.prototype.updateSide = function(sideData, midBattle) {
+    var sidesSwitched = false;
+    this.me.sideData = sideData; // just for easy debugging
+    if (this.battle.sidesSwitched !== !!(this.me.side === 'p2')) {
+        sidesSwitched = true;
+        this.battle.reset();
+        this.battle.switchSides();
+    }
+    for (var i = 0; i < sideData.pokemon.length; i++) {
+        var pokemonData = sideData.pokemon[i];
+        var pokemon;
+        if (i == 0) {
+            pokemon = this.battle.getPokemon('canfnt: '+pokemonData.ident, pokemonData.details);
+            pokemon.side.pokemon = [pokemon];
+        } else {
+            pokemon = this.battle.getPokemon('new: '+pokemonData.ident, pokemonData.details);
+        }
+        pokemon.healthParse(pokemonData.condition);
+        pokemon.ability = pokemonData.ability;
+        pokemon.item = pokemonData.item;
+        pokemon.moves = pokemonData.moves;
+    }
+    this.battle.mySide.updateSidebar();
+    if (sidesSwitched) {
+        if (midBattle) {
+            this.battle.fastForwardTo(-1);
+        } else {
+            this.battle.play();
+        }
+    }
+};
+
+BattleTab.prototype.updateMe = function () {
+    if (this.meIdent.name !== me.name || this.meIdent.named !== me.named) {
+        if (me.named) {
+            this.chatAddElem.html('<form onsubmit="return false" class="chatbox"><label style="' + hashColor(me.userid) + '">' + sanitize(me.name) + ':</label> <textarea class="textbox" type="text" size="70" autocomplete="off" onkeypress="return battles.battle(\'' + this.id + '\').formKeyPress(event)"></textarea></form>');
+            this.chatboxElem = this.chatAddElem.find('textarea');
+            this.chatboxElem.autoResize({
+                animateDuration: 100,
+                extraSpace: 0
+            });
+            this.chatboxElem.focus();
+        } else {
+            this.chatAddElem.html('<form><button onclick="return battles.battle(\'' + this.id + '\').formRename()">Join chat</button></form>');
+        }
+
+        this.meIdent.name = me.name;
+        this.meIdent.named = me.named;
+    }
+    var inner = this.chatFrameElem.find('.inner');
+    if (inner.length) this.chatElem = inner;
+    else this.chatElem = null;
+    this.updateJoinButton();
+};
+
+BattleTab.prototype.formJoinBattle = function () {
+    this.send('/joinbattle');
+    return false;
+};
+
+BattleTab.prototype.formKickInactive = function () {
+    this.send('/kickinactive');
+    return false;
+};
+
+BattleTab.prototype.formForfeit = function () {
+    this.send('/forfeit');
+    return false;
+};
+
+BattleTab.prototype.formSaveReplay = function () {
+    this.send('/savereplay');
+    return false;
+};
+
+BattleTab.prototype.formRestart = function () {
+    /* hideTooltip();
+     this.send('/restart'); */
+    this.me.request = null;
+    this.battle.reset();
+    this.battle.play();
+    return false;
+};
+
+BattleTab.prototype.formUseMove = function (move) {
+    hideTooltip();
+    this.choices.push('move '+move);
+    if (this.battle.mySide.active.length > this.choices.length) {
+        this.callback(this.battle, 'move2');
+        return false;
+    }
+    this.controlsElem.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div> <br /><button onclick="battles.battle(\'' + this.id + '\').formKickInactive();return false"><small>Kick inactive player</small></button>');
+    this.send('/choose '+this.choices.join(','));
+    this.notifying = false;
+    updateRoomList();
+    return false;
+};
+
+BattleTab.prototype.formSwitchTo = function (pos) {
+    hideTooltip();
+    this.choices.push('switch '+(parseInt(pos,10)+1));
+    if (this.me.request && this.me.request.requestType === 'move' && this.battle.mySide.active.length > this.choices.length) {
+        this.callback(this.battle, 'move2');
+        return false;
+    }
+    this.controlsElem.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div> <br /><button onclick="battles.battle(\'' + this.id + '\').formKickInactive();return false"><small>Kick inactive player</small></button>');
+    this.send('/choose '+this.choices.join(','));
+    this.notifying = false;
+    updateRoomList();
+    return false;
+};
+
+BattleTab.prototype.formTeamPreviewSelect = function (pos) {
+    pos = parseInt(pos,10);
+    hideTooltip();
+    if (this.teamPreviewHasIllusion) {
+        var temp = this.teamPreviewChoice[pos];
+        this.teamPreviewChoice[pos] = this.teamPreviewChoice[this.teamPreviewDone];
+        this.teamPreviewChoice[this.teamPreviewDone] = temp;
+
+        this.teamPreviewDone++;
+
+        if (this.teamPreviewDone < this.teamPreviewChoice.length) {
+            this.callback(this.battle, 'team2');
+            return false;
+        }
+        pos = this.teamPreviewChoice.join('');
+    } else {
+        pos = pos+1;
+    }
+    this.controlsElem.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div> <br /><button onclick="battles.battle(\'' + this.id + '\').formKickInactive();return false"><small>Kick inactive player</small></button>');
+    this.send('/team '+(pos));
+    this.notifying = false;
+    updateRoomList();
+    return false;
+};
+
+BattleTab.prototype.formUndoDecision = function (pos) {
+    this.send('/undo');
+    this.notifying = true;
+    this.callback(this.battle, 'decision');
+    return false;
+};
+
+BattleTab.prototype.formRename = function () {
+    overlay('rename');
+    return false;
+};
+BattleTab.formLeaveBattle = function () {
+    hideTooltip();
+    this.send('/leavebattle');
+    this.notifying = false;
+    updateRoomList();
+    return false;
+};
+
+BattleTab.formSelectSwitch = function () {
+    hideTooltip();
+    this.controlsElem.find('.controls').attr('class', 'controls switch-controls');
+    return false;
+};
+
+BattleTab.formSelectMove = function () {
+    hideTooltip();
+    this.controlsElem.find('.controls').attr('class', 'controls move-controls');
+    return false;
+};
+
+function updateRoomList(){}
+function overlay(){}
+
+function hideTooltip() {
+    $('#tooltipwrapper').html('');
+    return true;
+}

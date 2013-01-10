@@ -121,7 +121,7 @@
                 });
 
                 $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
-                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.name(players.myid)}));
+                        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
                     }
                 });
                 $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
@@ -278,6 +278,11 @@
         </script>
     </head>
     <body>
+    <!-- used by PS -->
+        <div id="overlay" style="display:none"></div>
+        <div id="tooltipwrapper"><div class="tooltipinner"></div></div>
+        <div id="foehint"></div>
+    <!-- end used by PS -->
         <p style="display: none;">
             Relay station
             <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
@@ -288,7 +293,7 @@
 
             <table class="container"><tr style="height: 100%"><td class="sidebar" style="vertical-align: top;">
                 <div class="logo">PO</div>
-                <a href="#" class="find-battle">
+                <a class="find-battle" onclick="findBattle(); return false;" href="#">
                     Find Battle
                 </a>
                 <ul class="controls-list">
@@ -459,6 +464,11 @@
                 for (id in channels.channels) {
                     channels.channel(id).print(message, html, !parseExtras);
                 }
+            }
+
+            function findBattle()
+            {
+                websocket.send("findbattle|"+JSON.stringify({"sameTier":true, "range":300}));
             }
 
             function sendMessage(sender)
