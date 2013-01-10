@@ -24,6 +24,11 @@ Battles.prototype.addBattle = function (battles) {
 
         playerList.updatePlayer(battle.ids[0]);
         playerList.updatePlayer(battle.ids[1]);
+
+        /* Is it a battle we're taking part in ? */
+        if (battle.team) {
+            new BattleTab(battle.id, battle.conf, battle.team);
+        }
     }
 };
 
@@ -80,7 +85,7 @@ Battles.prototype.watchBattle = function(bid, conf) {
     new BattleTab(bid, conf);
 };
 
-function BattleTab(pid, conf) {
+function BattleTab(pid, conf, team) {
     /* me and meIdent are needed by PS stuff */
     this.me = {
         name: players.myname()
@@ -134,6 +139,10 @@ function BattleTab(pid, conf) {
         this.battle.runMajor(["player", "p2", players.name(conf.players[1])]);
         this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
+        if (team) {
+            //this.updateSide(team, false);
+        }
+
         this.initPSBattle();
 //        this.battle.runMajor(["poke", "p1: Pikachu", "Pikachu, 20, M"]);
 //        this.battle.runMajor(["poke", "p2: Gyarados", "Gyarados, 30, F, shiny"]);
@@ -153,6 +162,8 @@ function BattleTab(pid, conf) {
     this.print(JSON.stringify(conf));
 }
 
+BattleTab.inherits(ChannelTab);
+
 BattleTab.prototype.initPSBattle = function(data)
 {
     if (this.battle.activityQueue) {
@@ -160,11 +171,13 @@ BattleTab.prototype.initPSBattle = function(data)
         this.battleEnded = false;
         this.battle = new Battle(this.battleElem, this.chatFrameElem);
 
+/*
         if (widthClass !== 'tiny-layout') {
             this.battle.messageSpeed = 80;
         }
+*/
 
-        this.battle.setMute(me.mute);
+        this.battle.setMute(this.me.mute);
         this.battle.customCallback = this.callback;
         this.battle.startCallback = this.updateJoinButton;
         this.battle.stagnateCallback = this.updateJoinButton;
@@ -183,15 +196,13 @@ BattleTab.prototype.initPSBattle = function(data)
     if (this.chatElem) {
         this.chatFrameElem.scrollTop(this.chatElem.height());
     }
-}
-
-BattleTab.inherits(ChannelTab);
+};
 
 BattleTab.prototype.playerIds = function() {
     var array = [];
     for (var i = 0; i < this.conf.players.length; i++) {
         array.push(this.conf.players[i]);
-    };
+    }
     for (var x in this.spectators) {
         array.push(x);
     }
@@ -1030,7 +1041,7 @@ BattleTab.abilitiesToPS = {
     },
 //    46 %s is exerting its Pressure!
     46: function(params) {
-        this.addCommand(["-ability", params.srcpoke, "Pressure"]);s
+        this.addCommand(["-ability", params.srcpoke, "Pressure"]);
     },
 //    47 %s's ability became Mummy!
     47: function(params) {
@@ -1377,7 +1388,7 @@ BattleTab.prototype.add = function (log) {
 BattleTab.prototype.updateJoinButton = function()
 {
 
-}
+};
 
 BattleTab.prototype.update = function (update) {
     if (update.updates) {
@@ -1395,9 +1406,11 @@ BattleTab.prototype.update = function (update) {
                 this.battleEnded = false;
                 this.battle = new Battle(this.battleElem, this.chatFrameElem);
 
+/*
                 if (widthClass !== 'tiny-layout') {
                     this.battle.messageSpeed = 80;
                 }
+*/
 
                 this.battle.setMute(me.mute);
                 this.battle.customCallback = this.callback;
@@ -1506,6 +1519,7 @@ BattleTab.prototype.updateSide = function(sideData, midBattle) {
 };
 
 BattleTab.prototype.updateMe = function () {
+    return;
     if (this.meIdent.name !== me.name || this.meIdent.named !== me.named) {
         if (me.named) {
             this.chatAddElem.html('<form onsubmit="return false" class="chatbox"><label style="' + hashColor(me.userid) + '">' + sanitize(me.name) + ':</label> <textarea class="textbox" type="text" size="70" autocomplete="off" onkeypress="return battles.battle(\'' + this.id + '\').formKeyPress(event)"></textarea></form>');
