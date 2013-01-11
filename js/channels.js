@@ -1,6 +1,9 @@
 function Channels() {
     this.channels = {"0": new Channel(0, "Main channel")};
     this.names = {};
+
+    currentTabObject = this.channels[0];
+    currentChannel = 0;
 }
 
 Channels.prototype.channel = function (id) {
@@ -134,7 +137,7 @@ Channel.prototype.setPlayers = function(players) {
     if (channels.currentId() == this.id) {
         this.generatePlayerList();
     }
-}
+};
 
 Channel.prototype.newPlayer = function(player) {
     this.players[player] = true;
@@ -142,7 +145,7 @@ Channel.prototype.newPlayer = function(player) {
     if (this.isCurrent()) {
         playerList.addPlayer(player);
     }
-}
+};
 
 Channel.prototype.removePlayer = function(player) {
     delete this.players[player];
@@ -159,15 +162,15 @@ Channel.prototype.removePlayer = function(player) {
             this.print("<i>You were removed from this channel</i>", true)
         }
     }
-}
+};
 
 Channel.prototype.hasPlayer = function(player) {
     return player in this.players;
-}
+};
 
 Channel.prototype.chat = function () {
     return $("#channel-" + this.id + " #chatTextArea");
-}
+};
 
 Channel.prototype.print = function (msg, html, noParse) {
     var chatTextArea = this.chat().get(0);
