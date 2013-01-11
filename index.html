@@ -75,14 +75,17 @@
                 /* Gets the current object owning a tab from the hrefid of the tab */
                 var objFromId = function(hrefid) {
                     var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
+                    var ret = undefined;
                     if (/^#channel-/.test(hrefid)) {
-                        return channels.hasChannel(id) ? channels.channel(id) : undefined;
+                        ret = channels.hasChannel(id) ? channels.channel(id) : undefined;
                     } else if (/^#pm-/.test(hrefid)) {
-                        return pms.pm(id);
+                        ret = pms.pm(id);
                     } else if (/^#battle-/.test(hrefid)) {
-                        return battles.battle(id);
+                        ret = battles.battle(id);
                     }
-                }
+                    console.log("Object from id: " + ret.shortHand);
+                    return ret;
+                };
 
                 currentTabObject = null;
                 currentChannel = -1;

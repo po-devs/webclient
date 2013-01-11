@@ -4213,13 +4213,13 @@ function Battle(frame, logFrame, noPreload) {
 				} else {
 					self.runMajor(args, kwargs, preempt);
 				}
-			} else try {
+			} else /*try*/ {
 				if (args[0].substr(0,1) === '-') {
 					self.runMinor(args, kwargs);
 				} else {
 					self.runMajor(args, kwargs, preempt);
 				}
-			} catch (e) {
+			} /*catch (e) {
 				self.log('<div class="chat">Error parsing: ' + self.sanitize(str) + '</div>', preempt);
 				if (e.stack) {
 					var stack = ''+e.stack;
@@ -4228,7 +4228,7 @@ function Battle(frame, logFrame, noPreload) {
 				} else {
 					self.log('<div class="chat">Error: ' + e + '</div>', preempt);
 				}
-			}
+			}*/
 		} else {
 			self.log('<div class="chat">' + self.sanitize(str) + '</div>', preempt);
 		}

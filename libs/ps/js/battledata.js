@@ -412,7 +412,7 @@ var Tools = {
 		var back = (siden?'':'back/');
         var shiny = pokemon.shiny ? "shiny/" : "";
         var facing = (siden?'front':'back');
-        var female = BattlePokemonSprites[pokemon.speciesid][facing]['anif'] && pokemon.gender === 'F' ? "female/":"";
+        var female = (pokemon.speciesid in BattlePokemonSprites) && BattlePokemonSprites[pokemon.speciesid][facing]['anif'] && pokemon.gender === 'F' ? "female/":"";
 		var cryurl = '';
         /*** PO change ***/
         var forme = '';
