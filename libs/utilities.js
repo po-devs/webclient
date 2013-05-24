@@ -1,3 +1,10 @@
+function sanitize(str, jsEscapeToo) {
+    str = (str?''+str:'');
+    str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    if (jsEscapeToo) str = str.replace(/'/g, '\\\'');
+    return str;
+}
+
 function getQueryString(key, default_,query_) {
     var match = RegExp('[?&]' + key + '=([^&]*)')
         .exec(query_ || window.location.search);
