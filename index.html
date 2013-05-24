@@ -773,7 +773,12 @@
     <script src="libs/alertify.js"></script>
     <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
     <script type="text/javascript">
-        /* Needed in battledata.js */
+        /* Needed in battledata.js
+        *
+        * Basically PS uses caja since it displays html, and caja defines this variable.
+        *
+        * Since we don't intend to let user display html (unless in trainer info, but that's covered), we don't need it!
+        * */
         html4 = {};
     </script>
     <script src="ps/js/lib/soundmanager2-nodebug-jsmin.js"></script>
