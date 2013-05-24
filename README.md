@@ -22,6 +22,13 @@ When merging a commit, if their ps/ folder has changed head, you need to do the 
 git submodule update
 ```
 
+Testing
+=======
+
+Thanks to github pages you can test the current repository with this url: http://po-devs.github.io/webclient/?server=default&autoconnect=true
+
+Add the query parameter 'user' to automatically have your username set up, or 'server' to use a different server than PO's main server.
+
 Info
 ====
 
