@@ -17,6 +17,11 @@ git submodule init
 git submodule update
 ```
 
+When merging a commit, if their ps/ folder has changed head, you need to do the following command in order to update the submodule folder in your local directory:
+```sh
+git submodule update
+```
+
 Info
 ====
 
