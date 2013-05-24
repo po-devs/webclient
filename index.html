@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="css/webclient.css" />
         <link rel="stylesheet" href="css/chat.css" />
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
         <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
         <script type="text/javascript">
             /* Function to search names in the playerlist */
@@ -771,13 +772,16 @@
         </script>
     <script src="libs/alertify.js"></script>
     <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
-    <script src="ps/js/soundmanager2-nodebug-jsmin.js"></script>
+    <script type="text/javascript">
+        /* Needed in battledata.js */
+        html4 = {};
+    </script>
+    <script src="ps/js/lib/soundmanager2-nodebug-jsmin.js"></script>
     <script src="ps/js/battledata.js"></script>
     <script src="ps/data/pokedex-mini.js"></script>
     <script src="ps/js/battle.js"></script>
     <script src="ps/data/graphics.js"></script>
     <script src="ps/data/pokedex.js"></script>
-    <script src="ps/formats-data.js"></script>
     <script src="ps/data/moves.js"></script>
     <script src="ps/data/items.js"></script>
     <script src="ps/data/abilities.js"></script>
