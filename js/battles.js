@@ -159,7 +159,10 @@ function BattleTab(pid, conf, team) {
 //        this.battle.runMajor(["turn", "3"]);
     }
 
-    this.print(JSON.stringify(conf));
+    this.print("conf: " + JSON.stringify(conf));
+    if (team) {
+        this.print("team: " + JSON.stringify(team));
+    }
 }
 
 BattleTab.inherits(ChannelTab);

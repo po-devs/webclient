@@ -159,7 +159,6 @@
                             }
                         } else if (params[0] == "watch") {
                             var bid = params[1];
-                            initBattleData();
                             websocket.send("watch|"+bid);
                         }
                         // TODO: watchbattle(id/name), reconnect(void)
@@ -731,6 +730,7 @@
                     var params = JSON.parse(data);
                     pms.pm(params.src).print(params.src, params.message);
                 } else if (cmd === "watchbattle") {
+                    initBattleData();
                     var id = data.split("|")[0];
                     var params = JSON.parse(data.slice(id.length+1));
                     battles.watchBattle(+(id), params);
@@ -742,6 +742,11 @@
                 } else if (cmd === "battlestarted") {
                     var battleid = data.split("|")[0];
                     var battle = JSON.parse(data.slice(battleid.length+1));
+
+                    if (battle.team) {
+                        initBattleData();
+                    }
+                    
                     var obj = {};
                     obj[battleid] = battle;
                     battles.addBattle(obj);
