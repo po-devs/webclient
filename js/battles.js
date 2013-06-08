@@ -209,7 +209,7 @@ BattleTab.prototype.initPSBattle = function(data)
     if (this.battle.activityQueue) {
         // re-initialize
         this.battleEnded = false;
-        this.battle = new Battle(this.battleElem, this.chatFrameElem);
+//        this.battle = new Battle(this.battleElem, this.chatFrameElem);
 
 /*
         if (widthClass !== 'tiny-layout') {
