@@ -140,8 +140,8 @@ function BattleTab(pid, conf, team) {
         this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
         if (team) {
-            convertedTeam = this.convertTeamToPS(team, conf.players[1] == Players.myid ? 1 : 0);
-            this.updateSide(convertedTeam, false);
+            this.convertTeamToPS(team, conf.players[1] == players.myid ? 1 : 0);
+            this.updateSide(this.request.side, false);
         }
 
         this.initPSBattle();
@@ -395,35 +395,49 @@ BattleTab.prototype.initPSBattle = function(data)
 };
 
 BattleTab.prototype.convertTeamToPS = function(team, slot) {
-    var ret = {'pokemon': team};
+    this.request = this.request || {};
+    this.request.side = this.request.side || {};
 
-    for (var i = 0; i < ret.pokemon.length; i++) {
-        var pokemon = ret.pokemon[i];
+    this.request.side.name = players.myname();
+    var id = this.request.side.id = "p" + (1+slot);
+    this.request.active = [{moves:[]}];
+
+    this.request.side.pokemon = team;
+
+    for (var i = 0; i < this.request.side.pokemon.length; i++) {
+        var pokemon = this.request.side.pokemon[i];
         pokemon.condition = this.pokemonDetails(pokemon);
         pokemon.details = this.pokemonToPS(pokemon);
 
-        pokemon.ident = 'p' + ((this.slot)+1) + ": " + pokemon.name;
+        pokemon.ident = id + ": " + pokemon.name;
 
         if (pokemon.item) {
-            pokemon.itemNum = pokemon.item;
-            pokemon.item = Tools.getItemName(pokemon.itemNum);
+            if (!pokemon.itemNum) pokemon.itemNum = pokemon.item;
+            pokemon.item = toId(Tools.getItemName(pokemon.itemNum));
         }
         if (pokemon.ability) {
-            pokemon.abilityNum = pokemon.ability;
-            pokemon.ability = pokemon.baseAbility = Tools.getAbilityName(pokemon.abilityNum);
+            if (!pokemon.abilityNum) pokemon.abilityNum = pokemon.ability;
+            pokemon.ability = pokemon.baseAbility = toId(Tools.getAbilityName(pokemon.abilityNum));
         }
         if (pokemon.moves) {
-            pokemon.moveNums = pokemon.moves;
+            if (!pokemon.moveNums) pokemon.moveNums = pokemon.moves;
             pokemon.moves = [];
 
+            var moveDetails = [];
             for (var j = 0; j < pokemon.moveNums.length; j++) {
-                pokemon.moves[j] = Tools.getMoveName(pokemon.moveNums[j].num);
+                pokemon.moves[j] = toId(Tools.getMoveName(pokemon.moveNums[j].move));
+                moveDetails.push({
+                    'move':Tools.getMoveName(pokemon.moveNums[j].move),
+                    'id': pokemon.moves[j],
+                    'disabled': false,
+                    'maxpp': pokemon.moveNums[j].totalpp,
+                    'pp': pokemon.moveNums[j].pp
+                });
             }
-        }
-        pokemon.moves = pokemon.moves;
-    }
 
-    return ret;
+            this.request.active[0].moves.push(moveDetails);
+        }
+    }
 };
 
 BattleTab.prototype.playerIds = function() {
@@ -457,7 +471,7 @@ BattleTab.prototype.print = function(msg) {
 BattleTab.prototype.close = function() {
     delete battles.battles[this.id];
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
-    if (this.conf.players[0] == Players.myid || this.conf.players[1] == Players.myid) {
+    if (this.conf.players[0] == players.myid || this.conf.players[1] == players.myid) {
         websocket.send("forfeit|"+this.id);
     } else {
         websocket.send("stopwatching|"+this.id);
