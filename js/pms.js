@@ -42,7 +42,7 @@ function PM(pid) {
                                       +' <button onClick="sendMessage(document.getElementById(\'send-pm-'+pid+'\'));">Send</button>'
                                       +' <button onClick="pms.pm(' + pid + ').close();">Close</button></p>');
         pms.pms[pid] = this;
-        $('#channel-tabs').tabs("select", "#pm-"+pid);
+        switchToTab("#pm-"+pid);
     }
 }
 

@@ -6,7 +6,7 @@ function ChannelTab(/* id */)
 
 ChannelTab.prototype.isCurrent = function()
 {
-    return currentTabObject == this;
+    return room == this;
 }
 
 ChannelTab.prototype.activateTab = function()

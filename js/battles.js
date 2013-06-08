@@ -119,7 +119,7 @@ function BattleTab(pid, conf, team) {
         $content.html('<div class="battlewrapper"><div class="battle">Loading battle...</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div><div class="replay-controls"></div></div>'
                                  +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
-        $('#channel-tabs').tabs("select", "#battle-"+pid);
+        switchToTab("#battle-"+pid);
 
         var $battle;
         this.battleElem = $battle = $content.find('.battle');
@@ -185,10 +185,10 @@ BattleTab.prototype.initPSBattle = function(data)
         var yourPokemon = selfR.battle.yourSide.active[0];
         var text = '';
         if (myPokemon) {
-            text += '<div style="position:absolute;top:210px;left:130px;width:180px;height:160px;"' + tooltipAttrs(myPokemon.ident, 'pokemon', true, true) + '></div>';
+            text += '<div style="position:absolute;top:210px;left:130px;width:180px;height:160px;"' + selfR.tooltipAttrs(myPokemon.ident, 'pokemon', true, true) + '></div>';
         }
         if (yourPokemon) {
-            text += '<div style="position:absolute;top:90px;left:390px;width:100px;height:100px;"' + tooltipAttrs(yourPokemon.ident, 'pokemon', true, 'foe') + '></div>';
+            text += '<div style="position:absolute;top:90px;left:390px;width:100px;height:100px;"' + selfR.tooltipAttrs(yourPokemon.ident, 'pokemon', true, 'foe') + '></div>';
         }
         selfR.foeHintElem.html(text);
 
@@ -203,163 +203,7 @@ BattleTab.prototype.initPSBattle = function(data)
         var active = selfR.battle.mySide.active[0];
         if (!active) active = {};
         selfR.controlsElem.html('<div class="controls"><em>Waiting for opponent...</em></div>');
-        var act = '';
-        var switchables = [];
-
-        if (selfR.me.request) {
-            act = selfR.me.request.requestType;
-            if (selfR.me.request.side) {
-                switchables = selfR.battle.mySide.pokemon;
-            }
-        }
-        switch (act) {
-            case 'move':
-            {
-                if (type !== 'move2') selfR.choices = [];
-                var pos = selfR.choices.length;
-                var hpbar = '';
-                {
-                    if (switchables[pos].hp * 5 / switchables[pos].maxhp < 1) {
-                        hpbar = '<small class="critical">';
-                    } else if (switchables[pos].hp * 2 / switchables[pos].maxhp < 1) {
-                        hpbar = '<small class="weak">';
-                    } else {
-                        hpbar = '<small class="healthy">';
-                    }
-                    hpbar += ''+switchables[pos].hp+'/'+switchables[pos].maxhp+'</small>';
-                }
-                var active = selfR.me.request;
-                if (active.active) active = active.active[pos];
-                var moves = active.moves;
-                var trapped = active.trapped;
-
-                var controls = '<div class="controls"><div class="whatdo">';
-                if (type === 'move2') {
-                    controls += '<button onclick="battles.battle(\'' + selfR.id + '\').callback(null,\'move\')">Back</button> ';
-                }
-                controls += 'What will <strong>' + sanitize(switchables[pos].name) + '</strong> do? '+hpbar+'</div>';
-                var hasMoves = false;
-                var hasDisabled = false;
-                controls += '<div class="movecontrols"><div class="moveselect"><button onclick="battles.battle(\'' + selfR.id + '\').formSelectMove()">Attack</button></div><div class="movemenu">';
-                var movebuttons = '';
-                for (var i = 0; i < moves.length; i++) {
-                    var moveData = moves[i];
-                    var move = Tools.getMove(moves[i].move);
-                    if (!move) {
-                        move = {
-                            name: moves[i].move,
-                            id: moves[i].move,
-                            type: ''
-                        };
-                    }
-                    var name = move.name;
-                    var pp = moveData.pp + '/' + moveData.maxpp;
-                    if (!moveData.maxpp) pp = '&ndash;';
-                    if (move.id === 'Struggle' || move.id === 'Recharge') pp = '&ndash;';
-                    if (move.id === 'Recharge') move.type = '&ndash;';
-                    if (name.substr(0, 12) === 'Hidden Power') name = 'Hidden Power';
-                    if (moveData.disabled) {
-                        movebuttons += '<button disabled="disabled"' + tooltipAttrs(moveData.move, 'move') + '>';
-                        hasDisabled = true;
-                    } else {
-                        movebuttons += '<button class="type-' + move.type + '" onclick="battles.battle(\'' + selfR.id + '\').formUseMove(\'' + moveData.move.replace(/'/g, '\\\'') + '\')"' + tooltipAttrs(moveData.move, 'move') + '>';
-                        hasMoves = true;
-                    }
-                    movebuttons += name + '<br /><small class="type">' + move.type + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
-                }
-                if (!hasMoves) {
-                    controls += '<button class="movebutton" onclick="battles.battle(\'' + selfR.id + '\').formUseMove(\'Struggle\')">Struggle<br /><small class="type">Normal</small> <small class="pp">&ndash;</small>&nbsp;</button> ';
-                } else {
-                    controls += movebuttons;
-                }
-                controls += '<div style="clear:left"></div>';
-                if (hasDisabled) {
-                    // controls += '<small>(grayed out moves have been disabled by Disable, Encore, or something like that)</small>';
-                }
-                controls += '</div></div><div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + selfR.id + '\').formSelectSwitch()">Switch</button></div><div class="switchmenu">';
-                if (trapped) {
-                    controls += '<em>You are trapped and cannot switch!</em>';
-                } else {
-                    controls += '';
-                    for (var i = 0; i < switchables.length; i++) {
-                        var pokemon = switchables[i];
-                        pokemon.name = pokemon.ident.substr(4);
-                        if (pokemon.zerohp || i < selfR.battle.mySide.active.length) {
-                            controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
-                        } else {
-                            controls += '<button onclick="battles.battle(\'' + selfR.id + '\').formSwitchTo(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
-                        }
-                    }
-                    if (selfR.battle.mySide.pokemon.length > 6) {
-                        //controls += '<small>Pokeball data corrupt. Please copy the text from selfR button: <button onclick="prompt(\'copy selfR text\', curRoom.battle.activityQueue.join(\' :: \'));return false">[click here]</button> and tell aesoft.</small>';
-                    }
-                }
-                controls += '</div></div></div>';
-                selfR.controlsElem.html(controls);
-            }
-                selfR.notifying = true;
-                break;
-            case 'switch':
-                selfR.choices = [];
-                var controls = '<div class="controls"><div class="whatdo">';
-                controls += 'Switch to:</div>';
-                controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + selfR.id + '\').formSelectSwitch()">Switch</button></div><div class="switchmenu">';
-                for (var i = 0; i < switchables.length; i++) {
-                    var pokemon = switchables[i];
-                    if (i >= 6) {
-                        //controls += '<small>Pokeball data corrupt. Please copy the text from selfR button: <button onclick="prompt(\'copy selfR text\', curRoom.battle.activityQueue.join(\' :: \'));return false">[click here]</button> and tell aesoft.</small>';
-                        break;
-                    }
-                    if (pokemon.zerohp || i == 0) {
-                        controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
-                    } else {
-                        controls += '<button onclick="battles.battle(\'' + selfR.id + '\').formSwitchTo(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '<span class="hpbar"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
-                    }
-                }
-                controls += '</div></div></div>';
-                selfR.controlsElem.html(controls);
-                selfR.formSelectSwitch();
-                selfR.notifying = true;
-                break;
-            case 'team':
-                var controls = '<div class="controls"><div class="whatdo">';
-                if (type !== 'team2') {
-                    selfR.teamPreviewChoice = [1,2,3,4,5,6].slice(0,switchables.length);
-                    selfR.teamPreviewDone = 0;
-                    selfR.teamPreviewHasIllusion = false;
-                    controls += 'How will you start the battle?</div>';
-                    controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + selfR.id + '\').formSelectSwitch()">Choose Lead</button></div><div class="switchmenu">';
-                    for (var i = 0; i < switchables.length; i++) {
-                        var pokemon = switchables[i];
-                        if (i >= 6) {
-                            break;
-                        }
-                        if (toId(pokemon.ability) === 'illusion') selfR.teamPreviewHasIllusion = true;
-                        controls += '<button onclick="battles.battle(\'' + selfR.id + '\').formTeamPreviewSelect(' + i + ')"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
-                    }
-                    controls += '</div>';
-                } else {
-                    controls += '<button onclick="battles.battle(\'' + selfR.id + '\').callback(null,\'team\')">Back</button> What about the rest of your team?</div>';
-                    controls += '<div class="switchcontrols"><div class="switchselect"><button onclick="battles.battle(\'' + selfR.id + '\').formSelectSwitch()">Choose a pokemon for slot '+(selfR.teamPreviewDone+1)+'</button></div><div class="switchmenu">';
-                    for (var i = 0; i < switchables.length; i++) {
-                        var pokemon = switchables[selfR.teamPreviewChoice[i]-1];
-                        if (i >= 6) {
-                            break;
-                        }
-                        if (i < selfR.teamPreviewDone) {
-                            controls += '<button disabled="disabled"' + tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
-                        } else {
-                            controls += '<button onclick="battles.battle(\'' + selfR.id + '\').formTeamPreviewSelect(' + i + ')"' + tooltipAttrs(selfR.teamPreviewChoice[i]-1, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + sanitize(pokemon.name) + '</button> ';
-                        }
-                    }
-                    controls += '</div>';
-                }
-                controls += '</div></div>';
-                selfR.controlsElem.html(controls);
-                selfR.formSelectSwitch();
-                selfR.notifying = true;
-                break;
-        }
+        this.updateControlsForPlayer();
     };
 
     if (this.battle.activityQueue) {
@@ -1627,7 +1471,7 @@ BattleTab.prototype.formRestart = function () {
 };
 
 BattleTab.prototype.formUseMove = function (move) {
-    hideTooltip();
+    this.hideTooltip();
     this.choices.push('move '+move);
     if (this.battle.mySide.active.length > this.choices.length) {
         this.callback(this.battle, 'move2');
@@ -1641,7 +1485,7 @@ BattleTab.prototype.formUseMove = function (move) {
 };
 
 BattleTab.prototype.formSwitchTo = function (pos) {
-    hideTooltip();
+    this.hideTooltip();
     this.choices.push('switch '+(parseInt(pos,10)+1));
     if (this.me.request && this.me.request.requestType === 'move' && this.battle.mySide.active.length > this.choices.length) {
         this.callback(this.battle, 'move2');
@@ -1656,7 +1500,7 @@ BattleTab.prototype.formSwitchTo = function (pos) {
 
 BattleTab.prototype.formTeamPreviewSelect = function (pos) {
     pos = parseInt(pos,10);
-    hideTooltip();
+    this.hideTooltip();
     if (this.teamPreviewHasIllusion) {
         var temp = this.teamPreviewChoice[pos];
         this.teamPreviewChoice[pos] = this.teamPreviewChoice[this.teamPreviewDone];
@@ -1690,22 +1534,22 @@ BattleTab.prototype.formRename = function () {
     overlay('rename');
     return false;
 };
-BattleTab.formLeaveBattle = function () {
-    hideTooltip();
+BattleTab.prototype.formLeaveBattle = function () {
+    this.hideTooltip();
     this.send('/leavebattle');
     this.notifying = false;
     updateRoomList();
     return false;
 };
 
-BattleTab.formSelectSwitch = function () {
-    hideTooltip();
+BattleTab.prototype.formSelectSwitch = function () {
+    this.hideTooltip();
     this.controlsElem.find('.controls').attr('class', 'controls switch-controls');
     return false;
 };
 
-BattleTab.formSelectMove = function () {
-    hideTooltip();
+BattleTab.prototype.formSelectMove = function () {
+    this.hideTooltip();
     this.controlsElem.find('.controls').attr('class', 'controls move-controls');
     return false;
 };
@@ -1713,33 +1557,30 @@ BattleTab.formSelectMove = function () {
 function updateRoomList(){}
 function overlay(){}
 
-function hideTooltip() {
+BattleTab.prototype.hideTooltip = function() {
     $('#tooltipwrapper').html('');
-    return true;
-}
+};
 
+BattleTab.prototype.tooltipAttrs = function(thing, type, ownHeight, isActive) {
+    return ' onmouseover="room.showTooltip(\'' + Tools.escapeHTML(''+thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ', ' + (isActive ? 'true' : 'false') + ')" onmouseout="room.hideTooltip()" onmouseup="room.hideTooltip()"';
+};
 
-function tooltipAttrs(thing, type, ownHeight, isActive) {
-    return ' onmouseover="return showTooltip(\'' + sanitize(''+thing, true) + '\',\'' + type + '\', this, ' + (ownHeight ? 'true' : 'false') + ', ' + (isActive ? 'true' : 'false') + ')" onmouseout="return hideTooltip()" onmouseup="hideTooltip()"';
-}
-
-function showTooltip(thing, type, elem, ownHeight, isActive) {
+BattleTab.prototype.showTooltip = function(thing, type, elem, ownHeight, isActive) {
     var offset = {
         left: 150,
         top: 500
     };
     if (elem) offset = $(elem).offset();
-    var x = offset.left - 25;
+    var x = offset.left - 2;
     if (elem) {
         if (ownHeight) offset = $(elem).offset();
         else offset = $(elem).parent().offset();
     }
-    var y = offset.top - 15;
+    var y = offset.top - 5;
 
-//    if (widthClass === 'tiny-layout') {
-//        if (x > 360) x = 360;
-//    }
+    if (x > 335) x = 335;
     if (y < 140) y = 140;
+    if (!$('#tooltipwrapper').length) $(document.body).append('<div id="tooltipwrapper"></div>');
     $('#tooltipwrapper').css({
         left: x,
         top: y
@@ -1756,7 +1597,7 @@ function showTooltip(thing, type, elem, ownHeight, isActive) {
             if (!accuracy || accuracy === true) accuracy = '&mdash;';
             else accuracy = '' + accuracy + '%';
             text = '<div class="tooltipinner"><div class="tooltip">';
-            text += '<h2>' + move.name + '<br />'+Tools.getTypeIcon(move.type)+' <img src="/sprites/categories/' + move.category + '.png" alt="' + move.category + '" /></h2>';
+            text += '<h2>' + move.name + '<br />'+Tools.getTypeIcon(move.type)+' <img src="' + Tools.resourcePrefix + 'sprites/categories/' + move.category + '.png" alt="' + move.category + '" /></h2>';
             text += '<p>Base power: ' + basePower + '</p>';
             text += '<p>Accuracy: ' + accuracy + '</p>';
             if (move.desc) {
@@ -1764,12 +1605,13 @@ function showTooltip(thing, type, elem, ownHeight, isActive) {
             }
             text += '</div></div>';
             break;
+
         case 'pokemon':
-            var pokemon = currentTabObject.battle.getPokemon(thing);
+            var pokemon = this.battle.getPokemon(thing);
             if (!pokemon) return;
         //fallthrough
         case 'sidepokemon':
-            if (!pokemon) pokemon = currentTabObject.battle.mySide.pokemon[parseInt(thing)];
+            if (!pokemon) pokemon = this.battle.mySide.pokemon[parseInt(thing)];
             text = '<div class="tooltipinner"><div class="tooltip">';
             text += '<h2>' + pokemon.getFullName() + (pokemon.level !== 100 ? ' <small>L' + pokemon.level + '</small>' : '') + '<br />';
 
@@ -1788,22 +1630,28 @@ function showTooltip(thing, type, elem, ownHeight, isActive) {
                 text += '<small>(Type changed)</small><br />';
                 types = [pokemon.volatiles.typechange[2]];
             }
-            text += Tools.getTypeIcon(types[0]);
-            if (types[1]) {
-                text += ' '+Tools.getTypeIcon(types[1]);
+            if (types) {
+                text += Tools.getTypeIcon(types[0]);
+                if (types[1]) {
+                    text += ' '+Tools.getTypeIcon(types[1]);
+                }
+            } else {
+                text += 'Types unknown';
             }
             text += '</h2>';
-            if (!isActive) {
-                text += '<p>HP: ' + Math.round(100 * pokemon.hp / pokemon.maxhp) + '% ('+pokemon.hp+'/'+pokemon.maxhp+')'+(pokemon.status?' <span class="status '+pokemon.status+'">'+pokemon.status.toUpperCase()+'</span>':'')+'</p>';
-            }
-            if (!pokemon.ability || pokemon.ability.substr(0, 2) === '??') {
+            var exacthp = '';
+            if (pokemon.maxhp != 100 && pokemon.maxhp != 1000 && pokemon.maxhp != 48) exacthp = ' ('+pokemon.hp+'/'+pokemon.maxhp+')';
+            if (pokemon.maxhp == 48 && isActive) exacthp = ' <small>('+pokemon.hp+'/'+pokemon.maxhp+' pixels)</small>';
+            text += '<p>HP: ' + pokemon.hpDisplay() +exacthp+(pokemon.status?' <span class="status '+pokemon.status+'">'+pokemon.status.toUpperCase()+'</span>':'')+'</p>';
+            if (!pokemon.baseAbility && !pokemon.ability) {
                 text += '<p>Possible abilities: ' + Tools.getAbility(template.abilities['0']).name;
                 if (template.abilities['1']) text += ', ' + Tools.getAbility(template.abilities['1']).name;
                 if (template.abilities['DW']) text += ', ' + Tools.getAbility(template.abilities['DW']).name;
                 text += '</p>';
-            }
-            else if (pokemon.ability) {
+            } else if (pokemon.ability) {
                 text += '<p>Ability: ' + Tools.getAbility(pokemon.ability).name + '</p>';
+            } else if (pokemon.baseAbility) {
+                text += '<p>Ability: ' + Tools.getAbility(pokemon.baseAbility).name + '</p>';
             }
             if (pokemon.item) {
                 text += '<p>Item: ' + Tools.getItem(pokemon.item).name + '</p>';
@@ -1819,6 +1667,290 @@ function showTooltip(thing, type, elem, ownHeight, isActive) {
             text += '</div></div>';
             break;
     }
-    $('#tooltipwrapper').html(text);
-    return true;
-}
+    $('#tooltipwrapper').html(text).appendTo(document.body);
+};
+
+BattleTab.prototype.updateControlsForPlayer = function() {
+    var battle = this.battle;
+
+    this.callbackWaiting = true;
+    var active = this.battle.mySide.active[0];
+    if (!active) active = {};
+
+    var act = '';
+    var switchables = [];
+    if (this.request) {
+        // TODO: investigate when to do this
+        this.updateSide(this.request.side);
+
+        act = this.request.requestType;
+        if (this.request.side) {
+            switchables = this.battle.mySide.pokemon;
+        }
+    }
+
+    var type = '';
+    var moveTarget = '';
+    if (this.choice) {
+        type = this.choice.type;
+        moveTarget = this.choice.moveTarget;
+        if (this.choice.waiting) act = '';
+    }
+    // The choice object:
+    // !this.choice = nothing has been chosen
+    // this.choice.choices = array of choice strings
+    // this.choice.switchFlags = dict of pokemon indexes that have a switch pending
+
+    switch (act) {
+        case 'move':
+        {
+            if (!this.choice) {
+                this.choice = {
+                    choices: [],
+                    switchFlags: {}
+                }
+                while (switchables[this.choice.choices.length] && switchables[this.choice.choices.length].fainted) {
+                    this.choice.choices.push('pass');
+                }
+            }
+            var pos = this.choice.choices.length - (type === 'movetarget'?1:0);
+
+            // hp bar
+            var hpbar = '';
+            if (switchables[pos].hp * 5 / switchables[pos].maxhp < 1) {
+                hpbar = '<small class="critical">';
+            } else if (switchables[pos].hp * 2 / switchables[pos].maxhp < 1) {
+                hpbar = '<small class="weak">';
+            } else {
+                hpbar = '<small class="healthy">';
+            }
+            hpbar += ''+switchables[pos].hp+'/'+switchables[pos].maxhp+'</small>';
+
+            var active = this.request;
+            if (active.active) active = active.active[pos];
+            var moves = active.moves;
+            var trapped = active.trapped;
+            this.finalDecision = active.maybeTrapped || false;
+            if (this.finalDecision) {
+                for (var i = pos + 1; i < this.battle.mySide.active.length; ++i) {
+                    var p = this.battle.mySide.active[i];
+                    if (p && !p.fainted) {
+                        this.finalDecision = false;
+                    }
+                }
+            }
+
+            var controls = '<div class="controls"><div class="whatdo">';
+            if (type === 'move2' || type === 'movetarget') {
+                controls += '<button name="clearChoice">Back</button> ';
+            }
+
+            // Target selector
+
+            if (type === 'movetarget') {
+                controls += 'At who? '+hpbar+'</div>';
+                controls += '<div class="switchmenu" style="display:block">';
+
+                var myActive = this.battle.mySide.active;
+                var yourActive = this.battle.yourSide.active;
+                var yourSlot = yourActive.length-1-pos;
+                for (var i = yourActive.length-1; i >= 0; i--) {
+                    var pokemon = yourActive[i];
+
+                    var disabled = false;
+                    if (moveTarget === 'adjacentAlly' || moveTarget === 'adjacentAllyOrSelf') {
+                        disabled = true;
+                    } else if (moveTarget === 'normal' || moveTarget === 'adjacentFoe') {
+                        if (Math.abs(yourSlot-i) > 1) disabled = true;
+                    }
+
+                    if (!pokemon) {
+                        controls += '<button disabled></button> ';
+                    } else if (disabled || pokemon.zerohp) {
+                        controls += '<button disabled' + this.tooltipAttrs(pokemon.getIdent(), 'pokemon', true, 'foe') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+                    } else {
+                        var posString = '';
+                        controls += '<button name="chooseMoveTarget" value="'+(i+1)+'"' + this.tooltipAttrs(pokemon.getIdent(), 'pokemon', true, 'foe') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                    }
+                }
+                controls += '<div style="clear:both"></div> </div><div class="switchmenu" style="display:block">';
+                for (var i = 0; i < myActive.length; i++) {
+                    var pokemon = myActive[i];
+
+                    var disabled = false;
+                    if (moveTarget === 'adjacentFoe') {
+                        disabled = true;
+                    } else if (moveTarget === 'normal' || moveTarget === 'adjacentAlly' || moveTarget === 'adjacentAllyOrSelf') {
+                        if (Math.abs(pos-i) > 1) disabled = true;
+                    }
+                    if (moveTarget !== 'adjacentAllyOrSelf' && pos == i) disabled = true;
+
+                    if (!pokemon) {
+                        controls += '<button disabled="disabled"></button> ';
+                    } else if (disabled || pokemon.zerohp) {
+                        controls += '<button disabled="disabled"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+                    } else {
+                        controls += '<button name="chooseMoveTarget" value="' + (-(i+1)) + '"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                    }
+                }
+                controls += '</div>';
+                controls += '</div>';
+                this.$controls.html(controls);
+                break;
+            }
+
+            // Move chooser
+
+            controls += 'What will <strong>' + Tools.escapeHTML(switchables[pos].name) + '</strong> do? '+hpbar+'</div>';
+            var hasMoves = false;
+            var hasDisabled = false;
+            controls += '<div class="movecontrols"><div class="moveselect"><button name="selectMove">Attack</button></div><div class="movemenu">';
+            var movebuttons = '';
+            for (var i = 0; i < moves.length; i++) {
+                var moveData = moves[i];
+                var move = Tools.getMove(moves[i].move);
+                if (!move) {
+                    move = {
+                        name: moves[i].move,
+                        id: moves[i].move,
+                        type: ''
+                    };
+                }
+                var name = move.name;
+                var pp = moveData.pp + '/' + moveData.maxpp;
+                if (!moveData.maxpp) pp = '&ndash;';
+                if (move.id === 'Struggle' || move.id === 'Recharge') pp = '&ndash;';
+                if (move.id === 'Recharge') move.type = '&ndash;';
+                if (name.substr(0, 12) === 'Hidden Power') name = 'Hidden Power';
+                if (moveData.disabled) {
+                    movebuttons += '<button disabled="disabled"' + this.tooltipAttrs(moveData.move, 'move') + '>';
+                    hasDisabled = true;
+                } else {
+                    movebuttons += '<button class="type-' + move.type + '" name="chooseMove" value="' + Tools.escapeHTML(moveData.move) + '"' + this.tooltipAttrs(moveData.move, 'move') + '>';
+                    hasMoves = true;
+                }
+                movebuttons += name + '<br /><small class="type">' + move.type + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
+            }
+            if (!hasMoves) {
+                controls += '<button class="movebutton" name="chooseMove" value="Struggle">Struggle<br /><small class="type">Normal</small> <small class="pp">&ndash;</small>&nbsp;</button> ';
+            } else {
+                controls += movebuttons;
+            }
+            controls += '<div style="clear:left"></div>';
+            controls += '</div></div><div class="switchcontrols"><div class="switchselect"><button name="selectSwitch">Switch</button></div><div class="switchmenu">';
+            if (trapped) {
+                controls += '<em>You are trapped and cannot switch!</em>';
+            } else {
+                controls += '';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[i];
+                    pokemon.name = pokemon.ident.substr(4);
+                    if (pokemon.zerohp || i < this.battle.mySide.active.length || this.choice.switchFlags[i]) {
+                        controls += '<button disabled' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+                    } else {
+                        controls += '<button name="chooseSwitch" value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                    }
+                }
+                if (this.finalDecision) {
+                    controls += '<em style="display:block;clear:both">You <strong>might</strong> be trapped, so you won\'t be able to cancel a switch!</em><br/>';
+                }
+            }
+            controls += '</div></div></div>';
+            this.$controls.html(controls);
+        }
+            break;
+
+        case 'switch':
+            this.finalDecision = false;
+            if (!this.choice) {
+                this.choice = {
+                    choices: [],
+                    switchFlags: {}
+                };
+                if (this.request.forceSwitch !== true) {
+                    while (!this.request.forceSwitch[this.choice.choices.length] && this.choice.choices.length < 6) this.choice.choices.push('pass');
+                }
+            }
+            var pos = this.choice.choices.length;
+            var controls = '<div class="controls"><div class="whatdo">';
+            if (type === 'switch2') {
+                controls += '<button name="clearChoice">Back</button> ';
+            }
+            controls += 'Switch <strong>'+Tools.escapeHTML(switchables[pos].name)+'</strong> to:</div>';
+            controls += '<div class="switchcontrols"><div class="switchselect"><button name="selectSwitch">Switch</button></div><div class="switchmenu">';
+            for (var i = 0; i < switchables.length; i++) {
+                var pokemon = switchables[i];
+                if (pokemon.zerohp || i < this.battle.mySide.active.length || this.choice.switchFlags[i]) {
+                    controls += '<button disabled' + this.tooltipAttrs(i, 'sidepokemon') + '>';
+                } else {
+                    controls += '<button name="chooseSwitch" value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '>';
+                }
+                controls += '<span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
+            }
+            controls += '</div></div></div>';
+            this.$controls.html(controls);
+            this.selectSwitch();
+            break;
+
+        case 'team':
+            var controls = '<div class="controls"><div class="whatdo">';
+            if (!this.choice || !this.choice.done) {
+                this.choice = {
+                    teamPreview: [1,2,3,4,5,6].slice(0,switchables.length),
+                    done: 0,
+                    count: 0
+                }
+                if (this.battle.gameType === 'doubles') {
+                    this.choice.count = 2;
+                }
+                controls += 'How will you start the battle?</div>';
+                controls += '<div class="switchcontrols"><div class="switchselect"><button name="selectSwitch">Choose Lead</button></div><div class="switchmenu">';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[i];
+                    if (i >= 6) {
+                        break;
+                    }
+                    if (toId(pokemon.baseAbility) === 'illusion') {
+                        this.choice.count = 6;
+                    }
+                    controls += '<button name="chooseTeamPreview" value="'+i+'"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '</button> ';
+                }
+                if (this.battle.teamPreviewCount) this.choice.count = parseInt(this.battle.teamPreviewCount,10);
+                controls += '</div>';
+            } else {
+                controls += '<button name="clearChoice">Back</button> What about the rest of your team?</div>';
+                controls += '<div class="switchcontrols"><div class="switchselect"><button name="selectSwitch">Choose a pokemon for slot '+(this.choice.done+1)+'</button></div><div class="switchmenu">';
+                for (var i = 0; i < switchables.length; i++) {
+                    var pokemon = switchables[this.choice.teamPreview[i]-1];
+                    if (i >= 6) {
+                        break;
+                    }
+                    if (i < this.choice.done) {
+                        controls += '<button disabled="disabled"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '</button> ';
+                    } else {
+                        controls += '<button name="chooseTeamPreview" value="'+i+'"' + this.tooltipAttrs(this.choice.teamPreview[i]-1, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '</button> ';
+                    }
+                }
+                controls += '</div>';
+            }
+            controls += '</div></div>';
+            this.$controls.html(controls);
+            this.selectSwitch();
+            break;
+
+        default:
+            var buf = '<div class="controls"><p><em>Waiting for opponent...</em> ';
+            if (this.choice && this.choice.waiting && !this.finalDecision) {
+                buf += '<button name="undoChoice">Cancel</button>';
+            }
+            buf += '</p>';
+            if (this.battle.kickingInactive) {
+                buf += '<p class="timer"><button name="setTimer" value="off"><small>Stop timer</small></button></p>';
+            } else {
+                buf += '<p class="timer"><button name="setTimer" value="on"><small>Start timer</small></button></p>';
+            }
+            buf += '</div>';
+            this.$controls.html(buf);
+            break;
+    }
+};

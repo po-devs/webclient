@@ -2,7 +2,7 @@ function Channels() {
     this.channels = {"0": new Channel(0, "Main channel")};
     this.names = {};
 
-    currentTabObject = this.channels[0];
+    room = this.channels[0];
     currentChannel = 0;
 }
 
@@ -16,7 +16,7 @@ Channels.prototype.channel = function (id) {
 
         /* Hack to detect when the first channel is opened */
         if (Object.keys(this.channels).length === 1) {
-            currentTabObject = this.channels[id];
+            room = this.channels[id];
             currentChannel = id;
         }
     }

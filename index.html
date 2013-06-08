@@ -89,15 +89,20 @@
                     return ret;
                 };
 
-                currentTabObject = null;
+                room = null;
                 currentChannel = -1;
 
-                $("#channel-tabs").bind('tabsselect', function(event, ui) {
+                switchToTab = function(hrefid) {
+                    room = objFromId(hrefid);
+                    $('#channel-tabs').tabs("select", hrefid);
+                };
+
+                $("#channel-tabs").on('tabsselect', function(event, ui) {
                     var hrefid = $(ui.tab).attr("href");
                     var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
 
                     /* Changes the current object in memory */
-                    currentTabObject = objFromId(hrefid);
+                    room = objFromId(hrefid);
                     currentChannel = -1;
 
                     if (/^#channel-/.test(hrefid)) {
@@ -106,7 +111,7 @@
                         }
                     }
                     /* Update player list when switching channels */
-                    playerList.setPlayers(currentTabObject.playerIds());
+                    playerList.setPlayers(room.playerIds());
                 });
 
                 $("#channel-tabs").bind('tabsshow', function(event, ui) {
@@ -123,6 +128,11 @@
 
                     /* The tab is selected now, so any unseen activity is removed */
                     $(ui.tab).removeClass("tab-active tab-flashing");
+                });
+
+                $("#channel-tabs").bind('tabscreate', function(event, ui) {
+                    var hrefid = $(ui.tab).attr("href");
+                    room = objFromId(hrefid);
                 });
 
                 $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
@@ -765,7 +775,7 @@
 
                     /* Update whole player list */
                     if (chanid == currentChannel) {
-                        playerList.setPlayers(currentTabObject.playerIds());
+                        playerList.setPlayers(room.playerIds());
                     }
                 } else if (cmd === "battlefinished") {
                     var battleid = data.split("|")[0];
