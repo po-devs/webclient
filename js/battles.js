@@ -362,25 +362,25 @@ BattleTab.prototype.initPSBattle = function(data)
         }
     };
 
-//     if (this.battle.activityQueue) {
-//         // re-initialize
-//         this.battleEnded = false;
-//         this.battle = new Battle(this.battleElem, this.chatFrameElem);
+    if (this.battle.activityQueue) {
+        // re-initialize
+        this.battleEnded = false;
+//        this.battle = new Battle(this.battleElem, this.chatFrameElem);
 
-// /*
-//         if (widthClass !== 'tiny-layout') {
-//             this.battle.messageSpeed = 80;
-//         }
-// */
+/*
+        if (widthClass !== 'tiny-layout') {
+            this.battle.messageSpeed = 80;
+        }
+*/
 
-//         this.battle.setMute(this.me.mute);
-//         this.battle.customCallback = this.callback;
-//         this.battle.startCallback = this.updateJoinButton;
-//         this.battle.stagnateCallback = this.updateJoinButton;
-//         this.battle.endCallback = this.updateJoinButton;
-//         this.chatFrameElem.find('.inner').html('');
-//         this.controlsElem.html('');
-//     }
+        this.battle.setMute(this.me.mute);
+        this.battle.customCallback = this.callback;
+        this.battle.startCallback = this.updateJoinButton;
+        this.battle.stagnateCallback = this.updateJoinButton;
+        this.battle.endCallback = this.updateJoinButton;
+        this.chatFrameElem.find('.inner').html('');
+        this.controlsElem.html('');
+    }
     this.battle.play();
     if (data && data.battlelog) {
         for (var i = 0; i < data.battlelog.length; i++) {
