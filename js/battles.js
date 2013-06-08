@@ -140,7 +140,8 @@ function BattleTab(pid, conf, team) {
         this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
         if (team) {
-            //this.updateSide(team, false);
+            convertedTeam = this.convertTeamToPS(team, conf.players[1] == Players.myid ? 1 : 0);
+            this.updateSide(convertedTeam, false);
         }
 
         this.initPSBattle();
@@ -393,6 +394,38 @@ BattleTab.prototype.initPSBattle = function(data)
     }
 };
 
+BattleTab.prototype.convertTeamToPS = function(team, slot) {
+    var ret = {'pokemon': team};
+
+    for (var i = 0; i < ret.pokemon.length; i++) {
+        var pokemon = ret.pokemon[i];
+        pokemon.condition = this.pokemonDetails(pokemon);
+        pokemon.details = this.pokemonToPS(pokemon);
+
+        pokemon.ident = 'p' + ((this.slot)+1) + ": " + pokemon.name;
+
+        if (pokemon.item) {
+            pokemon.itemNum = pokemon.item;
+            pokemon.item = Tools.getItemName(pokemon.itemNum);
+        }
+        if (pokemon.ability) {
+            pokemon.abilityNum = pokemon.ability;
+            pokemon.ability = pokemon.baseAbility = Tools.getAbilityName(pokemon.abilityNum);
+        }
+        if (pokemon.moves) {
+            pokemon.moveNums = pokemon.moves;
+            pokemon.moves = [];
+
+            for (var j = 0; j < pokemon.moveNums.length; j++) {
+                pokemon.moves[j] = Tools.getMoveName(pokemon.moveNums[j].num);
+            }
+        }
+        pokemon.moves = pokemon.moves;
+    }
+
+    return ret;
+};
+
 BattleTab.prototype.playerIds = function() {
     var array = [];
     for (var i = 0; i < this.conf.players.length; i++) {
@@ -424,7 +457,11 @@ BattleTab.prototype.print = function(msg) {
 BattleTab.prototype.close = function() {
     delete battles.battles[this.id];
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
-    websocket.send("stopwatching|"+this.id);
+    if (this.conf.players[0] == Players.myid || this.conf.players[1] == Players.myid) {
+        websocket.send("forfeit|"+this.id);
+    } else {
+        websocket.send("stopwatching|"+this.id);
+    }
 };
 
 /* Receives a PO command, and translates it in PS language.
@@ -480,7 +517,7 @@ BattleTab.prototype.pokemonToPS = function(pokemon) {
 
 /* Converts PO pokemon to PS pokemon details that are like '(95/100 par)' */
 BattleTab.prototype.pokemonDetails = function(pokemon) {
-    var str = "(" + pokemon.percent + "/100";
+    var str = pokemon.totalLife ? pokemon.life + "/" + pokemon.totalLife : pokemon.percent + "/100";
 
     if (pokemon.status) {
         /* Koed = 31,
@@ -506,7 +543,7 @@ BattleTab.prototype.pokemonDetails = function(pokemon) {
             str += "fnt";
         }
     }
-    return str + ")";
+    return str;
 };
 
 BattleTab.statuses = {
@@ -1491,35 +1528,35 @@ BattleTab.prototype.update = function (update) {
 };
 
 BattleTab.prototype.updateSide = function(sideData, midBattle) {
-    var sidesSwitched = false;
-    this.me.sideData = sideData; // just for easy debugging
-    if (this.battle.sidesSwitched !== !!(this.me.side === 'p2')) {
-        sidesSwitched = true;
-        this.battle.reset();
-        this.battle.switchSides();
-    }
     for (var i = 0; i < sideData.pokemon.length; i++) {
         var pokemonData = sideData.pokemon[i];
         var pokemon;
         if (i == 0) {
-            pokemon = this.battle.getPokemon('canfnt: '+pokemonData.ident, pokemonData.details);
+            pokemon = this.battle.getPokemon(''+pokemonData.ident, pokemonData.details);
+            pokemon.slot = 0;
             pokemon.side.pokemon = [pokemon];
+            // if (pokemon.side.active[0] && pokemon.side.active[0].ident == pokemon.ident) pokemon.side.active[0] = pokemon;
+        } else if (i < this.battle.mySide.active.length) {
+            pokemon = this.battle.getPokemon('new: '+pokemonData.ident, pokemonData.details);
+            pokemon.slot = i;
+            // if (pokemon.side.active[i] && pokemon.side.active[i].ident == pokemon.ident) pokemon.side.active[i] = pokemon;
+            if (pokemon.side.active[i] && pokemon.side.active[i].ident == pokemon.ident) {
+                pokemon.side.active[i].item = pokemon.item;
+                pokemon.side.active[i].ability = pokemon.ability;
+                pokemon.side.active[i].baseAbility = pokemon.baseAbility;
+            }
         } else {
             pokemon = this.battle.getPokemon('new: '+pokemonData.ident, pokemonData.details);
         }
         pokemon.healthParse(pokemonData.condition);
-        pokemon.ability = pokemonData.ability;
+        if (pokemonData.baseAbility) {
+            pokemon.baseAbility = pokemonData.baseAbility;
+            if (!pokemon.ability) pokemon.ability = pokemon.baseAbility;
+        }
         pokemon.item = pokemonData.item;
         pokemon.moves = pokemonData.moves;
     }
     this.battle.mySide.updateSidebar();
-    if (sidesSwitched) {
-        if (midBattle) {
-            this.battle.fastForwardTo(-1);
-        } else {
-            this.battle.play();
-        }
-    }
 };
 
 BattleTab.prototype.updateMe = function () {
