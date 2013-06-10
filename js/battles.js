@@ -116,7 +116,8 @@ function BattleTab(pid, conf, team) {
         var myname = players.name(players.myid);
         var chatElem = '<form onsubmit="return false" class="chatbox"><label style="' + hashColor(toId(myname)) + '">' + sanitize(myname) +
             ':</label> <textarea class="ps-textbox" type="text" size="70" history="true" autofocus="true" id="send-battle-'+this.id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" ></textarea></form>';
-        $content.html('<div class="battlewrapper"><div class="battle">Loading battle...</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div><div class="replay-controls"></div></div>'
+        $content.html('<div class="battlewrapper"><div class="battle">Loading battle...</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div><div class="replay-controls"></div>' +
+            '<div class=".battle-controls"></div></div>'
                                  +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
@@ -124,13 +125,14 @@ function BattleTab(pid, conf, team) {
         var $battle;
         this.battleElem = $battle = $content.find('.battle');
         this.controlsElem = $content.find('.replay-controls');
-        var $chatFrame = this.chatFrameElem = $content.find('.battle-log');
+        this.$controls = $content.find('.battle-controls');
+        var $chatFrame = this.$chatFrame = this.chatFrameElem = $content.find('.battle-log');
 /*
         this.chatElem = null;*/
         this.chatAddElem = $content.find('.battle-log-add');
         /*this.chatboxElem = null;
         this.joinElem = null;*/
-        this.foeHintElem = $content.find('.foehint');
+        this.$foeHint = $content.find('.foehint');
 
         /* Create a showdown battle window */
         this.battle = new Battle($battle, $chatFrame);
@@ -140,7 +142,8 @@ function BattleTab(pid, conf, team) {
         this.battle.runMajor(["gametype", "singles"]);//could use this.conf.mode
 
         if (team) {
-            this.convertTeamToPS(team, conf.players[1] == players.myid ? 1 : 0);
+            this.myself = conf.players[1] == players.myid ? 1 : 0;
+            this.convertTeamToPS(team, this.myself);
             this.updateSide(this.request.side, false);
         }
 
@@ -190,7 +193,7 @@ BattleTab.prototype.initPSBattle = function(data)
         if (yourPokemon) {
             text += '<div style="position:absolute;top:90px;left:390px;width:100px;height:100px;"' + selfR.tooltipAttrs(yourPokemon.ident, 'pokemon', true, 'foe') + '></div>';
         }
-        selfR.foeHintElem.html(text);
+        selfR.$foeHint.html(text);
 
         if (!selfR.me.request) {
             selfR.controlsElem.html('<div class="controls"><em>Waiting for players...</em></div>');
@@ -633,6 +636,10 @@ BattleTab.prototype.dealWithRated = function(params) {
 
 BattleTab.prototype.dealWithChoiceselection = function(params) {
     this.addCommand(["callback", "decision"]);
+
+    if (this.request && params.spot%2 == this.myself) {
+        this.receiveRequest(this.request);
+    }
 };
 
 /*
@@ -1299,7 +1306,7 @@ BattleTab.prototype.update = function (update) {
                 this.controlsElem.html('');
             }
             if (update.updates[i] === 'RESET') {
-                this.foeHintElem.html('');
+                this.$foeHint.html('');
                 var blog = this.chatFrameElem.find('.inner').html();
                 delete this.me.side;
                 this.battleEnded = false;
@@ -1953,4 +1960,154 @@ BattleTab.prototype.updateControlsForPlayer = function() {
             this.$controls.html(buf);
             break;
     }
+};
+
+BattleTab.prototype.receiveRequest = function(request) {
+    if (!request) {
+        this.side = '';
+        return;
+    }
+    request.requestType = 'move';
+
+    if (request.forceSwitch) {
+        request.requestType = 'switch';
+    } else if (request.teamPreview) {
+        request.requestType = 'team';
+    } else if (request.wait) {
+        request.requestType = 'wait';
+    }
+
+    this.choice = null;
+    this.request = request;
+    if (request.side) {
+        this.updateSideLocation(request.side, true);
+    }
+    this.notifyRequest();
+    this.updateControls();
+};
+
+BattleTab.prototype.notifyRequest = function() {
+    var oName = this.battle.yourSide.name;
+    if (oName) oName = " against "+oName;
+    switch (this.request.requestType) {
+        case 'move':
+            this.notify("Your move!", "Move in your battle"+oName, 'choice');
+            break;
+        case 'switch':
+            this.notify("Your switch!", "Switch in your battle"+oName, 'choice');
+            break;
+        case 'team':
+            this.notify("Team preview!", "Choose your team order in your battle"+oName, 'choice');
+            break;
+    }
+};
+
+BattleTab.prototype.notify = function(title, msg, type, once) {
+    /* supposed to do an alert (browser notification */
+};
+
+BattleTab.prototype.updateSideLocation = function(sideData, midBattle) {
+    if (!sideData.id) return;
+    this.side = sideData.id;
+    if (this.battle.sidesSwitched !== !!(this.side === 'p2')) {
+        sidesSwitched = true;
+        this.battle.reset(true);
+        this.battle.switchSides();
+        if (midBattle) {
+            this.battle.fastForwardTo(-1);
+        } else {
+            this.battle.play();
+        }
+        this.$chat = this.$chatFrame.find('.inner');
+    }
+};
+
+BattleTab.prototype.updateControls = function() {
+    if (this.$join) {
+        this.$join.remove();
+        this.$join = null;
+    }
+
+    var controlsShown = this.controlsShown;
+    this.controlsShown = false;
+
+    if (this.battle.playbackState === 5) {
+
+        // battle is seeking
+        this.$controls.html('');
+        return;
+
+    } else if (this.battle.playbackState === 2 || this.battle.playbackState === 3) {
+
+        // battle is playing or paused
+        this.$controls.html('<p><button name="skipTurn">Skip turn <i class="icon-step-forward"></i></button></p>');
+        return;
+
+    }
+
+    // tooltips
+    var myActive = this.battle.mySide.active;
+    var yourActive = this.battle.yourSide.active;
+    var buf = '';
+    if (yourActive[1]) {
+        buf += '<div style="position:absolute;top:85px;left:320px;width:90px;height:100px;"' + this.tooltipAttrs(yourActive[1].getIdent(), 'pokemon', true, 'foe') + '></div>';
+    }
+    if (yourActive[0]) {
+        buf += '<div style="position:absolute;top:90px;left:390px;width:100px;height:100px;"' + this.tooltipAttrs(yourActive[0].getIdent(), 'pokemon', true, 'foe') + '></div>';
+    }
+    if (myActive[0]) {
+        buf += '<div style="position:absolute;top:210px;left:130px;width:180px;height:160px;"' + this.tooltipAttrs(myActive[0].getIdent(), 'pokemon', true, true) + '></div>';
+    }
+    if (myActive[1]) {
+        buf += '<div style="position:absolute;top:210px;left:270px;width:160px;height:160px;"' + this.tooltipAttrs(myActive[1].getIdent(), 'pokemon', true, true) + '></div>';
+    }
+    this.$foeHint.html(buf);
+
+    if (this.battle.done) {
+
+        // battle has ended
+        this.$controls.html('<div class="controls"><p><em><button name="instantReplay"><i class="icon-undo"></i> Instant Replay</button> <button name="saveReplay"><i class="icon-upload"></i> Share replay</button></p></div>');
+
+    } else if (!this.battle.mySide.initialized || !this.battle.yourSide.initialized) {
+
+        // empty battle
+
+        if (this.side) {
+            if (this.battle.kickingInactive) {
+                this.$controls.html('<div class="controls"><p><button name="setTimer" value="off"><small>Stop timer</small></button> <small>&larr; Your opponent has disconnected. This will give them more time to reconnect.</small></p></div>');
+            } else {
+                this.$controls.html('<div class="controls"><p><button name="setTimer" value="on"><small>Claim victory</small></button> <small>&larr; Your opponent has disconnected. Click this if they don\'t reconnect.</small></p></div>');
+            }
+        } else {
+            this.$controls.html('<p><em>Waiting for players...</em></p>');
+            this.$join = $('<div class="playbutton"><button name="joinBattle">Join Battle</button></div>');
+            this.$battle.append(this.$join);
+        }
+
+    } else if (this.side) {
+
+        // player
+        if (!this.request) {
+            if (this.battle.kickingInactive) {
+                this.$controls.html('<div class="controls"><p><button name="setTimer" value="off"><small>Stop timer</small></button> <small>&larr; Your opponent has disconnected. This will give them more time to reconnect.</small></p></div>');
+            } else {
+                this.$controls.html('<div class="controls"><p><button name="setTimer" value="on"><small>Claim victory</small></button> <small>&larr; Your opponent has disconnected. Click this if they don\'t reconnect.</small></p></div>');
+            }
+        } else {
+            this.controlsShown = true;
+            if (!controlsShown || (this.choice && this.choice.waiting)) {
+                this.updateControlsForPlayer();
+            }
+        }
+
+    } else {
+
+        // full battle
+        this.$controls.html('<p><em>Waiting for players...</em></p>');
+
+    }
+
+    // This intentionally doesn't happen if the battle is still playing,
+    // since those early-return.
+    app.topbar.updateTabbar();
 };
