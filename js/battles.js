@@ -127,6 +127,7 @@ function BattleTab(pid, conf, team) {
         var $battle;
         this.battleElem = $battle = $content.find('.battle');
         this.$controls = $content.find('.replay-controls');
+        this.$controls.click(this.dealWithControlsClick);
 
         var $chatFrame = this.$chatFrame = this.chatFrameElem = $content.find('.battle-log');
 /*
@@ -241,6 +242,10 @@ BattleTab.prototype.initPSBattle = function(data)
     if (this.chatElem) {
         this.chatFrameElem.scrollTop(this.chatElem.height());
     }
+};
+
+BattleTab.prototype.dealWithControlsClick = function() {
+    alert("something in controls was clicked");
 };
 
 BattleTab.prototype.convertTeamToPS = function(team, slot) {
@@ -1183,6 +1188,7 @@ BattleTab.prototype.updateSideLocation = function(sideData, midBattle) {
 };
 
 BattleTab.prototype.updateControls = function() {
+    console.log("updating controls");
     if (this.$join) {
         this.$join.remove();
         this.$join = null;
@@ -1269,7 +1275,7 @@ BattleTab.prototype.updateControls = function() {
 
     // This intentionally doesn't happen if the battle is still playing,
     // since those early-return.
-    app.topbar.updateTabbar();
+    //app.topbar.updateTabbar();
 };
 
 loadjscssfile("js/battle/commandshandling.js", "js");
