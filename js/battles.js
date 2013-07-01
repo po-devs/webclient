@@ -127,7 +127,7 @@ function BattleTab(pid, conf, team) {
         var $battle;
         this.battleElem = $battle = $content.find('.battle');
         this.$controls = $content.find('.replay-controls');
-        this.$controls.click(this.dealWithControlsClick);
+        this.$controls.click(this, this.dealWithControlsClick);
 
         var $chatFrame = this.$chatFrame = this.chatFrameElem = $content.find('.battle-log');
 /*
@@ -199,8 +199,9 @@ BattleTab.prototype.initPSBattle = function(data)
         selfR.$foeHint.html(text);
 
         if (!selfR.me.request) {
-            selfR.$controls.html('<div class="controls"><em>Waiting for players...</em></div>');
-            return;
+            selfR.me.request = selfR.request;
+            //selfR.$controls.html('<div class="controls"><em>Waiting for players...</em></div>');
+            //return;
         }
         if (selfR.me.request.side) {
             selfR.updateSide(selfR.me.request.side, true);
@@ -209,7 +210,7 @@ BattleTab.prototype.initPSBattle = function(data)
         var active = selfR.battle.mySide.active[0];
         if (!active) active = {};
         selfR.$controls.html('<div class="controls"><em>Waiting for opponent...</em></div>');
-        this.updateControlsForPlayer();
+        selfR.updateControlsForPlayer();
     };
 
     if (this.battle.activityQueue) {
@@ -244,8 +245,40 @@ BattleTab.prototype.initPSBattle = function(data)
     }
 };
 
-BattleTab.prototype.dealWithControlsClick = function() {
-    alert("something in controls was clicked");
+/** Calls the onXxxxXxxx functions where xxxxXxxx is the name attribute of the button
+ * in the controls that was clicked
+ * @param event the click event
+ * @param battle the object to use as this
+ */
+BattleTab.prototype.dealWithControlsClick = function(event) {
+    var $obj = $(event.target);
+    var battle = event.data;
+    while ($obj.length > 0 && $obj != $(this)) {
+        var name = $obj.attr("name");
+        if (name !== undefined) {
+            var funcName = "onControls"+name[0].toUpperCase()+name.slice(1);
+            if (funcName in BattleTab.prototype) {
+                battle[funcName]($obj);
+                return;
+            }
+        }
+        var oldobj = $obj;
+        $obj = $obj.parent();
+
+        if (oldobj == $obj) {
+            break;
+        }
+    }
+};
+
+/**
+ * Called when a chooseMove button is clicked
+ * @param $obj The button jquery object
+ */
+BattleTab.prototype.onControlsChooseMove = function($obj) {
+    console.log ("move " + $obj.attr("slot") + " ( " + $obj.attr("value") + ") called");
+    var choice = {"type":"move", "slot":this.myself, "attackSlot": + $obj.attr("slot")};
+    this.choose(choice);
 };
 
 BattleTab.prototype.convertTeamToPS = function(team, slot) {
@@ -326,6 +359,11 @@ BattleTab.prototype.print = function(msg) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
     chatTextArea.scrollTop = chatTextArea.scrollHeight;
+};
+
+BattleTab.prototype.choose = function(choice)
+{
+    websocket.send("battlechoice|"+this.id+"|"+JSON.stringify(choice));
 };
 
 BattleTab.prototype.close = function() {
@@ -764,7 +802,7 @@ BattleTab.prototype.showTooltip = function(thing, type, elem, ownHeight, isActiv
             if (!accuracy || accuracy === true) accuracy = '&mdash;';
             else accuracy = '' + accuracy + '%';
             text = '<div class="tooltipinner"><div class="tooltip">';
-            text += '<h2>' + move.name + '<br />'+Tools.getTypeIcon(move.type)+' <img src="' + Tools.resourcePrefix + 'sprites/categories/' + move.category + '.png" alt="' + move.category + '" /></h2>';
+            text += '<h2>' + move.name + '<br />'+Tools.getTypeIcon(move.type)+' <img src="' + Tools.resourcePrefix + 'images/categories/' + move.category + '.png" alt="' + move.category + '" /></h2>';
             text += '<p>Base power: ' + basePower + '</p>';
             text += '<p>Accuracy: ' + accuracy + '</p>';
             if (move.desc) {
@@ -994,7 +1032,7 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                     movebuttons += '<button disabled="disabled"' + this.tooltipAttrs(moveData.move, 'move') + '>';
                     hasDisabled = true;
                 } else {
-                    movebuttons += '<button class="type-' + move.type + '" name="chooseMove" value="' + Tools.escapeHTML(moveData.move) + '"' + this.tooltipAttrs(moveData.move, 'move') + '>';
+                    movebuttons += '<button class="type-' + move.type + '" name="chooseMove" slot="' + i + '" value="' + Tools.escapeHTML(moveData.move) + '"' + this.tooltipAttrs(moveData.move, 'move') + '>';
                     hasMoves = true;
                 }
                 movebuttons += name + '<br /><small class="type">' + move.type + '</small> <small class="pp">' + pp + '</small>&nbsp;</button> ';
@@ -1016,7 +1054,7 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                     if (pokemon.zerohp || i < this.battle.mySide.active.length || this.choice.switchFlags[i]) {
                         controls += '<button disabled' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
                     } else {
-                        controls += '<button name="chooseSwitch" value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
+                        controls += '<button name="chooseSwitch" slot="' + i + '" value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '><span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + '<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':'')+'</button> ';
                     }
                 }
                 if (this.finalDecision) {
@@ -1198,19 +1236,20 @@ BattleTab.prototype.updateControls = function() {
     this.controlsShown = false;
 
     if (this.battle.playbackState === 5) {
-
+        console.log("seeking");
         // battle is seeking
         this.$controls.html('');
         return;
 
     } else if (this.battle.playbackState === 2 || this.battle.playbackState === 3) {
-
-        // battle is playing or paused
-        this.$controls.html('<p><button name="skipTurn">Skip turn <i class="icon-step-forward"></i></button></p>');
-        return;
+        console.log("paused");
+        //battle is playing or paused
+//        this.$controls.html('<p><button name="skipTurn">Skip turn <i class="icon-step-forward"></i></button></p>');
+//        return;
 
     }
 
+    console.log("tooltips");
     // tooltips
     var myActive = this.battle.mySide.active;
     var yourActive = this.battle.yourSide.active;
@@ -1230,12 +1269,12 @@ BattleTab.prototype.updateControls = function() {
     this.$foeHint.html(buf);
 
     if (this.battle.done) {
-
+        console.log("done");
         // battle has ended
         this.$controls.html('<div class="controls"><p><em><button name="instantReplay"><i class="icon-undo"></i> Instant Replay</button> <button name="saveReplay"><i class="icon-upload"></i> Share replay</button></p></div>');
 
     } else if (!this.battle.mySide.initialized || !this.battle.yourSide.initialized) {
-
+        console.log("empty battle");
         // empty battle
 
         if (this.side) {
@@ -1251,7 +1290,7 @@ BattleTab.prototype.updateControls = function() {
         }
 
     } else if (this.side) {
-
+        console.log("player");
         // player
         if (!this.request) {
             if (this.battle.kickingInactive) {
@@ -1267,7 +1306,7 @@ BattleTab.prototype.updateControls = function() {
         }
 
     } else {
-
+        console.log("full battle");
         // full battle
         this.$controls.html('<p><em>Waiting for players...</em></p>');
 
