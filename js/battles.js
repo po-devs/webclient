@@ -277,7 +277,7 @@ BattleTab.prototype.dealWithControlsClick = function(event) {
  */
 BattleTab.prototype.onControlsChooseMove = function($obj) {
     console.log ("move " + $obj.attr("slot") + " ( " + $obj.attr("value") + ") called");
-    var choice = {"type":"move", "slot":this.myself, "attackSlot": + $obj.attr("slot")};
+    var choice = {"type":"attack", "slot":this.myself, "attackSlot": + $obj.attr("slot")};
     this.choose(choice);
 };
 
