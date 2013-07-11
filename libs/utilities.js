@@ -28,6 +28,12 @@ function loadjscssfile(filename, filetype){
     }
 }
 
+function push_properties(from, to) {
+    for (var p in from) {
+        to[p] = from[p];
+    }
+}
+
 /* Inheritance http://www.crockford.com/javascript/inheritance.html */
 
 Function.prototype.method = function (name, func) {

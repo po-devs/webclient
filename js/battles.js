@@ -376,10 +376,14 @@ BattleTab.prototype.choose = function(choice)
     websocket.send("battlechoice|"+this.id+"|"+JSON.stringify(choice));
 };
 
+BattleTab.prototype.isBattle = function() {
+    return this.conf.players[0] == players.myid || this.conf.players[1] == players.myid;
+};
+
 BattleTab.prototype.close = function() {
     delete battles.battles[this.id];
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
-    if (this.conf.players[0] == players.myid || this.conf.players[1] == players.myid) {
+    if (this.isBattle()) {
         websocket.send("forfeit|"+this.id);
     } else {
         websocket.send("stopwatching|"+this.id);
