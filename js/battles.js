@@ -281,6 +281,16 @@ BattleTab.prototype.onControlsChooseMove = function($obj) {
     this.choose(choice);
 };
 
+/**
+ * Called when a chooseMove button is clicked
+ * @param $obj The button jquery object
+ */
+BattleTab.prototype.onControlsChooseSwitch = function($obj) {
+    console.log ("poke " + $obj.attr("slot") + " ( " + $obj.attr("value") + ") called");
+    var choice = {"type":"switch", "slot":this.myself, "pokeSlot": + $obj.attr("slot")};
+    this.choose(choice);
+};
+
 BattleTab.prototype.convertTeamToPS = function(team, slot) {
     this.request = this.request || {};
     this.request.side = this.request.side || {};

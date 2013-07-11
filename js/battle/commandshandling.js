@@ -9,6 +9,7 @@ BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
     /* Stores the pokemon in memory */
     this.pokes[params.spot] = poke;
+    /* Todo: if this is our own pokemon, add more info to it */
     this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
 };
 
@@ -22,13 +23,20 @@ BattleTab.prototype.dealWithMove = function(params) {
 
 BattleTab.prototype.dealWithHpchange = function(params) {
     /* Checks & updates the pokemon in memory's life percent */
-    var current = this.pokes[params.spot].percent;
-    this.pokes[params.spot].percent = params.newHP;
-    /* Is it healing or damage? */
-    if (params.newHP > current || params.newHP == 100) {
-        this.addCommand(["-heal", this.spotToPlayer(params.spot), (params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
+    var current = this.pokes[params.spot].life || this.pokes[params.spot].percent;
+    if (this.pokes[params.spot].life) {
+        this.pokes[params.spot].life = params.newHP;
+        this.pokes[params.spot].percent = params.newHP/this.pokes[params.spot].totalLife;
     } else {
-        this.addCommand(["-damage", this.spotToPlayer(params.spot), -(params.newHP - current) + " " + this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
+        this.pokes[params.spot].percent = params.newHP;
+    }
+
+    /* Is it healing or damage? */
+    if (params.newHP > current || params.newHP == (this.pokes[params.spot].totalLife || 100)) {
+        this.addCommand(["-heal", this.spotToPlayer(params.spot), this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
+    } else {
+        var details = this.pokemonDetails(this.pokes[params.spot]);
+        this.addCommand(["-damage", this.spotToPlayer(params.spot), this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
     }
     this.damageCause = {};
 };
