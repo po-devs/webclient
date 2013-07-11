@@ -100,6 +100,7 @@ function BattleTab(pid, conf, team) {
     this.id = pid;
     this.conf = conf;
     this.pokes = {};
+    this.choices = {};
     this.spectators = {};
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
         together with the damage done to the Showdown window.

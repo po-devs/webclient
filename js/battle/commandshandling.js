@@ -7,7 +7,7 @@ BattleTab.prototype.dealWithTurn = function(params) {
 
 BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
-    /* Todo: if this is our own pokemon, add more info to it */
+
     if (this.isBattle()) {
         if (params.spot == this.myself) {
             var tpoke = this.request.side.pokemon[0];
@@ -21,6 +21,10 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.pokes[params.spot] = poke;
 
     this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
+};
+
+BattleTab.prototype.dealWithOfferchoice = function(params) {
+    this.choices[params.choice.slot] = params.choice;
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
