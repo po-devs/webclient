@@ -25,6 +25,11 @@ BattleTab.prototype.dealWithSend = function(params) {
 
 BattleTab.prototype.dealWithOfferchoice = function(params) {
     this.choices[params.choice.slot] = params.choice;
+
+    if(params.choice.attack)
+        this.request.forceSwitch = false;
+    else
+        this.request.forceSwitch = true;
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
