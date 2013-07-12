@@ -1105,14 +1105,14 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                 if (pokemon.zerohp || i < this.battle.mySide.active.length || this.choice.switchFlags[i]) {
                     controls += '<button disabled' + this.tooltipAttrs(i, 'sidepokemon') + '>';
                 } else {
-                    controls += '<button name="chooseSwitch" value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '>';
+                    controls += '<button name="chooseSwitch" slot="' + i + '"value="' + i + '"' + this.tooltipAttrs(i, 'sidepokemon') + '>';
                 }
                 controls += '<span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
             }
             controls += '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>';
             controls += '</div></div></div>';
             this.$controls.html(controls);
-            this.selectSwitch();
+            this.formSelectSwitch();
             break;
 
         case 'team':
