@@ -509,7 +509,8 @@
                             var strToSend = "pm|" + JSON.stringify({"to": targetid, message: msg});
                             pms.pm(targetid).print(players.myid, msg);
                         } else if (/^send-battle-/.test(idsender)) {
-                            var strToSend = "spectatingchat|" + targetid + "|"+ msg;
+                            var battle = battles.battlesByPlayer[id][targetid];;
+                            var strToSend = (battle.isBattle() ? "spectatingchat|" : "battlechat|") + targetid + "|" + msg;
                         }
                         websocket.send( strToSend );
                         console.log( "Message sent :", '"'+strToSend+'"' );
