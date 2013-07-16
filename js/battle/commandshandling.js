@@ -23,6 +23,17 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
 };
 
+BattleTab.prototype.dealWithTeampreview = function(params) {
+    var team = params.team;
+    var player = params.player;
+
+    for (var i = 0; i < team.length; i++) {
+        this.addCommand(["poke", this.spotToPlayer(player), this.pokemonToPS(team[i])]);
+    }
+
+    this.addCommand(["teampreview"]);
+};
+
 BattleTab.prototype.dealWithOfferchoice = function(params) {
     this.choices[params.choice.slot] = params.choice;
 
