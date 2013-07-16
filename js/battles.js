@@ -303,7 +303,7 @@ BattleTab.prototype.onControlsChooseTeamPreview = function($obj) {
             neworder.push(i);
         }
     }
-    var choice = {"type":"rearrange", "slot":this.myself, "neworder": + neworder};
+    var choice = {"type":"rearrange", "slot":this.myself, "neworder": neworder};
     this.choose(choice);
     this.request.teamPreview = false;
     this.createCancelButton();
