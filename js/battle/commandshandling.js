@@ -31,7 +31,12 @@ BattleTab.prototype.dealWithTeampreview = function(params) {
         this.addCommand(["poke", this.spotToPlayer(player), this.pokemonToPS(team[i])]);
     }
 
+    /* triggers the display */
     this.addCommand(["teampreview"]);
+
+    /* triggers the choice */
+    this.request.teamPreview = true;
+    this.receiveRequest(this.request);
 };
 
 BattleTab.prototype.dealWithOfferchoice = function(params) {
