@@ -303,6 +303,11 @@ BattleTab.prototype.onControlsChooseTeamPreview = function($obj) {
             neworder.push(i);
         }
     }
+    /* Reorder the team in memory to match the rearranged team */
+    var tpoke = this.request.side.pokemon[0];
+    this.request.side.pokemon[0] = this.request.side.pokemon[lead];
+    this.request.side.pokemon[lead] = tpoke;
+
     var choice = {"type":"rearrange", "slot":this.myself, "neworder": neworder};
     this.choose(choice);
     this.request.teamPreview = false;
