@@ -116,18 +116,18 @@ function BattleTab(pid, conf, team) {
         var $content = $("#battle-" + pid);
         var myname = players.name(players.myid);
         var chatElem = '<form onsubmit="return false" class="chatbox"><label style="' + hashColor(toId(myname)) + '">' + sanitize(myname) +
-            ':</label> <textarea class="ps-textbox" type="text" size="70" history="true" autofocus="true" id="send-battle-'+this.id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" ></textarea></form>';
+            ':</label> <textarea class="ps-textbox" type="text" size="70" history="true" autofocus="true" id="send-battle-'+this.id+'" onkeydown="BattleTab.onChatKeyDown(event, this);" ></textarea></form>';
         $content.html('<div class="battlewrapper">' +
             '<div class="battle">Loading battle...</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div>' +
-            '<div class="replay-controls"></div>' +
+            '<div class="replay-controls-2"></div>' +
             '</div>'
-            +'<div id="chatTextArea" class="textbox"></div><p><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
+            +'<div id="chatTextArea" class="textbox"></div><p class="close"><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
 
         var $battle;
         this.battleElem = $battle = $content.find('.battle');
-        this.$controls = $content.find('.replay-controls');
+        this.$controls = $content.find('.replay-controls-2');
         this.$controls.click(this, this.dealWithControlsClick);
 
         var $chatFrame = this.$chatFrame = this.chatFrameElem = $content.find('.battle-log');
@@ -174,6 +174,12 @@ function BattleTab(pid, conf, team) {
 }
 
 BattleTab.inherits(ChannelTab);
+
+BattleTab.onChatKeyDown = function(event, obj) {
+    if(event.keyCode==13) {
+        sendMessage(obj);
+    }
+};
 
 BattleTab.prototype.initPSBattle = function(data)
 {
@@ -260,7 +266,7 @@ BattleTab.prototype.dealWithControlsClick = function(event) {
             var funcName = "onControls"+name[0].toUpperCase()+name.slice(1);
             if (funcName in BattleTab.prototype) {
                 battle[funcName]($obj);
-                return;
+                return true;
             }
         }
         var oldobj = $obj;
@@ -270,6 +276,7 @@ BattleTab.prototype.dealWithControlsClick = function(event) {
             break;
         }
     }
+    return false;
 };
 
 /**
@@ -764,7 +771,9 @@ BattleTab.prototype.formTeamPreviewSelect = function (pos) {
 };
 
 BattleTab.prototype.createCancelButton = function() {
-    this.$controls.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div>');
+    this.$controls.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button>'
+        + '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>'
+        + '</div>');
 };
 
 BattleTab.prototype.formUndoDecision = function (pos) {
@@ -1209,6 +1218,7 @@ BattleTab.prototype.receiveRequest = function(request) {
         this.side = '';
         return;
     }
+    $("#battle-" + this.id + " .close").html("");
     request.requestType = 'move';
 
     if (request.forceSwitch) {
