@@ -39,6 +39,10 @@ BattleTab.prototype.dealWithTeampreview = function(params) {
     this.receiveRequest(this.request);
 };
 
+BattleTab.prototype.dealWithPpchange = function(params) {
+    this.request.side.pokemon[Math.floor(params.spot/2)].moveDetails[params.move].pp = params.pp;
+};
+
 BattleTab.prototype.dealWithOfferchoice = function(params) {
     this.choices[params.choice.slot] = params.choice;
 

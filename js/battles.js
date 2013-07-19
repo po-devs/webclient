@@ -167,10 +167,10 @@ function BattleTab(pid, conf, team) {
 //        this.battle.runMajor(["turn", "3"]);
     }
 
-    this.print("conf: " + JSON.stringify(conf));
-    if (team) {
+    //this.print("conf: " + JSON.stringify(conf));
+    //if (team) {
         //this.print("team: " + JSON.stringify(team));
-    }
+    //}
 }
 
 BattleTab.inherits(ChannelTab);
@@ -297,12 +297,9 @@ BattleTab.prototype.onControlsChooseSwitch = function($obj) {
 BattleTab.prototype.onControlsChooseTeamPreview = function($obj) {
     console.log ("teampreview (" + $obj.attr("value") + ") called");
     var lead = $obj.attr("value");
-    var neworder = [lead];
-    for (var i = 0; i < 6; i++) {
-        if (i != lead) {
-            neworder.push(i);
-        }
-    }
+    /* New order of the team */
+    var neworder = [lead,1,2,3,4,5];
+    neworder[lead] = 0;
     /* Reorder the team in memory to match the rearranged team */
     var tpoke = this.request.side.pokemon[0];
     this.request.side.pokemon[0] = this.request.side.pokemon[lead];
