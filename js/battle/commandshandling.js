@@ -42,6 +42,7 @@ BattleTab.prototype.dealWithTeampreview = function(params) {
 BattleTab.prototype.dealWithOfferchoice = function(params) {
     this.choices[params.choice.slot] = params.choice;
 
+    /* Force the user to switch */
     if(params.choice.attack)
         this.request.forceSwitch = false;
     else
