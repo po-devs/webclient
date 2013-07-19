@@ -306,6 +306,7 @@ BattleTab.prototype.onControlsChooseTeamPreview = function($obj) {
     var choice = {"type":"rearrange", "slot":this.myself, "neworder": neworder};
     this.choose(choice);
     this.request.teamPreview = false;
+    this.battle.teamPreview(false);
     this.createCancelButton();
 };
 
