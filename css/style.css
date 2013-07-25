@@ -84,7 +84,7 @@ input:focus:-ms-input-placeholder {
 	box-shadow:4px 3px 5px rgba(157, 157, 157, 0.04);
 }
 
-#users_list {
+#player-list {
 	position:relative;
 	z-index:2;
 	float:right;
@@ -105,17 +105,14 @@ input:focus:-ms-input-placeholder {
 	background-color:#f7f7f7;
 }
 
-#tabs_container {
-	overflow-x:auto;
-}
-
-#tabs {
+#tab-titles {
+    overflow-x:auto;
 	display:table;
 	width:100%;
 	height:40px;
 }
 
-#tabs span {
+#tab-titles span {
 	display:table-cell;
 	color:#abaaaa;
 	min-width:150px;
@@ -129,25 +126,25 @@ input:focus:-ms-input-placeholder {
 	cursor:pointer;
 }
 
-#tabs span i {
+#tab-titles span i {
 	float:right;
 	margin-right:5px;
 }
 
-#tabs span:last-child {
+#tab-titles span:last-child {
 	border-right:none;
 }
 
-#tabs span:hover {
+#tab-titles span:hover {
 	background-color:#dbdbdb;
 }
 
-#tabs span.active_tab {
+#tab-titles span.active_tab {
 	color:#ffffff;
 	background-color:#363636;
 }
 
-#tabs span i:hover {
+#tab-titles span i:hover {
 	color:#000000;
 }
 
@@ -221,7 +218,7 @@ input:focus:-ms-input-placeholder {
 	font-size:20px;
 }
 
-#users_list input[type="text"] {
+#player-list input[type="text"] {
 	margin-left:25px;
 	padding-right:5px;
 	width:150px;
