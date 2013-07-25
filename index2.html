@@ -20,6 +20,13 @@
     <div id="tooltipwrapper"><div class="tooltipinner"></div></div>
     <div id="foehint"></div>
     <!-- end used by PS -->
+    <p style="display: none;">
+        Relay station
+        <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
+        <button onClick="initWebsocket();">Connect</button>
+        <button onClick="stopWebsocket();">Disconnect</button>
+        <button onClick="checkSocket();">State</button>
+    </p>
 	<div id="sidebar">
 		<h1 id="po_title">Pokémon <span>Online</span></h1>
 		<img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />

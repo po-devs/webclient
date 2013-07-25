@@ -26,7 +26,11 @@
         <script src="js/index.js"></script>
     </head>
     <body>
-
+        <!-- used by PS -->
+        <div id="overlay" style="display:none"></div>
+        <div id="tooltipwrapper"><div class="tooltipinner"></div></div>
+        <div id="foehint"></div>
+        <!-- end used by PS -->
         <p style="display: none;">
             Relay station
             <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
