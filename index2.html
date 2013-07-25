@@ -114,10 +114,10 @@
 			</div>
 		</div><br />
 	</div>
-	<div id="player-list">
+	<div id="users_list">
 		<span id="players_count">750 Users</span>
-		<input type="text" name="search_user" placeholder="Search..." />
-		<ul id="players">
+		<input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
+		<ul id="player-list">
 			<li>Deity</li>
 			<li>Jirachier</li>
 			<li>Professor Oak</li>
@@ -168,48 +168,19 @@
 	<div id="content">
 		<div id="channel-tabs">
 			<ul id="tab-titles">
-				<span class="active_tab">
-					Tohjo Fails
-					<i class="icon-remove-circle"></i>
-				</span>
-				<span>
-					Indigo Plateau
-					<i class="icon-remove-circle"></i>
-				</span>
-				<span>
-					Mafia Channel
-					<i class="icon-remove-circle"></i>
-				</span>
-				<span>
-					Jirachier VS Moogle
-					<i class="icon-remove-circle"></i>
-				</span>
-				<span>
-					Victory Road
-					<i class="icon-remove-circle"></i>
-				</span>
+				<li>
+					<a href="#channel-0">Console<i class="icon-remove-circle"></i></a>
+				</li>
 			</ul>
-            <div class="chat_messages">
-                Tohjo Fails
+            <div id="channel-0">
+                <div id="chatTextArea" class="textbox"></div>
+                <div class="send_chat_message">
+                    <p>
+                        <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
+                        <i class="icon-circle-arrow-right icon-large"></i>
+                    </p>
+                </div>
             </div>
-            <div class="chat_messages">
-                Indigo Plateau
-            </div>
-            <div class="chat_messages">
-                Mafia Channel
-            </div>
-            <div class="chat_messages">
-                Jirachier VS Moogle
-            </div>
-            <div class="chat_messages">
-                Victory Road
-            </div>
-		</div>
-		<form id="send_chat_message" method="post">
-			<p>
-				<input name="message" type="text" placeholder="Start typing your message here..." />
-				<i class="icon-circle-arrow-right icon-large"></i>
-			</p>
 		</div>
 	</div>
 	
@@ -227,6 +198,8 @@
     <script src="js/channels.js"></script>
     <script src="js/formatting.js"></script>
     <script src="js/index.js"></script>
+
+    <script src="libs/alertify.js"></script>
 
     <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
     <script type="text/javascript">

@@ -111,7 +111,7 @@ function BattleTab(pid, conf, team) {
 
     if ($("#battle-" + pid).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#battle-" + pid, name);
+        $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
         var $content = $("#battle-" + pid);
         var myname = players.name(players.myid);
@@ -121,7 +121,7 @@ function BattleTab(pid, conf, team) {
             '<div class="battle">Loading battle...</div><div class="foehint"></div><div class="battle-log"></div><div class="battle-log-add">'+ chatElem +'</div>' +
             '<div class="replay-controls-2"></div>' +
             '</div>'
-            +'<div id="chatTextArea" class="textbox"></div><p class="close"><button onClick="battles.battle(' + pid + ').close();">Close</button></p>');
+            +'<div id="chatTextArea" class="textbox"></div>');
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
 

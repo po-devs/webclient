@@ -84,7 +84,7 @@ input:focus:-ms-input-placeholder {
 	box-shadow:4px 3px 5px rgba(157, 157, 157, 0.04);
 }
 
-#player-list {
+#users_list {
 	position:relative;
 	z-index:2;
 	float:right;
@@ -112,7 +112,7 @@ input:focus:-ms-input-placeholder {
 	height:40px;
 }
 
-#tab-titles span {
+#tab-titles li {
 	display:table-cell;
 	color:#abaaaa;
 	min-width:150px;
@@ -126,25 +126,25 @@ input:focus:-ms-input-placeholder {
 	cursor:pointer;
 }
 
-#tab-titles span i {
+#tab-titles li i {
 	float:right;
 	margin-right:5px;
 }
 
-#tab-titles span:last-child {
+#tab-titles li:last-child {
 	border-right:none;
 }
 
-#tab-titles span:hover {
+#tab-titles li:hover {
 	background-color:#dbdbdb;
 }
 
-#tab-titles span.active_tab {
+#tab-titles li.ui-tabs-active {
 	color:#ffffff;
 	background-color:#363636;
 }
 
-#tab-titles span i:hover {
+#tab-titles li i:hover {
 	color:#000000;
 }
 
@@ -161,9 +161,7 @@ input:focus:-ms-input-placeholder {
 	box-shadow:0px 0px 7px rgba(50, 50, 50, 0.1);
 }
 
-.chat_messages {
-	display:none;
-	position:absolute;
+#chatTextArea {
 	overflow:auto;
 	top:190px;
 	bottom:90px;
@@ -171,13 +169,10 @@ input:focus:-ms-input-placeholder {
 	right:0px;
 	padding:20px;
 	border-top:1px solid #f2f2f2;
+    display:block;
 }
 
-#chat .chat_messages:first-child {
-	display:block;
-}
-
-#send_chat_message {
+.send_chat_message {
 	position:absolute;
 	bottom:20px;
 	left:20px;
@@ -188,11 +183,11 @@ input:focus:-ms-input-placeholder {
 	outline:1px solid #f2f2f2;
 }
 
-#send_chat_message p {
+.send_chat_message p {
 	display:inline;
 }
 
-#send_chat_message p input {
+.send_chat_message p input {
 	width:100%;
 	height:48px;
 	line-height:48px;
@@ -200,14 +195,14 @@ input:focus:-ms-input-placeholder {
 	border:none;
 }
 
-#send_chat_message i {
+.send_chat_message i {
 	color:#666666;
 	position:absolute;
 	top:15px;
 	right:20px;
 }
 
-#send_chat_message i:hover {
+.send_chat_message i:hover {
 	color:#363636;
 	cursor:pointer;
 }
@@ -218,7 +213,7 @@ input:focus:-ms-input-placeholder {
 	font-size:20px;
 }
 
-#player-list input[type="text"] {
+#search_filter {
 	margin-left:25px;
 	padding-right:5px;
 	width:150px;
@@ -231,13 +226,13 @@ input:focus:-ms-input-placeholder {
 	border-radius:3px;
 }
 
-ul#players, ul#players li {
+ul#player-list, ul#player-list li {
 	margin:0;
 	padding:0;
 	list-style-type:none;
 }
 
-ul#players {
+ul#player-list {
 	width:150px;
 	padding:25px;
 	position:absolute;
@@ -247,7 +242,7 @@ ul#players {
 	overflow:auto;
 }
 
-ul#players li  {
+ul#player-list li  {
 	margin-bottom:10px;
 	font-weight:bold;
 	cursor:pointer;

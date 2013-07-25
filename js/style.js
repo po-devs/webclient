@@ -6,29 +6,17 @@ $(document).ready(function() {
 		};
 	});
 	
-	$("#tab-titles span i").on('click', function() {
-		if($("#tab-titles span").length > 1)
+	$("#tab-titles").on('click', 'li i', function() {
+		if($("#tab-titles li").length > 1)
 		{
-			var position = $(this).parent().index();
-			
-			if($(this).parent().hasClass('active_tab'))
-			{
-				var offset = position+1 == $("#tab-titles span").length ? -1 : 1;
-				$("#tab-titles span").eq(position+offset).addClass('active_tab');
-				$(".chat_messages").eq(position+offset).css('display', 'block');
-			}
-			$("#tab-titles span").eq(position).remove();
-			$(".chat_messages").eq(position).remove();
+            var dparent = $(this).parent().parent();
+			var href = dparent.attr("href");
+            objFromId(href).close();
 		}
 	});
 	
 	$(".dropdown_button").on('click', function() {
 		$(this).find('i').toggle();
 		$(this).parent().find('.dropdown_content').toggle();
-	});
-	
-	$("input[name='search_user']").on('keyup', function() {
-		$("ul#players li").hide();
-		$("ul#players li:contains("+$(this).val()+")").show();
 	});
 });
