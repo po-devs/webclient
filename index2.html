@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Pokémon Online Web Client</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!--<link rel="stylesheet" href="css/reset.css" />-->
+    <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />-->
+    <link rel="stylesheet" href="libs/alertify.css" />
+    <!--<link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />-->
+    <!--<link rel="stylesheet" href="css/webclient.css" />-->
+    <link rel="stylesheet" href="css/chat.css" />
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+	<!--[if IE 7]>
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet">
+	<![endif]-->
+	<link href="style.css" rel="stylesheet" />
+	<!--[if lte IE 7]>
+		<style type="text/css">
+			html, body {
+				overflow:hidden;
+			}
+			
+			#tabs {
+				display:block;
+			}
+			
+			#tabs span {
+				width:150px;
+				display:block;
+				position:relative;
+				float:left;
+			}
+			
+			#tabs span i {
+				position:absolute;
+				top:5px;
+				right:3px;
+			}
+			
+			.dropdown_button {
+				position:relative;
+			}
+			
+			.dropdown_button i {
+				position:absolute;
+				top:15px;
+				right:5px;
+			}
+			
+			#send_chat_message p input {
+				margin-left:-18px;
+				border:1px solid transparent;
+			}
+		</style>
+	<![endif]-->
+</head>
+<body>
+    <!-- used by PS -->
+    <div id="overlay" style="display:none"></div>
+    <div id="tooltipwrapper"><div class="tooltipinner"></div></div>
+    <div id="foehint"></div>
+    <!-- end used by PS -->
+	<div id="sidebar">
+		<h1 id="po_title">Pokémon <span>Online</span></h1>
+		<img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
+		<span id="trainer_username">Jirachier</span>
+		<br style="clear:both;" />
+		<div class="dropdown">
+			<span class="dropdown_button">Teams<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+			<div class="dropdown_content">
+				<div class="team_preview current_team">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/3.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/6.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/9.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/25.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/143.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/196.png" alt="" /><br />
+					Tier: <strong>Wifi OU</strong>
+				</div>
+				<div class="team_preview">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/100.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/385.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/130.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/400.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/149.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/197.png" alt="" /><br />
+					Tier: <strong>Wifi Ubers</strong>
+				</div>
+				<div class="team_preview">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/50.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/210.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/125.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/302.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/211.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/81.png" alt="" /><br />
+					Tier: <strong>Adv OU</strong>
+				</div>
+			</div>
+		</div><br />
+		<div class="push_right">
+			<span class="button">New Team</span> 
+			<span class="button">Import</span>
+		</div>
+		<br style="clear:both;" /><br />
+		<div class="dropdown">
+			<span class="dropdown_button">Rankings<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+			<div class="dropdown_content push_right">
+				<ul id="rankings">
+					<li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+					<li><strong>#24</strong> <em>(1420)</em> - <strong>Gen 3 UU</strong></li>
+					<li><strong>#3</strong> <em>(1580)</em> - <strong>Challenge Cup</strong></li>
+					<li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+					<li><strong>#31</strong> <em>(1220)</em> - <strong>Gen 2 UU</strong></li>
+					<li><strong>#2</strong> <em>(1600)</em> - <strong>ADV OU</strong></li>
+				</ul>
+				<span class="button">View All</span> 
+			</div>
+		</div><br />
+	</div>
+	<div id="users_list">
+		<span id="players_count">750 Users</span>
+		<input type="text" name="search_user" placeholder="Search..." />
+		<ul id="players">
+			<li>Deity</li>
+			<li>Jirachier</li>
+			<li>Professor Oak</li>
+			<li>The Ice Bandit</li>
+			<li>Samphire</li>
+			<li>Crystal Moogle</li>
+			<li>Hannah</li>
+			<li>Gold</li>
+			<li>Bad Romance</li>
+			<li>Tonico</li>
+			<li>Rina</li>
+			<li>GayLord Salamence</li>
+			<li>Skarmpiss</li>
+			<li>Steve</li>
+			<li>Platinum</li>
+			<li>Picklesword</li>
+			<li>Avatar Roku</li>
+			<li>sulcata</li>
+			<li>Navy</li>
+			<li>uso</li>
+			<li>Heather Star</li>
+			<li>Lady Umb</li>
+			<li>Mystra</li>
+			<li>Ethan</li>
+			<li>Latios</li>
+			<li>[LD]Dark Lugios</li>
+			<li>pizza</li>
+			<li>Eternal</li>
+			<li>ete</li>
+			<li>Weavilewinz</li>
+			<li>Key</li>
+			<li>mibuchiha</li>
+			<li>lamperi</li>
+			<li>M Dragon</li>
+			<li>zeroality</li>
+			<li>SteelEdges</li>
+			<li>Amarillo Caballero</li>
+			<li>Viderizer</li>
+			<li>Gilad</li>
+			<li>Darkness</li>
+			<li>Weby</li>
+			<li>coyotte508</li>
+			<li>PolkaBot</li>
+			<li>Elements</li>
+			<li>Celestial Phantom</li>
+		</ul>
+	</div>
+	<div id="content">
+		<div id="tabs_container">
+			<div id="tabs">
+				<span class="active_tab">
+					Tohjo Fails
+					<i class="icon-remove-circle"></i>
+				</span>
+				<span>
+					Indigo Plateau
+					<i class="icon-remove-circle"></i>
+				</span>
+				<span>
+					Mafia Channel
+					<i class="icon-remove-circle"></i>
+				</span>
+				<span>
+					Jirachier VS Moogle
+					<i class="icon-remove-circle"></i>
+				</span>
+				<span>
+					Victory Road
+					<i class="icon-remove-circle"></i>
+				</span>
+			</div>
+		</div>
+		<div id="announcements">
+			HELLO GUYS
+		</div>
+		<div id="chat">
+			<div class="chat_messages">
+				Tohjo Fails
+			</div>
+			<div class="chat_messages">
+				Indigo Plateau
+			</div>
+			<div class="chat_messages">
+				Mafia Channel
+			</div>
+			<div class="chat_messages">
+				Jirachier VS Moogle
+			</div>
+			<div class="chat_messages">
+				Victory Road
+			</div>
+		</div>
+		<form id="send_chat_message" method="post">
+			<p>
+				<input name="message" type="text" placeholder="Start typing your message here..." />
+				<i class="icon-circle-arrow-right icon-large"></i>
+			</p>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/style.js"></script>
+    <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
+    <script src="libs/md5.js"></script>
+    <script src="libs/utilities.js"></script>
+    <script src="js/channeltab.js"></script>
+    <script src="js/battles.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/pms.js"></script>
+    <script src="js/channels.js"></script>
+    <script src="js/formatting.js"></script>
+    <script src="js/index.js"></script>
+
+    <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
+    <script type="text/javascript">
+        /* Needed in battledata.js
+         *
+         * Basically PS uses caja since it displays html, and caja defines this variable.
+         *
+         * Since we don't intend to let user display html (unless in trainer info, but that's covered), we don't need it!
+         * */
+        html4 = {};
+    </script>
+    <script src="ps/js/lib/soundmanager2-nodebug-jsmin.js"></script>
+    <script src="ps/js/battledata.js"></script>
+    <script src="ps/data/pokedex-mini.js"></script>
+    <script src="ps/js/battle.js"></script>
+    <script src="ps/data/graphics.js"></script>
+    <script src="ps/data/pokedex.js"></script>
+    <script src="ps/data/moves.js"></script>
+    <script src="ps/data/items.js"></script>
+    <script src="ps/data/abilities.js"></script>
+    <script src="ps/data/formats.js"></script>
+    <script src="ps/js/utilichart.js"></script>
+</body>
+</html>
