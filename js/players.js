@@ -102,6 +102,10 @@ Players.prototype.name = function(pid) {
     return ((pid in this.players) ? this.players[pid].name : "???");
 };
 
+Players.prototype.auth = function(pid) {
+    return ((pid in this.players) ? this.players[pid].auth : 0);
+};
+
 Players.prototype.myname = function() {
     return this.name(this.myid);
 };
@@ -193,7 +197,7 @@ PlayerList.prototype.updatePlayerCount = function () {
 
 PlayerList.prototype.createPlayerItem = function(id) {
     var name = players.name(id);
-    var ret = $("<li class='player-list-item' id='player-"+id+"'>").html(name);
+    var ret = $("<li class='player-list-item player-auth-" + players.auth(id) + "' id='player-"+id+"'>").html(name);
     if (battles.isBattling(id)) {
         ret.addClass('player-battling');
     }
