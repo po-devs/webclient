@@ -116,14 +116,21 @@ input:focus:-ms-input-placeholder {
 	display:table-cell;
 	color:#abaaaa;
 	min-width:150px;
-	height:30px;
-	line-height:30px;
-	padding-top:5px;
-	padding-bottom:5px;
+	height:40px;
+	line-height:40px;
 	text-align:center;
 	background-color:#e4e4e4;
 	border-right:1px solid #d9d9d9;
 	cursor:pointer;
+}
+
+ul#tab-titles a {
+	color:#abaaaa;
+	text-decoration:none;
+}
+
+ul#tab-titles, ul#tab-titles li {
+	margin:0;padding:0;
 }
 
 #tab-titles li i {
