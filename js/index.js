@@ -50,7 +50,6 @@ $(function() {
         $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
     }
 
-    $('#player-list').height($(window).height()-$("#player-list").offset().top);
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
@@ -102,8 +101,6 @@ $(function() {
     $("#channel-tabs").bind('tabsshow', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
-        /* Resizes the player list */
-        $('#player-list').height($(window).height()-$("#player-list").offset().top);
         /* Resizes channel tabs, if window height changed */
         $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
         /* Resizes chat area in funciton of the height of the channel tab */
