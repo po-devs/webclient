@@ -763,7 +763,7 @@ BattleTab.prototype.formTeamPreviewSelect = function (pos) {
     } else {
         pos = pos+1;
     }
-    this.$controls.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div> <br /><button onclick="battles.battle(\'' + this.id + '\').formKickInactive();return false"><small>Kick inactive player</small></button>');
+    this.createCancelButton();
     this.send('/team '+(pos));
     this.notifying = false;
     updateRoomList();
@@ -771,9 +771,7 @@ BattleTab.prototype.formTeamPreviewSelect = function (pos) {
 };
 
 BattleTab.prototype.createCancelButton = function() {
-    this.$controls.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button>'
-        + '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>'
-        + '</div>');
+    this.$controls.html('<div class="controls"><em>Waiting for opponent...</em> <button onclick="battles.battle(\'' + this.id + '\').formUndoDecision(); return false">Cancel</button></div>');
 };
 
 BattleTab.prototype.formUndoDecision = function (pos) {
@@ -1109,7 +1107,6 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                     controls += '<em style="display:block;clear:both">You <strong>might</strong> be trapped, so you won\'t be able to cancel a switch!</em><br/>';
                 }
             }
-            controls += '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>';
             controls += '</div></div></div>';
             this.$controls.html(controls);
         }
@@ -1142,7 +1139,6 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                 }
                 controls += '<span class="pokemonicon" style="display:inline-block;vertical-align:middle;'+Tools.getIcon(pokemon)+'"></span>' + Tools.escapeHTML(pokemon.name) + (!pokemon.zerohp?'<span class="hpbar' + pokemon.getHPColorClass() + '"><span style="width:'+(Math.round(pokemon.hp*92/pokemon.maxhp)||1)+'px"></span></span>'+(pokemon.status?'<span class="status '+pokemon.status+'"></span>':''):'') +'</button> ';
             }
-            controls += '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>';
             controls += '</div></div></div>';
             this.$controls.html(controls);
             this.formSelectSwitch();
@@ -1189,7 +1185,6 @@ BattleTab.prototype.updateControlsForPlayer = function() {
                 }
                 controls += '</div>';
             }
-            controls += '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>';
             controls += '</div></div>';
             this.$controls.html(controls);
             this.selectSwitch();
@@ -1206,7 +1201,6 @@ BattleTab.prototype.updateControlsForPlayer = function() {
             } else {
                 buf += '<p class="timer"><button name="setTimer" value="on"><small>Start timer</small></button></p>';
             }
-            buf += '<p><button onClick="battles.battle(' + this.id + ').close();">Close</button></p>';
             buf += '</div>';
             this.$controls.html(buf);
             break;
@@ -1218,7 +1212,6 @@ BattleTab.prototype.receiveRequest = function(request) {
         this.side = '';
         return;
     }
-    $("#battle-" + this.id + " .close").html("");
     request.requestType = 'move';
 
     if (request.forceSwitch) {
