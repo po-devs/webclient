@@ -12,6 +12,8 @@ Players.prototype.login = function(id, info) {
     var obj = {};
     obj[id] = info;
     this.addPlayer(obj);
+
+    $("#trainer_username").text(this.myname());
 };
 
 Players.prototype.hasPlayer = function(pid) {
@@ -42,6 +44,10 @@ Players.prototype.addPlayer = function (players) {
             playerList.updatePlayer(id);
         }
         pms.playerLogin(id);
+
+        if (id == this.myid) {
+            $("#trainer_username").text(this.myname());
+        }
     }
 };
 
