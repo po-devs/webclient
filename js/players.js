@@ -178,6 +178,11 @@ PlayerList.prototype.setPlayers = function(playerIds) {
         list.append(this.createPlayerItem(id));
     }, this);
     this.ids = playerIds;
+    this.updatePlayerCount();
+};
+
+PlayerList.prototype.updatePlayerCount = function () {
+    $("#players_count").text(this.ids.length + (this.ids.length != 1 ? " Users" : "User"));
 };
 
 PlayerList.prototype.createPlayerItem = function(id) {
@@ -212,6 +217,8 @@ PlayerList.prototype.addPlayer = function(id) {
     }
 
     this.ids.splice(pos, 0, id);
+
+    this.updatePlayerCount();
 };
 
 PlayerList.prototype.removePlayer = function(id) {
@@ -221,6 +228,7 @@ PlayerList.prototype.removePlayer = function(id) {
     }
     /* Remove the graphical element */
     $(".player-list-item#player-"+id).remove();
+    this.updatePlayerCount();
 };
 
 PlayerList.prototype.updatePlayer = function(id) {
