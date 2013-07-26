@@ -19,4 +19,17 @@ $(document).ready(function() {
 		$(this).find('i').toggle();
 		$(this).parent().find('.dropdown_content').toggle();
 	});
+	
+	$("#trainer_username").on('click', function() {
+		$(".middle_block").hide();
+		$("#user_params").show();
+	});
+	$("#create_team").on('click', function() {
+		$(".middle_block").hide();
+		$("#teambuilder").show();
+	});
+	$("#po_title").on('click', function() {
+		$(".middle_block").hide();
+		$("#content").show();
+	});
 });

@@ -95,7 +95,8 @@ input:focus:-ms-input-placeholder {
 	box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
 }
 
-#content {
+#content, #user_params, #teambuilder {
+	display:none;
 	position:relative;
 	z-index:1;
 	margin-left:300px;
@@ -103,6 +104,10 @@ input:focus:-ms-input-placeholder {
 	width:auto;
 	height:100%;
 	background-color:#f7f7f7;
+}
+
+.middle_block#content {
+	display:block;
 }
 
 #tab-titles {
@@ -261,6 +266,7 @@ ul#player-list li  {
 	font-size:25px;
 	margin:25px;
 	display:block;
+	cursor:pointer;
 }
 
 #trainer_img {
