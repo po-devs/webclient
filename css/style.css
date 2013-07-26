@@ -413,3 +413,8 @@ ul#rankings li {
 	margin:20px;
 	margin-left:100px;
 }
+
+.player-battling {
+	color:#b7b7b7;
+	font-style:italic;
+}
