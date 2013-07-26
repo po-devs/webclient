@@ -16,7 +16,7 @@ h1 {
 	font-size:25px;
 }
 
-h1 > span {
+#po_title > span {
 	color:#000000;
 }
 
@@ -257,7 +257,10 @@ ul#player-list li  {
 }
 
 #po_title {
+	color:#1f5d96;
+	font-size:25px;
 	margin:25px;
+	display:block;
 }
 
 #trainer_img {
@@ -284,7 +287,7 @@ ul#player-list li  {
 	cursor:pointer;
 }
 
-.button  {
+.click_button  {
 	display:block;
 	margin:3px;
 	float:left;
