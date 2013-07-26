@@ -8,7 +8,7 @@ html, body {
 }
 
 input {
-	outline:none; /* Removing Chrome's effect on inputs */
+	outline:none; /* Removing Webkit's effect on inputs */
 }
 
 h1 {
