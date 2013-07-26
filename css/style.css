@@ -125,6 +125,7 @@ input:focus:-ms-input-placeholder {
 }
 
 ul#tab-titles a {
+	display:block;
 	color:#abaaaa;
 	text-decoration:none;
 }
