@@ -1,10 +1,4 @@
 $(document).ready(function() {
-	// makes :contains selector case insensitive
-	$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-		return function( elem ) {
-			return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-		};
-	});
 	
 	$("#tab-titles").on('click', 'li i', function() {
 		if($("#tab-titles li").length > 1)
@@ -18,5 +12,23 @@ $(document).ready(function() {
 	$(".dropdown_button").on('click', function() {
 		$(this).find('i').toggle();
 		$(this).parent().find('.dropdown_content').toggle();
+	});
+	
+	$("#trainer_username, #create_team, #po_title").on('click', function() {
+		$(".middle_block").hide();
+		switch($(this).attr('id'))
+		{
+			case 'trainer_username':
+				$("#user_params").show();
+			break;
+			
+			case 'create_team':
+				$("#teambuilder").show();
+			break;
+			
+			case 'po_title':
+				$("#content").show();
+			break;
+		}
 	});
 });

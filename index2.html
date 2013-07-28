@@ -28,11 +28,11 @@
         <button onClick="checkSocket();">State</button>
     </p>
 	<div id="sidebar">
-		<h1 id="po_title">Pokémon <span>Online</span></h1>
+		<span id="po_title">Pokémon <span>Online</span></span>
 		<img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
 		<span id="trainer_username">Guest</span>
 		<br style="clear:both;" />
-		<span onclick="findBattle(); return false;" class="button find-battle">Find Battle</span><br style="clear:both;"/>
+		<span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
 		<div class="dropdown">
 			<span class="dropdown_button">Teams<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
 			<div class="dropdown_content">
@@ -94,8 +94,8 @@
 					Tier: <strong>Adv OU</strong>
 				</div>
 				<div class="push_right">
-					<span class="button">New Team</span> 
-					<span class="button">Import</span>
+					<span id="create_team" class="click_button">New Team</span> 
+					<span class="click_button">Import</span>
 				</div>
 			</div>
 		</div>
@@ -111,17 +111,34 @@
 					<li><strong>#31</strong> <em>(1220)</em> - <strong>Gen 2 UU</strong></li>
 					<li><strong>#2</strong> <em>(1600)</em> - <strong>ADV OU</strong></li>
 				</ul>
-				<span class="button">View All</span> 
+				<span class="click_button">View All</span> 
 			</div>
 		</div><br />
 	</div>
 	<div id="users_list">
-		<span id="players_count">750 Users</span>
+		<span id="players_count">Users</span>
 		<input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
 		<ul id="player-list">
 		</ul>
 	</div>
-	<div id="content">
+	<div class="middle_block" id="user_params">
+		User stuff
+	</div>
+	<div class="middle_block" id="teambuilder">
+		<div id="pokemon-tabs">
+			<span class="pokemon-tabs-line">
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			</span>
+			<span class="pokemon-tabs-line">
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			</span>
+		</div>
+	</div>
+	<div class="middle_block" id="content">
 		<div id="channel-tabs">
 			<ul id="tab-titles">
 				<li>
