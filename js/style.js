@@ -31,4 +31,16 @@ $(document).ready(function() {
 			break;
 		}
 	});
+	
+	/* Teambuilder */
+	
+	$("#pokemon-parameters .icon-gear").on('click', function() {
+		$("#team-infos").toggle();
+	});
+	
+	$(".pokemon-slot-gender-radio").on('change', function() {
+		$(this).parent().find(' .pokemon-slot-gender-checked').removeClass('pokemon-slot-gender-checked');
+		$("label[for='"+$(this).attr('id')+"']").addClass('pokemon-slot-gender-checked');
+	});
+	
 });
