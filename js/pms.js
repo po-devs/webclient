@@ -35,12 +35,16 @@ function PM(pid) {
 
     if ($("#pm-" + pid).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#pm-" + pid, name === "???" ? "Player " + pid : name);
+        $('#channel-tabs').tabs("add", "#pm-" + pid, (name === "???" ? "Player " + pid : name)+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution would be appreciated */
         $("#pm-" + pid).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" id="send-pm-'+pid+'" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                      +' <button onClick="sendMessage(document.getElementById(\'send-pm-'+pid+'\'));">Send</button>'
-                                      +' <button onClick="pms.pm(' + pid + ').close();">Close</button></p>');
+                                      +'<div class="send_chat_message">\
+            <p>\
+                <input name="message" type="text" history="true" id="send-pm-'+pid+'" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />\
+                <i class="icon-circle-arrow-right icon-large"></i>\
+            </p>\
+        </div>'
+                                      );
         pms.pms[pid] = this;
         switchToTab("#pm-"+pid);
     }

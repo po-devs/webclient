@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Pokémon Online Web Client</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!--<link rel="stylesheet" href="css/reset.css" />-->
+    <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />-->
+    <link rel="stylesheet" href="libs/alertify.css" />
+    <!--<link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />-->
+    <!--<link rel="stylesheet" href="css/webclient.css" />-->
+    <link rel="stylesheet" href="css/chat.css" />
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- used by PS -->
+    <div id="overlay" style="display:none"></div>
+    <div id="tooltipwrapper"><div class="tooltipinner"></div></div>
+    <div id="foehint"></div>
+    <!-- end used by PS -->
+    <p style="display: none;">
+        Relay station
+        <input type="text" id="url" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();" autofocus="autofocus"/>
+        <button onClick="initWebsocket();">Connect</button>
+        <button onClick="stopWebsocket();">Disconnect</button>
+        <button onClick="checkSocket();">State</button>
+    </p>
+	<div id="sidebar">
+		<span id="po_title">Pokémon <span>Online</span></span>
+		<img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
+		<span id="trainer_username">Guest</span>
+		<br style="clear:both;" />
+		<span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
+		<div class="dropdown">
+			<span class="dropdown_button">Teams<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+			<div class="dropdown_content">
+				<div class="team_preview current_team">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/3.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/6.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/9.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/25.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/143.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/196.png" alt="" /><br />
+					Tier: <strong>Wifi OU</strong>
+				</div>
+				<div class="team_preview">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/100.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/385.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/130.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/400.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/149.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/197.png" alt="" /><br />
+					Tier: <strong>Wifi Ubers</strong>
+				</div>
+				<div class="team_preview">
+					<div class="team_preview_options">
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-remove icon-light"></i>
+						</span>
+						<span class="icon-stack">
+							<i class="icon-circle icon-stack-base"></i>
+							<i class="icon-cog icon-light"></i>
+						</span>
+					</div>
+					<img src="http://pokemon-online.eu/images/poke_icons/50.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/210.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/125.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/302.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/211.png" alt="" />
+					<img src="http://pokemon-online.eu/images/poke_icons/81.png" alt="" /><br />
+					Tier: <strong>Adv OU</strong>
+				</div>
+				<div class="push_right">
+					<span id="create_team" class="click_button">New Team</span> 
+					<span class="click_button">Import</span>
+				</div>
+			</div>
+		</div>
+		<br style="clear:both;" />
+		<div class="dropdown">
+			<span class="dropdown_button">Rankings<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+			<div class="dropdown_content push_right">
+				<ul id="rankings">
+					<li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+					<li><strong>#24</strong> <em>(1420)</em> - <strong>Gen 3 UU</strong></li>
+					<li><strong>#3</strong> <em>(1580)</em> - <strong>Challenge Cup</strong></li>
+					<li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+					<li><strong>#31</strong> <em>(1220)</em> - <strong>Gen 2 UU</strong></li>
+					<li><strong>#2</strong> <em>(1600)</em> - <strong>ADV OU</strong></li>
+				</ul>
+				<span class="click_button">View All</span> 
+			</div>
+		</div><br />
+	</div>
+	<div id="users_list">
+		<span id="players_count">Users</span>
+		<input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
+		<ul id="player-list">
+		</ul>
+	</div>
+	<div class="middle_block" id="user_params">
+		User stuff
+	</div>
+	<div class="middle_block" id="teambuilder">
+		<div id="pokemon-tabs">
+			<span class="pokemon-tabs-line">
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			</span>
+			<span class="pokemon-tabs-line">
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			</span>
+		</div>
+	</div>
+	<div class="middle_block" id="content">
+		<div id="channel-tabs">
+			<ul id="tab-titles">
+				<li>
+					<a href="#channel-0">Console<i class="icon-remove-circle"></i></a>
+				</li>
+			</ul>
+            <div id="channel-0">
+                <div id="chatTextArea" class="textbox"></div>
+                <div class="send_chat_message">
+                    <p>
+                        <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
+                        <i class="icon-circle-arrow-right icon-large"></i>
+                    </p>
+                </div>
+            </div>
+		</div>
+	</div>
+
+    <div id='player-dialog' title='User Menu'></div>
+	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/style.js"></script>
+    <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
+    <script src="libs/md5.js"></script>
+    <script src="libs/utilities.js"></script>
+    <script src="js/channeltab.js"></script>
+    <script src="js/battles.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/pms.js"></script>
+    <script src="js/channels.js"></script>
+    <script src="js/formatting.js"></script>
+    <script src="js/index.js"></script>
+
+    <script src="libs/alertify.js"></script>
+
+    <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
+    <script type="text/javascript">
+        /* Needed in battledata.js
+         *
+         * Basically PS uses caja since it displays html, and caja defines this variable.
+         *
+         * Since we don't intend to let user display html (unless in trainer info, but that's covered), we don't need it!
+         * */
+        html4 = {};
+    </script>
+    <script src="ps/js/lib/soundmanager2-nodebug-jsmin.js"></script>
+    <script src="ps/js/battledata.js"></script>
+    <script src="ps/data/pokedex-mini.js"></script>
+    <script src="ps/js/battle.js"></script>
+    <script src="ps/data/graphics.js"></script>
+    <script src="ps/data/pokedex.js"></script>
+    <script src="ps/data/moves.js"></script>
+    <script src="ps/data/items.js"></script>
+    <script src="ps/data/abilities.js"></script>
+    <script src="ps/data/formats.js"></script>
+    <script src="ps/js/utilichart.js"></script>
+</body>
+</html>

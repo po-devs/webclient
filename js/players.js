@@ -12,6 +12,8 @@ Players.prototype.login = function(id, info) {
     var obj = {};
     obj[id] = info;
     this.addPlayer(obj);
+
+    $("#trainer_username").text(this.myname());
 };
 
 Players.prototype.hasPlayer = function(pid) {
@@ -42,6 +44,10 @@ Players.prototype.addPlayer = function (players) {
             playerList.updatePlayer(id);
         }
         pms.playerLogin(id);
+
+        if (id == this.myid) {
+            $("#trainer_username").text(this.myname());
+        }
     }
 };
 
@@ -94,6 +100,10 @@ Players.prototype.player = function (pid) {
 
 Players.prototype.name = function(pid) {
     return ((pid in this.players) ? this.players[pid].name : "???");
+};
+
+Players.prototype.auth = function(pid) {
+    return ((pid in this.players) ? this.players[pid].auth : 0);
 };
 
 Players.prototype.myname = function() {
@@ -178,11 +188,16 @@ PlayerList.prototype.setPlayers = function(playerIds) {
         list.append(this.createPlayerItem(id));
     }, this);
     this.ids = playerIds;
+    this.updatePlayerCount();
+};
+
+PlayerList.prototype.updatePlayerCount = function () {
+    $("#players_count").text(this.ids.length + (this.ids.length != 1 ? " Users" : "User"));
 };
 
 PlayerList.prototype.createPlayerItem = function(id) {
     var name = players.name(id);
-    var ret = $("<li class='player-list-item' id='player-"+id+"'>").html(name);
+    var ret = $("<li class='player-list-item player-auth-" + players.auth(id) + "' id='player-"+id+"'>").html(name);
     if (battles.isBattling(id)) {
         ret.addClass('player-battling');
     }
@@ -212,6 +227,8 @@ PlayerList.prototype.addPlayer = function(id) {
     }
 
     this.ids.splice(pos, 0, id);
+
+    this.updatePlayerCount();
 };
 
 PlayerList.prototype.removePlayer = function(id) {
@@ -221,6 +238,7 @@ PlayerList.prototype.removePlayer = function(id) {
     }
     /* Remove the graphical element */
     $(".player-list-item#player-"+id).remove();
+    this.updatePlayerCount();
 };
 
 PlayerList.prototype.updatePlayer = function(id) {

@@ -50,19 +50,10 @@ Channels.prototype.newChannel = function (id, name) {
     this.names[id] = name;
 };
 
-Channels.prototype.leaveChannel = function(chanid) {
-    if (!this.hasChannel(chanid) || this.channel(chanid).closable & 1) {
-        $('#channel-tabs').tabs("remove", "#channel-" + chanid);
-    } else {
-        this.channel(chanid).closable |= 2;
-        websocket.send("leave|"+chanid);
-    }
-};
-
 Channels.prototype.removeChannel = function (id) {
     if (id in this.channels) {
         if (this.channel(id).closable & 2) {
-            this.channel(id).close();
+            this.channel(id).close2();
         } else {
             this.channel(id).print("<i>This channel was destroyed.</i>", true);
             this.channel(id).disconnect();
@@ -101,6 +92,15 @@ Channels.prototype.channelsByName = function () {
     })
 };
 
+Channels.prototype.leaveChannel = function(chanid) {
+    if (!this.hasChannel(chanid) || this.channel(chanid).closable & 1) {
+        $('#channel-tabs').tabs("remove", "#channel-" + chanid);
+    } else {
+        this.channel(chanid).closable |= 2;
+        websocket.send("leave|"+chanid);
+    }
+};
+
 function Channel(id, name) {
     this.shortHand = "channel";
     this.id = id;
@@ -116,16 +116,23 @@ function Channel(id, name) {
 
     if ($("#channel-" + id).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#channel-" + id, name || ("channel " + id));
+        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id))+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<p><input type="text" id="send-channel-'+id+'" cols="40" history="true" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Type your message here..."/>'
-                                         +' <button onClick="sendMessage(document.getElementById(\'send-channel-'+id+'\'));">Send</button>'
-                                         +' <button onClick="channels.leaveChannel(' + id + ');">Leave Channel</button></p>');
+            +'<div class="send_chat_message">\
+            <p>\
+                <input name="message" type="text" history="true" id="send-channel-'+id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />\
+                <i class="icon-circle-arrow-right icon-large"></i>\
+            </p>\
+        </div>');
     }
 }
 
 Channel.inherits(ChannelTab);
+
+Channel.prototype.close = function() {
+    channels.leaveChannel(this.id)
+};
 
 Channel.prototype.setPlayers = function(players) {
     /* The server 'unclosed' us, so removing server close if there */
@@ -156,7 +163,7 @@ Channel.prototype.removePlayer = function(player) {
 
     if (player == players.myid) {
         if (this.closable & 2) {
-            this.close();
+            this.close2();
         } else {
             this.closable |= 1;
             this.print("<i>You were removed from this channel</i>", true)
@@ -223,7 +230,7 @@ Channel.prototype.print = function (msg, html, noParse) {
 
 Channel.prototype.changeName = function (name) {
     this.name = name;
-    $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html(name);
+    $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html("<span>"+name+'<i class="icon-remove-circle"></i></span>');
 };
 
 Channel.prototype.disconnect = function() {
@@ -232,7 +239,7 @@ Channel.prototype.disconnect = function() {
     for(var id in pl) {players.testPlayerOnline(id)};
 };
 
-Channel.prototype.close = function () {
+Channel.prototype.close2 = function () {
     $('#channel-tabs').tabs("remove", "#channel-" + this.id);
 
     this.disconnect();
