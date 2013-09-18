@@ -24,7 +24,7 @@ def convert_line(line):
     else:
         lines.append('true')
     lines[0] = str(int(nums[0]) + int(nums[1])*65536)
-    return '{' + lines[0] + ':'+lines[1]+'},\n'
+    return lines[0] + ':'+lines[1]+',\n'
 
 
 def deal_with_file(path, gen="0", file=""):

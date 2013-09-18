@@ -24,7 +24,7 @@ def convert_line(line):
     else:
         lines.append('true')
 
-    return '{' + lines[0] + ':'+lines[1]+'},\n'
+    return lines[0] + ':'+lines[1]+',\n'
 
 
 def deal_with_file(path, gen="0", file="", type="pokes"):
