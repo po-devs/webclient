@@ -104,7 +104,6 @@ $(function() {
         /* Resizes channel tabs, if window height changed */
         $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
         /* Resizes chat area in funciton of the height of the channel tab */
-        $(hrefid + " #chatTextArea").height($("#channel-tabs").height()-$(hrefid + " #chatTextArea").position().top-90);
         /* Scrolls down the chat of the current tab */
         $(hrefid+" #chatTextArea").get(0).scrollTop = $(hrefid+" #chatTextArea").get(0).scrollHeight;
 
@@ -122,7 +121,6 @@ $(function() {
     }
     });
     $("#channel-tabs").height($(window).height()-$("#channel-tabs").offset().top-10);
-    $("#chatTextArea").height($("#channel-tabs").height()-$("#chatTextArea").position().top-90);
     $(document).on("click", "a", function (event) {
         var href = this.href;
 
