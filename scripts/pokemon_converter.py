@@ -16,7 +16,9 @@ def convert_line(line):
     nums = lines[0].split(':')
     if len(lines) > 1:
         if lines[1][0].isdigit():
-            lines[1] = "[" + ",".join(lines[1].split(' ')) + "]"
+            lines[1] = ",".join(lines[1].split(' '))
+            if lines[1].find(",") != -1:
+                lines[1] = "[" + lines[1] + "]"
         else:
             lines[1] = '"'+lines[1]+'"'
     else:
