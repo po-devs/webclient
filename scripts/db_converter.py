@@ -80,6 +80,20 @@ def main(argv):
         },
         'items': {
             'base_files': ['items', 'berries']
+        },
+        'types': {
+            'base_files': ["types", "category", 'type1_hp', 'type2_hp', 'type3_hp', 'type4_hp', 'type5_hp', 'type6_hp',
+                           'type7_hp', 'type8_hp', 'type9_hp', 'type10_hp', 'type11_hp', 'type12_hp', 'type13_hp',
+                           'type14_hp', 'type15_hp', 'type16_hp']
+        },
+        'categories': {
+            'base_files': ['categories']
+        },
+        'natures': {
+            'base_files': ['nature']
+        },
+        'status': {
+            'base_files': ['stats', 'status']
         }
     }
     gens = ['1','2','3','4','5']
