@@ -7,7 +7,9 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <!--<link rel="stylesheet" href="css/reset.css" />-->
     <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />-->
+	<!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> ->
     <link rel="stylesheet" href="libs/alertify.css" />
+	<link href="css/combobox.css" rel="stylesheet" />
     <!--<link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />-->
     <!--<link rel="stylesheet" href="css/webclient.css" />-->
     <link rel="stylesheet" href="css/chat.css" />
@@ -137,6 +139,7 @@
 			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
 			</span>
 		</div>
+		<form id="team_form" action="" method="post">
 		<div id="pokemon-parameters">
 			<i class="icon-gear icon-large"></i>
 			<div id="team-infos">
@@ -149,7 +152,7 @@
 					</span>
 					<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
 					<span class="pokemon-slot-type-block">
-						<span style="background-color:#79c02c;" class="pokemon-slot-type">Grass</span><span style="background-color:#c42dcb;" class="pokemon-slot-type">Poison</span>
+						<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
 					</span><br />
 					<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
 					<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
@@ -215,8 +218,90 @@
 					</div><br />
 					<span class="click_button pokemon-slot-advanced">Advanced</span>
 				</div>
-				<br style="clear:both;" />hi
+				<br style="clear:both;" /><br />
+				<div class="pokemon-slot-advanced-content">
+					Advanced stuff here
+				</div>
+				<select class="pokemon-slot-hidden-power-type">
+					<option>Hidden Power</option>
+					<option>Grass</option>
+				</select>
+				<select class="pokemon-slot-ability">
+					<option>Ability</option>
+					<option>Overgrow</option>
+				</select>
+				<select class="pokemon-slot-nature">
+					<option>Nature</option>
+					<option>Hardy</option>
+				</select>
+				<select class="pokemon-slot-item">
+					<option>Item</option>
+					<option>Leftovers</option>
+				</select>
+				<br /><br />
+			</div>
+			<span class="pokemon-evs">
+				<span class="pokemon-evs-stat-name">Attack</span>
+				<input type="text" value="0" class="pokemon-evs-value" />
+			</span>
+			<span class="pokemon-evs">
+				<span class="pokemon-evs-stat-name">Defense</span>
+				<input type="text" value="0" class="pokemon-evs-value" />
+			</span>
+			<span class="pokemon-evs">
+				<span class="pokemon-evs-stat-name">Sp.Atk</span>
+				<input type="text" value="0" class="pokemon-evs-value" />
+			</span>
+			<span class="pokemon-evs">
+				<span class="pokemon-evs-stat-name">Sp.Def</span>
+				<input type="text" value="0" class="pokemon-evs-value" />
+			</span>
+			<span class="pokemon-evs">
+				<span class="pokemon-evs-stat-name">Speed</span>
+				<input type="text" value="0" class="pokemon-evs-value" />
+			</span>
+			<br style="clear:both;" /><br />
+			<div class="moves-list">
+				<div class="move-infos">
+						<span class="move-type pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span>
+						</span>
+						<span class="move-category pokemon-slot-type-block">
+							<span class="pokemon-slot-type fire">Special</span>
+						</span>
+					<div class="move-name">Frenzy Plant</div>
+					<div class="move-pp"><strong>5</strong> <em>PP</em></div>
+					<div class="move-bp"><strong>150</strong> <em>Power</em></div>
+					<div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
+				</div>
+				<div class="move-infos">
+						<span class="move-type pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span>
+						</span>
+						<span class="move-category pokemon-slot-type-block">
+							<span class="pokemon-slot-type fire">Special</span>
+						</span>
+					<div class="move-name">Frenzy Plant</div>
+					<div class="move-pp"><strong>5</strong> <em>PP</em></div>
+					<div class="move-bp"><strong>150</strong> <em>Power</em></div>
+					<div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
+				</div>
+				<div class="move-infos">
+						<span class="move-type pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span>
+						</span>
+						<span class="move-category pokemon-slot-type-block">
+							<span class="pokemon-slot-type fire">Special</span>
+						</span>
+					<div class="move-name">Frenzy Plant</div>
+					<div class="move-pp"><strong>5</strong> <em>PP</em></div>
+					<div class="move-bp"><strong>150</strong> <em>Power</em></div>
+					<div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
+				</div>
+			</div>
 		</div>
+		<input id="save_team" class="click_button" type="submit" name="save_team" value="Save" />
+		</form>
 	</div>
 	<div class="middle_block" id="content">
 		<div id="channel-tabs">
@@ -244,6 +329,7 @@
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/style.js"></script>
     <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
+	<script type="text/javascript" src="libs/jquery.knob.js"></script>
     <script src="libs/md5.js"></script>
     <script src="libs/utilities.js"></script>
     <script src="js/channeltab.js"></script>
@@ -253,6 +339,7 @@
     <script src="js/channels.js"></script>
     <script src="js/formatting.js"></script>
     <script src="js/index.js"></script>
+	<script src="js/combobox.js"></script>
 
     <script src="libs/alertify.js"></script>
 
