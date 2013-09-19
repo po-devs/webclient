@@ -21,20 +21,29 @@ html, body {
 	top:10px;
 	left:10px;
 	right:10px;
-	bottom:400px;
-	overflow:auto;
+	bottom:285px;
 }
 
 #bottom-content {
-	height:386px;
+	height:270px;
 	position:absolute;
 	left:10px;
 	right:10px;
 	bottom:10px;
 }
 
+#servers-list-container {
+	position:absolute;
+	top:70px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	overflow:auto;
+}
+
 #servers-list {
 	width:100%;
+	overflow:scroll;
 	background-color:#ffffff;
 	border-collapse:collapse;
 	border:1px solid #f2f2f2;

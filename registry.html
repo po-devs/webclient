@@ -11,6 +11,12 @@
 <body>
 	<div id="content">
 		<div id="top-content">
+			<label for="relay">Relay</label>
+			<span style="float:right;" class="button">Load</span>
+			<input style="width:60%;" type="text" name="relay" id="relay" />
+			<br style="clear:both;" />
+			<label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />
+			<div id="servers-list-container">
 			<table id="servers-list">
 				<thead>
 					<tr>
@@ -51,28 +57,19 @@
 						<td>22.132.55.152</td>
 					</tr>
 					<tr>
-						<td>Pokémon Trash</td>
-						<td>666</td>
-						<td>22.132.55.152</td>
+						<td>Pokéneon</td>
+						<td>300</td>
+						<td>22.132.55.153</td>
 					</tr>
 					<tr>
-						<td>Pokémon Trash</td>
-						<td>666</td>
-						<td>22.132.55.152</td>
-					</tr>
-					<tr>
-						<td>Pokémon Trash</td>
-						<td>666</td>
-						<td>22.132.55.152</td>
-					</tr>
-					<tr>
-						<td>Pokémon Trash</td>
-						<td>666</td>
-						<td>22.132.55.152</td>
+						<td>Gamecorner</td>
+						<td>2</td>
+						<td>240.112.33.42</td>
 					</tr>
 					<tr id="hidden-cell"><td colspan="3"></td></tr>
 				</tbody>
 			</table>
+			</div>
 			<br />
 		</div>
 		<div id="bottom-content">
@@ -82,9 +79,9 @@
 				<!-- <iframe></iframe> -->
 			</div><br />
 			<label for="advanced-connection">Advanced Connection</label><input type="text" name="advanced-connection" id="advanced-connection" /><br style="clear:both;" />
-			<label for="relay">Relay</label><input type="text" name="relay" id="relay" /><br style="clear:both;" />
-			<label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" />
-			<label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /><br />
+			<div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
+			<div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
+			<br style="clear:both;" />
 			<span class="button">Connect</span><br style="clear:both;" />
 		</div>
 	</div>
