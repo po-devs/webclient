@@ -530,6 +530,12 @@ function checkSocket()
     }
 }
 
+function connect() {
+    websocket.send("connect|" + $("#advanced-connection").val());
+    $("#registry-content").hide();
+    $("#client-content").show();
+}
+
 parseCommand = function(message) {
     var cmd = message.substr(0, message.indexOf("|"));
     var data = message.slice(message.indexOf("|")+1);

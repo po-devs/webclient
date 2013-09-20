@@ -95,7 +95,7 @@ input:focus:-ms-input-placeholder {
 	box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
 }
 
-#content, #user_params, #teambuilder {
+#client-content, #user_params, #teambuilder {
 	display:none;
 	position:relative;
 	z-index:1;
@@ -110,7 +110,7 @@ input:focus:-ms-input-placeholder {
 	overflow:auto;
 }
 
-.middle_block#content {
+.middle_block#client-content {
 	display:block;
 }
 

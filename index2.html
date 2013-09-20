@@ -8,7 +8,6 @@
     <!--<link rel="stylesheet" href="css/reset.css" />-->
     <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />-->
     <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> ->
-    <link rel="stylesheet" href="libs/alertify.css" />
     <link href="css/combobox.css" rel="stylesheet" />
     <!--<link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />-->
     <!--<link rel="stylesheet" href="css/webclient.css" />-->
@@ -57,7 +56,7 @@
         <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
         <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
         <br style="clear:both;" />
-        <span class="button">Connect</span><br style="clear:both;" />
+        <span class="button" onclick="connect()">Connect</span><br style="clear:both;" />
     </div>
 </div>
 <div id="client-content" style="display: none">
@@ -356,6 +355,8 @@
 </div>
 
 <div id='player-dialog' title='User Menu'></div>
+
+<link rel="stylesheet" href="libs/alertify.css" />
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
