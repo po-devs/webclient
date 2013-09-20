@@ -528,10 +528,8 @@ parseCommand = function(message) {
             var server = servers[i];
             var html = "<tr><td>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>"
                 + "<td>"+server.ip+":" + server.port + "</td></tr>";
-            $("#servers-list tbody").append(html);
+            $("#servers-list tbody").prepend(html);
         }
-
-        $("#servers-list").tablesorter();
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
 
