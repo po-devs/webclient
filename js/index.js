@@ -47,7 +47,7 @@ $(function() {
 $(function() {
     var queryString = getQueryString('relay');
     if (queryString) {
-        $("#url").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
+        $("#relay").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
     }
 
     $('#channel-tabs').tabs()
@@ -220,10 +220,6 @@ $(function() {
             return false;
         }
     });
-
-//    if (getQueryString("autoconnect") === "true") {
-        initWebsocket();
-//    }
 
     $(window).bind("beforeunload", function () {
         if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
@@ -447,12 +443,12 @@ function initWebsocket()
             WebSocket = MozWebSocket;
         if ( websocket && websocket.readyState == 1 )
             websocket.close();
-        displayMessage("Connecting to " + $("#url").val());
+        displayMessage("Connecting to " + $("#relay").val());
 
-        relayIP = $('#url').val().slice(5); //remove 'ws://'
+        relayIP = $('#relay').val().slice(5); //remove 'ws://'
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-        websocket = new WebSocket( $("#url").val() );
+        websocket = new WebSocket( $("#relay").val() );
         websocket.onopen = function( evt ) {
             displayMessage( "CONNECTED" );
         };
@@ -523,27 +519,19 @@ parseCommand = function(message) {
          send localhost */
         var server = data.replace("localhost", relayIP);
 
-        var serverQuerystring = getQueryString("server");
-        if (serverQuerystring === "default") {
-            console.log("Message sent: '" + "connect|" + data + "'");
-            websocket.send("connect|" + data);
-        } else if (serverQuerystring !== "") {
-            websocket.send("connect|" + serverQuerystring + (!isNaN(serverQuerystring.split(":")[1]) ? '' : ':5080'));
-        } else {
-            alertify.prompt("Server to connect to (default " + server + ")", function (e, str) {
-                if (e) {
-                    // after clicking OK
-                    // str is the value from the textbox
-                    if (str && str.indexOf(":") == -1) { str += ":5080"; }
-                    var strToSend = "connect|" + (str ? str.replace(relayIP, "localhost") : data);
-                    console.log("Message sent: '" + strToSend + "'");
-                    websocket.send(strToSend);
-                } else {
-                    // after clicking Cancel
-                    stopWebsocket();
-                }
-            });
+        $("#advanced-connection").val(server);
+        websocket.send("registry");
+    } else if (cmd == "servers") {
+        var servers = JSON.parse(data);
+
+        for (var i = 0; i < servers.length; i++) {
+            var server = servers[i];
+            var html = "<tr><td>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>"
+                + "<td>"+server.ip+":" + server.port + "</td></tr>";
+            $("#servers-list tbody").append(html);
         }
+
+        $("#servers-list").tablesorter();
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
 
