@@ -530,6 +530,8 @@ parseCommand = function(message) {
                 + "<td>"+server.ip+":" + server.port + "</td></tr>";
             $("#servers-list tbody").prepend(html);
         }
+
+        $("#servers-list").tablesorter();
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
 
