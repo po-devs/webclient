@@ -45,9 +45,9 @@ $(function() {
 });
 
 $(function() {
-    var queryString = getQueryString('relay');
-    if (queryString) {
-        $("#relay").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
+    var cookieRelay = $.cookie("relay");
+    if (cookieRelay) {
+        $("#relay").val($.cookie("relay"));
     }
 
     $('#channel-tabs').tabs()
@@ -443,12 +443,16 @@ function initWebsocket()
             WebSocket = MozWebSocket;
         if ( websocket && websocket.readyState == 1 )
             websocket.close();
-        displayMessage("Connecting to " + $("#relay").val());
 
-        relayIP = $('#relay').val();
+        var fullIP = $("#relay").val();
+        displayMessage("Connecting to " + fullIP);
+
+        relayIP = fullIP;
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-        websocket = new WebSocket( $("#relay").val() );
+        $.cookie("relay", fullIP, { expires: 365 });
+
+        websocket = new WebSocket( "ws://"+fullIP );
         websocket.onopen = function( evt ) {
             displayMessage( "CONNECTED" );
         };
