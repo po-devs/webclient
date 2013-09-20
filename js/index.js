@@ -221,9 +221,9 @@ $(function() {
         }
     });
 
-    if (getQueryString("autoconnect") === "true") {
+//    if (getQueryString("autoconnect") === "true") {
         initWebsocket();
-    }
+//    }
 
     $(window).bind("beforeunload", function () {
         if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
