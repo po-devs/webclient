@@ -50,6 +50,9 @@ $(function() {
         $("#relay").val(cookieRelay);
     }
 
+    $("#servers-list tbody").on('click', 'tr', function() {
+        $("#advanced-connection").val($(this).find(' td:last-child').text());
+    });
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
