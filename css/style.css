@@ -7,6 +7,11 @@ html, body {
 	margin:0;
 }
 
+.page {
+    width:100%;
+    height: 100%;
+}
+
 input {
 	outline:none; /* Removing Webkit's effect on inputs */
 }
@@ -95,7 +100,7 @@ input:focus:-ms-input-placeholder {
 	box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
 }
 
-#client-content, #user_params, #teambuilder {
+#content, #user_params, #teambuilder {
 	display:none;
 	position:relative;
 	z-index:1;
@@ -110,7 +115,7 @@ input:focus:-ms-input-placeholder {
 	overflow:auto;
 }
 
-.middle_block#client-content {
+.middle_block#content {
 	display:block;
 }
 

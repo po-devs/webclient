@@ -532,8 +532,7 @@ function checkSocket()
 
 function connect() {
     websocket.send("connect|" + $("#advanced-connection").val());
-    $("#registry-content").hide();
-    $("#client-content").show();
+    $(".page").toggle();
 }
 
 parseCommand = function(message) {
