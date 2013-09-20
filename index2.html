@@ -28,7 +28,7 @@
     <div id="top-content">
         <label for="relay">Relay</label>
         <span style="float:right;" class="button" onClick="initWebsocket();">Load</span>
-        <input style="width:60%;" type="text" name="relay" id="relay" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
+        <input style="width:60%;" type="text" name="relay" id="relay" value="localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
                autofocus="autofocus"/>
         <br style="clear:both;" />
         <label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />

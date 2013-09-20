@@ -445,7 +445,7 @@ function initWebsocket()
             websocket.close();
         displayMessage("Connecting to " + $("#relay").val());
 
-        relayIP = $('#relay').val().slice(5); //remove 'ws://'
+        relayIP = $('#relay').val();
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
         websocket = new WebSocket( $("#relay").val() );
