@@ -94,6 +94,12 @@ def main(argv):
         },
         'status': {
             'base_files': ['stats', 'status']
+        },
+        'genders': {
+            'base_files': ['genders']
+        },
+        'gens': {
+            'base_files': ['versions', 'gens']
         }
     }
     gens = ['1','2','3','4','5']
