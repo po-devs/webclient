@@ -8,7 +8,6 @@
     <!--<link rel="stylesheet" href="css/reset.css" />-->
     <!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />-->
     <!-- <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> ->
-    <link rel="stylesheet" href="libs/alertify.css" />
     <link href="css/combobox.css" rel="stylesheet" />
     <!--<link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />-->
     <!--<link rel="stylesheet" href="css/webclient.css" />-->
@@ -24,11 +23,12 @@
 <div id="foehint"></div>
 <!-- end used by PS -->
 
+<div class="page" id="registry-page">
 <div id="registry-content">
     <div id="top-content">
         <label for="relay">Relay</label>
         <span style="float:right;" class="button" onClick="initWebsocket();">Load</span>
-        <input style="width:60%;" type="text" name="relay" id="relay" value="ws://localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
+        <input style="width:60%;" type="text" name="relay" id="relay" value="localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
                autofocus="autofocus"/>
         <br style="clear:both;" />
         <label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />
@@ -51,17 +51,17 @@
     <div id="bottom-content">
         <strong>Server Description</strong><br />
         <div id="server-description">
-            Hurr Durr
             <!-- <iframe></iframe> -->
         </div><br />
         <label for="advanced-connection">Advanced Connection</label><input type="text" name="advanced-connection" id="advanced-connection" /><br style="clear:both;" />
         <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
         <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
         <br style="clear:both;" />
-        <span class="button">Connect</span><br style="clear:both;" />
+        <span class="button" onclick="connect()">Connect</span><br style="clear:both;" />
     </div>
 </div>
-<div id="client-content" style="display: none">
+</div>
+<div class="page" style="display: none">
     <div id="sidebar">
         <span id="po_title">Pokémon <span>Online</span></span>
         <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
@@ -358,12 +358,15 @@
 
 <div id='player-dialog' title='User Menu'></div>
 
+<link rel="stylesheet" href="libs/alertify.css" />
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/style.js"></script>
 <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
 <script type="text/javascript" src="libs/jquery.knob.js"></script>
+<script type="text/javascript" src="libs/jquery.cookie.js"></script>
 <script type="text/javascript" src="libs/jquery.tablesorter.min.js"></script>
 <script src="libs/md5.js"></script>
 <script src="libs/utilities.js"></script>
@@ -375,7 +378,6 @@
 <script src="js/formatting.js"></script>
 <script src="js/index.js"></script>
 <script src="js/combobox.js"></script>
-<script type="text/javascript" src="js/registry.js"></script>
 
 <script src="libs/alertify.js"></script>
 

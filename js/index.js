@@ -45,11 +45,14 @@ $(function() {
 });
 
 $(function() {
-    var queryString = getQueryString('relay');
-    if (queryString) {
-        $("#relay").val("ws://" + queryString + (!isNaN(queryString.split(":")[1]) ? "" : ":10508"));
+    var cookieRelay = $.cookie("relay");
+    if (cookieRelay) {
+        $("#relay").val(cookieRelay);
     }
 
+    $("#servers-list tbody").on('click', 'tr', function() {
+        $("#advanced-connection").val($(this).find(' td:last-child').text());
+    });
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
@@ -231,6 +234,19 @@ $(function() {
 
     $(window).unload(function () {
         localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
+    });
+
+    if ($.cookie("autoload")) {
+        $("#autoload").attr("checked", true);
+        initWebsocket();
+    }
+
+    $("#autoload").click(function() {
+        if($(this).is(':checked')) {
+            $.cookie("autoload", true, {expires:365});
+        } else {
+            $.removeCookie("autoload");
+        }
     });
 });
 
@@ -443,12 +459,16 @@ function initWebsocket()
             WebSocket = MozWebSocket;
         if ( websocket && websocket.readyState == 1 )
             websocket.close();
-        displayMessage("Connecting to " + $("#relay").val());
 
-        relayIP = $('#relay').val().slice(5); //remove 'ws://'
+        var fullIP = $("#relay").val();
+        displayMessage("Connecting to " + fullIP);
+
+        relayIP = fullIP;
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-        websocket = new WebSocket( $("#relay").val() );
+        $.cookie("relay", fullIP, { expires: 365 });
+
+        websocket = new WebSocket( "ws://"+fullIP );
         websocket.onopen = function( evt ) {
             displayMessage( "CONNECTED" );
         };
@@ -510,6 +530,11 @@ function checkSocket()
     }
 }
 
+function connect() {
+    websocket.send("connect|" + $("#advanced-connection").val());
+    $(".page").toggle();
+}
+
 parseCommand = function(message) {
     var cmd = message.substr(0, message.indexOf("|"));
     var data = message.slice(message.indexOf("|")+1);
@@ -531,7 +556,7 @@ parseCommand = function(message) {
             $("#servers-list tbody").prepend(html);
         }
 
-        $("#servers-list").tablesorter();
+        $("#servers-list").tablesorter({sortList: [[1,1]]});
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
 

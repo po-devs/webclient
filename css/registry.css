@@ -5,7 +5,6 @@ html, body {
 	height:100%;
 	padding:0;
 	margin:0;
-	background-color:#ffffff;
 }
 
 #registry-content {
@@ -14,6 +13,10 @@ html, body {
 	height:100%;
 	margin:auto;
 	background-color:#f7f7f7;
+}
+
+#registry-page {
+    background-color: #ffffff;
 }
 
 #top-content {
