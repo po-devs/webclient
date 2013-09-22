@@ -152,6 +152,4 @@ $(document).ready(function() {
 		$(this).addClass('active-pokemon-tab');
 		$('.pokemon-slot').removeClass('active-pokemon-slot').eq($(this).index()).addClass('active-pokemon-slot');
 	});
-	
-	
 });
