@@ -1,5 +1,5 @@
 pokedex.status.stats = {
-0:"Life Points",
+0:"HP",
 1:"Attack",
 2:"Defense",
 3:"Sp. Att.",

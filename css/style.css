@@ -463,16 +463,6 @@ ul#rankings li {
 
 /* Teambuilder */
 
-/*.pokemon-tabs-line {
-	display:table;
-	width:100%;
-	border-top:1px solid #d9d9d9;
-}
-
-#teambuilder .pokemon-tabs-line:first-child {
-	border-top:none;
-}*/
-
 .pokemon-tab {
 	display:block;
 	-moz-box-sizing:border-box;
@@ -487,10 +477,6 @@ ul#rankings li {
 	border-right:1px solid #d9d9d9;
 	cursor:pointer;
 }
-
-/*.pokemon-tabs-line .pokemon-tab:last-child {
-	border-right:none;
-}*/
 
 .pokemon-tab:hover {
 	background-color:#dddddd;
@@ -771,7 +757,7 @@ ul#rankings li {
 	background-color:#f28ff2;
 }
 
-.pokemon-slot-type.unknown {
+.pokemon-slot-type.type_17 { /* unknown */
 	background-color:#39b37d;
 }
 

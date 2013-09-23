@@ -63,7 +63,7 @@ $(document).ready(function() {
 		thickness:.06,
 		displayInput:true,
 		fgColor:'#1f5d96',
-		bgColor:'#f5f5f5',
+		bgColor:'#f0f0f0',
 		font:'inherit',
 		inputColor:'#757575'
 	});
@@ -77,7 +77,7 @@ $(document).ready(function() {
 		thickness:.06,
 		displayInput:true,
 		fgColor:'#1f5d96',
-		bgColor:'#f5f5f5',
+		bgColor:'#f0f0f0',
 		font:'inherit',
 		inputColor:'#757575'
 	});
@@ -111,7 +111,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#tb-team-generation-value").fillSelect(pokedex.generations).val($(this).find('option:last-child').val()).combobox();
+	$("#tb-team-generation-value").fillSelect(pokedex.generations.generation).val($(this).find('option:last-child').val()).combobox();
 	$(".moves-list tr").on('click', function() {
 		var move_name = $(this).find('.move-name').text();
 		var moves = $(this).closest('.pokemon-slot').find('.pokemon-move-selection');
