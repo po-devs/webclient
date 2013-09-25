@@ -544,8 +544,19 @@ parseCommand = function(message) {
          send localhost */
         var server = data.replace("localhost", relayIP);
 
-        $("#advanced-connection").val(server);
-        websocket.send("registry");
+        var qserver = getQueryString("server");
+
+        if (qserver != "default" && qserver) {
+            $("#advanced-connection").val(qserver);
+        } else {
+            $("#advanced-connection").val(server);
+        }
+
+        if (getQueryString("autoconnect") === "true") {
+            connect();
+        } else {
+            websocket.send("registry");
+        }
     } else if (cmd == "servers") {
         var servers = JSON.parse(data);
 
