@@ -627,19 +627,24 @@ parseCommand = function(message) {
         var password = $("#password").val();
         if (password) {
             var hash = MD5(MD5(password)+data);
+            $.cookie("pass-"+data, hash, {expires:365});
             websocket.send("auth|" + hash);
         } else {
-            alertify.pass("Please enter your password", function (e, str) {
-                if (e) {
-                    // after clicking OK
-                    // str is the value from the textbox
-                    var hash = MD5(MD5(str)+data);
-                    websocket.send("auth|" + hash);
-                } else {
-                    // after clicking Cancel
-                    stopWebsocket();
-                }
-            });
+            if ($.cookie("pass-"+data)) {
+                websocket.send("auth|" + $.cookie("pass-"+data));
+            } else {
+                alertify.pass("Please enter your password", function (e, str) {
+                    if (e) {
+                        // after clicking OK
+                        // str is the value from the textbox
+                        var hash = MD5(MD5(str)+data);
+                        websocket.send("auth|" + hash);
+                    } else {
+                        // after clicking Cancel
+                        stopWebsocket();
+                    }
+                });
+            }
         }
     } else if (cmd == "announcement") {
         announcement.html(data);
