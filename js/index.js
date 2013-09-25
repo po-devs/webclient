@@ -49,6 +49,12 @@ $(function() {
     if (cookieRelay) {
         $("#relay").val(cookieRelay);
     }
+    if ($.cookie("username")) {
+        $("#username").val($.cookie("username"));
+    }
+    if ($.cookie("password")) {
+        $("#password").val($.cookie("password"));
+    }
 
     $("#servers-list tbody").on('click', 'tr', function() {
         $("#advanced-connection").val($(this).find(' td:last-child').text());
@@ -571,9 +577,16 @@ parseCommand = function(message) {
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
 
+        var username = $("#username").val();
+        if (username && username.length > 0) {
+            $.cookie("username", username, {expires:365});
+        } else {
+            $.removeCookie("username");
+        }
+
         var data = {version: 1};
-        if (getQueryString("user")) {
-            data.name = getQueryString("user");
+        if (getQueryString("user") || username) {
+            data.name = getQueryString("user") || username;
             data.default = getQueryString("channel");
             data.autojoin = getQueryString("autojoin");
             if (data.autojoin) {
@@ -611,17 +624,23 @@ parseCommand = function(message) {
             channels.channel(params.channel).print(msg, params.html);
         }
     } else if (cmd == "challenge") {
-        alertify.pass("Please enter your password", function (e, str) {
-            if (e) {
-                // after clicking OK
-                // str is the value from the textbox
-                var hash = MD5(MD5(str)+data);
-                websocket.send("auth|" + hash);
-            } else {
-                // after clicking Cancel
-                stopWebsocket();
-            }
-        });
+        var password = $("#password").val();
+        if (password) {
+            var hash = MD5(MD5(password)+data);
+            websocket.send("auth|" + hash);
+        } else {
+            alertify.pass("Please enter your password", function (e, str) {
+                if (e) {
+                    // after clicking OK
+                    // str is the value from the textbox
+                    var hash = MD5(MD5(str)+data);
+                    websocket.send("auth|" + hash);
+                } else {
+                    // after clicking Cancel
+                    stopWebsocket();
+                }
+            });
+        }
     } else if (cmd == "announcement") {
         announcement.html(data);
         format(announcement);
