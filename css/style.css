@@ -946,3 +946,66 @@ label[for="tb-team-name"], label[for="tb-team-tier-value"], label[for="tb-team-g
 	margin-left:15px;
 	margin-bottom:10px;
 }
+
+div.ui-dialog.ui-widget.ui-widget-content {
+	padding:0px;
+	font-family:inherit;
+	font-size:inherit;
+	background:#ffffff;
+	border:1px solid #d9d9d9;
+	border-radius:0px;
+}
+
+div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header {
+	height:40px;
+	line-height:40px;
+	padding:0px;
+	background:#dddddd;
+	border:none;
+	border-bottom:1px solid #d9d9d9;
+	border-radius:0px;
+	cursor:pointer;
+}
+
+div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header, div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header .ui-dialog-title {
+	color:#abaaaa;
+	text-indent:5px;
+	font-weight:inherit;
+}
+
+div#player-dialog.ui-dialog-content.ui-widget-content {
+	width:98%;
+	height:98%;
+	margin:1%;
+	padding:0px;
+	background:none;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix  {
+	text-align:center;
+	background:none;
+	border:none;
+	padding:0px;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .ui-dialog-buttonset {
+	display:inline-block;
+	float:none;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .click_button {
+	padding:5px 0px;
+	margin:3px;
+	font-size:inherit;
+	font-family:inherit;
+	color:#ffffff;
+	font-weight:bold;
+	background-image:none;
+	background-color:#1f5d96;
+	border:1px solid transparent;
+	cursor:pointer;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .click_button:hover {
+	background-color:#3285d3;
+}

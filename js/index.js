@@ -333,22 +333,25 @@ $("#player-list").on("click", "li", function(event) {
     var buttons = [
         {
             text: "Send Private Message",
+			class: "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
     ];
     if (players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
+			class: "click_button",
             click: function() { players.removeIgnore(id); dialog.dialog("close"); }
         });
     } else {
         buttons.push({
             text: "Ignore",
+			class: "click_button",
             click: function() { players.addIgnore(id); dialog.dialog("close"); }
         });
     }
     dialog.dialog("option", "buttons", buttons);
-    dialog.dialog("option", "position", [event.pageX, event.pageY]);
+	dialog.dialog({ position: { my: "center top", at: "center top+40px", of: window } });
     dialog.dialog("open");
 });
 

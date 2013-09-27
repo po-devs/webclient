@@ -1,4 +1,4 @@
-pokedex.generations.generation = {
+pokedex.generations.generations = {
 1:"Generation 1",
 2:"Generation 2",
 3:"Generation 3",

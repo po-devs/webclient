@@ -111,7 +111,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#tb-team-generation-value").fillSelect(pokedex.generations.generation).val($(this).find('option:last-child').val()).combobox();
+	$("#tb-team-generation-value").fillSelect(pokedex.generations.generations).val($(this).find('option:last-child').val()).combobox();
 	$(".moves-list tr").on('click', function() {
 		var move_name = $(this).find('.move-name').text();
 		var moves = $(this).closest('.pokemon-slot').find('.pokemon-move-selection');
@@ -148,8 +148,7 @@ $(document).ready(function() {
 	});
 	
 	$("#pokemon-tabs .pokemon-tab").on('click', function() {
-		$('.pokemon-tab.active-pokemon-tab').removeClass('active-pokemon-tab');
-		$(this).addClass('active-pokemon-tab');
+		$('.pokemon-tab').removeClass('active-pokemon-tab').eq($(this).index()).addClass('active-pokemon-tab');
 		$('.pokemon-slot').removeClass('active-pokemon-slot').eq($(this).index()).addClass('active-pokemon-slot');
 	});
 });
