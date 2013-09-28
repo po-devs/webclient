@@ -16,4 +16,5 @@ pokedex.gens.versions = {
 4:2:"Heart Gold/Soul Silver",
 5:0:"Black/White",
 5:1:"Black/White 2",
+6:0:"X/Y",
 };

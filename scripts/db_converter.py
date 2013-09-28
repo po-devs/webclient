@@ -79,12 +79,11 @@ def main(argv):
             'base_files': ['abilities', 'ability_desc', 'ability_messages']
         },
         'items': {
-            'base_files': ['items', 'berries']
+            'base_files': ['items', 'berries', 'item_useful', 'items_gen2', 'items_gen3', 'items_gen4', 'items_gen5',
+                           'berries_gen2', 'berries_gen3', 'berries_gen4', 'berries_gen5']
         },
         'types': {
-            'base_files': ["types", "category", 'type1_hp', 'type2_hp', 'type3_hp', 'type4_hp', 'type5_hp', 'type6_hp',
-                           'type7_hp', 'type8_hp', 'type9_hp', 'type10_hp', 'type11_hp', 'type12_hp', 'type13_hp',
-                           'type14_hp', 'type15_hp', 'type16_hp']
+            'base_files': ["types", "category"]
         },
         'categories': {
             'base_files': ['categories']

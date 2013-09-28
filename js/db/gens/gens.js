@@ -4,4 +4,5 @@ pokedex.gens.gens = {
 3:[3rd,gen],
 4:[4th,gen],
 5:[5th,gen],
+6:[6th,gen],
 };
