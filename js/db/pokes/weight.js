@@ -1,3 +1,4 @@
+if(!pokedex.pokes)pokedex.pokes={};
 pokedex.pokes.weight = {
 0:0.0,
 1:6.9,
@@ -646,7 +647,7 @@ pokedex.pokes.weight = {
 641:63.0,
 66177:63.0,
 642:61.0,
-66177:61.0,
+66178:61.0,
 643:330.0,
 644:345.0,
 645:68.0,

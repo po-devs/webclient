@@ -1,3 +1,4 @@
+if(!pokedex.natures)pokedex.natures={};
 pokedex.natures.nature = {
 0:"Hardy",
 1:"Lonely",

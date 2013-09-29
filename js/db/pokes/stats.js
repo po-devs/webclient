@@ -1,3 +1,4 @@
+if(!pokedex.pokes)pokedex.pokes={};
 pokedex.pokes.stats = {
 0:[50,50,50,50,50,50],
 1:[45,49,49,65,65,45],

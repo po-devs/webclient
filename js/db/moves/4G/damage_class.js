@@ -1,3 +1,5 @@
+if(!pokedex.moves)pokedex.moves={};
+if(!pokedex.moves.damage_class)pokedex.moves.damage_class=[];
 pokedex.moves.damage_class[4] = {
 0:0,
 1:1,

@@ -1,3 +1,4 @@
+if(!pokedex.abilities)pokedex.abilities={};
 pokedex.abilities.abilities = {
 0:"(No Ability)",
 1:"Stench",

@@ -1,3 +1,5 @@
+if(!pokedex.moves)pokedex.moves={};
+if(!pokedex.moves.effect)pokedex.moves.effect=[];
 pokedex.moves.effect[4] = {
 0:"No effect",
 1:"Inflicts regular damage with no additional effect.",

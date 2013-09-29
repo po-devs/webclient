@@ -1,3 +1,4 @@
+if(!pokedex.abilities)pokedex.abilities={};
 pokedex.abilities.ability_desc = {
 0:true,
 1:"The stench helps keep wild Pokémon away.",

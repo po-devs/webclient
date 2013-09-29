@@ -1,3 +1,4 @@
+if(!pokedex.pokes)pokedex.pokes={};
 pokedex.pokes.height = {
 0:true,
 1:0.7,

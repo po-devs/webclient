@@ -1,3 +1,4 @@
+if(!pokedex.pokes)pokedex.pokes={};
 pokedex.pokes.pokemons = {
 0:"Missingno",
 1:"Bulbasaur",

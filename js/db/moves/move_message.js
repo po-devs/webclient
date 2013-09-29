@@ -1,3 +1,4 @@
+if(!pokedex.moves)pokedex.moves={};
 pokedex.moves.move_message = {
 0:true,
 1:"%f had its energy drained!|%s devoured %f's dreams!|%s sucked up the Liquid Ooze!",

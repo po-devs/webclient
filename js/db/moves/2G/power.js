@@ -1,3 +1,5 @@
+if(!pokedex.moves)pokedex.moves={};
+if(!pokedex.moves.power)pokedex.moves.power=[];
 pokedex.moves.power[2] = {
 0:0,
 1:40,

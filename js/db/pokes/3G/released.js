@@ -1,3 +1,5 @@
+if(!pokedex.pokes)pokedex.pokes={};
+if(!pokedex.pokes.released)pokedex.pokes.released=[];
 pokedex.pokes.released[3] = {
 0:true,
 1:true,

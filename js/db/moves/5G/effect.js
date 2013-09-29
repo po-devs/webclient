@@ -1,3 +1,5 @@
+if(!pokedex.moves)pokedex.moves={};
+if(!pokedex.moves.effect)pokedex.moves.effect=[];
 pokedex.moves.effect[5] = {
 0:"No Effect",
 2:"Has a higher chance of a critical hit. (12.5%)",

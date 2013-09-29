@@ -1,3 +1,4 @@
+if(!pokedex.pokes)pokedex.pokes={};
 pokedex.pokes.gender = {
 0:0,
 1:3,
