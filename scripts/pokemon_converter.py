@@ -50,9 +50,14 @@ def deal_with_file(path, gen="0", file=""):
     ensure_dir(output_name)
 
     print ("writing into " + output_name)
-    output = open(output_name, "w");
+    output = open(output_name, "wb");
 
-    output.write("pokedex.pokes." + file);
+    typepath = "pokedex.pokes"
+    filepath = typepath+"."+file
+    output.write("if(!"+typepath+")"+typepath+"={};\n")
+    if gen != "0":
+        output.write("if(!"+filepath+")"+filepath+"=[];\n")
+    output.write(filepath);
     if gen != "0":
         output.write("[" + gen + "]")
     output.write(" = {\n")

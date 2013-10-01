@@ -1,3 +1,5 @@
+if(!pokedex.pokes)pokedex.pokes={};
+if(!pokedex.pokes.ability2)pokedex.pokes.ability2=[];
 pokedex.pokes.ability2[5] = {
 0:0,
 1:0,

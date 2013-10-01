@@ -1,3 +1,4 @@
+if(!pokedex.items)pokedex.items={};
 pokedex.items.berries_gen2 = {
 1000:true,
 1001:true,

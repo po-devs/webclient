@@ -1,3 +1,4 @@
+if(!pokedex.status)pokedex.status={};
 pokedex.status.stats = {
 0:"Life Points",
 1:"Attack",

@@ -1,3 +1,4 @@
+if(!pokedex.gens)pokedex.gens={};
 pokedex.gens.gens = {
 1:[1st,gen],
 2:[2nd,gen],

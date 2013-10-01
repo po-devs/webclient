@@ -1,3 +1,5 @@
+if(!pokedex.pokes)pokedex.pokes={};
+if(!pokedex.pokes.released)pokedex.pokes.released=[];
 pokedex.pokes.released[4] = {
 0:"Missingno",
 1:"Bulbasaur",

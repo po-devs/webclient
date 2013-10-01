@@ -1,3 +1,5 @@
+if(!pokedex.pokes)pokedex.pokes={};
+if(!pokedex.pokes.all_moves)pokedex.pokes.all_moves=[];
 pokedex.pokes.all_moves[1] = {
 1:[14,15,22,33,34,36,38,45,72,73,74,75,76,77,79,92,99,102,104,115,117,156,164],
 2:[14,15,22,33,34,36,38,45,72,73,74,75,76,77,79,92,99,102,104,115,117,156,164],

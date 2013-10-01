@@ -1,3 +1,4 @@
+if(!pokedex.gens)pokedex.gens={};
 pokedex.gens.versions = {
 1:0:"Red/Blue",
 1:1:"Yellow",

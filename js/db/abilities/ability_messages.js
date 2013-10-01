@@ -1,3 +1,4 @@
+if(!pokedex.abilities)pokedex.abilities={};
 pokedex.abilities.ability_messages = {
 0:true,
 2:"%s's Aftermath damages %f!|%f is unaffected by Aftermath.",

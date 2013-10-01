@@ -1,3 +1,4 @@
+if(!pokedex.items)pokedex.items={};
 pokedex.items.items_gen4 = {
 0:true,
 1:true,

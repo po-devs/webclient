@@ -1,3 +1,4 @@
+if(!pokedex.moves)pokedex.moves={};
 pokedex.moves.moves = {
 0:"(No Move)",
 1:"Pound",
