@@ -192,7 +192,7 @@ PlayerList.prototype.setPlayers = function(playerIds) {
 };
 
 PlayerList.prototype.updatePlayerCount = function () {
-    $("#players_count").text(this.ids.length + (this.ids.length != 1 ? " Users" : "User"));
+    $("#players_count").text(this.ids.length + (this.ids.length != 1 ? " Users" : " User"));
 };
 
 PlayerList.prototype.createPlayerItem = function(id) {

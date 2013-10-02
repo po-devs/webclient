@@ -692,6 +692,8 @@ parseCommand = function(message) {
     } else if (cmd === "login") {
         var params = JSON.parse(data);
         players.login(params.id, params.info);
+
+        websocket.send("getrankings|" + params.id);
     } else if (cmd === "unregistered") {
         $("#register").attr("disabled", false);
     } else if (cmd === "pm") {
@@ -739,5 +741,9 @@ parseCommand = function(message) {
         var battleid = data.split("|")[0];
         var result = JSON.parse(data.slice(battleid.length+1));
         battles.battleEnded(battleid, result);
+    } else if (cmd === "rankings") {
+        var id = data.split("|")[0];
+        var result = JSON.parse(data.slice(id.length+1));
+        console.log(JSON.stringify(result));
     }
 };
