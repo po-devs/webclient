@@ -5,6 +5,7 @@ html, body {
 	height:100%;
 	padding:0;
 	margin:0;
+	overflow:hidden;
 }
 
 input {
@@ -108,6 +109,7 @@ input:focus:-ms-input-placeholder {
 
 #teambuilder {
 	overflow:auto;
+	position:relative;
 }
 
 .middle_block#teambuilder {
@@ -328,7 +330,7 @@ ul#player-list li  {
 	cursor:pointer;
 }
 
-.click_button  {
+.click_button {
 	display:block;
 	margin:3px;
 	float:left;
@@ -548,6 +550,10 @@ ul#rankings li {
 	cursor:pointer;
 }
 
+.pokemon-slot-shiny {
+	display:none;
+}
+
 .pokemon-slot-name {
 	color:#363636;
 	background:transparent;
@@ -762,6 +768,10 @@ ul#rankings li {
 }
 
 /* end pokemon types */
+
+.pokemon-hidden-power-ivs-selection {
+	display:none;
+}
 
 .pokemon-evs-value, .pokemon-ivs-value {
 	height:20px !important;
@@ -1008,4 +1018,11 @@ div#player-dialog.ui-dialog-content.ui-widget-content {
 
 .ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .click_button:hover {
 	background-color:#3285d3;
+}
+
+div.player-info-battle {
+	margin:0px 5px;
+	font-weight:bold;
+	text-align:center;
+	font-style:italic;
 }

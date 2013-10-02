@@ -1,6 +1,7 @@
 (function( $ ) {
 		$.widget( "custom.combobox", {
 			_create: function() {
+				this.element.addClass('ui-combobox-input');
 				this.wrapper = $( "<span>" )
 					.addClass( "custom-combobox" )
 					.insertAfter( this.element );
@@ -122,6 +123,7 @@
 			},
 
 			_destroy: function() {
+				this.element.removeClass('ui-combobox-input');
 				this.wrapper.remove();
 				this.element.show();
 			}

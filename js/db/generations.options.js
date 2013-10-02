@@ -10,6 +10,7 @@ pokedex.generations.options = {
 	nature:false,
 	item:false,
 	evs:false,
+	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15],
 	sprite_folder:'http://pokemon-online.eu/images/pokemon/red-blue/'
 },
 2:{
@@ -23,6 +24,7 @@ pokedex.generations.options = {
 	nature:false,
 	item:true,
 	evs:false,
+	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 	sprite_folder:'http://pokemon-online.eu/images/pokemon/crystal/'
 },
 3:{
@@ -36,6 +38,7 @@ pokedex.generations.options = {
 	nature:true,
 	item:true,
 	evs:true,
+	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 	sprite_folder:'http://pokemon-online.eu/images/pokemon/emerald/'
 },
 4:{
@@ -49,6 +52,7 @@ pokedex.generations.options = {
 	nature:true,
 	item:true,
 	evs:true,
+	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 	sprite_folder:'http://pokemon-online.eu/images/pokemon/platinum/'
 },
 5:{
@@ -62,6 +66,7 @@ pokedex.generations.options = {
 	nature:true,
 	item:true,
 	evs:true,
+	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 	sprite_folder:'http://pokemon-online.eu/images/pokemon/black-white/'
 }
 };

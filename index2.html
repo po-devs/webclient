@@ -153,73 +153,78 @@
 					<div class="pokemon-slot-top-left">
 						<span class="pokemon-slot-sprite">
 							<img src="http://pokemon-online.eu/images/pokemon/black-white/3.png" alt="" />
+							<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
 						</span>
 						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
 						<span class="pokemon-slot-type-block">
 							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
 						</span>
 						<br />
-						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
-						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
-						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
-						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
-						<br style="clear:left;" />
+						<div class="pokemon-slot-gender-selection">
+							<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
+							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
+							<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
+							<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
+							<br style="clear:left;" />
+						</div>
 						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
 					</div>
 					<div class="pokemon-slot-top-right">
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">HP</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
-								<span class="pokemon-slot-stat-value">
-									130
+						<div class="pokemon-slot-stats">
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">HP</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+									<span class="pokemon-slot-stat-value">
+										130
+									</span>
 								</span>
-							</span>
-						</div>
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">Attack</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
-								<span class="pokemon-slot-stat-value">
-									70
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Attack</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+									<span class="pokemon-slot-stat-value">
+										70
+									</span>
 								</span>
-							</span>
-						</div>
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">Defense</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
-								<span class="pokemon-slot-stat-value">
-									115
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Defense</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+									<span class="pokemon-slot-stat-value">
+										115
+									</span>
 								</span>
-							</span>
-						</div>
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">Sp. Attack</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
-								<span class="pokemon-slot-stat-value">
-									111
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Sp. Attack</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+									<span class="pokemon-slot-stat-value">
+										111
+									</span>
 								</span>
-							</span>
-						</div>
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">Sp. Defense</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
-								<span class="pokemon-slot-stat-value">
-									121
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Sp. Defense</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+									<span class="pokemon-slot-stat-value">
+										121
+									</span>
 								</span>
-							</span>
-						</div>
-						<div class="pokemon-slot-stat-content">
-							<span class="pokemon-slot-stat-name">Speed</span>
-							<span class="pokemon-slot-stat-block">
-								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
-								<span class="pokemon-slot-stat-value">
-									30
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Speed</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+									<span class="pokemon-slot-stat-value">
+										30
+									</span>
 								</span>
-							</span>
+							</div>
 						</div>
 						<br />
 						<span class="click_button pokemon-slot-advanced">Advanced</span>
@@ -281,27 +286,30 @@
 						<option>Leftovers</option>
 					</select>
 					<br />
+					<div class="pokemon-hidden-power-ivs-selection"></div>
 					<br />
-					<span class="pokemon-evs">
-						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
-						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
-					</span>
-					<span class="pokemon-evs">
-						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
-						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
-					</span>
-					<span class="pokemon-evs">
-						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
-						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
-					</span>
-					<span class="pokemon-evs">
-						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
-						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
-					</span>
-					<span class="pokemon-evs">
-						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
-						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
-					</span>
+					<div class="pokemon-evs-selectors">
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+							<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+							<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+							<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+					</div>
 					<br style="clear:both;" /><br />
 					<div class="moves-list-container">
 						<table class="moves-list">
@@ -799,6 +807,7 @@
 						<option>Leftovers</option>
 					</select>
 					<br />
+					<div class="pokemon-hidden-power-ivs-selection"></div>
 					<br />
 					<span class="pokemon-evs">
 						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
@@ -1732,14 +1741,26 @@
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+	<!-- Team Builder stuff -->
+	<script type="text/javascript">var pokedex = {};pokedex.generations = {};pokedex.pokes = {};pokedex.pokes.released = {};pokedex.status = {};pokedex.types = {};pokedex.natures = {};pokedex.pokes.stats = {}</script>
+	<script type="text/javascript" src="js/db/generations.js"></script>
+	<script type="text/javascript" src="js/db/generations.options.js"></script>
+	<script type="text/javascript" src="js/db/pokes/1G/released.js"></script>
+	<script type="text/javascript" src="js/db/pokes/2G/released.js"></script>
+	<script type="text/javascript" src="js/db/pokes/3G/released.js"></script>
+	<script type="text/javascript" src="js/db/pokes/4G/released.js"></script>
+	<script type="text/javascript" src="js/db/pokes/5G/released.js"></script>
+	<script type="text/javascript" src="js/db/natures/nature.js"></script>
+	<script type="text/javascript" src="js/db/status/stats.js"></script>
+	<script type="text/javascript" src="js/db/types/types.js"></script>
+	<script type="text/javascript" src="js/teambuilder.js"></script>
+	<!-- end of Team Builder stuff -->
 	<script type="text/javascript" src="js/style.js"></script>
     <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
 	<script type="text/javascript" src="libs/jquery.knob.js"></script>
 	<script type="text/javascript" src="libs/jquery.formValues.js"></script>
     <script src="libs/md5.js"></script>
     <script src="libs/utilities.js"></script>
-	<script type="text/javascript">var pokedex = {};pokedex.generations = {};</script>
-	<script type="text/javascript" src="js/db/generations.js"></script>
     <script src="js/channeltab.js"></script>
     <script src="js/battles.js"></script>
     <script src="js/players.js"></script>

@@ -34,6 +34,10 @@ $(document).ready(function() {
 	
 	/* Teambuilder */
 	
+	$("#team_form").on('submit', function(e) {
+		e.preventDefault();
+	});
+	
 	$("#pokemon-parameters .icon-gear").on('click', function() {
 		$("#team-infos").toggle();
 	});
@@ -111,7 +115,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#tb-team-generation-value").fillSelect(pokedex.generations.generations).val($(this).find('option:last-child').val()).combobox();
+	//$("#tb-team-generation-value").fillSelect(pokedex.generations.generations).val($(this).find('option:last-child').val()).combobox();
 	$(".moves-list tr").on('click', function() {
 		var move_name = $(this).find('.move-name').text();
 		var moves = $(this).closest('.pokemon-slot').find('.pokemon-move-selection');
@@ -151,4 +155,6 @@ $(document).ready(function() {
 		$('.pokemon-tab').removeClass('active-pokemon-tab').eq($(this).index()).addClass('active-pokemon-tab');
 		$('.pokemon-slot').removeClass('active-pokemon-slot').eq($(this).index()).addClass('active-pokemon-slot');
 	});
+	
+	var tb = new teambuilder();
 });
