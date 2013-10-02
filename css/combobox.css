@@ -3,25 +3,34 @@
 	position:relative;
 	display:inline-block;
 	font-size:12px;
-	border:none;
 	background:none;
 	height:40px;
 	line-height:40px;
 	margin-left:4%;
+	z-index:1001;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	border:1px solid #f0f0f0;
+	border-radius:3px;
+}
+
+.ui-autocomplete {
+	max-height:200px;
+    overflow-y:auto;
 }
 
 .custom-combobox-toggle {
 	position:absolute;
 	width:20%;
 	top:0;
+	right:0;
 	bottom:0;
 	padding:0;
+	z-index:1000;
 	height:40px;
 	border:none;
 	line-height:40px;
 	background:#f0f0f0;
-	border-top-right-radius:3px;
-	border-bottom-right-radius:3px;
 }
 
 .custom-combobox-toggle .ui-icon {
@@ -38,7 +47,7 @@
 }
 
 .custom-combobox-input {
-	width:80%;
+	width:100%;
 	margin:0;
 	text-align:center;
 	border:none;
@@ -60,7 +69,6 @@ ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
 	width:100%;
 	padding-top:6px;
 	padding-bottom:6px;
-	padding-right:25%;
 	visibility:visible;
 	margin-top:-5px;
 	margin-left:0px;
@@ -73,7 +81,10 @@ ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all li a {
 	color:#737373;
 }
 
-ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all li:last-child {
-	border-bottom-left-radius:3px;
-	border-bottom-right-radius:3px;
+ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all li a.ui-state-focus {
+	width:auto;
+	margin:0px;
+	background:#e4e4e4;
+	border:none;
+	border-radius:0px;
 }

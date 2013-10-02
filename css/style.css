@@ -5,6 +5,7 @@ html, body {
 	height:100%;
 	padding:0;
 	margin:0;
+	overflow:hidden;
 }
 
 .page {
@@ -113,63 +114,93 @@ input:focus:-ms-input-placeholder {
 
 #teambuilder {
 	overflow:auto;
+	position:relative;
 }
 
-.middle_block#content {
+.middle_block#teambuilder {
 	display:block;
 }
 
-#tab-titles {
+div#channel-tabs {
+	padding:0px;
+	border:none;
+	background:none;
+	font-family:inherit;
+	font-size:inherit;
+}
+
+ul#tab-titles.ui-tabs-nav.ui-sortable {
     overflow-x:auto;
 	display:table;
 	width:100%;
 	height:40px;
+	line-height:40px;
+	background:none;
+	outline:none;
+	border:none;
+	font-size:inherit;
+	font-family:inherit;
+	list-style:none;
+	border-radius:0px;
 }
 
-#tab-titles li {
+ul#tab-titles.ui-tabs-nav.ui-sortable li {
 	display:table-cell;
+	float:none;
+	position:static;
 	color:#abaaaa;
 	min-width:150px;
 	height:40px;
 	line-height:40px;
 	text-align:center;
+	list-style:none;
+	background:none;
 	background-color:#e4e4e4;
+	border:none;
+	white-space:normal;
 	border-right:1px solid #d9d9d9;
+	border-radius:0px;
 	cursor:pointer;
 }
 
-ul#tab-titles a {
+ul#tab-titles.ui-tabs-nav.ui-sortable a {
 	display:block;
 	color:#abaaaa;
 	text-decoration:none;
+	cursor:pointer;
+	float:none;
+	padding:0px;
+	
 }
 
-ul#tab-titles, ul#tab-titles li {
+ul#tab-titles.ui-tabs-nav.ui-sortable, ul#tab-titles.ui-tabs-nav.ui-sortable li {
 	margin:0;padding:0;
 }
 
-#tab-titles li i {
+ul#tab-titles.ui-tabs-nav.ui-sortable li i {
 	float:right;
 	margin-right:5px;
 	margin-top:3px;
 }
 
-#tab-titles li:last-child {
+ul#tab-titles.ui-tabs-nav.ui-sortable li:last-child {
 	border-right:none;
 }
 
-#tab-titles li:hover {
+ul#tab-titles.ui-tabs-nav.ui-sortable li:hover {
 	background-color:#dbdbdb;
 }
 
-#tab-titles li.ui-tabs-active {
+ul#tab-titles.ui-tabs-nav.ui-sortable li.ui-tabs-active {
 	color:#ffffff;
 	background-color:#363636;
 }
 
-#tab-titles li i:hover {
+ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 	color:#000000;
 }
+
+
 
 #announcements {
 	margin:20px;
@@ -304,7 +335,7 @@ ul#player-list li  {
 	cursor:pointer;
 }
 
-.click_button  {
+.click_button {
 	display:block;
 	margin:3px;
 	float:left;
@@ -439,30 +470,19 @@ ul#rankings li {
 
 /* Teambuilder */
 
-.pokemon-tabs-line {
-	display:table;
-	width:100%;
-	border-top:1px solid #d9d9d9;
-}
-
-#teambuilder .pokemon-tabs-line:first-child {
-	border-top:none;
-}
-
 .pokemon-tab {
-	display:table-cell;
+	display:block;
+	-moz-box-sizing:border-box;
 	box-sizing:border-box;
-	width:auto;
+	width:33.333333%;
+	float:left;
 	height:40px;
 	line-height:40px;
 	color:#abaaaa;
 	background-color:#e4e4e4;
+	border-top:1px solid #d9d9d9;
 	border-right:1px solid #d9d9d9;
 	cursor:pointer;
-}
-
-.pokemon-tabs-line .pokemon-tab:last-child {
-	border-right:none;
 }
 
 .pokemon-tab:hover {
@@ -491,6 +511,7 @@ ul#rankings li {
 
 #team-infos {
 	display:none;
+	margin-bottom:50px;
 }
 
 #team_form {
@@ -532,6 +553,10 @@ ul#rankings li {
 .pokemon-slot-sprite img {
 	margin:auto;
 	cursor:pointer;
+}
+
+.pokemon-slot-shiny {
+	display:none;
 }
 
 .pokemon-slot-name {
@@ -666,6 +691,7 @@ ul#rankings li {
 
 .pokemon-slot-advanced-content {
 	display:none;
+	margin:25px 0px;
 }
 
 /* pokemon types colors */
@@ -742,13 +768,17 @@ ul#rankings li {
 	background-color:#f28ff2;
 }
 
-.pokemon-slot-type.unknown {
+.pokemon-slot-type.type_17 { /* unknown */
 	background-color:#39b37d;
 }
 
 /* end pokemon types */
 
-.pokemon-evs-value {
+.pokemon-hidden-power-ivs-selection {
+	display:none;
+}
+
+.pokemon-evs-value, .pokemon-ivs-value {
 	height:20px !important;
 	line-height:20px !important;
 	margin-top:50px !important;
@@ -758,19 +788,46 @@ ul#rankings li {
 	-moz-border-radius:3px !important;
 }
 
-.pokemon-evs {
+.pokemon-ivs-value {
+	margin-top:42px !important;
+}
+
+.pokemon-evs, .pokemon-ivs, .pokemon-level, .pokemon-happiness {
 	display:block;
 	position:relative;
 	float:left;
 	width:20%;
 }
 
-.pokemon-evs div {
+.pokemon-ivs {
+	width:16.66%;
+}
+
+.pokemon-level, .pokemon-happiness {
+	width:50%;
+	margin:20px 0px;
+}
+
+.pokemon-level-name, .pokemon-happiness-name {
+	font-weight:bold;
+}
+
+.pokemon-level-display-value, .pokemon-happiness-display-value {
+	font-weight:normal;
+}
+
+.pokemon-level-value, .pokemon-happiness-value {
+	width:50%;
+	margin-right:5%;
+	float:right;
+}
+
+.pokemon-evs div, .pokemon-ivs div {
 	display:block !important;
 	margin:auto !important;
 }
 
-.pokemon-evs-stat-name {
+.pokemon-evs-stat-name, .pokemon-ivs-stat-name {
 	display:block;
 	position:absolute;
 	top:25px;
@@ -779,65 +836,198 @@ ul#rankings li {
 	text-align:center;
 }
 
-.moves-list {
-	display:table;
+.moves-list-container {
 	width:100%;
 	max-height:160px;
 	overflow:auto;
+}
+
+.moves-list {
+	width:100%;
 	background-color:#ffffff;
-	border-collapse:collapse;
-	border:1px solid #f2f2f2;
-	-moz-border-radius:3px;
-	border-radius:3px;
+	border-spacing:0px;
+	-moz-border-radius:5px;
+	border-radius:5px;
 }
 
 .move-infos {
-	display:table-row;
 	height:30px;
 	text-align:left;
 	line-height:30px;
 	font-size:12px;
 	color:#363636;
-	border:1px solid #f2f2f2;
-	border-bottom:1px solid transparent;
 	cursor:pointer;
 }
 
-.moves-list .move-infos:first-child {
-	border-top:1px solid transparent;
+.move-infos td:first-child {
+	border-left:1px solid #f2f2f2;
 }
 
-.moves-list .move-infos:hover {
+.move-infos td:last-child {
+	border-right:1px solid #f2f2f2;
+}
+
+.move-infos:hover td {
 	background-color:#e0e7ed;
-	border:1px solid #acc3d6;
+	border-color:#acc3d6;
+}
+
+.move-infos td {
+	border-top:1px solid #f2f2f2;
+	border-bottom:1px solid #f2f2f2;
 }
 
 .move-type, .move-category {
-	display:table-cell;
+	width:30px;
 }
 
-.move-type.pokemon-slot-type-block, .move-category.pokemon-slot-type-block {
-	padding:5px;
-	width:25px;
+.move-type .pokemon-slot-type-block, .move-category .pokemon-slot-type-block {
+	position:relative;
+	top:5px;
+	left:5px;
 }
 
 .move-name {
-	display:table-cell;
+	min-width:150px;
 	text-indent:10px;
 	font-weight:bold;
 }
 
 .move-pp {
-	display:table-cell;
 	width:60px;
 }
 
 .move-bp {
-	display:table-cell;
 	width:100px;
 }
 
 .move-accuracy {
-	display:table-cell;
 	width:110px;
+}
+
+.pokemon-move-selection{
+	width:24%;
+	float:left;
+	height:35px;
+	line-height:35px;
+	text-indent:10px;
+	margin:0.5%;
+	margin-top:10px;
+	border:1px solid #f2f2f2;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	-moz-border-radius:5px;
+	border-radius:5px;
+}
+
+#tb-team-name, #tb-team-tier-value, #tb-team-generation-value {
+	width:80%;
+	float:right;
+	height:35px;
+	line-height:35px;
+	text-indent:10px;
+	border:1px solid #f2f2f2;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	-moz-border-radius:5px;
+	border-radius:5px;
+}
+
+#tb-team-tier-value {
+	width:50%;
+}
+
+#tb-team-tier, #tb-team-generation {
+	width:47.5%;
+	float:left;
+}
+
+#tb-team-tier {
+	margin-right:5%;
+}
+
+#tb-team-generation .custom-combobox {
+	width:auto;
+	float:right;
+}
+
+label[for="tb-team-name"], label[for="tb-team-tier-value"], label[for="tb-team-generation-value"] {
+	height:35px;
+	line-height:35px;
+	font-weight:bold;
+}
+
+#save-team {
+	margin-left:15px;
+	margin-bottom:10px;
+}
+
+div.ui-dialog.ui-widget.ui-widget-content {
+	padding:0px;
+	font-family:inherit;
+	font-size:inherit;
+	background:#ffffff;
+	border:1px solid #d9d9d9;
+	border-radius:0px;
+}
+
+div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header {
+	height:40px;
+	line-height:40px;
+	padding:0px;
+	background:#dddddd;
+	border:none;
+	border-bottom:1px solid #d9d9d9;
+	border-radius:0px;
+	cursor:pointer;
+}
+
+div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header, div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header .ui-dialog-title {
+	color:#abaaaa;
+	text-indent:5px;
+	font-weight:inherit;
+}
+
+div#player-dialog.ui-dialog-content.ui-widget-content {
+	width:98%;
+	height:98%;
+	margin:1%;
+	padding:0px;
+	background:none;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix  {
+	text-align:center;
+	background:none;
+	border:none;
+	padding:0px;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .ui-dialog-buttonset {
+	display:inline-block;
+	float:none;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .click_button {
+	padding:5px 0px;
+	margin:3px;
+	font-size:inherit;
+	font-family:inherit;
+	color:#ffffff;
+	font-weight:bold;
+	background-image:none;
+	background-color:#1f5d96;
+	border:1px solid transparent;
+	cursor:pointer;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix .click_button:hover {
+	background-color:#3285d3;
+}
+
+div.player-info-battle {
+	margin:0px 5px;
+	font-weight:bold;
+	text-align:center;
+	font-style:italic;
 }

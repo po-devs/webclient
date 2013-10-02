@@ -24,55 +24,55 @@
 <!-- end used by PS -->
 
 <div class="page" id="registry-page">
-<div id="registry-content">
-    <div id="top-content">
-        <label for="relay">Relay</label>
-        <span style="float:right;" class="button" onClick="initWebsocket();">Load</span>
-        <input style="width:60%;" type="text" name="relay" id="relay" value="localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
-               autofocus="autofocus"/>
-        <br style="clear:both;" />
-        <label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />
-        <div id="servers-list-container">
-            <table id="servers-list">
-                <thead>
-                <tr>
-                    <th>Server Name</th>
-                    <th width="100">Players / Max</th>
-                    <th width="200">Advanced Connection</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr id="hidden-cell"><td colspan="3"></td></tr>
-                </tbody>
-            </table>
+    <div id="registry-content">
+        <div id="top-content">
+            <label for="relay">Relay</label>
+            <span style="float:right;" class="button" onClick="initWebsocket();">Load</span>
+            <input style="width:60%;" type="text" name="relay" id="relay" value="localhost:10508" onkeydown="if(event.keyCode==13) initWebsocket();"
+                   autofocus="autofocus"/>
+            <br style="clear:both;" />
+            <label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />
+            <div id="servers-list-container">
+                <table id="servers-list">
+                    <thead>
+                    <tr>
+                        <th>Server Name</th>
+                        <th width="100">Players / Max</th>
+                        <th width="200">Advanced Connection</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="hidden-cell"><td colspan="3"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
         </div>
-        <br />
+        <div id="bottom-content">
+            <strong>Server Description</strong><br />
+            <div id="server-description">
+                <!-- <iframe></iframe> -->
+            </div><br />
+            <label for="advanced-connection">Advanced Connection</label><input type="text" name="advanced-connection" id="advanced-connection" /><br style="clear:both;" />
+            <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
+            <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
+            <br style="clear:both;" />
+            <span class="button" onclick="connect()">Connect</span><br style="clear:both;" />
+        </div>
     </div>
-    <div id="bottom-content">
-        <strong>Server Description</strong><br />
-        <div id="server-description">
-            <!-- <iframe></iframe> -->
-        </div><br />
-        <label for="advanced-connection">Advanced Connection</label><input type="text" name="advanced-connection" id="advanced-connection" /><br style="clear:both;" />
-        <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
-        <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
-        <br style="clear:both;" />
-        <span class="button" onclick="connect()">Connect</span><br style="clear:both;" />
-    </div>
-</div>
 </div>
 <div class="page" style="display: none">
-    <div id="sidebar">
-        <span id="po_title">Pokémon <span>Online</span></span>
-        <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
-        <span id="trainer_username">Guest</span>
-        <br style="clear:both;" />
-        <span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
-        <div class="dropdown">
-            <span class="dropdown_button">Teams<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
-            <div class="dropdown_content">
-                <div class="team_preview current_team">
-                    <div class="team_preview_options">
+<div id="sidebar">
+    <span id="po_title">Pokémon <span>Online</span></span>
+    <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
+    <span id="trainer_username">Guest</span>
+    <br style="clear:both;" />
+    <span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
+    <div class="dropdown">
+        <span class="dropdown_button">Teams<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+        <div class="dropdown_content">
+            <div class="team_preview current_team">
+                <div class="team_preview_options">
                             <span class="icon-stack">
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-remove icon-light"></i>
@@ -81,17 +81,17 @@
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-cog icon-light"></i>
                             </span>
-                    </div>
-                    <img src="http://pokemon-online.eu/images/poke_icons/3.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/6.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/9.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/25.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/143.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/196.png" alt="" /><br />
-                    Tier: <strong>Wifi OU</strong>
                 </div>
-                <div class="team_preview">
-                    <div class="team_preview_options">
+                <img src="http://pokemon-online.eu/images/poke_icons/3.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/6.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/9.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/25.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/143.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/196.png" alt="" /><br />
+                Tier: <strong>Wifi OU</strong>
+            </div>
+            <div class="team_preview">
+                <div class="team_preview_options">
                             <span class="icon-stack">
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-remove icon-light"></i>
@@ -100,17 +100,17 @@
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-cog icon-light"></i>
                             </span>
-                    </div>
-                    <img src="http://pokemon-online.eu/images/poke_icons/100.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/385.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/130.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/400.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/149.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/197.png" alt="" /><br />
-                    Tier: <strong>Wifi Ubers</strong>
                 </div>
-                <div class="team_preview">
-                    <div class="team_preview_options">
+                <img src="http://pokemon-online.eu/images/poke_icons/100.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/385.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/130.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/400.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/149.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/197.png" alt="" /><br />
+                Tier: <strong>Wifi Ubers</strong>
+            </div>
+            <div class="team_preview">
+                <div class="team_preview_options">
                             <span class="icon-stack">
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-remove icon-light"></i>
@@ -119,48 +119,48 @@
                                 <i class="icon-circle icon-stack-base"></i>
                                 <i class="icon-cog icon-light"></i>
                             </span>
-                    </div>
-                    <img src="http://pokemon-online.eu/images/poke_icons/50.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/210.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/125.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/302.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/211.png" alt="" />
-                    <img src="http://pokemon-online.eu/images/poke_icons/81.png" alt="" /><br />
-                    Tier: <strong>Adv OU</strong>
                 </div>
-                <div class="push_right">
-                    <span id="create_team" class="click_button">New Team</span>
-                    <span class="click_button">Import</span>
-                </div>
+                <img src="http://pokemon-online.eu/images/poke_icons/50.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/210.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/125.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/302.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/211.png" alt="" />
+                <img src="http://pokemon-online.eu/images/poke_icons/81.png" alt="" /><br />
+                Tier: <strong>Adv OU</strong>
+            </div>
+            <div class="push_right">
+                <span id="create_team" class="click_button">New Team</span>
+                <span class="click_button">Import</span>
             </div>
         </div>
-        <br style="clear:both;" />
-        <div class="dropdown">
-            <span class="dropdown_button">Rankings<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
-            <div class="dropdown_content push_right">
-                <ul id="rankings">
-                    <li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
-                    <li><strong>#24</strong> <em>(1420)</em> - <strong>Gen 3 UU</strong></li>
-                    <li><strong>#3</strong> <em>(1580)</em> - <strong>Challenge Cup</strong></li>
-                    <li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
-                    <li><strong>#31</strong> <em>(1220)</em> - <strong>Gen 2 UU</strong></li>
-                    <li><strong>#2</strong> <em>(1600)</em> - <strong>ADV OU</strong></li>
-                </ul>
-                <span class="click_button">View All</span>
-            </div>
-        </div><br />
     </div>
-    <div id="users_list">
-        <span id="players_count">Users</span>
-        <input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
-        <ul id="player-list">
-        </ul>
-    </div>
-    <div class="middle_block" id="user_params">
-        User stuff
-    </div>
-    <div class="middle_block" id="teambuilder">
-        <div id="pokemon-tabs">
+    <br style="clear:both;" />
+    <div class="dropdown">
+        <span class="dropdown_button">Rankings<i class="icon-chevron-down"></i><i class="icon-chevron-up"></i></span>
+        <div class="dropdown_content push_right">
+            <ul id="rankings">
+                <li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+                <li><strong>#24</strong> <em>(1420)</em> - <strong>Gen 3 UU</strong></li>
+                <li><strong>#3</strong> <em>(1580)</em> - <strong>Challenge Cup</strong></li>
+                <li><strong>#1</strong> <em>(1650)</em> - <strong>Gen 5 OU</strong></li>
+                <li><strong>#31</strong> <em>(1220)</em> - <strong>Gen 2 UU</strong></li>
+                <li><strong>#2</strong> <em>(1600)</em> - <strong>ADV OU</strong></li>
+            </ul>
+            <span class="click_button">View All</span>
+        </div>
+    </div><br />
+</div>
+<div id="users_list">
+    <span id="players_count">Users</span>
+    <input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
+    <ul id="player-list">
+    </ul>
+</div>
+<div class="middle_block" id="user_params">
+    User stuff
+</div>
+<div class="middle_block" id="teambuilder">
+    <div id="pokemon-tabs">
                 <span class="pokemon-tabs-line">
                 <span class="pokemon-tab active-pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
                 <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
@@ -171,108 +171,108 @@
                 <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
                 <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
                 </span>
-        </div>
-        <form id="team_form" action="" method="post">
-            <div id="pokemon-parameters">
-                <i class="icon-gear icon-large"></i>
-                <div id="team-infos">
-                    Hihaaaa
-                </div>
-                <div class="pokemon-slot active-pokemon-slot">
-                    <div class="pokemon-slot-top-left">
+    </div>
+    <form id="team_form" action="" method="post">
+        <div id="pokemon-parameters">
+            <i class="icon-gear icon-large"></i>
+            <div id="team-infos">
+                Hihaaaa
+            </div>
+            <div class="pokemon-slot active-pokemon-slot">
+                <div class="pokemon-slot-top-left">
                         <span class="pokemon-slot-sprite">
                             <img src="http://pokemon-online.eu/images/pokemon/black-white/3.png" alt="" />
                         </span>
-                        <input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+                    <input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
                         <span class="pokemon-slot-type-block">
                             <span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
                         </span><br />
-                        <label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
-                        <input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
-                        <label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
-                        <input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
-                        <br style="clear:left;" />
-                        <input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
-                    </div>
-                    <div class="pokemon-slot-top-right">
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">HP</span>
+                    <label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
+                    <input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
+                    <label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
+                    <input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
+                    <br style="clear:left;" />
+                    <input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+                </div>
+                <div class="pokemon-slot-top-right">
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">HP</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     130
                                 </span>
                             </span>
-                        </div>
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">Attack</span>
+                    </div>
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">Attack</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     70
                                 </span>
                             </span>
-                        </div>
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">Defense</span>
+                    </div>
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">Defense</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     115
                                 </span>
                             </span>
-                        </div>
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">Sp. Attack</span>
+                    </div>
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">Sp. Attack</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     111
                                 </span>
                             </span>
-                        </div>
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">Sp. Defense</span>
+                    </div>
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">Sp. Defense</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     121
                                 </span>
                             </span>
-                        </div>
-                        <div class="pokemon-slot-stat-content">
-                            <span class="pokemon-slot-stat-name">Speed</span>
+                    </div>
+                    <div class="pokemon-slot-stat-content">
+                        <span class="pokemon-slot-stat-name">Speed</span>
                             <span class="pokemon-slot-stat-block">
                                 <span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
                                 <span class="pokemon-slot-stat-value">
                                     30
                                 </span>
                             </span>
-                        </div><br />
-                        <span class="click_button pokemon-slot-advanced">Advanced</span>
-                    </div>
-                    <br style="clear:both;" /><br />
-                    <div class="pokemon-slot-advanced-content">
-                        Advanced stuff here
-                    </div>
-                    <select class="pokemon-slot-hidden-power-type">
-                        <option>Hidden Power</option>
-                        <option>Grass</option>
-                    </select>
-                    <select class="pokemon-slot-ability">
-                        <option>Ability</option>
-                        <option>Overgrow</option>
-                    </select>
-                    <select class="pokemon-slot-nature">
-                        <option>Nature</option>
-                        <option>Hardy</option>
-                    </select>
-                    <select class="pokemon-slot-item">
-                        <option>Item</option>
-                        <option>Leftovers</option>
-                    </select>
-                    <br /><br />
+                    </div><br />
+                    <span class="click_button pokemon-slot-advanced">Advanced</span>
                 </div>
+                <br style="clear:both;" /><br />
+                <div class="pokemon-slot-advanced-content">
+                    Advanced stuff here
+                </div>
+                <select class="pokemon-slot-hidden-power-type">
+                    <option>Hidden Power</option>
+                    <option>Grass</option>
+                </select>
+                <select class="pokemon-slot-ability">
+                    <option>Ability</option>
+                    <option>Overgrow</option>
+                </select>
+                <select class="pokemon-slot-nature">
+                    <option>Nature</option>
+                    <option>Hardy</option>
+                </select>
+                <select class="pokemon-slot-item">
+                    <option>Item</option>
+                    <option>Leftovers</option>
+                </select>
+                <br /><br />
+            </div>
                 <span class="pokemon-evs">
                     <span class="pokemon-evs-stat-name">Attack</span>
                     <input type="text" value="0" class="pokemon-evs-value" />
@@ -293,67 +293,67 @@
                     <span class="pokemon-evs-stat-name">Speed</span>
                     <input type="text" value="0" class="pokemon-evs-value" />
                 </span>
-                <br style="clear:both;" /><br />
-                <div class="moves-list">
-                    <div class="move-infos">
+            <br style="clear:both;" /><br />
+            <div class="moves-list">
+                <div class="move-infos">
                             <span class="move-type pokemon-slot-type-block">
                                 <span class="pokemon-slot-type grass">Grass</span>
                             </span>
                             <span class="move-category pokemon-slot-type-block">
                                 <span class="pokemon-slot-type fire">Special</span>
                             </span>
-                        <div class="move-name">Frenzy Plant</div>
-                        <div class="move-pp"><strong>5</strong> <em>PP</em></div>
-                        <div class="move-bp"><strong>150</strong> <em>Power</em></div>
-                        <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
-                    </div>
-                    <div class="move-infos">
-                            <span class="move-type pokemon-slot-type-block">
-                                <span class="pokemon-slot-type grass">Grass</span>
-                            </span>
-                            <span class="move-category pokemon-slot-type-block">
-                                <span class="pokemon-slot-type fire">Special</span>
-                            </span>
-                        <div class="move-name">Frenzy Plant</div>
-                        <div class="move-pp"><strong>5</strong> <em>PP</em></div>
-                        <div class="move-bp"><strong>150</strong> <em>Power</em></div>
-                        <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
-                    </div>
-                    <div class="move-infos">
-                            <span class="move-type pokemon-slot-type-block">
-                                <span class="pokemon-slot-type grass">Grass</span>
-                            </span>
-                            <span class="move-category pokemon-slot-type-block">
-                                <span class="pokemon-slot-type fire">Special</span>
-                            </span>
-                        <div class="move-name">Frenzy Plant</div>
-                        <div class="move-pp"><strong>5</strong> <em>PP</em></div>
-                        <div class="move-bp"><strong>150</strong> <em>Power</em></div>
-                        <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
-                    </div>
+                    <div class="move-name">Frenzy Plant</div>
+                    <div class="move-pp"><strong>5</strong> <em>PP</em></div>
+                    <div class="move-bp"><strong>150</strong> <em>Power</em></div>
+                    <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
                 </div>
-            </div>
-            <input id="save_team" class="click_button" type="submit" name="save_team" value="Save" />
-        </form>
-    </div>
-    <div class="middle_block" id="content">
-        <div id="channel-tabs">
-            <ul id="tab-titles">
-                <li>
-                    <a href="#channel-0">Console<i class="icon-remove-circle"></i></a>
-                </li>
-            </ul>
-            <div id="channel-0">
-                <div id="chatTextArea" class="textbox"></div>
-                <div class="send_chat_message">
-                    <p>
-                        <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
-                        <i class="icon-circle-arrow-right icon-large"></i>
-                    </p>
+                <div class="move-infos">
+                            <span class="move-type pokemon-slot-type-block">
+                                <span class="pokemon-slot-type grass">Grass</span>
+                            </span>
+                            <span class="move-category pokemon-slot-type-block">
+                                <span class="pokemon-slot-type fire">Special</span>
+                            </span>
+                    <div class="move-name">Frenzy Plant</div>
+                    <div class="move-pp"><strong>5</strong> <em>PP</em></div>
+                    <div class="move-bp"><strong>150</strong> <em>Power</em></div>
+                    <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
+                </div>
+                <div class="move-infos">
+                            <span class="move-type pokemon-slot-type-block">
+                                <span class="pokemon-slot-type grass">Grass</span>
+                            </span>
+                            <span class="move-category pokemon-slot-type-block">
+                                <span class="pokemon-slot-type fire">Special</span>
+                            </span>
+                    <div class="move-name">Frenzy Plant</div>
+                    <div class="move-pp"><strong>5</strong> <em>PP</em></div>
+                    <div class="move-bp"><strong>150</strong> <em>Power</em></div>
+                    <div class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></div>
                 </div>
             </div>
         </div>
+        <input id="save_team" class="click_button" type="submit" name="save_team" value="Save" />
+    </form>
+</div>
+<div class="middle_block" id="content">
+    <div id="channel-tabs">
+        <ul id="tab-titles">
+            <li>
+                <a href="#channel-0">Console<i class="icon-remove-circle"></i></a>
+            </li>
+        </ul>
+        <div id="channel-0">
+            <div id="chatTextArea" class="textbox"></div>
+            <div class="send_chat_message">
+                <p>
+                    <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
+                    <i class="icon-circle-arrow-right icon-large"></i>
+                </p>
+            </div>
+        </div>
     </div>
+</div>
 </div>
 
 <div id='player-dialog' title='User Menu'></div>
@@ -363,11 +363,24 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+<!-- Team Builder stuff -->
+<script type="text/javascript">var pokedex = {};pokedex.generations = {};pokedex.pokes = {};pokedex.pokes.released = {};pokedex.status = {};pokedex.types = {};pokedex.natures = {};pokedex.pokes.stats = {}</script>
+<script type="text/javascript" src="js/db/generations.js"></script>
+<script type="text/javascript" src="js/db/generations.options.js"></script>
+<script type="text/javascript" src="js/db/pokes/1G/released.js"></script>
+<script type="text/javascript" src="js/db/pokes/2G/released.js"></script>
+<script type="text/javascript" src="js/db/pokes/3G/released.js"></script>
+<script type="text/javascript" src="js/db/pokes/4G/released.js"></script>
+<script type="text/javascript" src="js/db/pokes/5G/released.js"></script>
+<script type="text/javascript" src="js/db/natures/nature.js"></script>
+<script type="text/javascript" src="js/db/status/stats.js"></script>
+<script type="text/javascript" src="js/db/types/types.js"></script>
+<script type="text/javascript" src="js/teambuilder.js"></script>
+<!-- end of Team Builder stuff -->
 <script type="text/javascript" src="js/style.js"></script>
 <!--<script src="libs/farbtastic.js" type="text/javascript"></script>-->
 <script type="text/javascript" src="libs/jquery.knob.js"></script>
-<script type="text/javascript" src="libs/jquery.cookie.js"></script>
-<script type="text/javascript" src="libs/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="libs/jquery.formValues.js"></script>
 <script src="libs/md5.js"></script>
 <script src="libs/utilities.js"></script>
 <script src="js/channeltab.js"></script>
@@ -378,7 +391,7 @@
 <script src="js/formatting.js"></script>
 <script src="js/index.js"></script>
 <script src="js/combobox.js"></script>
-
+<script src="libs/combobox.utilities.js"></script>
 <script src="libs/alertify.js"></script>
 
 <!-- there for now as it's dev version. Should be moved in initBattleData when out of dev -->
