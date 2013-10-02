@@ -1,0 +1,1589 @@
+<div id="pokemon-tabs">
+			<span class="pokemon-tab active-pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+		</div><br style="clear:both;" />
+		<form id="team_form" action="" method="post">
+			<div id="pokemon-parameters">
+				<i class="icon-gear icon-large"></i>
+				<div id="team-infos">
+					<label for="tb-team-name">Team Name</label><input type="text" name="team-name" id="tb-team-name" /><br style="clear:both;" />
+					<br />
+					<div id="tb-team-tier">
+						<label for="tb-team-tier-value">Tier Name</label><input type="text" name="team-tier" id="tb-team-tier-value" /><br style="clear:both;" />
+					</div>
+					<div id="tb-team-generation">
+						<label for="tb-team-generation-value">Generation</label><select name="team-generation" id="tb-team-generation-value"></select>
+						<br style="clear:both;" />					
+					</div>
+				</div>
+				<div class="pokemon-slot active-pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/3.png" alt="" />
+							<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<div class="pokemon-slot-gender-selection">
+							<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
+							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
+							<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
+							<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
+							<br style="clear:left;" />
+						</div>
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stats">
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">HP</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+									<span class="pokemon-slot-stat-value">
+										130
+									</span>
+								</span>
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Attack</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+									<span class="pokemon-slot-stat-value">
+										70
+									</span>
+								</span>
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Defense</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+									<span class="pokemon-slot-stat-value">
+										115
+									</span>
+								</span>
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Sp. Attack</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+									<span class="pokemon-slot-stat-value">
+										111
+									</span>
+								</span>
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Sp. Defense</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+									<span class="pokemon-slot-stat-value">
+										121
+									</span>
+								</span>
+							</div>
+							<div class="pokemon-slot-stat-content">
+								<span class="pokemon-slot-stat-name">Speed</span>
+								<span class="pokemon-slot-stat-block">
+									<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+									<span class="pokemon-slot-stat-value">
+										30
+									</span>
+								</span>
+							</div>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<div class="pokemon-ivs-selectors">
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+								<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+								<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+								<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+								<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+								<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+							<span class="pokemon-ivs">
+								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+								<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+							</span>
+						</div>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<div class="pokemon-hidden-power-ivs-selection"></div>
+					<br />
+					<div class="pokemon-evs-selectors">
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+							<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+							<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+						<span class="pokemon-evs">
+							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+							<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+						</span>
+					</div>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+				<div class="pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/9.png" alt="" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-2"></label>
+						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-2" type="radio" name="pokemon-slot-gender[]" value="male" />
+						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-2"></label>
+						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-2" type="radio" name="pokemon-slot-gender[]" value="female" />
+						<br style="clear:left;" />
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">HP</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									130
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+								<span class="pokemon-slot-stat-value">
+									70
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									115
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									111
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									121
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Speed</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+								<span class="pokemon-slot-stat-value">
+									30
+								</span>
+							</span>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<br />
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+							<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+							<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+							<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+							<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<br />
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+				<div class="pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/6.png" alt="" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-3"></label>
+						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-3" type="radio" name="pokemon-slot-gender[]" value="male" />
+						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-3"></label>
+						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-3" type="radio" name="pokemon-slot-gender[]" value="female" />
+						<br style="clear:left;" />
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">HP</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									130
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+								<span class="pokemon-slot-stat-value">
+									70
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									115
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									111
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									121
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Speed</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+								<span class="pokemon-slot-stat-value">
+									30
+								</span>
+							</span>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<br />
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+							<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+							<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+							<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+							<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<div class="pokemon-hidden-power-ivs-selection"></div>
+					<br />
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+				<div class="pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/12.png" alt="" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-4"></label>
+						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-4" type="radio" name="pokemon-slot-gender[]" value="male" />
+						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-4"></label>
+						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-4" type="radio" name="pokemon-slot-gender[]" value="female" />
+						<br style="clear:left;" />
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">HP</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									130
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+								<span class="pokemon-slot-stat-value">
+									70
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									115
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									111
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									121
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Speed</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+								<span class="pokemon-slot-stat-value">
+									30
+								</span>
+							</span>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<br />
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+							<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+							<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+							<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+							<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<br />
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+				<div class="pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/15.png" alt="" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-5"></label>
+						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-5" type="radio" name="pokemon-slot-gender[]" value="male" />
+						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-5"></label>
+						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-5" type="radio" name="pokemon-slot-gender[]" value="female" />
+						<br style="clear:left;" />
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">HP</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									130
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+								<span class="pokemon-slot-stat-value">
+									70
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									115
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									111
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									121
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Speed</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+								<span class="pokemon-slot-stat-value">
+									30
+								</span>
+							</span>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<br />
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+							<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+							<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+							<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+							<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<br />
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+				<div class="pokemon-slot">
+					<div class="pokemon-slot-top-left">
+						<span class="pokemon-slot-sprite">
+							<img src="http://pokemon-online.eu/images/pokemon/black-white/18.png" alt="" />
+						</span>
+						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<span class="pokemon-slot-type-block">
+							<span class="pokemon-slot-type grass">Grass</span><span class="pokemon-slot-type poison">Poison</span>
+						</span>
+						<br />
+						<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-6"></label>
+						<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-6" type="radio" name="pokemon-slot-gender[]" value="male" />
+						<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-6"></label>
+						<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-6" type="radio" name="pokemon-slot-gender[]" value="female" />
+						<br style="clear:left;" />
+						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+					</div>
+					<div class="pokemon-slot-top-right">
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">HP</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:80%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									130
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:48%" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-2x"></span>
+								<span class="pokemon-slot-stat-value">
+									70
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:65%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									115
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Attack</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:63%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-3x"></span>
+								<span class="pokemon-slot-stat-value">
+									111
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Sp. Defense</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:75%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-4x"></span>
+								<span class="pokemon-slot-stat-value">
+									121
+								</span>
+							</span>
+						</div>
+						<div class="pokemon-slot-stat-content">
+							<span class="pokemon-slot-stat-name">Speed</span>
+							<span class="pokemon-slot-stat-block">
+								<span style="width:24%;" class="pokemon-slot-stat-progress pokemon-slot-stat-progress-1x"></span>
+								<span class="pokemon-slot-stat-value">
+									30
+								</span>
+							</span>
+						</div>
+						<br />
+						<span class="click_button pokemon-slot-advanced">Advanced</span>
+					</div>
+					<br style="clear:both;" />
+					<br />
+					<div class="pokemon-slot-advanced-content">
+						<span class="pokemon-level">
+							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+							<div class="pokemon-level-value"></div>
+						</span>
+						<span class="pokemon-happiness">
+							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+							<div class="pokemon-happiness-value"></div>
+						</span>
+						<br style="clear:both;" />
+						<br />
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
+							<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
+							<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
+							<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
+							<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
+							<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<span class="pokemon-ivs">
+							<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
+							<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
+						</span>
+						<br style="clear:both;" />
+					</div>
+					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+						<option>Hidden Power</option>
+						<option>Grass</option>
+					</select>
+					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+						<option>Ability</option>
+						<option>Overgrow</option>
+					</select>
+					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+						<option>Nature</option>
+						<option>Hardy</option>
+					</select>
+					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+						<option>Item</option>
+						<option>Leftovers</option>
+					</select>
+					<br />
+					<br />
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
+						<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
+						<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
+						<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
+						<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<span class="pokemon-evs">
+						<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
+						<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
+					</span>
+					<br style="clear:both;" /><br />
+					<div class="moves-list-container">
+						<table class="moves-list">
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Frenzy Plant</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Sleep Powder</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Giga Drain</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Leech Seed</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Hidden Power</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+							<tr class="move-infos">
+								<td class="move-type">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type grass">Grass</span>
+									</span>
+								</td>
+								<td class="move-category">
+									<span class="pokemon-slot-type-block">
+										<span class="pokemon-slot-type fire">Special</span>
+									</span>
+								</td>
+								<td class="move-name">Energy Ball</td>
+								<td class="move-pp"><strong>5</strong> <em>PP</em></td>
+								<td class="move-bp"><strong>150</strong> <em>Power</em></td>
+								<td class="move-accuracy"><strong>100%</strong> <em>Accuracy</em></td>
+							</tr>
+						</table>
+					</div>
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<br style="clear:both;" />
+				</div>
+			</div>
+			<input id="save-team" class="click_button" type="submit" name="save_team" value="Save" />
+		</form>

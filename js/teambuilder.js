@@ -12,7 +12,7 @@ function teambuilder(generation) {
 		hp_id:0, // to exclude it from the EVs
 		special_stat:{ id:3, name:'Special', replace_ids:[3, 4]},
 		missingno:{icon:'http://pokemon-online.eu/images/poke_icons/0.png', sprite:'http://pokemon-online.eu/images/pokemon/black-white/0.png'},
-		unknown_type_id:17
+		unknown_type_id:18
 	};
 	this.setGeneration(generation != undefined ? generation : this.default_settings.generation);
 }
