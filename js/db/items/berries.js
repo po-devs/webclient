@@ -1,5 +1,5 @@
 if(!pokedex.items)pokedex.items={};
-pokedex.items.berries_list = {
+pokedex.items.berries = {
 0:"Cheri Berry",
 1:"Chesto Berry",
 2:"Pecha Berry",

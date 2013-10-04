@@ -1,6 +1,6 @@
 if(!pokedex.items)pokedex.items={};
-if(!pokedex.items.berries)pokedex.items.berries={};
-pokedex.items.berries[4] = {
+if(!pokedex.items.released_berries)pokedex.items.released_berries=[];
+pokedex.items.released_berries[3] = {
 0:true,
 1:true,
 2:true,
@@ -36,22 +36,6 @@ pokedex.items.berries[4] = {
 32:true,
 33:true,
 34:true,
-35:true,
-36:true,
-37:true,
-38:true,
-39:true,
-40:true,
-41:true,
-42:true,
-43:true,
-44:true,
-45:true,
-46:true,
-47:true,
-48:true,
-49:true,
-50:true,
 51:true,
 52:true,
 53:true,
@@ -61,8 +45,4 @@ pokedex.items.berries[4] = {
 57:true,
 58:true,
 59:true,
-60:true,
-61:true,
-62:true,
-63:true,
 };

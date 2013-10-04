@@ -1,6 +1,6 @@
 if(!pokedex.items)pokedex.items={};
-if(!pokedex.items.berries)pokedex.items.berries={};
-pokedex.items.berries[2] = {
+if(!pokedex.items.released_berries)pokedex.items.released_berries=[];
+pokedex.items.released_berries[2] = {
 1000:true,
 1001:true,
 1002:true,
