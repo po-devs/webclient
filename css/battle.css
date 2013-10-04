@@ -1,5 +1,3 @@
-.plouf { width:800px;height:300px;margin:auto;resize:both;overflow:scroll; }
-
 .battle {
 	display:table;
 	vertical-align:top;
@@ -29,16 +27,19 @@
 
 .battle_window_top_left_pokeballs {
 	position:absolute;
-	width:100px;
+	width:96px;
 	top:10px;
 	left:10px;
+	font-size:0px; /* remove the space between pokéballs */
 }
+
 
 .battle_window_bottom_right_pokeballs {
 	position:absolute;
-	width:100px;
+	width:96px;
 	bottom:10px;
 	right:10px;
+	font-size:0px; /* remove the space between pokéballs */
 }
 
 .battle_window_top_right_username {
