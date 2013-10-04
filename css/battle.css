@@ -8,41 +8,66 @@
 }
 
 .battle_window {
-	display:table-cell;
-	min-width:500px;
+	width:200px;
 	width:60%;
 }
 
 .battle_window_content {
-	width:100%;
-	height:100%;
-}
-
-.battle_window_top, .battle_window_bottom {
-	width:100%;
-	height:50px;
-}
-
-.battle_window_top_pokemon_infos, .battle_window_bottom_pokemon_infos {
-	vertical-align:top;
-}
-
-.battle_window_middle_left, .battle_window_middle_right {
-	width:100px;
-	text-align:center;
-}
-
-.battle_window_top_party, .battle_window_bottom_party {
-	width:100px;
-	text-align:center;
-}
-
-.battle_background {
 	position:relative;
 	width:100%;
 	height:100%;
-	min-width:257px;
-	min-height:145px;
+}
+
+.battle_window_background {
+	position:absolute;
+	z-index:-1;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+}
+
+.battle_window_top_left_pokeballs {
+	position:absolute;
+	width:100px;
+	top:10px;
+	left:10px;
+}
+
+.battle_window_bottom_right_pokeballs {
+	position:absolute;
+	width:100px;
+	bottom:10px;
+	right:10px;
+}
+
+.battle_window_top_right_username {
+	position:absolute;
+	text-align:right;
+	font-weight:bold;
+	width:100px;
+	top:10px;
+	right:10px;
+}
+
+.battle_window_bottom_left_username {
+	position:absolute;
+	text-align:left;
+	font-weight:bold;
+	width:100px;
+	bottom:10px;
+	left:10px;
+}
+
+.battle_window_top_pokemon, .battle_window_bottom_pokemon {
+	position:absolute;
+}
+
+.battle_window_pokemon_infos {
+	width:100%;
+	position:absolute;
+	top:-45px;
+	text-align:center;
 }
 
 .battle_chat {
@@ -84,37 +109,19 @@
 	border:1px solid #f2f2f2;
 }
 
-.battle_bg_img {
-	position:absolute;
-	width:100%;
-	height:100%;
-}
-
-.top_pokemon_name, .bottom_pokemon_name {
-	display:block;
-	float:left;
-}
-
-.top_pokemon_gender_level, .bottom_pokemon_gender_level {
-	display:block;
-	float:right;
-}
-
 .battle-stat-content {
-	height:15px;
-	line-height:15px;
+	font-size:10px;
+	bottom:-10px;
 }
 
 .battle-stat-name {
-	width:50px;
+	width:10px;
+	bottom:-2px;
 	text-align:center;
 }
 
 .battle-stat-block {
-	height:15px;
-	top:5px;
-	left:53px;
-	right:10px;
+	left:10px;
 }
 
 .battle-stat-value {
