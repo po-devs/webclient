@@ -56,14 +56,18 @@ teambuilder.prototype.resetTeamBuilder = function() {
 	$('.pokemon-slot-shiny').prop('checked', false);
 	
 	// pokemon name
-	$(".pokemon-slot-name").destroyAutocomplete().val('').data('pokemon_id', 0).autocomplete({ source:$.map(pokedex.pokes.released[this.getTeamInfo('team_generation')], function(name, id) { return {label:name, value:id}; }), select:function(e, ui) {
+	$(".pokemon-slot-name").destroyAutocomplete().val('').data('pokemon_id', 0).autocomplete({ source:$.map(pokedex.pokes.released[this.getTeamInfo('team_generation')], function(name, id) { return {label:name, value:id}; })}).on('autocompleteselect autocompletefocus', function(e, ui) {
 		
 		e.preventDefault();
 		$(this).val(ui.item.label).data('pokemon_id', ui.item.value);
 		var pokemonIndex = $(this).index('.pokemon-slot-name');
 		// that.resetTeambuilderPokemon(pokemondIndex);
-		that.recalculateStats(pokemonIndex);
-	}});
+		//that.recalculateStats(pokemonIndex); is gonna be inside resetTeambuilderPokemon(pokemonIndex)
+		
+		// loading the sprite
+		$(".pokemon-slot-sprite img").attr('src', that.getGenerationInfo(that.getTeamInfo('team_generation'), 'sprite_folder')+ui.item.value+'.png');
+		
+	});
 	
 	// types
 	$('.pokemon-slot-type-block').empty();
@@ -100,17 +104,17 @@ teambuilder.prototype.resetTeamBuilder = function() {
 		
 	});
 	$(".pokemon-ivs-value").knob({
-	min:0,
-	max:31,
-	step:1,
-	width:75,
-	height:75,
-	thickness:.06,
-	displayInput:true,
-	fgColor:'#1f5d96',
-	bgColor:'#f0f0f0',
-	font:'inherit',
-	inputColor:'#757575'
+		min:0,
+		max:31,
+		step:1,
+		width:75,
+		height:75,
+		thickness:.06,
+		displayInput:true,
+		fgColor:'#1f5d96',
+		bgColor:'#f0f0f0',
+		font:'inherit',
+		inputColor:'#757575'
 	});
 	
 	// hidden power reset
@@ -124,7 +128,7 @@ teambuilder.prototype.resetTeamBuilder = function() {
 	$('.pokemon-slot-nature').reloadCombobox(pokedex.natures.nature, 0);
 	
 	// refreshing items list
-	//$('.pokemon-slot-item').destroyCombobox().fillSelect(pokedex.items.generation[this.getTeamInfo('team_generation')]).combobox();
+	$('.pokemon-slot-item').destroyCombobox().fillSelect(this.getGenerationInfo(this.getTeamInfo('team_generation'), 'items_list')).combobox();
 	
 	// recreating EVs inputs
 	$(".pokemon-evs-selectors").empty();
@@ -232,6 +236,20 @@ teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 	{
 		case 'gender': case 'shiny': case 'special_stat': case 'happiness': case 'ivs_limit': case 'hidden_power': case 'ability': case 'nature': case 'item': case 'evs': case 'types_ids': case 'sprite_folder':
 			return pokedex.generations.options[generation][info_name];
+		break;
+		
+		case 'items_list':
+			
+			var items = {}, berries = {};
+			$.each(pokedex.items.items[generation], function(key, value) {
+				items[key] = pokedex.items.items_list[key];
+			});
+			$.each(pokedex.items.berries[generation], function(key, value) {
+				berries[key] = pokedex.items.berries_list[key];
+			});
+			
+			return $.extend({}, items, $.updateObjectKeys(berries, 10000));
+			
 		break;
 		
 		case 'stats_list':

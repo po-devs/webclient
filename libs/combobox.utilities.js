@@ -29,7 +29,16 @@
 	};
 	
 	jQuery.fn.reloadCombobox = function(data, default_value) {
-		$(this).destroyCombobox().empty().fillSelect(data).val(default_value).combobox();
+		$(this).destroyCombobox().find('option').remove().end().fillSelect(data).val(default_value).combobox();
 		return $(this);
-	}
+	};
+	
+	jQuery.updateObjectKeys = function(object, integer) {
+		var obj = {};
+		$.each(object, function(index, value) {
+			obj[parseInt(integer)+parseInt(index)] = value;
+		});
+		
+		return obj;
+	};
 }(jQuery));
