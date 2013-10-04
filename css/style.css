@@ -623,7 +623,7 @@ ul#rankings li {
 	border-radius:3px;
 }
 
-.pokemon-slot-stat-content {
+.pokemon-slot-stat-content, .battle-stat-content {
 	position:relative;
 	width:100%;
 	height:10px;
@@ -631,7 +631,7 @@ ul#rankings li {
 	margin-bottom:6px;
 }
 
-.pokemon-slot-stat-block {
+.pokemon-slot-stat-block, .battle-stat-block {
 	position:absolute;
 	top:0px;
 	left:95px;
@@ -647,29 +647,29 @@ ul#rankings li {
 	border-radius:3px;
 }
 
-.pokemon-slot-stat-progress {
+.pokemon-slot-stat-progress, .battle-stat-progress {
 	display:block;
 	width:0px;
 	height:100%;
 }
 
-.pokemon-slot-stat-progress-1x {
+.pokemon-slot-stat-progress-1x, .battle-stat-progress-1x {
 	background-color:#e59292;
 }
 
-.pokemon-slot-stat-progress-2x {
+.pokemon-slot-stat-progress-2x, .battle-stat-progress-2x {
 	background-color:#f8efa2;
 }
 
-.pokemon-slot-stat-progress-3x {
+.pokemon-slot-stat-progress-3x, .battle-stat-progress-3x {
 	background-color:#dbf09c;
 }
 
-.pokemon-slot-stat-progress-4x {
+.pokemon-slot-stat-progress-4x, .battle-stat-progress-4x {
 	background-color:#bae38e;
 }
 
-.pokemon-slot-stat-name {
+.pokemon-slot-stat-name, .battle-stat-name {
 	position:absolute;
 	bottom:-3px;
 	left:0px;
@@ -678,7 +678,7 @@ ul#rankings li {
 	text-align:right;
 }
 
-.pokemon-slot-stat-value {
+.pokemon-slot-stat-value, .battle-stat-value {
 	position:absolute;
 	bottom:0px;
 	right:3px;

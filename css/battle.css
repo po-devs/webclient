@@ -5,59 +5,36 @@
 	vertical-align:top;
 	width:100%;
 	height:100%;
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
-	border:1px solid black;
 }
 
 .battle_window {
 	display:table-cell;
-	min-width:400px;
+	min-width:500px;
 	width:60%;
 }
 
 .battle_window_content {
-	display:table;
 	width:100%;
 	height:100%;
-	border-collapse:collapse;
-}
-
-.battle_window_top, .battle_window_middle, .battle_window_bottom {
-	display:table-row;
-	width:100%;
-	border:1px solid pink;
 }
 
 .battle_window_top, .battle_window_bottom {
+	width:100%;
 	height:50px;
 }
 
-.battle_window_top_pokemon_infos {
-	display:table-cell;
-	width:auto;
-	border:1px solid green;
+.battle_window_top_pokemon_infos, .battle_window_bottom_pokemon_infos {
+	vertical-align:top;
 }
 
-.battle_window_top_party {
-	display:table-cell;
-	width:10px;
-	border:1px solid red;
-}
-
-.battle_window_middle_left {
-	display:table-cell;
+.battle_window_middle_left, .battle_window_middle_right {
 	width:100px;
+	text-align:center;
 }
 
-.battle_window_middle_center {
-	display:table-cell;
-	border:1px solid blue;
-}
-
-.battle_window_middle_right {
-	display:table-cell;
+.battle_window_top_party, .battle_window_bottom_party {
 	width:100px;
+	text-align:center;
 }
 
 .battle_background {
@@ -75,23 +52,26 @@
 }
 
 .battle_chat_content {
-	display:table;
+	position:relative;
 	width:100%;
 	height:100%;
 }
 
 .scrollable {
-	display:table-row;
-}
-
-.scrollable_content {
-	padding:0px 5px;
-	height:300px;
+	position:absolute;
+	padding:10px;
+	top:0px;
+	left:0px;
+	bottom:30px;
+	right:0px;
 	overflow:auto;
 }
 
 .messagebox {
-	display:table-row;
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:0px;
 	height:30px;
 	text-align:center;
 }
@@ -108,4 +88,37 @@
 	position:absolute;
 	width:100%;
 	height:100%;
+}
+
+.top_pokemon_name, .bottom_pokemon_name {
+	display:block;
+	float:left;
+}
+
+.top_pokemon_gender_level, .bottom_pokemon_gender_level {
+	display:block;
+	float:right;
+}
+
+.battle-stat-content {
+	height:15px;
+	line-height:15px;
+}
+
+.battle-stat-name {
+	width:50px;
+	text-align:center;
+}
+
+.battle-stat-block {
+	height:15px;
+	top:5px;
+	left:53px;
+	right:10px;
+}
+
+.battle-stat-value {
+	left:0px;
+	right:0px;
+	text-align:center;
 }
