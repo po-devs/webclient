@@ -1,5 +1,6 @@
 if(!pokedex.items)pokedex.items={};
-pokedex.items.items_gen4 = {
+if(!pokedex.items.items)pokedex.items.items={};
+pokedex.items.items[4] = {
 0:true,
 1:true,
 2:true,
