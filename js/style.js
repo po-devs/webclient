@@ -30,7 +30,8 @@ $(document).ready(function() {
 				$("#content").show();
 			break;
 		}
-	});	
+	});
+    $("#battle-html").load("battle.html");
 	$("#teambuilder").load("teambuilder.html", function() {
 		
 		/* Teambuilder */

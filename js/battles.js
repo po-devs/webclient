@@ -114,12 +114,10 @@ function BattleTab(pid, conf, team) {
         $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
         var $content = $("#battle-" + pid);
+        $content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
-
-        this.$controls = $content.find('.replay-controls-2');
-        this.$controls.click(this, this.dealWithControlsClick);
 
         if (team) {
             this.myself = conf.players[1] == players.myid ? 1 : 0;
