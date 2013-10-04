@@ -8,19 +8,6 @@ in your server config.
 
 The host of the official PO relay station is ws://server.pokemon-online.eu:10508
 
-Cloning
-=======
-
-This contains a submodule, so don't forget to do the following commands after the initial clone:
-```sh
-git submodule init
-git submodule update
-```
-
-When merging a commit, if their ps/ folder has changed head, you need to do the following command in order to update the submodule folder in your local directory:
-```sh
-git submodule update
-```
 
 Testing
 =======
