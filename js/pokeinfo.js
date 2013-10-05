@@ -1,4 +1,4 @@
-pokeinfo = {};
+pokeinfo = {}; moveinfo = {};
 defaultgen = {"num":5, "subnum": 1};
 
 pokeinfo.toNum = function(poke) {
@@ -21,4 +21,8 @@ pokeinfo.icon = function(poke) {
 
 pokeinfo.name = function(poke) {
     return pokedex.pokes.pokemons[this.toNum(poke)];
+};
+
+moveinfo.name = function(move) {
+    return pokedex.moves.moves[move];
 };

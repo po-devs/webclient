@@ -185,16 +185,19 @@ BattleTab.prototype.slot = function(spot) {
 
 BattleTab.prototype.updateFieldPoke = function(spot) {
     var poke = this.pokes[spot];
-    var $poke = this.$content.find(".p" + (this.player(spot) + 1) + "_pokemon" + (this.slot(spot) + 1));
+    var $poke = this.$poke(spot);
     $poke.find(".pokemon_name").text(poke.name);
     $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, this.conf.gen, this.player(spot) == 0));
     $poke.find(".battle-stat-value").text(poke.percent + "%");
 
     var $prog = $poke.find(".battle-stat-progress");
-    $prog.removeClass();
-    $prog.addClass("battle-stat-progress");
+    $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
     $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
     $prog.css("width", poke.percent + "%");
+};
+
+BattleTab.prototype.$poke = function(spot) {
+    return this.$content.find(".p" + (this.player(spot)+1) + "_pokemon" + (this.slot(spot)+1));
 };
 
 BattleTab.prototype.updateTeamPokes = function(player, pokes) {

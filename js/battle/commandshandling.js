@@ -29,6 +29,8 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.teams[pl][params.slot] = this.teams[pl][this.slot(params.spot)];
     this.teams[pl][this.slot(params.spot)] = poke;
 
+    this.$poke(params.spot).show();
+
     this.updateFieldPoke(params.spot);
     this.updateTeamPokes(pl, [this.slot(params.spot), params.slot]);
 
@@ -70,11 +72,14 @@ BattleTab.prototype.dealWithOfferchoice = function(params) {
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
-    this.addCommand(["faint", this.spotToPlayer(params.spot)]);
+    this.$poke(params.spot).hide();
+    this.print("<strong>" + this.pokes[params.spot].name + " fainted!</strong>");
+
+    this.pokes[params.spot].status = 31; //ko
 };
 
 BattleTab.prototype.dealWithMove = function(params) {
-    this.addCommand(["move", this.spotToPlayer(params.spot), Tools.getMoveName(params.move)]);
+    this.print(this.pokes[params.spot].name + " used <strong>" + moveinfo.name(params.move) + "</strong>!");
 };
 
 BattleTab.prototype.dealWithHpchange = function(params) {
