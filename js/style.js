@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	$("#tab-titles").on('click', 'li i', function() {
 		if($("#tab-titles li").length > 1)
 		{
@@ -156,7 +156,9 @@ $(document).ready(function() {
 			$('.pokemon-tab').removeClass('active-pokemon-tab').eq($(this).index()).addClass('active-pokemon-tab');
 			$('.pokemon-slot').removeClass('active-pokemon-slot').eq($(this).index()).addClass('active-pokemon-slot');
 		});
-		
-		var tb = new teambuilder();
+
+        $(document).ready(function() {
+		    var tb = new teambuilder();
+        });
 	})
 });
