@@ -241,11 +241,11 @@ teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 		case 'items_list':
 			
 			var items = {}, berries = {};
-			$.each(pokedex.items.items[generation], function(key, value) {
-				items[key] = pokedex.items.items_list[key];
+			$.each(pokedex.items.released_items, function(key, value) {
+				items[key] = pokedex.items.items[key];
 			});
-			$.each(pokedex.items.berries[generation], function(key, value) {
-				berries[key] = pokedex.items.berries_list[key];
+			$.each(pokedex.items.released_berries, function(key, value) {
+				berries[key] = pokedex.items.berries[key];
 			});
 			
 			return $.extend({}, items, $.updateObjectKeys(berries, 10000));
