@@ -6,7 +6,7 @@ BattleTab.prototype.dealWithTurn = function(params) {
 };
 
 BattleTab.prototype.dealWithBlank = function(params) {
-    this.print("")
+    this.print("");
 };
 
 BattleTab.prototype.dealWithSend = function(params) {
@@ -24,7 +24,19 @@ BattleTab.prototype.dealWithSend = function(params) {
     /* Stores the pokemon in field memory */
     this.pokes[params.spot] = poke;
 
-    this.addCommand(["switch", this.spotToPlayer(params.spot) + "a: " + poke.name, this.pokemonToPS(poke), this.pokemonDetails(poke)]);
+    /* switch in memory */
+    var pl = this.player(params.spot);
+    this.teams[pl][params.slot] = this.teams[pl][this.slot(params.spot)];
+    this.teams[pl][this.slot(params.spot)] = poke;
+
+    this.updateFieldPoke(params.spot);
+    this.updateTeamPokes(pl, [this.slot(params.spot), params.slot]);
+
+    if (pokeinfo.name(poke) == poke.name) {
+        this.print(this.name(pl) + " sent out " + poke.name);
+    } else {
+        this.print(this.name(pl) + " sent out " + poke.name + " (" + pokeinfo.name(poke) + ")");
+    }
 };
 
 BattleTab.prototype.dealWithTeampreview = function(params) {

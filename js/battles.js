@@ -99,7 +99,10 @@ function BattleTab(pid, conf, team) {
     this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
+    /* pokemons on the fields */
     this.pokes = {};
+    /* teams */
+    this.teams = [[], []];
     this.choices = {};
     this.spectators = {};
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
@@ -113,8 +116,8 @@ function BattleTab(pid, conf, team) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
-        var $content = $("#battle-" + pid);
-        $content.html($("#battle-html").html());
+        this.$content = $("#battle-" + pid);
+        this.$content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
@@ -123,13 +126,19 @@ function BattleTab(pid, conf, team) {
             this.myself = conf.players[1] == players.myid ? 1 : 0;
         }
 
-        this.print("<strong>Battle between " + players.name(conf.players[0]) + " and " +
-            players.name(conf.players[1]) + " just started!</strong><br />");
+        this.$content.find(".p1_name").text(this.name(0));
+        this.$content.find(".p2_name").text(this.name(1));
+
+        this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
         this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
     }
 }
 
 BattleTab.inherits(ChannelTab);
+
+BattleTab.prototype.name = function(player) {
+    return players.name(this.conf.players[player]);
+};
 
 BattleTab.prototype.chat = function () {
     return $("#battle-" + this.id + " .scrollable");
@@ -163,6 +172,44 @@ BattleTab.prototype.print = function(pid, msg) {
 BattleTab.onChatKeyDown = function(event, obj) {
     if(event.keyCode==13) {
         sendMessage(obj);
+    }
+};
+
+BattleTab.prototype.player = function(spot) {
+    return spot % 2;
+};
+
+BattleTab.prototype.slot = function(spot) {
+    return spot >> 1;
+};
+
+BattleTab.prototype.updateFieldPoke = function(spot) {
+    var poke = this.pokes[spot];
+    var $poke = this.$content.find(".p" + (this.player(spot) + 1) + "_pokemon" + (this.slot(spot) + 1));
+    $poke.find(".pokemon_name").text(poke.name);
+    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, this.conf.gen, this.player(spot) == 0));
+    $poke.find(".battle-stat-value").text(poke.percent + "%");
+
+    var $prog = $poke.find(".battle-stat-progress");
+    $prog.removeClass();
+    $prog.addClass("battle-stat-progress");
+    $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
+    $prog.css("width", poke.percent + "%");
+};
+
+BattleTab.prototype.updateTeamPokes = function(player, pokes) {
+    if (!pokes) {
+        pokes = [0,1,2,3,4,5];
+    }
+    var $pokes = this.$content.find(".p" + (player + 1) + "_pokeballs");
+
+    for (var i = 0; i < pokes.length; i++) {
+        var $img = $pokes.find("img:eq("+i+")");
+        if (pokes[i] && pokes[i].num) {
+            $img.attr("src", pokeinfo.icon(pokes[i]));
+        } else {
+            $img.attr("src", "images/pokeballicon.png");
+        }
     }
 };
 
