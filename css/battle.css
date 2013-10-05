@@ -26,7 +26,7 @@
 	height:100%;
 }
 
-.battle_window_top_left_pokeballs {
+.p2_pokeballs {
 	position:absolute;
 	width:96px;
 	top:10px;
@@ -35,7 +35,7 @@
 }
 
 
-.battle_window_bottom_right_pokeballs {
+.p1_pokeballs {
 	position:absolute;
 	width:96px;
 	bottom:10px;
@@ -43,7 +43,7 @@
 	font-size:0px; /* remove the space between pokéballs */
 }
 
-.battle_window_top_right_username {
+.p2_name {
 	position:absolute;
 	text-align:right;
 	font-weight:bold;
@@ -52,7 +52,7 @@
 	right:10px;
 }
 
-.battle_window_bottom_left_username {
+.p1_name {
 	position:absolute;
 	text-align:left;
 	font-weight:bold;
@@ -61,7 +61,7 @@
 	left:10px;
 }
 
-.battle_window_top_pokemon, .battle_window_bottom_pokemon {
+.p2_pokemon1, .p1_pokemon1 {
 	position:absolute;
 }
 
