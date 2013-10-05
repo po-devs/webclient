@@ -2,15 +2,16 @@
 	display:table;
 	vertical-align:top;
 	width:100%;
-	height:100%;
+	height:55%;
+	min-height:300px;
 }
 
 .battle_window {
-	width:200px;
 	width:60%;
 }
 
 .battle_window_content {
+	display:table;
 	position:relative;
 	width:100%;
 	height:100%;

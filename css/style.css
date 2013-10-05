@@ -117,11 +117,22 @@ input:focus:-ms-input-placeholder {
 	position:relative;
 }
 
-.middle_block#teambuilder {
+.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
+	position:absolute;
+	padding:0px;
+	top:40px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+.middle_block#content {
 	display:block;
 }
 
 div#channel-tabs {
+	position:relative;
+	height:100%;
 	padding:0px;
 	border:none;
 	background:none;
@@ -218,7 +229,7 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 #chatTextArea {
 	position:absolute;
 	overflow:auto;
-	top:40px;
+	top:0px;
 	bottom:90px;
 	left:0px;
 	right:0px;
