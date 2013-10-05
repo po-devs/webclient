@@ -10,20 +10,20 @@ PMs.prototype.pm = function(pid) {
         return;
     new PM(pid);
     return this.pms[pid];
-}
+};
 
 PMs.prototype.playerLogout = function (pid) {
     if (pid in this.pms) {
         this.pm(pid).disconnect();
     }
-}
+};
 
 /* In case of reconnect */
 PMs.prototype.playerLogin = function(pid) {
     if (pid in this.pms) {
         this.pm(pid).reconnect();
     }
-}
+};
 
 function PM(pid) {
     this.shortHand = "pm";
@@ -58,7 +58,7 @@ PM.prototype.playerIds = function() {
         ret.push(this.id);
     }
     return ret;
-}
+};
 
 PM.prototype.disconnect = function() {
     if (this.disconnected) {
@@ -67,7 +67,7 @@ PM.prototype.disconnect = function() {
 
     this.print(-1, "<i>"+players.name(this.id)+ " is no longer connected.</i>");
     this.disconnected = true;
-}
+};
 
 PM.prototype.reconnect = function() {
     if (!this.disconnected) {
@@ -77,11 +77,11 @@ PM.prototype.reconnect = function() {
     players.addFriend(this.id);
     this.print(-1, "<i>"+players.name(this.id)+ " came back.</i>");
     this.disconnected = false;
-}
+};
 
 PM.prototype.chat = function () {
     return $("#pm-" + this.id + " #chatTextArea");
-}
+};
 
 
 PM.prototype.print = function(pid, msg) {
@@ -102,9 +102,9 @@ PM.prototype.print = function(pid, msg) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
     chatTextArea.scrollTop = chatTextArea.scrollHeight;
-}
+};
 
 PM.prototype.close = function() {
     $('#channel-tabs').tabs("remove", "#pm-" + this.id);
     delete pms.pms[this.id];
-}
+};

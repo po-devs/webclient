@@ -122,10 +122,43 @@ function BattleTab(pid, conf, team) {
         if (team) {
             this.myself = conf.players[1] == players.myid ? 1 : 0;
         }
+
+        this.print("<strong>Battle between " + players.name(conf.players[0]) + " and " +
+            players.name(conf.players[1]) + " just started!</strong><br />");
+        this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
     }
 }
 
 BattleTab.inherits(ChannelTab);
+
+BattleTab.prototype.chat = function () {
+    return $("#battle-" + this.id + " .scrollable");
+};
+
+BattleTab.prototype.print = function(pid, msg) {
+    if (arguments.length == 1) {
+        msg = pid;
+        pid = -1;
+    }
+
+    var chatTextArea = this.chat().get(0);
+
+    if (pid !== -1) {
+        msg = escapeHtml(msg);
+        var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
+        msg = pref + " " + addChannelLinks(msg);
+
+        this.activateTab();
+    }
+
+    chatTextArea.innerHTML += msg + "<br/>\n";
+
+    /* Limit number of lines */
+    if (this.chatCount++ % 500 === 0) {
+        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
+    }
+    chatTextArea.scrollTop = chatTextArea.scrollHeight;
+};
 
 BattleTab.onChatKeyDown = function(event, obj) {
     if(event.keyCode==13) {
@@ -203,22 +236,6 @@ BattleTab.prototype.playerIds = function() {
     return array;
 };
 
-BattleTab.prototype.chat = function () {
-    return $("#battle-" + this.id + " #chatTextArea");
-};
-
-BattleTab.prototype.print = function(msg) {
-    var chatTextArea = this.chat().get(0);
-
-    chatTextArea.innerHTML += msg + "<br/>\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
-};
-
 BattleTab.prototype.choose = function(choice)
 {
     websocket.send("battlechoice|"+this.id+"|"+JSON.stringify(choice));
@@ -248,19 +265,6 @@ BattleTab.prototype.dealWithCommand = function(params) {
         this[funcName](params);
     }
 };
-
-BattleTab.prototype.addCommand = function(args, kwargs, preempt) {
-    kwargs = kwargs||{};
-    for (var x in kwargs) {
-        args.push("["+x+"]"+kwargs[x]);
-    }
-    if (!preempt) {
-        this.battle.add("|"+args.join("|"));
-    } else {
-        this.battle.instantAdd("|"+args.join("|"));
-    }
-};
-
 
 BattleTab.statuses = {
     0: "",
@@ -293,6 +297,12 @@ BattleTab.clauses = {
     8: "Self-KO Clause"
 };
 
+BattleTab.modes = {
+    0: "Singles",
+    1: "Doubles",
+    2: "Triples",
+    3: "Rotation"
+};
 //
 //BattleTab.prototype.updateSide = function(sideData, midBattle) {
 //    for (var i = 0; i < sideData.pokemon.length; i++) {

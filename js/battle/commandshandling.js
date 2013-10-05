@@ -2,7 +2,11 @@
 
 /* dealWithXxxx functions are all called from dealWithCommand */
 BattleTab.prototype.dealWithTurn = function(params) {
-    this.addCommand(["turn",  params.turn]);
+    this.print("<h2>Turn " + params.turn + "</h2>")
+};
+
+BattleTab.prototype.dealWithBlank = function(params) {
+    this.print("")
 };
 
 BattleTab.prototype.dealWithSend = function(params) {
@@ -226,13 +230,11 @@ BattleTab.prototype.dealWithSubstitute = function(params) {
 };
 
 BattleTab.prototype.dealWithTier = function(params) {
-    this.addCommand(["tier", params.tier]);
+    this.print("<strong>Tier: </strong> " + params.tier);
 };
 
 BattleTab.prototype.dealWithRated = function(params) {
-    if (params.rated) {
-        this.addCommand(["rated", params.rated]);
-    }
+    this.print("<strong>Rule: </strong> " + (params.rated ? "Rated" : "Unrated"));
 
     /* Print the clauses, convert flags to actual clause numbers */
     var clauses = this.conf.clauses;
@@ -240,13 +242,11 @@ BattleTab.prototype.dealWithRated = function(params) {
 
     while (clauses > 0) {
         if (clauses % 2) {
-            this.addCommand(["rule", BattleTab.clauses[i]]);
+            this.print("<strong>Rule: </strong> " + BattleTab.clauses[i]);
         }
         clauses = Math.floor(clauses/2);
         i = i+1;
     }
-
-    this.addCommand(["start"]);
 };
 
 BattleTab.prototype.dealWithChoiceselection = function(params) {
