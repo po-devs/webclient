@@ -133,11 +133,11 @@ BattleTab.prototype.dealWithAvoid = function(params) {
 
 BattleTab.prototype.dealWithBoost = function(params) {
     if (params.boost > 6) {
-        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + " drastically rose!");
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stat) + " drastically rose!");
     } else if (params.boost > 0) {
-        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + (params.boost > 1 ? (params.boost > 2 ? "drastically " : "sharply ") : "") + " rose!");
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stat) + (params.boost > 1 ? (params.boost > 2 ? "drastically " : "sharply ") : "") + " rose!");
     } else if (params.boost < 0) {
-        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + (-params.boost > 1 ? (-params.boost > 2 ? "drastically " : "sharply ") : "") + " fell!");
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stat) + (-params.boost > 1 ? (-params.boost > 2 ? "drastically " : "sharply ") : "") + " fell!");
     }
     //this.damageCause = {};
 };

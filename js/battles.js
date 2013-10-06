@@ -205,7 +205,7 @@ BattleTab.prototype.$poke = function(spot) {
 };
 
 BattleTab.prototype.tpoke = function(spot) {
-    return this.teams[this.player(spot)][this.slot[spot]];
+    return this.teams[this.player(spot)][this.slot(spot)];
 };
 
 BattleTab.prototype.updateTeamPokes = function(player, pokes) {
