@@ -1,4 +1,4 @@
-pokeinfo = {}; moveinfo = {};
+pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {};
 defaultgen = {"num":5, "subnum": 1};
 
 pokeinfo.toNum = function(poke) {
@@ -26,3 +26,11 @@ pokeinfo.name = function(poke) {
 moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
 };
+
+statinfo.name = function(stat) {
+    return pokedex.status.stats[stat];
+};
+
+statusinfo.name = function(status) {
+    return pokedex.status.status[status];
+}

@@ -73,13 +73,13 @@ BattleTab.prototype.dealWithOfferchoice = function(params) {
 
 BattleTab.prototype.dealWithKo = function(params) {
     this.$poke(params.spot).hide();
-    this.print("<strong>" + this.pokes[params.spot].name + " fainted!</strong>");
+    this.print("<strong>" + this.nick(params.spot) + " fainted!</strong>");
 
     this.pokes[params.spot].status = 31; //ko
 };
 
 BattleTab.prototype.dealWithMove = function(params) {
-    this.print(this.pokes[params.spot].name + " used <strong>" + moveinfo.name(params.move) + "</strong>!");
+    this.print(this.nick(params.spot) + " used <strong>" + moveinfo.name(params.move) + "</strong>!");
 };
 
 BattleTab.prototype.dealWithHpchange = function(params) {
@@ -88,58 +88,65 @@ BattleTab.prototype.dealWithHpchange = function(params) {
     if (this.pokes[params.spot].life) {
         this.pokes[params.spot].life = params.newHP;
         this.pokes[params.spot].percent = params.newHP/this.pokes[params.spot].totalLife;
-        this.request.side.pokemon[0].condition = this.pokemonDetails(this.pokes[params.spot]);
+        this.tpoke(params.spot).life = params.newHP;
+        this.tpoke(params.spot).percent = params.newHP/this.pokes[params.spot].totalLife;
     } else {
         this.pokes[params.spot].percent = params.newHP;
     }
 
     /* Is it healing or damage? */
-    if (params.newHP > current || params.newHP == (this.pokes[params.spot].totalLife || 100)) {
+/*    if (params.newHP > current || params.newHP == (this.pokes[params.spot].totalLife || 100)) {
         this.addCommand(["-heal", this.spotToPlayer(params.spot), this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
     } else {
         this.addCommand(["-damage", this.spotToPlayer(params.spot), this.pokemonDetails(this.pokes[params.spot])], this.damageCause);
     }
     this.damageCause = {};
+    */
+    this.updateFieldPoke(params.spot);
 };
 
 BattleTab.prototype.dealWithHitcount = function(params) {
-    this.addCommand(["-hitcount", this.spotToPlayer(params.spot), params.count]);
+    this.print("Hit " + params.count + " time(s)!");
 };
 
 BattleTab.prototype.dealWithEffectiveness = function(params) {
     if (params.effectiveness > 4) {
-        this.addCommand(["-supereffective", this.spotToPlayer(params.spot)]);
+        this.print("It's super effective!");
     } else if (params.effectiveness < 4 && params.effectiveness > 0) {
-        this.addCommand(["-resisted", this.spotToPlayer(params.spot)]);
+        this.print("It's not very effective...");
     } else if (params.effectiveness == 0) {
-        this.addCommand(["-immune", this.spotToPlayer(params.spot)]);
+        this.print("It had no effect on " + this.nick(params.spot) + "!");
     }
 };
 
 BattleTab.prototype.dealWithCritical = function(params) {
-    this.addCommand(["-crit", this.spotToPlayer(params.spot)]);
+    this.print("A critical hit!");
 };
 
 BattleTab.prototype.dealWithMiss = function(params) {
-    this.addCommand(["-miss", this.spotToPlayer(params.spot)]);
+    this.print("The attack of "+ this.nick(params.spot) +" missed!");
 };
 
 BattleTab.prototype.dealWithAvoid = function(params) {
-    this.addCommand(["-avoid", this.spotToPlayer(params.spot)], {"msg":true});
+    this.print(this.nick(params.spot) +" avoided the attack!");
 };
 
 BattleTab.prototype.dealWithBoost = function(params) {
     if (params.boost > 6) {
-        this.addCommand(["-setboost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), 6], this.damageCause);
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + " drastically rose!");
     } else if (params.boost > 0) {
-        this.addCommand(["-boost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), params.boost], this.damageCause);
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + (params.boost > 1 ? (params.boost > 2 ? "drastically " : "sharply ") : "") + " rose!");
     } else if (params.boost < 0) {
-        this.addCommand(["-unboost", this.spotToPlayer(params.spot), Tools.getStatName(params.stat), -params.boost], this.damageCause);
+        this.print(this.nick(params.spot) +"'s " + statinfo.name(params.stats) + (-params.boost > 1 ? (-params.boost > 2 ? "drastically " : "sharply ") : "") + " fell!");
     }
-    this.damageCause = {};
+    //this.damageCause = {};
 };
 
 BattleTab.prototype.dealWithStatus = function(params) {
+    if (params.status == 6) {
+        this.print("%1 became confused!".replace("%1", this.nick(params.spot)));
+        return;
+    }
     var status = BattleTab.statuses[params.status];
     if (!status || status == "fnt") {
         return;
@@ -147,18 +154,80 @@ BattleTab.prototype.dealWithStatus = function(params) {
     if (status == "psn" && params.multiple) {
         status = "tox";
     }
+
+    var messages = [
+        "%1 is paralyzed! It may be unable to move!",
+        "%1 fell asleep!",
+        "%1 was frozen solid!",
+        "%1 was burned!",
+        "%1 was poisoned!",
+        "%1 was badly poisoned!"
+    ];
+
     this.pokes[params.spot].status = params.status;
-    this.addCommand(["-status", this.spotToPlayer(params.spot), status], this.damageCause);
-    this.damageCause = {};
+    this.tpoke(params.spot).status = params.status;
+
+    this.print(messages[params.status].replace("%1", this.nick(params.spot)));
+
+    //this.damageCause = {};
+};
+
+BattleTab.prototype.dealWithTeamstatus = function(params) {
+    this.teams[params.player][params.slot].status = params.status;
+    this.updateTeamPokes(params.player, [params.slot]);
+};
+
+BattleTab.prototype.dealWithAlreadystatus = function(params) {
+    this.print(this.nick(params.spot) + " is already " + statusinfo.name(params.status));
+};
+
+BattleTab.prototype.dealWithFeelstatus = function(params) {
+    if (params.status == 6) { //confusion
+        this.print(this.nick(params.spot) + " is confused!");
+    } else {
+        var status = BattleTab.statuses[params.status];
+        if (status == "par") {
+            this.print(this.nick(params.spot) + " is paralyzed!");
+        } else if (status == "slp") {
+            this.print(this.nick(params.spot) + " is fast asleep!");
+        } else if (status == "frz") {
+            this.print(this.nick(params.spot) + " is frozen solid!");
+        }
+    }
 };
 
 BattleTab.prototype.dealWithStatusdamage = function(params) {
-    this.damageCause.from = BattleTab.statuses[params.status];
+    if (params.status == 6) {
+        this.print("It hurt itself in its confusion!");
+    } else {
+        var status = BattleTab.statuses[params.status]
+
+        if (status == "brn") {
+            this.print(this.nick(params.spot) + " was hurt by its burn!");
+        } else if (status == "psn") {
+            this.print(this.nick(params.spot) + " was hurt by poison!");
+        }
+    }
+    //this.damageCause.from = BattleTab.statuses[params.status];
+};
+
+BattleTab.prototype.dealWithFreestatus = function(params) {
+    if (params.status == 6) { //confusion
+        this.print(this.nick(params.spot) + " snapped out its confusion.");
+    } else {
+        var status = BattleTab.statuses[params.status];
+        if (status == "slp") {
+            this.print(this.nick(params.spot) + " woke up!");
+        } else if (status == "frz") {
+            this.print(this.nick(params.spot) + " thawed out!");
+        }
+    }
 };
 
 BattleTab.prototype.dealWithFail = function(params) {
-    /* Third argument should be what the fail is about */
-    this.addCommand(["-fail", this.spotToPlayer(params.spot)]);
+    if (!params.silent) {
+        this.print("But it failed!");
+    }
 };
 
 BattleTab.prototype.dealWithPlayerchat = function(params) {
@@ -204,22 +273,6 @@ BattleTab.prototype.dealWithRecoil = function(params) {
 BattleTab.prototype.dealWithDrain = function(params) {
     this.damageCause.from = "drain";
     this.damageCause.of = this.spotToPlayer(params.spot);
-};
-
-BattleTab.prototype.dealWithAlreadystatus = function(params) {
-    this.addCommand(["-fail", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
-};
-
-BattleTab.prototype.dealWithFeelstatus = function(params) {
-    if (params.status == 6) { //confusion
-        this.addCommand(["-activate", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
-    } else {
-        this.addCommand(["cant", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
-    }
-};
-
-BattleTab.prototype.dealWithFreestatus = function(params) {
-    this.addCommand(["-curestatus", this.spotToPlayer(params.spot), BattleTab.statuses[params.status]]);
 };
 
 BattleTab.prototype.dealWithWeatherstart = function(params) {

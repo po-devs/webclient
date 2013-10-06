@@ -102,7 +102,7 @@ function BattleTab(pid, conf, team) {
     /* pokemons on the fields */
     this.pokes = {};
     /* teams */
-    this.teams = [[], []];
+    this.teams = [[{},{},{},{},{},{}], [{},{},{},{},{},{}]];
     this.choices = {};
     this.spectators = {};
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
@@ -138,6 +138,10 @@ BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.name = function(player) {
     return players.name(this.conf.players[player]);
+};
+
+BattleTab.prototype.nick = function(spot) {
+    return this.pokes[spot].name;
 };
 
 BattleTab.prototype.chat = function () {
@@ -198,6 +202,10 @@ BattleTab.prototype.updateFieldPoke = function(spot) {
 
 BattleTab.prototype.$poke = function(spot) {
     return this.$content.find(".p" + (this.player(spot)+1) + "_pokemon" + (this.slot(spot)+1));
+};
+
+BattleTab.prototype.tpoke = function(spot) {
+    return this.teams[this.player(spot)][this.slot[spot]];
 };
 
 BattleTab.prototype.updateTeamPokes = function(player, pokes) {
