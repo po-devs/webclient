@@ -1,4 +1,4 @@
-pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}
+pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
 defaultgen = {"num":5, "subnum": 1};
 
 pokeinfo.toNum = function(poke) {
@@ -48,7 +48,7 @@ iteminfo.message = function(item, part) {
     } else {
         return undefined;
     }
-}
+};
 
 statinfo.name = function(stat) {
     return pokedex.status.stats[stat];
@@ -57,3 +57,11 @@ statinfo.name = function(stat) {
 statusinfo.name = function(status) {
     return pokedex.status.status[status];
 };
+
+typeinfo.name = function(type) {
+    return pokedex.types.types[type];
+};
+
+abilityinfo.name = function(ability) {
+    return pokedex.abilities.abilities[ability];
+}                                               ;

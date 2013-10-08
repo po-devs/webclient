@@ -148,17 +148,12 @@ BattleTab.prototype.chat = function () {
     return $("#battle-" + this.id + " .scrollable");
 };
 
-BattleTab.prototype.print = function(pid, msg) {
-    if (arguments.length == 1) {
-        msg = pid;
-        pid = -1;
-    }
-
+BattleTab.prototype.print = function(msg, args) {
     var chatTextArea = this.chat().get(0);
 
-    if (pid !== -1) {
+    if ("player" in args) {
         msg = escapeHtml(msg);
-        pid = this.conf.players[player];
+        var pid = this.conf.players[args.player];
         var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
         msg = pref + " " + addChannelLinks(msg);
 
