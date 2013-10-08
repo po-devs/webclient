@@ -1,4 +1,4 @@
-pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {};
+pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}
 defaultgen = {"num":5, "subnum": 1};
 
 pokeinfo.toNum = function(poke) {
@@ -27,10 +27,33 @@ moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
 };
 
+iteminfo.name = function(item) {
+    if (item >= 8000) {
+        return pokedex.items.berries[item-8000];
+    } else {
+        return pokedex.items.items[item];
+    }
+};
+
+iteminfo.message = function(item, part) {
+    var messages = (item >= 8000 ? pokedex.items.berry_messages[item-8000] : pokedex.items.item_messages[item]);
+
+    if (!messages) {
+        return undefined;
+    }
+
+    var parts = messages.split('|');
+    if (part >= 0 && part < parts.length) {
+        return parts[part];
+    } else {
+        return undefined;
+    }
+}
+
 statinfo.name = function(stat) {
     return pokedex.status.stats[stat];
 };
 
 statusinfo.name = function(status) {
     return pokedex.status.status[status];
-}
+};

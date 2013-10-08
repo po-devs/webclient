@@ -158,6 +158,7 @@ BattleTab.prototype.print = function(pid, msg) {
 
     if (pid !== -1) {
         msg = escapeHtml(msg);
+        pid = this.conf.players[player];
         var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
         msg = pref + " " + addChannelLinks(msg);
 

@@ -231,13 +231,12 @@ BattleTab.prototype.dealWithFail = function(params) {
 };
 
 BattleTab.prototype.dealWithPlayerchat = function(params) {
-    var name = players.name(this.conf.players[params.spot]);
-    this.addCommand(["chat", name, params.message], undefined, true);
+    this.print(params.spot, params.message);
 };
 
 BattleTab.prototype.dealWithSpectatorjoin = function(params) {
     this.spectators[params.id] = params.name;
-    this.addCommand(["join", params.name], undefined, true);
+    this.print(params.name + " is watching the battle.");
 
     if (this.isCurrent()) {
         playerList.addPlayer(params.id);
@@ -245,7 +244,7 @@ BattleTab.prototype.dealWithSpectatorjoin = function(params) {
 };
 
 BattleTab.prototype.dealWithSpectatorleave = function(params) {
-    this.addCommand(["leave", this.spectators[params.id]], undefined, true);
+    this.print(this.spectators[params.id] + " stopped watching the battle.");
     delete this.spectators[params.id];
 
     if (this.isCurrent()) {
@@ -255,48 +254,93 @@ BattleTab.prototype.dealWithSpectatorleave = function(params) {
 
 BattleTab.prototype.dealWithSpectatorchat = function(params) {
     var name = this.spectators[params.id];
-    this.addCommand(["chat", name, params.message], undefined, true);
+    this.print(name + ": " + params.message);
 };
 
 BattleTab.prototype.dealWithNotarget = function(params) {
-    this.addCommand(["-notarget"]);
+    this.print("But there was no target...");
 };
 
 BattleTab.prototype.dealWithFlinch = function(params) {
-    this.addCommand(["cant", this.spotToPlayer(params.spot), "flinch"]);
+    this.print(this.nick(params.spot) + " flinched and couldn't move!");
 };
 
 BattleTab.prototype.dealWithRecoil = function(params) {
-    this.damageCause.from = "recoil";
+    //this.damageCause.from = "recoil";
+    this.print(this.nick(params.spot) + " is damaged by recoil!");
 };
 
 BattleTab.prototype.dealWithDrain = function(params) {
-    this.damageCause.from = "drain";
-    this.damageCause.of = this.spotToPlayer(params.spot);
+    //this.damageCause.from = "drain";
+    //this.damageCause.of = this.spotToPlayer(params.spot);
+    this.print(this.nick(params.spot) + " had its energy drained!");
 };
 
 BattleTab.prototype.dealWithWeatherstart = function(params) {
-    var kwargs = {};
+    //QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
+
+    var weatherAbilityMessage = [
+        tr("%1's Snow Warning whipped up a hailstorm!"),
+        tr("%1's Drizzle made it rain!"),
+        tr("%1's Sand Stream whipped up a sandstorm!"),
+        tr("%1's Drought intensified the sun's rays!")
+    ];
+
+    var weatherRegularMessage = [
+        tr("It started to hail!"),
+        tr("It started to rain!"),
+        tr("A sandstorm kicked up!"),
+        tr("The sunlight turned harsh!")
+    ];
+
     if (params.permanent) {
-        kwargs.of = this.spotToPlayer(params.spot);
+        this.print(weatherAbilityMessage[params.weather-1]).replace("%1", this.nick(params.spot));
+    } else {
+        this.print(weatherRegularMessage[params.weather-1]);
     }
-    this.addCommand(["-weather", BattleTab.weathers[params.weather]], kwargs);
 };
 
 BattleTab.prototype.dealWithFeelweather = function(params) {
-    this.addCommand(["-weather", BattleTab.weathers[params.weather]], {"upkeep": true});
+    var messages = [
+        "The hail crashes down.",
+        "Rain continues to fall.",
+        "The sandstorm rages.",
+        "The sunlight is strong."
+    ];
+
+    this.print(messages[params.weather -1]);
 };
 
 BattleTab.prototype.dealWithWeatherend = function(params) {
-    this.addCommand(["-weather", "none"]);
+    var messages = [
+        "The hail stopped.",
+        "The rain stopped.",
+        "The sandstorm subsided.",
+        "The sunlight faded."
+    ];
+
+    this.print(messages[params.weather -1]);
 };
 
 BattleTab.prototype.dealWithWeatherhurt = function(params) {
-    this.damageCause.from = BattleTab.weathers[params.weather];
+    //this.damageCause.from = BattleTab.weathers[params.weather];
+    var messages = [
+        "%1 is buffeted by the hail!",
+        undefined,
+        "%1 is buffeted by the sandstorm!",
+        undefined
+    ];
+    if (messages[params.weather -1]) {
+        this.print(messages[params.weather -1].replace("%1", this.nick(params.spot)));
+    }
 };
 
 BattleTab.prototype.dealWithSubstitute = function(params) {
-    this.addCommand([params.substitute?"-start":"-end", this.spotToPlayer(params.spot), "Substitute"]);
+    if (params.substitue) {
+
+    } else {
+
+    }
 };
 
 BattleTab.prototype.dealWithTier = function(params) {
@@ -320,8 +364,6 @@ BattleTab.prototype.dealWithRated = function(params) {
 };
 
 BattleTab.prototype.dealWithChoiceselection = function(params) {
-    this.addCommand(["callback", "decision"]);
-
     if (this.request && params.spot%2 == this.myself) {
         this.loadChoices();
         this.receiveRequest(this.request);
@@ -335,55 +377,35 @@ BattleTab.prototype.dealWithChoiceselection = function(params) {
  Close
  */
 BattleTab.prototype.dealWithBattleend = function(params) {
-    if (params.result == 0 || params.result == 1) {
-        this.addCommand(["win", players.name(this.conf.players[params.winner])]);
+    if (params.result == 0) {
+        this.print("<strong>" + this.name(!params.winner) + " forfeited against " + this.name(params.winner) + "</strong>");
+    } else if (params.result == 1) {
+        this.print("<strong>" + this.name(params.winner) + " won the battle!</strong>");
     } else if (params.result == 2) {
-        this.addCommand(["tie"]);
-    } else if (params.result == 3) {
-        this.addCommand(["leave", players.name(this.conf.players[0])]);
-        this.addCommand(["leave", players.name(this.conf.players[1])]);
+        this.print("<strong>Tie between " + this.name(0) + " and " + this.name(1) + "!</strong>");
     }
-};
-
-BattleTab.itemsToPS = {
-    3: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: White herb"])},
-    4: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Focus Band"])},
-    5: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Focus Sash"])},
-    7: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Mental Herb"])},
-    11: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Power Herb"])},
-    12: function() {this.damageCause.from = "item: Leftovers"},
-    16: function() {this.damageCause.from = "item: Black Sludge"},
-    17: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Quick Claw"])},
-    18: function() {this.damageCause.from = "item: Berry Juice"},
-    19: [function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Flame Orb"])},
-        function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Toxic Orb"])}],
-    21: function() {this.damageCause.from = "item: Life Orb"},
-    24: function() {this.damageCause.from = "item: Shell Bell"},
-    29: function() {this.damageCause.from = "item: Sticky Barb"},
-    34: function(params) {this.damageCause.from = "item: Rocky Helmet"; this.damageCause.of = this.spotToPlayer(params.spot);},
-    35: [function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Air Balloon"])},
-        function(params) {this.addCommand(["-item", this.spotToPlayer(params.spot), "item: Air Balloon"])}],
-    36: function(params) {this.damageCause.from = "item: " + Tools.getItemName(params.berry); },
-    37: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: " + Tools.getItemName(params.berry)], {from: "gem", move: Tools.getMoveName(params.other)});},
-    38: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Red Card"], {of: this.spotToPlayer(params.foe)});},
-    39: function(params) {this.addCommand(["-enditem", this.spotToPlayer(params.spot), "item: Eject Button"])},
-    40: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Berserk Gene"])},
-    41: function(params) {this.addCommand(["-activate", this.spotToPlayer(params.spot), "item: Destiny Knot"])}
-//    41: %s's Destiny Knot activated, %f is in love!
 };
 
 BattleTab.prototype.dealWithItemmessage = function(params) {
-    var f = BattleTab.itemsToPS[params.item];
-    if (!f) {
+    /* Item like Potion used on a pokemon we haven't seen */
+    if (this.pokes[params.foe].num == 0 || this.pokes[params.spot].num == 0) {
         return;
     }
-    if (Array.isArray(f)) {
-        f = f[params.part];
-    }
-    if (!f) {
+    var mess = iteminfo.message(params.item, params.part);
+    if (!mess) {
         return;
     }
-    f.call(this, params);
+    mess.replace("%st", statinfo.name(params.other, this.conf.gen));
+    mess.replace("%s", this.nick(params.spot));
+    mess.replace("%f", this.nick(params.foe));
+    mess.replace("%i", iteminfo.name(params.berry));
+    mess.replace("%m", moveinfo.name(params.other));
+
+    /* Balloon gets a really special treatment */
+    if (item == 35)
+        this.print("<strong>" + mess + "</strong>");
+    else
+        this.print(mess);
 };
 
 BattleTab.movesToPS = {

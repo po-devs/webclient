@@ -85,7 +85,7 @@ def main(argv):
         },
         'items': {
             'files': ['released_items', 'released_berries'],
-            'base_files': ['items', 'berries', 'item_useful']
+            'base_files': ['items', 'berries', 'item_useful', 'item_messages', 'berry_messages']
         },
         'types': {
             'base_files': ["types", "category"]
