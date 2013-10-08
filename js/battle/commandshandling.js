@@ -396,6 +396,18 @@ BattleTab.prototype.dealWithBattleend = function(params) {
     }
 };
 
+BattleTab.prototype.dealWithVariation = function(params) {
+    this.print("<strong>Variation: </strong>" + params.bonus + ", " + params.malus);
+};
+
+BattleTab.prototype.dealWithDisconnect = function(params) {
+    this.print(this.name(params.player) + " disconnected.");
+};
+
+BattleTab.prototype.dealWithReconnect = function(params) {
+    this.print(this.name(params.player) + " reconnected.");
+};
+
 BattleTab.prototype.dealWithItemmessage = function(params) {
     /* Item like Potion used on a pokemon we haven't seen */
     if (this.pokes[params.foe].num == 0 || this.pokes[params.spot].num == 0) {

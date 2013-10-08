@@ -109,6 +109,7 @@ function BattleTab(pid, conf, team) {
         together with the damage done to the Showdown window.
      */
     this.damageCause={};
+    this.players = [players.name(conf.players[0]), players.name(conf.players[1])];
 
     var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
 
@@ -137,8 +138,7 @@ function BattleTab(pid, conf, team) {
 BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.name = function(player) {
-    var id = this.conf.players[this.player(player)];
-    return players.name(id);
+    return this.players[this.player(player)];
 };
 
 BattleTab.prototype.rnick = function(spot) {
