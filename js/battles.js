@@ -129,6 +129,8 @@ function BattleTab(pid, conf, team) {
 
         this.$content.find(".p1_name").text(this.name(0));
         this.$content.find(".p2_name").text(this.name(1));
+        this.$content.find(".send_battle_message").attr("id", "send-battle-" + this.id);
+        this.$content.find(".send_battle_message").attr("onkeydown","if(event.keyCode==13)sendMessage(this);");
 
         this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
         this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
