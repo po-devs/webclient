@@ -2,7 +2,7 @@
 
 /* dealWithXxxx functions are all called from dealWithCommand */
 BattleTab.prototype.dealWithTurn = function(params) {
-    this.print("<h2>Turn " + params.turn + "</h2>")
+    this.print("<h2>Turn " + params.turn + "</h2>", {"css": "turn"});
 };
 
 BattleTab.prototype.dealWithBlank = function(params) {
@@ -280,21 +280,21 @@ BattleTab.prototype.dealWithWeatherstart = function(params) {
     //QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
     var weatherAbilityMessage = [
-        tr("%1's Snow Warning whipped up a hailstorm!"),
-        tr("%1's Drizzle made it rain!"),
-        tr("%1's Sand Stream whipped up a sandstorm!"),
-        tr("%1's Drought intensified the sun's rays!")
+        "%1's Snow Warning whipped up a hailstorm!",
+        "%1's Drizzle made it rain!",
+        "%1's Sand Stream whipped up a sandstorm!",
+        "%1's Drought intensified the sun's rays!"
     ];
 
     var weatherRegularMessage = [
-        tr("It started to hail!"),
-        tr("It started to rain!"),
-        tr("A sandstorm kicked up!"),
-        tr("The sunlight turned harsh!")
+        "It started to hail!",
+        "It started to rain!",
+        "A sandstorm kicked up!",
+        "The sunlight turned harsh!"
     ];
 
     if (params.permanent) {
-        this.print(weatherAbilityMessage[params.weather-1]).replace("%1", this.nick(params.spot));
+        this.print(weatherAbilityMessage[params.weather-1].replace("%1", this.nick(params.spot)));
     } else {
         this.print(weatherRegularMessage[params.weather-1]);
     }
@@ -405,14 +405,14 @@ BattleTab.prototype.dealWithItemmessage = function(params) {
     if (!mess) {
         return;
     }
-    if (mess.contains("%st")) mess.replace("%st", statinfo.name(params.other, this.conf.gen));
-    if (mess.contains("%s")) mess.replace("%s", this.nick(params.spot));
-    if (mess.contains("%f")) mess.replace("%f", this.nick(params.foe));
-    if (mess.contains("%i")) mess.replace("%i", iteminfo.name(params.berry));
-    if (mess.contains("%m")) mess.replace("%m", moveinfo.name(params.other));
+    if (mess.contains("%st")) mess = mess.replace("%st", statinfo.name(params.other, this.conf.gen));
+    if (mess.contains("%s")) mess = mess.replace("%s", this.nick(params.spot));
+    if (mess.contains("%f")) mess = mess.replace("%f", this.nick(params.foe));
+    if (mess.contains("%i")) mess = mess.replace("%i", iteminfo.name(params.berry));
+    if (mess.contains("%m")) mess = mess.replace("%m", moveinfo.name(params.other));
 
     /* Balloon gets a really special treatment */
-    if (item == 35)
+    if (params.item == 35)
         this.print("<strong>" + mess + "</strong>");
     else
         this.print(mess);
@@ -423,36 +423,36 @@ BattleTab.prototype.dealWithMovemessage = function(params) {
     if (!mess) {
         return;
     }
-    if (mess.contains("%s")) mess.replace("%s", this.nick(params.spot));
-    if (mess.contains("%ts")) mess.replace("%ts", this.name(params.spot));
-    if (mess.contains("%tf")) mess.replace("%tf", this.name(!params.spot));
-    if (mess.contains("%t")) mess.replace("%t", typeinfo.name(params.type));
-    if (mess.contains("%f")) mess.replace("%f", this.nick(params.foe));
-    if (mess.contains("%m")) mess.replace("%m", moveinfo.name(params.other));
-    if (mess.contains("%d")) mess.replace("%d", params.other);
-    if (mess.contains("%q")) mess.replace("%q", params.q);
-    if (mess.contains("%i")) mess.replace("%i", iteminfo.name(params.other));
-    if (mess.contains("%a")) mess.replace("%a", abilityinfo.name(params.other));
-    if (mess.contains("%p")) mess.replace("%p", pokeinfo.name(params.other));
+    if (mess.contains("%s")) mess = mess.replace("%s", this.nick(params.spot));
+    if (mess.contains("%ts")) mess = mess.replace("%ts", this.name(params.spot));
+    if (mess.contains("%tf")) mess = mess.replace("%tf", this.name(1-params.spot));
+    if (mess.contains("%t")) mess = mess.replace("%t", typeinfo.name(params.type));
+    if (mess.contains("%f")) mess = mess.replace("%f", this.nick(params.foe));
+    if (mess.contains("%m")) mess = mess.replace("%m", moveinfo.name(params.other));
+    if (mess.contains("%d")) mess = mess.replace("%d", params.other);
+    if (mess.contains("%q")) mess = mess.replace("%q", params.q);
+    if (mess.contains("%i")) mess = mess.replace("%i", iteminfo.name(params.other));
+    if (mess.contains("%a")) mess = mess.replace("%a", abilityinfo.name(params.other));
+    if (mess.contains("%p")) mess = mess.replace("%p", pokeinfo.name(params.other));
     this.print(mess);
 };
 
 BattleTab.prototype.dealWithAbilitymessage = function(params) {
-    var mess = moveinfo.message(params.ability, params.part);
+    var mess = abilityinfo.message(params.ability, params.part);
     if (!mess) {
         return;
     }
-    if (mess.contains("%st")) mess.replace("%st", statinfo.name(params.other, this.conf.gen));
-    if (mess.contains("%s")) mess.replace("%s", this.nick(params.spot));
+    if (mess.contains("%st")) mess = mess.replace("%st", statinfo.name(params.other, this.conf.gen));
+    if (mess.contains("%s")) mess = mess.replace("%s", this.nick(params.spot));
     //            mess.replace("%ts", data()->name(spot));
-    if (mess.contains("%tf")) mess.replace("%tf", this.name(!params.spot));
-    if (mess.contains("%t")) mess.replace("%t", typeinfo.name(params.type));
-    if (mess.contains("%f")) mess.replace("%f", this.nick(params.foe));
-    if (mess.contains("%m")) mess.replace("%m", moveinfo.name(params.other));
+    if (mess.contains("%tf")) mess = mess.replace("%tf", this.name(!params.spot));
+    if (mess.contains("%t")) mess = mess.replace("%t", typeinfo.name(params.type));
+    if (mess.contains("%f")) mess = mess.replace("%f", this.nick(params.foe));
+    if (mess.contains("%m")) mess = mess.replace("%m", moveinfo.name(params.other));
     //            mess.replace("%d", QString::number(other));
-    if (mess.contains("%i")) mess.replace("%i", iteminfo.name(params.other));
-    if (mess.contains("%a")) mess.replace("%a", abilityinfo.name(params.other));
-    if (mess.contains("%p")) mess.replace("%p", pokeinfo.name(params.other));
+    if (mess.contains("%i")) mess = mess.replace("%i", iteminfo.name(params.other));
+    if (mess.contains("%a")) mess = mess.replace("%a", abilityinfo.name(params.other));
+    if (mess.contains("%p")) mess = mess.replace("%p", pokeinfo.name(params.other));
 
     /* if (type == 0) {
         printLine("AbilityMessage", escapeHtml(tu(mess)));

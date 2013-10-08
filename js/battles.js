@@ -137,11 +137,20 @@ function BattleTab(pid, conf, team) {
 BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.name = function(player) {
-    return players.name(this.conf.players[player]);
+    var id = this.conf.players[this.player(player)];
+    return players.name(id);
+};
+
+BattleTab.prototype.rnick = function(spot) {
+    return this.pokes[spot].name;
 };
 
 BattleTab.prototype.nick = function(spot) {
-    return this.pokes[spot].name;
+    if (this.isBattle()) {
+        return this.rnick(spot);
+    } else {
+        return this.name(this.player(spot)) + "'s " + this.pokes[spot].name;
+    }
 };
 
 BattleTab.prototype.chat = function () {
@@ -149,24 +158,42 @@ BattleTab.prototype.chat = function () {
 };
 
 BattleTab.prototype.print = function(msg, args) {
-    var chatTextArea = this.chat().get(0);
-
-    if ("player" in args) {
-        msg = escapeHtml(msg);
-        var pid = this.conf.players[args.player];
-        var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
-        msg = pref + " " + addChannelLinks(msg);
-
-        this.activateTab();
+    /* Do not print empty message twice in a row */
+    if (msg.length == 0) {
+        if (this.blankMessage) {
+            return;
+        }
+        this.blankMessage = true;
+    } else {
+        this.blankMessage = false;
     }
 
-    chatTextArea.innerHTML += msg + "<br/>\n";
+    var chatTextArea = this.chat().get(0);
+
+    if (args) {
+        if ("player" in args) {
+            msg = escapeHtml(msg);
+            var pid = this.conf.players[args.player];
+            var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
+            msg = pref + " " + addChannelLinks(msg);
+        } else if ("css" in args && args.css == "turn") {
+            this.blankMessage = true;
+        }
+    }
+
+    if (!msg.contains("<h2")) {
+        msg += "<br/>";
+    }
+
+    chatTextArea.innerHTML += msg + "\n";
 
     /* Limit number of lines */
     if (this.chatCount++ % 500 === 0) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
     chatTextArea.scrollTop = chatTextArea.scrollHeight;
+
+    this.activateTab();
 };
 
 BattleTab.onChatKeyDown = function(event, obj) {
@@ -187,6 +214,7 @@ BattleTab.prototype.updateFieldPoke = function(spot) {
     var poke = this.pokes[spot];
     var $poke = this.$poke(spot);
     $poke.find(".pokemon_name").text(poke.name);
+    $poke.find(".sprite").attr("src", "");
     $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, this.conf.gen, this.player(spot) == 0));
     $poke.find(".battle-stat-value").text(poke.percent + "%");
 

@@ -27,6 +27,21 @@ moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
 };
 
+moveinfo.message = function(move, part) {
+    var messages = pokedex.moves.move_message[move];
+
+    if (!messages) {
+        return undefined;
+    }
+
+    var parts = messages.split('|');
+    if (part >= 0 && part < parts.length) {
+        return parts[part];
+    } else {
+        return undefined;
+    }
+};
+
 iteminfo.name = function(item) {
     if (item >= 8000) {
         return pokedex.items.berries[item-8000];
@@ -64,4 +79,19 @@ typeinfo.name = function(type) {
 
 abilityinfo.name = function(ability) {
     return pokedex.abilities.abilities[ability];
-}                                               ;
+};
+
+abilityinfo.message = function(ability, part) {
+    var messages = pokedex.abilities.ability_messages[ability];
+
+    if (!messages) {
+        return undefined;
+    }
+
+    var parts = messages.split('|');
+    if (part >= 0 && part < parts.length) {
+        return parts[part];
+    } else {
+        return undefined;
+    }
+};
