@@ -241,9 +241,10 @@ BattleTab.prototype.updateTeamPokes = function(player, pokes) {
     var $pokes = this.$content.find(".p" + (player + 1) + "_pokeballs");
 
     for (var i = 0; i < pokes.length; i++) {
-        var $img = $pokes.find("img:eq("+i+")");
-        if (pokes[i] && pokes[i].num) {
-            $img.attr("src", pokeinfo.icon(pokes[i]));
+        var $img = $pokes.find("img:eq("+pokes[i]+")");
+        if (this.teams[player][pokes[i]] && this.teams[player][pokes[i]].num) {
+            $img.attr("src", "");
+            $img.attr("src", pokeinfo.icon(this.teams[player][pokes[i]]));
         } else {
             $img.attr("src", "images/pokeballicon.png");
         }
