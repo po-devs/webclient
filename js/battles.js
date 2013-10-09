@@ -99,13 +99,17 @@ function BattleTab(pid, conf, team) {
     this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
+    /* pokemons on the fields */
     this.pokes = {};
+    /* teams */
+    this.teams = [[{},{},{},{},{},{}], [{},{},{},{},{},{}]];
     this.choices = {};
     this.spectators = {};
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
         together with the damage done to the Showdown window.
      */
     this.damageCause={};
+    this.players = [players.name(conf.players[0]), players.name(conf.players[1])];
 
     var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
 
@@ -113,8 +117,8 @@ function BattleTab(pid, conf, team) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
-        var $content = $("#battle-" + pid);
-        $content.html($("#battle-html").html());
+        this.$content = $("#battle-" + pid);
+        this.$content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
         switchToTab("#battle-"+pid);
@@ -122,14 +126,127 @@ function BattleTab(pid, conf, team) {
         if (team) {
             this.myself = conf.players[1] == players.myid ? 1 : 0;
         }
+
+        this.$content.find(".p1_name").text(this.name(0));
+        this.$content.find(".p2_name").text(this.name(1));
+        this.$content.find(".send_battle_message").attr("id", "send-battle-" + this.id);
+        this.$content.find(".send_battle_message").attr("onkeydown","if(event.keyCode==13)sendMessage(this);");
+
+        this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
+        this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
     }
 }
 
 BattleTab.inherits(ChannelTab);
 
+BattleTab.prototype.name = function(player) {
+    return this.players[this.player(player)];
+};
+
+BattleTab.prototype.rnick = function(spot) {
+    return this.pokes[spot].name;
+};
+
+BattleTab.prototype.nick = function(spot) {
+    if (this.isBattle()) {
+        return this.rnick(spot);
+    } else {
+        return this.name(this.player(spot)) + "'s " + this.pokes[spot].name;
+    }
+};
+
+BattleTab.prototype.chat = function () {
+    return $("#battle-" + this.id + " .scrollable");
+};
+
+BattleTab.prototype.print = function(msg, args) {
+    /* Do not print empty message twice in a row */
+    if (msg.length == 0) {
+        if (this.blankMessage) {
+            return;
+        }
+        this.blankMessage = true;
+    } else {
+        this.blankMessage = false;
+    }
+
+    var chatTextArea = this.chat().get(0);
+
+    if (args) {
+        if ("player" in args) {
+            msg = escapeHtml(msg);
+            var pid = this.conf.players[args.player];
+            var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
+            msg = pref + " " + addChannelLinks(msg);
+        } else if ("css" in args && args.css == "turn") {
+            this.blankMessage = true;
+        }
+    }
+
+    if (!msg.contains("<h2")) {
+        msg += "<br/>";
+    }
+
+    chatTextArea.innerHTML += msg + "\n";
+
+    /* Limit number of lines */
+    if (this.chatCount++ % 500 === 0) {
+        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
+    }
+    chatTextArea.scrollTop = chatTextArea.scrollHeight;
+
+    this.activateTab();
+};
+
 BattleTab.onChatKeyDown = function(event, obj) {
     if(event.keyCode==13) {
         sendMessage(obj);
+    }
+};
+
+BattleTab.prototype.player = function(spot) {
+    return spot % 2;
+};
+
+BattleTab.prototype.slot = function(spot) {
+    return spot >> 1;
+};
+
+BattleTab.prototype.updateFieldPoke = function(spot) {
+    var poke = this.pokes[spot];
+    var $poke = this.$poke(spot);
+    $poke.find(".pokemon_name").text(poke.name);
+    $poke.find(".sprite").attr("src", "");
+    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, this.conf.gen, this.player(spot) == 0));
+    $poke.find(".battle-stat-value").text(poke.percent + "%");
+
+    var $prog = $poke.find(".battle-stat-progress");
+    $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
+    $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
+    $prog.css("width", poke.percent + "%");
+};
+
+BattleTab.prototype.$poke = function(spot) {
+    return this.$content.find(".p" + (this.player(spot)+1) + "_pokemon" + (this.slot(spot)+1));
+};
+
+BattleTab.prototype.tpoke = function(spot) {
+    return this.teams[this.player(spot)][this.slot(spot)];
+};
+
+BattleTab.prototype.updateTeamPokes = function(player, pokes) {
+    if (!pokes) {
+        pokes = [0,1,2,3,4,5];
+    }
+    var $pokes = this.$content.find(".p" + (player + 1) + "_pokeballs");
+
+    for (var i = 0; i < pokes.length; i++) {
+        var $img = $pokes.find("img:eq("+i+")");
+        if (pokes[i] && pokes[i].num) {
+            $img.attr("src", pokeinfo.icon(pokes[i]));
+        } else {
+            $img.attr("src", "images/pokeballicon.png");
+        }
     }
 };
 
@@ -203,22 +320,6 @@ BattleTab.prototype.playerIds = function() {
     return array;
 };
 
-BattleTab.prototype.chat = function () {
-    return $("#battle-" + this.id + " #chatTextArea");
-};
-
-BattleTab.prototype.print = function(msg) {
-    var chatTextArea = this.chat().get(0);
-
-    chatTextArea.innerHTML += msg + "<br/>\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
-};
-
 BattleTab.prototype.choose = function(choice)
 {
     websocket.send("battlechoice|"+this.id+"|"+JSON.stringify(choice));
@@ -248,19 +349,6 @@ BattleTab.prototype.dealWithCommand = function(params) {
         this[funcName](params);
     }
 };
-
-BattleTab.prototype.addCommand = function(args, kwargs, preempt) {
-    kwargs = kwargs||{};
-    for (var x in kwargs) {
-        args.push("["+x+"]"+kwargs[x]);
-    }
-    if (!preempt) {
-        this.battle.add("|"+args.join("|"));
-    } else {
-        this.battle.instantAdd("|"+args.join("|"));
-    }
-};
-
 
 BattleTab.statuses = {
     0: "",
@@ -293,6 +381,12 @@ BattleTab.clauses = {
     8: "Self-KO Clause"
 };
 
+BattleTab.modes = {
+    0: "Singles",
+    1: "Doubles",
+    2: "Triples",
+    3: "Rotation"
+};
 //
 //BattleTab.prototype.updateSide = function(sideData, midBattle) {
 //    for (var i = 0; i < sideData.pokemon.length; i++) {

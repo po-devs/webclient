@@ -5,6 +5,10 @@ function sanitize(str, jsEscapeToo) {
     return str;
 }
 
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
+String.prototype.startsWith = function(str) { return this.lastIndexOf(str, 0) === 0; }
+
 function getQueryString(key, default_,query_) {
     var match = RegExp('[?&]' + key + '=([^&]*)')
         .exec(query_ || window.location.search);

@@ -2,13 +2,13 @@
     <tr>
 	<td class="battle_window">
 		<div class="battle_window_content">
-			<div class="battle_window_top_right_username">
+			<div class="p2_name">
 				cojot
 			</div>
-			<div class="battle_window_bottom_left_username">
+			<div class="p1_name">
 				Jirachier
 			</div>
-			<div class="battle_window_top_left_pokeballs">
+			<div class="p2_pokeballs">
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
@@ -16,7 +16,7 @@
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
 			</div>
-			<div class="battle_window_bottom_right_pokeballs">
+			<div class="p1_pokeballs">
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
@@ -24,43 +24,39 @@
 				<img src="images/pokeballicon.png" alt="" />
 				<img src="images/pokeballicon.png" alt="" />
 			</div>
-			<div style="top:60px;right:75px;" class="battle_window_top_pokemon">
+			<div style="top:60px;right:75px;" class="p2_pokemon1">
 				<div class="battle_window_pokemon_infos">
-					<span class="battle_window_top_pokemon_name">
-						Camerupt
+					<span class="pokemon_name">
 					</span>
 					<div class="battle-stat-content">
 						<span class="battle-stat-name">
 							HP
 						</span>
 						<span class="battle-stat-block">
-						<span style="width:30%;" class="battle-stat-progress battle-stat-progress-2x"></span>
+						<span style="width:30%;" class="battle-stat-progress"></span>
 						<span class="battle-stat-value">
-							30%
 						</span>
 						</span>
 					</div>
 				</div>
-				<img src="http://pokemon-online.eu/images/pokemon/black-white/323.png" alt="" />
+				<img src="" alt="" class="sprite" />
 			</div>
-			<div style="bottom:30px;left:70px;" class="battle_window_bottom_pokemon">
+			<div style="bottom:30px;left:70px;" class="p1_pokemon1">
 				<div class="battle_window_pokemon_infos">
-					<span class="battle_window_top_pokemon_name">
-						Jirachi
+					<span class="pokemon_name">
 					</span>
 					<div class="battle-stat-content">
 						<span class="battle-stat-name">
 							HP
 						</span>
 						<span class="battle-stat-block">
-						<span style="width:80%;" class="battle-stat-progress battle-stat-progress-4x"></span>
+						<span style="width:80%;" class="battle-stat-progress"></span>
 						<span class="battle-stat-value">
-							80%
 						</span>
 						</span>
 					</div>
 				</div>
-				<img src="http://pokemon-online.eu/images/pokemon/black-white/back/385.png" alt="" />
+				<img src="" alt="" class="sprite"/>
 			</div>
 			<img class="battle_window_background" src="http://play.pokemonshowdown.com/fx/bg-meadow.png" alt="" />
 		</div>
@@ -68,14 +64,9 @@
 	<td class="battle_chat">
 		<div class="battle_chat_content">
 			<div class="scrollable">
-					<strong>Battle between plouf and plouf2 just started!</strong><br /><br />
-					<strong>Tier:</strong> Wifi OU<br />
-					<strong>Mode:</strong> Singles<br />
-					<h2>Turn 1</h2>
-					hurr durr<br /><br /><br /><br />durrrrr<br /><br /><br /><br />plouf<br /><br />plouf<br /><br />plouf
 			</div>
 			<div class="messagebox">
-				<input type="text" name="send_battle_message[]" value="" placeholder="Send Message" />
+				<input type="text" history="true" class="send_battle_message" value="" placeholder="Send Message" />
 			</div>
 		</div>
 	</td>
