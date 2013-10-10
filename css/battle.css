@@ -61,14 +61,13 @@
 	left:10px;
 }
 
-.p2_pokemon1, .p1_pokemon1 {
+.p2_pokemon1 .sprite, .p1_pokemon1 .sprite {
 	position:absolute;
 }
 
 .battle_window_pokemon_infos {
-	width:100%;
+	width:100px;
 	position:absolute;
-	top:-45px;
 	text-align:center;
 }
 
