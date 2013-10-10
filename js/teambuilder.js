@@ -56,7 +56,7 @@ teambuilder.prototype.resetTeamBuilder = function() {
 	$('.pokemon-slot-shiny').prop('checked', false);
 	
 	// pokemon name
-	$(".pokemon-slot-name").destroyAutocomplete().val('').data('pokemon_id', 0).autocomplete({ source:$.map(pokedex.pokes.released[this.getTeamInfo('team_generation')], function(name, id) { return {label:name, value:id}; })}).on('autocompleteselect autocompletefocus', function(e, ui) {
+	$(".pokemon-slot-name").destroyAutocomplete().val('Missingno').data('pokemon_id', 0).autocomplete({ source:$.map(pokedex.pokes.released[this.getTeamInfo('team_generation')], function(name, id) { return {label:name, value:id}; })}).on('autocompleteselect autocompletefocus', function(e, ui) {
 		
 		e.preventDefault();
 		$(this).val(ui.item.label).data('pokemon_id', ui.item.value);
