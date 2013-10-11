@@ -10,8 +10,9 @@ pokeinfo.sprite = function(poke, gen, back) {
         gen = defaultgen;
     }
 
-    return pokedex.generations.options[gen.num].sprite_folder + (gen.num == 5 ? "animated/" : "" )
-        + (back ? "back/" : "") + poke.num + (poke.forme ? "-" + poke.forme : "") + (gen.num == 5 ? ".gif" : ".png");
+    return pokedex.generations.options[gen.num].sprite_folder + (gen.num == 5 ? "animated/" : "" ) + (back ? "back/" : "")
+        + (gen.num == 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
+        + (gen.num == 5 ? ".gif" : ".png");
 };
 
 pokeinfo.icon = function(poke) {
