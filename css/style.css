@@ -130,6 +130,10 @@ input:focus:-ms-input-placeholder {
 	display:block;
 }
 
+.tab-active {
+	color:#ffffff;
+}
+
 div#channel-tabs {
 	position:relative;
 	height:100%;

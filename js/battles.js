@@ -127,8 +127,8 @@ function BattleTab(pid, conf, team) {
             this.myself = conf.players[1] == players.myid ? 1 : 0;
         }
 
-        this.$content.find(".p1_name").text(this.name(0));
-        this.$content.find(".p2_name").text(this.name(1));
+        this.$content.find(".p1_name_content").text(this.name(0));
+        this.$content.find(".p2_name_content").text(this.name(1));
         this.$content.find(".send_battle_message").attr("id", "send-battle-" + this.id);
         this.$content.find(".send_battle_message").attr("onkeydown","if(event.keyCode==13)sendMessage(this);");
 
