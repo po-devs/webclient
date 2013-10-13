@@ -126,7 +126,7 @@ input:focus:-ms-input-placeholder {
 	bottom:0px;
 }
 
-.middle_block#teambuilder {
+.middle_block#content {
 	display:block;
 }
 
@@ -354,13 +354,16 @@ ul#player-list li  {
 	font-weight:bold;
 	text-align:center;
 	min-width:100px;
-	padding:10px 0px;
+	height:40px;
+	line-height:36px;
 	background-color:#1f5d96;
 	border:1px solid transparent;
 	-moz-border-radius:3px;
 	border-radius:3px;
 	cursor:pointer;
 	text-transform:uppercase;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
 }
 
 .click_button:hover {
@@ -707,79 +710,79 @@ ul#rankings li {
 
 /* pokemon types colors */
 
-.pokemon-slot-type.grass {
-	background-color:#79c02c;
-}
-
-.pokemon-slot-type.poison {
-	background-color:#c42dcb;
-}
-
-.pokemon-slot-type.fire {
-	background-color:#fc7a00;
-}
-
-.pokemon-slot-type.water {
-	background-color:#3278b4;
-}
-
-.pokemon-slot-type.rock {
-	background-color:#b19d20;
-}
-
-.pokemon-slot-type.ground {
-	background-color:#bea344;
-}
-
-.pokemon-slot-type.steel {
-	background-color:#a0b5b8;
-}
-
-.pokemon-slot-type.electric {
-	background-color:#ebcd16;
-}
-
-.pokemon-slot-type.fighting {
-	background-color:#c64404;
-}
-
-.pokemon-slot-type.normal {
+.type_0 { /* Normal */
 	background-color:#d5ca72;
 }
 
-.pokemon-slot-type.ice {
-	background-color:#29b2e1;
+.type_1 { /* Fighting */
+	background-color:#c64404;
 }
 
-.pokemon-slot-type.flying {
+.type_2 { /* Flying */
 	background-color:#3bd2ed;
 }
 
-.pokemon-slot-type.bug {
+.type_3 { /* Poison */
+	background-color:#c42dcb;
+}
+
+.type_4 { /* Ground */
+	background-color:#bea344;
+}
+
+.type_5 { /* Rock */
+	background-color:#b19d20;
+}
+
+.type_6 { /* Bug */
 	background-color:#5e9025;
 }
 
-.pokemon-slot-type.psychic {
-	background-color:#a0316f;
-}
-
-.pokemon-slot-type.dark {
-	background-color:#3f3f3f;
-}
-
-.pokemon-slot-type.ghost {
+.type_7 { /* Ghost */
 	background-color:#654595;
 }
 
-.pokemon-slot-type.dragon {
+.type_8 { /* Steel */
+	background-color:#a0b5b8;
+}
+
+.type_9 { /* Fire */
+	background-color:#fc7a00;
+}
+
+.type_10 { /* Water */
+	background-color:#3278b4;
+}
+
+.type_11 { /* Grass */
+	background-color:#79c02c;
+}
+
+.type_12 { /* Electric */
+	background-color:#ebcd16;
+}
+
+.type_13 { /* Psychic */
+	background-color:#a0316f;
+}
+
+.type_14 { /* Ice */
+	background-color:#29b2e1;
+}
+
+.type_15 { /* Dragon */
 	background-color:#ec4f38;
 }
 
-.pokemon-slot-type.fairy {
+.type_16 { /* Dark */
+	background-color:#3f3f3f;
+}
+
+.type_17 { /* Fairy */
 	background-color:#f28ff2;
 }
 
-.pokemon-slot-type.type_18 { /* unknown */
+.type_18 { /* Unknown */
 	background-color:#39b37d;
 }
 
