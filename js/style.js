@@ -8,12 +8,12 @@ $(document).ready(function() {
 			objFromId(href).close();
 		}
 	});
-	
+
 	$(".dropdown_button").on('click', function() {
 		$(this).find('i').toggle();
 		$(this).parent().find('.dropdown_content').toggle();
 	});
-	
+
 	$("#trainer_username, #create_team, #po_title").on('click', function() {
 		$(".middle_block").hide();
 		switch($(this).attr('id'))
@@ -21,11 +21,11 @@ $(document).ready(function() {
 			case 'trainer_username':
 				$("#user_params").show();
 			break;
-			
+
 			case 'create_team':
 				$("#teambuilder").show();
 			break;
-			
+
 			case 'po_title':
 				$("#content").show();
 			break;
@@ -33,33 +33,33 @@ $(document).ready(function() {
 	});
     $("#battle-html").load("battle.html");
 	$("#teambuilder").load("teambuilder.html", function() {
-		
+
 		/* Teambuilder */
-		
+
 		$("#team_form").on('submit', function(e) {
 			e.preventDefault();
 		});
-		
+
 		$("#pokemon-parameters .icon-gear").on('click', function() {
 			$("#team-infos").toggle();
 		});
-		
+
 		$(".pokemon-slot-gender-radio").on('change', function() {
 			$(this).parent().find(' .pokemon-slot-gender-checked').removeClass('pokemon-slot-gender-checked');
 			$("label[for='"+$(this).attr('id')+"']").addClass('pokemon-slot-gender-checked');
 		});
-		
+
 		$(".pokemon-slot-advanced").on('click', function() {
 			$(this).parent().parent().find(' .pokemon-slot-advanced-content').toggle();
 		});
-		
+
 		$(".pokemon-slot-hidden-power-type, .pokemon-slot-ability, .pokemon-slot-nature, .pokemon-slot-item").combobox();
-		
+
 		$("#save_team").on('click', function(e) {
 			e.preventDefault();
 			alert(JSON.stringify($("#team_form").serializeArray()));
 		});
-		
+
 		$(".pokemon-evs-value").knob({
 			min:0,
 			max:255,
@@ -73,7 +73,7 @@ $(document).ready(function() {
 			font:'inherit',
 			inputColor:'#757575'
 		});
-		
+
 		$(".pokemon-ivs-value").knob({
 			min:0,
 			max:31,
@@ -87,7 +87,7 @@ $(document).ready(function() {
 			font:'inherit',
 			inputColor:'#757575'
 		});
-		
+
 		$(".pokemon-level-value").slider({
 			min:0,
 			max:100,
@@ -101,7 +101,7 @@ $(document).ready(function() {
 				$(this).parent().find('.pokemon-level-display-value').text($(this).slider('value'));
 			}
 		});
-		
+
 		$(".pokemon-happiness-value").slider({
 			min:0,
 			max:255,
@@ -115,7 +115,7 @@ $(document).ready(function() {
 				$(this).parent().find('.pokemon-happiness-display-value').text($(this).slider('value'));
 			}
 		});
-		
+
 		//$("#tb-team-generation-value").fillSelect(pokedex.generations.generations).val($(this).find('option:last-child').val()).combobox();
 		$(".moves-list tr").on('click', function() {
 			var move_name = $(this).find('.move-name').text();
@@ -130,14 +130,14 @@ $(document).ready(function() {
 				}
 			});
 		});
-		
+
 		$("#pokemon-tabs").sortable().on('sortstart', function(event, ui) {
 			$("#pokemon-tabs .pokemon-tab").each(function(index) {
 				$(this).attr('id', 'tb_tab_temporary_id_'+index);
-				$(".pokemon-slot").eq(index).attr('id', 'tb_tab_content_temporary_id_'+index)
+				$(".pokemon-slot").eq(index).attr('id', 'tb_tab_content_temporary_id_'+index);
 			});
 		}).on('sortupdate', function(event, ui) {
-			
+
 			var selector = "#tb_tab_content_"+ui.item.attr('id').substr(7);
 			if(ui.item.index() > $(selector).index())
 			{
@@ -151,7 +151,7 @@ $(document).ready(function() {
 			$("#pokemon-tabs .pokemon-tab").removeAttr('id'),
 			$(".pokemon-slot").removeAttr('id');
 		});
-		
+
 		$("#pokemon-tabs .pokemon-tab").on('click', function() {
 			$('.pokemon-tab').removeClass('active-pokemon-tab').eq($(this).index()).addClass('active-pokemon-tab');
 			$('.pokemon-slot').removeClass('active-pokemon-slot').eq($(this).index()).addClass('active-pokemon-slot');
@@ -160,5 +160,5 @@ $(document).ready(function() {
         $(document).ready(function() {
 		    var tb = new teambuilder();
         });
-	})
+	});
 });
