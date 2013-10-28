@@ -128,6 +128,7 @@ function pokemonPictureUrl(pokeid, gen, gender, shiny, back) {
 function format(element) {
     if (typeof element === "object") {
         convertPOLinks(element);
+        return undefined;
     } else {
         var el = $("<div>");
         el.html(element);
