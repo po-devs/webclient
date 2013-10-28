@@ -232,6 +232,8 @@ $(function() {
         if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
             return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
         }
+        return undefined;
+
     });
 
     $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
