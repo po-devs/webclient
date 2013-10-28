@@ -349,14 +349,14 @@ $("#player-list").on("click", "li", function(event) {
     var buttons = [
         {
             text: "Send Private Message",
-			class: "click_button",
+			"class": "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
     ];
     if (players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
-			class: "click_button",
+			"class": "click_button",
             click: function() { players.removeIgnore(id); dialog.dialog("close"); }
         });
     } else {
