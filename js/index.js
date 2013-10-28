@@ -127,7 +127,7 @@ $(function() {
         websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
     }
     });
-	
+
     $(document).on("click", "a", function (event) {
         var href = this.href;
 
@@ -314,7 +314,7 @@ var updatePlayerInfo = function(player) {
         if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
             var path = window.location.pathname;
             var dir = path.substr(0, path.lastIndexOf("/"));
-            info = "<div class='iframe-trainer-info'>"+info+"</div>"
+            info = "<div class='iframe-trainer-info'>"+info+"</div>";
             $("#player-dialog .trainer-info").html("<iframe src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
                 + window.btoa(window.location.protocol + "//" + window.location.hostname + dir + "/css/webclient.css") + "'></iframe>");
         } else {
