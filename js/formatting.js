@@ -6,9 +6,8 @@
     added through .prototype aren't enumerable. Still works fine with IE < 9 (8 can only do this on DOM objects)
     and browsers that don't have it in the first place.
 */
-defineOn = function (core, props) {
-    var x,
-        hasDefineProperty = true;
+var defineOn = function (core, props) {
+    var x, hasDefineProperty = true;
 
     if ($.browser.msie) {
         if (parseInt($.browser.version, 10) < 9) {
