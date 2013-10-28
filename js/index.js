@@ -362,7 +362,7 @@ $("#player-list").on("click", "li", function(event) {
     } else {
         buttons.push({
             text: "Ignore",
-			class: "click_button",
+			"class": "click_button",
             click: function() { players.addIgnore(id); dialog.dialog("close"); }
         });
     }
