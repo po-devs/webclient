@@ -585,7 +585,7 @@ parseCommand = function(message) {
             $.removeCookie("username");
         }
 
-        var data = {version: 1};
+        data = {version: 1};
         if (getQueryString("user") || username) {
             data.name = getQueryString("user") || username;
             data.default = getQueryString("channel");
