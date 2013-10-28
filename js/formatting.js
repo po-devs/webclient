@@ -55,7 +55,7 @@ defineOn(String.prototype, {
         var prevLetter=false;
         for (var i=0; i < s.length; i++) {
             if (/[a-zA-Z]/.test(s[i])) {
-                if (!prevLetter){s[i] = s[i].toUpperCase()}
+                if (!prevLetter){s[i] = s[i].toUpperCase();}
                 prevLetter = true;
             } else {
                 prevLetter = false;
