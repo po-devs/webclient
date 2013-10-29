@@ -126,7 +126,7 @@ input:focus:-ms-input-placeholder {
 	bottom:0px;
 }
 
-.middle_block#content {
+.middle_block#teambuilder {
 	display:block;
 }
 
@@ -568,6 +568,15 @@ ul#rankings li {
 	border-radius:3px;
 }
 
+.pokemon-slot-sprite table {
+	width:100%;
+	height:100%;
+	text-align:center;
+	vertical-align:middle;
+	border-collapse:collapse;
+	border:none;
+}
+
 .pokemon-slot-sprite img {
 	margin:auto;
 	cursor:pointer;
@@ -627,7 +636,7 @@ ul#rankings li {
 }
 
 .pokemon-slot-gender-checked {
-	background-color:#f0f0f0;
+	background-color:#e4e4e4;
 }
 
 .pokemon-slot-nickname {
@@ -711,6 +720,22 @@ ul#rankings li {
 	display:none;
 	margin:25px 0px;
 }
+
+/* move damage classes colors */
+
+.damage_class_0 { /* Other */
+	background-color:#ada594;
+}
+
+.damage_class_1 { /* Physical */
+	background-color:#f75231;
+}
+
+.damage_class_2 { /* Special */
+	background-color:#5273ad;
+}
+
+/* end of damage classes colors */
 
 /* pokemon types colors */
 
@@ -799,15 +824,11 @@ ul#rankings li {
 .pokemon-evs-value, .pokemon-ivs-value {
 	height:20px !important;
 	line-height:20px !important;
-	margin-top:50px !important;
+	margin-top:42px !important;
 	background-color:#ffffff !important;
 	border:1px solid #f2f2f2 !important;
 	border-radius:3px !important;
 	-moz-border-radius:3px !important;
-}
-
-.pokemon-ivs-value {
-	margin-top:42px !important;
 }
 
 .pokemon-evs, .pokemon-ivs, .pokemon-level, .pokemon-happiness {
@@ -817,7 +838,8 @@ ul#rankings li {
 	width:20%;
 }
 
-.pokemon-ivs {
+.pokemon-evs, .pokemon-ivs {
+	font-size:10px;
 	width:16.66%;
 }
 
@@ -895,8 +917,14 @@ ul#rankings li {
 	border-bottom:1px solid #f2f2f2;
 }
 
-.move-type, .move-category {
+.move-type {
 	width:30px;
+	padding-right:2.5px;
+}
+
+.move-category {
+	width:30px;
+	padding-left:2.5px;
 }
 
 .move-type .pokemon-slot-type-block, .move-category .pokemon-slot-type-block {

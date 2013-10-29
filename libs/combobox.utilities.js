@@ -1,11 +1,27 @@
 (function($) {	
+	
+	jQuery.getFirstPropertyIndex = function(object) {
+		
+		var first;
+		
+		$.each(object, function(index) {
+			first = index;
+			return false;
+		});
+		
+		return first;
+	};
+	
+	
 	jQuery.fn.fillSelect = function(object){
 		
 		var select = $(this);
+		var options = "";
 		
 		$.each(object, function(key, value) {
-			select.append($('<option></option>').attr('value', key).text(value));
+			options += '<option value="'+key+'">'+value+'</option>';
 		});
+		select.append(options);
 		
 		return $(this);
 	};
@@ -28,8 +44,8 @@
 		return $(this);
 	};
 	
-	jQuery.fn.reloadCombobox = function(data, default_value) {
-		$(this).destroyCombobox().find('option').remove().end().fillSelect(data).val(default_value).combobox();
+	jQuery.fn.reloadCombobox = function(data, default_value, select_event) {
+		$(this).destroyCombobox().find('option').remove().end().fillSelect(data).val(default_value).combobox(select_event != undefined ? { select: function(e, ui) { select_event(e, ui) } } : {});
 		return $(this);
 	};
 	
