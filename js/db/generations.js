@@ -1,3 +1,4 @@
+if(!pokedex.generations)pokedex.generations={};
 pokedex.generations.generations = {
 1:"Generation 1",
 2:"Generation 2",

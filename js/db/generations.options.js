@@ -1,3 +1,4 @@
+if(!pokedex.generations)pokedex.generations={};
 pokedex.generations.options = {
 1:{
 	gender:false,

@@ -130,6 +130,10 @@ input:focus:-ms-input-placeholder {
 	display:block;
 }
 
+.tab-active {
+	color:#ffffff;
+}
+
 div#channel-tabs {
 	position:relative;
 	height:100%;
@@ -354,13 +358,16 @@ ul#player-list li  {
 	font-weight:bold;
 	text-align:center;
 	min-width:100px;
-	padding:10px 0px;
+	height:40px;
+	line-height:36px;
 	background-color:#1f5d96;
 	border:1px solid transparent;
 	-moz-border-radius:3px;
 	border-radius:3px;
 	cursor:pointer;
 	text-transform:uppercase;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
 }
 
 .click_button:hover {
@@ -561,6 +568,15 @@ ul#rankings li {
 	border-radius:3px;
 }
 
+.pokemon-slot-sprite table {
+	width:100%;
+	height:100%;
+	text-align:center;
+	vertical-align:middle;
+	border-collapse:collapse;
+	border:none;
+}
+
 .pokemon-slot-sprite img {
 	margin:auto;
 	cursor:pointer;
@@ -620,7 +636,7 @@ ul#rankings li {
 }
 
 .pokemon-slot-gender-checked {
-	background-color:#f0f0f0;
+	background-color:#e4e4e4;
 }
 
 .pokemon-slot-nickname {
@@ -705,81 +721,97 @@ ul#rankings li {
 	margin:25px 0px;
 }
 
+/* move damage classes colors */
+
+.damage_class_0 { /* Other */
+	background-color:#ada594;
+}
+
+.damage_class_1 { /* Physical */
+	background-color:#f75231;
+}
+
+.damage_class_2 { /* Special */
+	background-color:#5273ad;
+}
+
+/* end of damage classes colors */
+
 /* pokemon types colors */
 
-.pokemon-slot-type.grass {
-	background-color:#79c02c;
-}
-
-.pokemon-slot-type.poison {
-	background-color:#c42dcb;
-}
-
-.pokemon-slot-type.fire {
-	background-color:#fc7a00;
-}
-
-.pokemon-slot-type.water {
-	background-color:#3278b4;
-}
-
-.pokemon-slot-type.rock {
-	background-color:#b19d20;
-}
-
-.pokemon-slot-type.ground {
-	background-color:#bea344;
-}
-
-.pokemon-slot-type.steel {
-	background-color:#a0b5b8;
-}
-
-.pokemon-slot-type.electric {
-	background-color:#ebcd16;
-}
-
-.pokemon-slot-type.fighting {
-	background-color:#c64404;
-}
-
-.pokemon-slot-type.normal {
+.type_0 { /* Normal */
 	background-color:#d5ca72;
 }
 
-.pokemon-slot-type.ice {
-	background-color:#29b2e1;
+.type_1 { /* Fighting */
+	background-color:#c64404;
 }
 
-.pokemon-slot-type.flying {
+.type_2 { /* Flying */
 	background-color:#3bd2ed;
 }
 
-.pokemon-slot-type.bug {
+.type_3 { /* Poison */
+	background-color:#c42dcb;
+}
+
+.type_4 { /* Ground */
+	background-color:#bea344;
+}
+
+.type_5 { /* Rock */
+	background-color:#b19d20;
+}
+
+.type_6 { /* Bug */
 	background-color:#5e9025;
 }
 
-.pokemon-slot-type.psychic {
-	background-color:#a0316f;
-}
-
-.pokemon-slot-type.dark {
-	background-color:#3f3f3f;
-}
-
-.pokemon-slot-type.ghost {
+.type_7 { /* Ghost */
 	background-color:#654595;
 }
 
-.pokemon-slot-type.dragon {
+.type_8 { /* Steel */
+	background-color:#a0b5b8;
+}
+
+.type_9 { /* Fire */
+	background-color:#fc7a00;
+}
+
+.type_10 { /* Water */
+	background-color:#3278b4;
+}
+
+.type_11 { /* Grass */
+	background-color:#79c02c;
+}
+
+.type_12 { /* Electric */
+	background-color:#ebcd16;
+}
+
+.type_13 { /* Psychic */
+	background-color:#a0316f;
+}
+
+.type_14 { /* Ice */
+	background-color:#29b2e1;
+}
+
+.type_15 { /* Dragon */
 	background-color:#ec4f38;
 }
 
-.pokemon-slot-type.fairy {
+.type_16 { /* Dark */
+	background-color:#3f3f3f;
+}
+
+.type_17 { /* Fairy */
 	background-color:#f28ff2;
 }
 
-.pokemon-slot-type.type_18 { /* unknown */
+.type_18 { /* Unknown */
 	background-color:#39b37d;
 }
 
@@ -792,15 +824,11 @@ ul#rankings li {
 .pokemon-evs-value, .pokemon-ivs-value {
 	height:20px !important;
 	line-height:20px !important;
-	margin-top:50px !important;
+	margin-top:42px !important;
 	background-color:#ffffff !important;
 	border:1px solid #f2f2f2 !important;
 	border-radius:3px !important;
 	-moz-border-radius:3px !important;
-}
-
-.pokemon-ivs-value {
-	margin-top:42px !important;
 }
 
 .pokemon-evs, .pokemon-ivs, .pokemon-level, .pokemon-happiness {
@@ -810,7 +838,8 @@ ul#rankings li {
 	width:20%;
 }
 
-.pokemon-ivs {
+.pokemon-evs, .pokemon-ivs {
+	font-size:10px;
 	width:16.66%;
 }
 
@@ -888,8 +917,14 @@ ul#rankings li {
 	border-bottom:1px solid #f2f2f2;
 }
 
-.move-type, .move-category {
+.move-type {
 	width:30px;
+	padding-right:2.5px;
+}
+
+.move-category {
+	width:30px;
+	padding-left:2.5px;
 }
 
 .move-type .pokemon-slot-type-block, .move-category .pokemon-slot-type-block {
