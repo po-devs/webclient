@@ -106,7 +106,7 @@ def main(argv):
             'base_files': ['versions', 'gens']
         }
     }
-    gens = ['1','2','3','4','5']
+    gens = ['1','2','3','4','5', '6']
 
     for type in types.keys():
         for gen in gens:

@@ -75,7 +75,7 @@ def main(argv):
     else:
         path = argv[1]
 
-    gens = ['1','2','3','4','5']
+    gens = ['1','2','3','4','5', '6']
     files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels', 'released']
     base_files = ['gender', 'height', 'weight', 'stats', 'pokemons']
 
