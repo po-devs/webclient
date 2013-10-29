@@ -590,7 +590,7 @@ parseCommand = function(message) {
         data = {version: 1};
         if (getQueryString("user") || username) {
             data.name = getQueryString("user") || username;
-            data.default = getQueryString("channel");
+            data["default"] = getQueryString("channel");
             data.autojoin = getQueryString("autojoin");
             if (data.autojoin) {
                 data.autojoin = data.autojoin.split(",");
