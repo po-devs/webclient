@@ -127,7 +127,7 @@ $(function() {
         websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
     }
     });
-	
+
     $(document).on("click", "a", function (event) {
         var href = this.href;
 
@@ -232,6 +232,8 @@ $(function() {
         if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
             return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
         }
+        return undefined;
+
     });
 
     $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
@@ -314,7 +316,7 @@ var updatePlayerInfo = function(player) {
         if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
             var path = window.location.pathname;
             var dir = path.substr(0, path.lastIndexOf("/"));
-            info = "<div class='iframe-trainer-info'>"+info+"</div>"
+            info = "<div class='iframe-trainer-info'>"+info+"</div>";
             $("#player-dialog .trainer-info").html("<iframe src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
                 + window.btoa(window.location.protocol + "//" + window.location.hostname + dir + "/css/webclient.css") + "'></iframe>");
         } else {
@@ -349,20 +351,20 @@ $("#player-list").on("click", "li", function(event) {
     var buttons = [
         {
             text: "Send Private Message",
-			class: "click_button",
+			"class": "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
     ];
     if (players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
-			class: "click_button",
+			"class": "click_button",
             click: function() { players.removeIgnore(id); dialog.dialog("close"); }
         });
     } else {
         buttons.push({
             text: "Ignore",
-			class: "click_button",
+			"class": "click_button",
             click: function() { players.addIgnore(id); dialog.dialog("close"); }
         });
     }
@@ -585,10 +587,10 @@ parseCommand = function(message) {
             $.removeCookie("username");
         }
 
-        var data = {version: 1};
+        data = {version: 1};
         if (getQueryString("user") || username) {
             data.name = getQueryString("user") || username;
-            data.default = getQueryString("channel");
+            data["default"] = getQueryString("channel");
             data.autojoin = getQueryString("autojoin");
             if (data.autojoin) {
                 data.autojoin = data.autojoin.split(",");

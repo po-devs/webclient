@@ -1,5 +1,6 @@
-pokeinfo = {}; moveinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
-defaultgen = {"num":5, "subnum": 1};
+var pokeinfo = {}, moveinfo = {}, statinfo = {}, statusinfo = {}, iteminfo = {}, typeinfo = {}, abilityinfo = {};
+
+var defaultgen = {"num":5, "subnum": 1};
 
 pokeinfo.toNum = function(poke) {
     return poke.num + ( (poke.forme || 0) << 16);
