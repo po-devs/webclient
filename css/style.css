@@ -1077,3 +1077,7 @@ div.player-info-battle {
 	text-align:center;
 	font-style:italic;
 }
+
+.pokemon-slot-hidden-power-container, .pokemon-slot-ability-container, .pokemon-slot-nature-container, .pokemon-slot-item-container {
+	display:inline;
+}
