@@ -1,4 +1,9 @@
 geninfo = {}; pokeinfo = {}; genderinfo = {}; natureinfo = {}; moveinfo = {}; categoryinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
+var lastgen = 1;
+
+for (var i in pokedex.generations.generations) {
+    lastgen = i;
+}
 
 geninfo.list = function() {
     return pokedex.generations.generations;
@@ -30,9 +35,7 @@ pokeinfo.sprite = function(stuff) {
         return;
     }
     if (!gen) {
-        for (var i in pokedex.generations.generations) {
-        gen = i;
-        }
+        gen = lastgen;
     }
     if (type != "back" && type != "icon") {
         type = "front";
@@ -107,14 +110,15 @@ pokeinfo.stat = function(poke, stat) {
 
 pokeinfo.allMovesList = function(gen) {
     if (!gen) {
-        return pokedex.pokes.all_moves;
+        gen = lastgen;
     }
-    else {
-        return pokedex.pokes.all_moves[gen];
-    }
+    return pokedex.pokes.all_moves[gen];
 };
 
 pokeinfo.allMoves = function(poke, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     if (!pokedex.pokes.all_moves[this.toNum(poke)]) {
         poke %= 65536;
     }
@@ -123,20 +127,18 @@ pokeinfo.allMoves = function(poke, gen) {
 
 pokeinfo.typesList = function(gen) {
     if (!gen) {
-        return {
-            1: pokedex.pokes.type1,
-            2: pokedex.pokes.type2
-        };
+        gen = lastgen;
     }
-    else {
-        return {
-            1: pokedex.pokes.type1[gen],
-            2: pokedex.pokes.type2[gen]
-        };
-    }
+    return {
+        1: pokedex.pokes.type1[gen],
+        2: pokedex.pokes.type2[gen]
+    };
 };
 
 pokeinfo.types = function(poke, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     var id = this.toNum(poke);
     if (!pokedex.pokes.type1[gen][id]) {
         id %= 65536;
@@ -152,22 +154,19 @@ pokeinfo.types = function(poke, gen) {
 
 pokeinfo.abilityList = function(gen) {
     if (!gen) {
-        return {
-            1: pokedex.pokes.ability1,
-            2: pokedex.pokes.ability2,
-            3: pokedex.pokes.ability3
-        }
+        gen = lastgen;
     }
-    else {
-        return {
-            1: pokedex.pokes.ability1[gen],
-            2: pokedex.pokes.ability2[gen],
-            3: pokedex.pokes.ability3[gen]
-        }
+    return {
+        1: pokedex.pokes.ability1[gen],
+        2: pokedex.pokes.ability2[gen],
+        3: pokedex.pokes.ability3[gen]
     }
 };
 
-pokeinfo.ability = function(poke, gen, hidden) {
+pokeinfo.ability = function(poke, hidden, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     var id = this.toNum(poke);
     if (!pokedex.pokes.ability1[gen][id]) {
         id %= 65536;
@@ -188,14 +187,15 @@ pokeinfo.ability = function(poke, gen, hidden) {
 
 pokeinfo.releasedList = function(gen) {
     if (!gen) {
-        return pokedex.pokes.released;
+        gen = lastgen;
     }
-    else {
-        return pokedex.pokes.released[gen];
-    }
+    return pokedex.pokes.released[gen];
 };
 
 pokeinfo.released = function(poke, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.pokes.released[gen].hasOwnProperty(this.toNum(poke));
 };
 
@@ -257,53 +257,57 @@ moveinfo.name = function(move) {
 
 moveinfo.accuracyList = function(gen) {
     if (!gen) {
-        return pokedex.moves.accuracy;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.accuracy[gen];
-    }
+    return pokedex.moves.accuracy[gen];
 };
 
 moveinfo.accuracy = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.accuracy[gen][move];
 };
 
 moveinfo.damageClassList = function(gen) {
     if (!gen) {
-        return pokedex.moves.damage_class;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.damage_class[gen];
-    }
+    return pokedex.moves.damage_class[gen];
 };
 
 moveinfo.damageClass = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.damage_class[gen][move];
 };
 
 moveinfo.effectList = function(gen) {
     if (!gen) {
-        return pokedex.moves.effect;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.effect[gen];
-    }
+    return pokedex.moves.effect[gen];
 };
 
 moveinfo.effect = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.effect[gen][move];
 };
 
 moveinfo.powerList = function(gen) {
     if (!gen) {
-        return pokedex.moves.power;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.power[gen];
-    }
+    return pokedex.moves.power[gen];
 };
 
 moveinfo.power = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.power[gen][move];
 };
 
@@ -313,27 +317,29 @@ moveinfo.messageList = function() {
 
 moveinfo.ppList = function(gen) {
     if (!gen) {
-        return pokedex.moves.pp;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.pp[gen];
-    }
+    return pokedex.moves.pp[gen];
 };
 
 moveinfo.pp = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.pp[gen][move];
 };
 
 moveinfo.typeList = function(gen) {
     if (!gen) {
-        return pokedex.moves.type;
+        gen = lastgen;
     }
-    else {
-        return pokedex.moves.type[gen];
-    }
+    return pokedex.moves.type[gen];
 };
 
 moveinfo.type = function(move, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     return pokedex.moves.type[gen][move];
 };
 
@@ -376,27 +382,22 @@ iteminfo.name = function(item) {
     }
 };
 
-iteminfo.releasedList(gen) {
-    if (!gen){
-        var list = pokedex.items.released_items;
-        for (var x in pokedex.items.released_berries) {
-            for (var y in pokedex.items.released_berries[x]) {
-                list[x][y + 8000] = pokedex.items.released_berries[x][y];
-            }
-        }
-        return list;
+iteminfo.releasedList = function(gen) {
+    if (!gen) {
+        gen = lastgen;
     }
-    else {
-        var list = pokedex.items.released_items[gen];
-        for (var i in pokedex.items.released_berries[gen]) {
-            list[y + 8000] = pokedex.items.released_berries[gen][i];
-        }
-        return list;
-        }
+    var list = pokedex.items.released_items[gen];
+    for (var i in pokedex.items.released_berries[gen]) {
+        list[y + 8000] = pokedex.items.released_berries[gen][i];
+    }
+    return list;
     }
 };
 
-iteminfo.released(item, gen) {
+iteminfo.released = function (item, gen) {
+    if (!gen) {
+        gen = lastgen;
+    }
     if (item >= 8000) {
         return pokedex.items.released_berries[gen].hasOwnProperty(item-8000);
     }
