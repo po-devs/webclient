@@ -1,5 +1,5 @@
 geninfo = {}; pokeinfo = {}; genderinfo = {}; natureinfo = {}; moveinfo = {}; categoryinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
-var lastgen = 1;
+var lastgen;
 
 for (var i in pokedex.generations.generations) {
     lastgen = i;
