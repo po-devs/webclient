@@ -361,10 +361,11 @@ categoryinfo.name = function(category) {
 };
 
 iteminfo.list = function() {
-    return {
-        items: pokedex.items.items,
-        berries: pokedex.items.berries
-    };
+    var list = pokedex.items.items;
+    for (var i in pokedex.items.berries) {
+        list[i + 8000] = pokedex.items.berries[i];
+    }
+    return list;
 };
 
 iteminfo.name = function(item) {
@@ -377,16 +378,20 @@ iteminfo.name = function(item) {
 
 iteminfo.releasedList(gen) {
     if (!gen){
-        return {
-            items: pokedex.items.released_items,
-            berries: pokedex.items.released_berries
+        var list = pokedex.items.released_items;
+        for (var x in pokedex.items.released_berries) {
+            for (var y in pokedex.items.released_berries[x]) {
+                list[x][y + 8000] = pokedex.items.released_berries[x][y];
+            }
         }
+        return list;
     }
     else {
-        return {
-            items: pokedex.items.released_items[gen],
-            berries: pokedex.items.released_berries[gen]
+        var list = pokedex.items.released_items[gen];
+        for (var i in pokedex.items.released_berries[gen]) {
+            list[y + 8000] = pokedex.items.released_berries[gen][i];
         }
+        return list;
     }
 };
 
