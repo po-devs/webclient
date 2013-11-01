@@ -392,6 +392,7 @@ iteminfo.releasedList(gen) {
             list[y + 8000] = pokedex.items.released_berries[gen][i];
         }
         return list;
+        }
     }
 };
 
