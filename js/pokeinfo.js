@@ -1,5 +1,4 @@
 geninfo = {}; pokeinfo = {}; genderinfo = {}; natureinfo = {}; moveinfo = {}; categoryinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
-defaultgen = {"num":5, "subnum": 1};
 
 geninfo.list = function() {
     return pokedex.generations.generations;
@@ -21,18 +20,32 @@ pokeinfo.toNum = function(poke) {
     return poke.num + ( (poke.forme || 0) << 16);
 };
 
-pokeinfo.sprite = function(poke, gen, back) {
-    if (!gen && !poke.gen) {
-        gen = defaultgen;
+pokeinfo.sprite = function(stuff) {
+    var id = stuff.id;
+    var gen = stuff.gen;
+    var type = stuff.type.toLowerCase();
+    var female = stuff.female;
+    var shiny = stuff.shiny;
+    if (!id) {
+        return;
     }
-
-    return pokedex.generations.options[gen.num].sprite_folder + (gen.num == 5 ? "animated/" : "" ) + (back ? "back/" : "")
-        + (gen.num == 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
-        + (gen.num == 5 ? ".gif" : ".png");
-};
-
-pokeinfo.icon = function(poke) {
-    return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
+    if (!gen) {
+        for (var i in pokedex.generations.generations) {
+        gen = i;
+        }
+    }
+    if (type != "back" && type != "icon") {
+        type = "front";
+    }
+    if (type == "icon") {
+        return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
+    }
+    else {
+        var back = (type == "back");
+        return pokedex.generations.options[gen].sprite_folder + (gen == 5 ? "animated/" : "" ) + (back ? "back/" : "") + (shiny ? "shiny/" : "") + (female ? "female/" : "")
+        + (gen == 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
+        + (gen == 5 ? ".gif" : ".png");
+    }
 };
 
 pokeinfo.list = function() {
@@ -48,6 +61,9 @@ pokeinfo.genderList = function() {
 };
 
 pokeinfo.gender = function(poke) {
+    if (!pokedex.pokes.gender[this.toNum(poke)]) {
+        poke %= 65536;
+    }
     return pokedex.pokes.gender[this.toNum(poke)];
 };
 
@@ -56,6 +72,9 @@ pokeinfo.heightList = function() {
 };
 
 pokeinfo.height = function(poke) {
+if (!pokedex.pokes.height[this.toNum(poke)]) {
+        poke %= 65536;
+    }
     return pokedex.pokes.height[this.toNum(poke)];
 };
 
@@ -64,6 +83,9 @@ pokeinfo.weightList = function() {
 };
 
 pokeinfo.weight = function(poke) {
+if (!pokedex.pokes.weight[this.toNum(poke)]) {
+        poke %= 65536;
+    }
     return pokedex.pokes.weight[this.toNum(poke)];
 };
 
@@ -77,6 +99,9 @@ pokeinfo.statList = function(poke) {
 };
 
 pokeinfo.stat = function(poke, stat) {
+    if (!pokedex.pokes.stats[this.toNum(poke)]) {
+        poke %= 65536;
+    }
     return pokedex.pokes.stats[this.toNum(poke)][stat];
 };
 
@@ -90,72 +115,75 @@ pokeinfo.allMovesList = function(gen) {
 };
 
 pokeinfo.allMoves = function(poke, gen) {
+    if (!pokedex.pokes.all_moves[this.toNum(poke)]) {
+        poke %= 65536;
+    }
     return pokedex.pokes.all_moves[gen][this.toNum(poke)];
 };
 
-pokeinfo.type1List = function(gen) {
+pokeinfo.typesList = function(gen) {
     if (!gen) {
-        return pokedex.pokes.type1;
+        return {
+            1: pokedex.pokes.type1,
+            2: pokedex.pokes.type2
+        };
     }
     else {
-        return pokedex.pokes.type1[gen];
+        return {
+            1: pokedex.pokes.type1[gen],
+            2: pokedex.pokes.type2[gen]
+        };
     }
 };
 
-pokeinfo.type1 = function(poke, gen) {
-    return pokedex.pokes.type1[gen][this.toNum(poke)];
+pokeinfo.types = function(poke, gen) {
+    var id = this.toNum(poke);
+    if (!pokedex.pokes.type1[gen][id]) {
+        id %= 65536;
+    }
+    var type1 = pokedex.pokes.type1[gen][id];
+    var type2 = pokedex.pokes.type2[gen][id];
+    var types = [].push(type1);
+    if (type2) {
+        types.push(type2);
+    }
+    return types;
 };
 
-pokeinfo.type2List = function(gen) {
+pokeinfo.abilityList = function(gen) {
     if (!gen) {
-        return pokedex.pokes.type2;
+        return {
+            1: pokedex.pokes.ability1,
+            2: pokedex.pokes.ability2,
+            3: pokedex.pokes.ability3
+        }
     }
     else {
-        return pokedex.pokes.type2[gen];
+        return {
+            1: pokedex.pokes.ability1[gen],
+            2: pokedex.pokes.ability2[gen],
+            3: pokedex.pokes.ability3[gen]
+        }
     }
 };
 
-pokeinfo.type2 = function(poke, gen) {
-    return pokedex.pokes.type2[gen][this.toNum(poke)];
-};
-
-pokeinfo.ability1List = function(gen) {
-    if (!gen) {
-        return pokedex.pokes.ability1;
+pokeinfo.ability = function(poke, gen, hidden) {
+    var id = this.toNum(poke);
+    if (!pokedex.pokes.ability1[gen][id]) {
+        id %= 65536;
     }
-    else {
-        return pokedex.pokes.ability1[gen];
-    }
-};
-
-pokeinfo.ability1 = function(poke, gen) {
-    return pokedex.pokes.ability1[gen][this.toNum(poke)];
-};
-
-pokeinfo.ability2List = function(gen) {
-    if (!gen) {
-        return pokedex.pokes.ability2;
+    if (hidden) {
+        return pokedex.pokes.ability3[gen][id];
     }
     else {
-        return pokedex.pokes.ability2[gen];
+        var ability1 = pokedex.pokes.ability1[gen][id];
+        var ability2 = pokedex.pokes.ability2[gen][id];
+        var abilities = [].push(ability1);
+        if (ability2) {
+            abilities.push(ability2);
+        }
+        return abilities;
     }
-};
-
-pokeinfo.ability2 = function(poke, gen) {
-    return pokedex.pokes.ability2[gen][this.toNum(poke)];
-};
-
-pokeinfo.ability3List = function(gen) {
-    if (!gen) {
-        return pokedex.pokes.ability3;
-    }
-    else {
-        return pokedex.pokes.ability3[gen];
-    }
-};
-
-pokeinfo.ability3 = function(poke, gen) {
-    return pokedex.pokes.ability3[gen][this.toNum(poke)];
 };
 
 pokeinfo.releasedList = function(gen) {
@@ -169,6 +197,33 @@ pokeinfo.releasedList = function(gen) {
 
 pokeinfo.released = function(poke, gen) {
     return pokedex.pokes.released[gen].hasOwnProperty(this.toNum(poke));
+};
+
+pokeinfo.getSpecieId = function(poke) {
+    return poke & ((1 << 16) - 1);
+};
+
+pokeinfo.getFormId = function(poke) {
+    return Math.floor(poke / 65536);
+};
+
+pokeinfo.calculateStat = function(infos) {
+    if(infos.stat_id == this.default_settings.hp_id) {
+        if(infos.generation > 2) {
+            return Math.floor(Math.floor((infos.stat_ivs + (2 * infos.base_stat) + Math.floor(infos.stat_evs/4) + 100) * infos.level)/100) + 10;
+        }
+        else {
+            return Math.floor(((infos.stat_ivs + infos.base_stat + Math.sqrt(65535)/8 + 50) * infos.level)/50 + 10);
+        }
+    }
+    else {
+        if(infos.generation > 2) {
+            return Math.floor(Math.floor(((infos.stat_ivs + (2 * infos.base_stat) + Math.floor(infos.stat_evs/4)) * infos.level)/100 + 5)*infos.nature);
+        }
+        else {
+            return Math.floor(Math.floor((infos.stat_ivs + infos.base_stat + Math.sqrt(65535)/8) * infos.level)/50 + 5);
+        }
+    }
 };
 
 genderinfo.list = function() {
@@ -185,6 +240,11 @@ natureinfo.list = function() {
 
 natureinfo.name = function(nature) {
     return pokedex.natured.natures[nature];
+};
+
+natureinfo.getNatureEffect = function(nature_id, stat_id) {
+    var arr = {0:0, 1:1, 2:2, 3:4, 4:5, 5:3};
+    return (10+(-(nature_id%5 == arr[stat_id]-1) + (Math.floor(nature_id/5) == arr[stat_id]-1)))/10;
 };
 
 moveinfo.list = function() {
