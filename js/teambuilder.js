@@ -3,7 +3,7 @@
 function teambuilder(generation) {
 	
 	this.default_settings = {
-		generation:5,
+		generation:6,
 		gender:'male', // if the pokemon is not genderless
 		level:100,
 		happiness:255,
@@ -292,7 +292,8 @@ function teambuilder(generation) {
 		var moves_block = "";
 		var learnset = pokedex.pokes.all_moves[generation][pokemonId] != undefined ? pokedex.pokes.all_moves[generation][pokemonId] : pokedex.pokes.all_moves[generation][self.getSpecieId(pokemonId)];
 		learnset = learnset != undefined ? learnset: {};
-		
+		learnset.sort(function(a, b) {	if(pokedex.moves.moves[a] > pokedex.moves.moves[b])	{ return 1; } else if(pokedex.moves.moves[a] < pokedex.moves.moves[b]) { return -1; } return 0; });
+
 		$.each(learnset, function(index, move_id) {
 			move_type_id = pokedex.moves.type[generation][move_id] != undefined ? pokedex.moves.type[generation][move_id] : 0;
 			move_damage_class_id = pokedex.moves.damage_class[generation][move_id] != undefined ? pokedex.moves.damage_class[generation][move_id] : 0;
