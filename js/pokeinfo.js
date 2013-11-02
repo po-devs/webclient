@@ -391,7 +391,6 @@ iteminfo.releasedList = function(gen) {
         list[y + 8000] = pokedex.items.released_berries[gen][i];
     }
     return list;
-    }
 };
 
 iteminfo.released = function (item, gen) {
