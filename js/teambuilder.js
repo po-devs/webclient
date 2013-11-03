@@ -324,7 +324,7 @@ function teambuilder(generation) {
 	// SAVING THE TEAM
 	$("#save-team").on('click', function(e) {
 		//alert(self.getLoadedTeam(true));
-		self.loadPokemonInfos(0, {pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}});
+		self.loadTeam({infos:{tier:'aaa', name:'el yoyo'}, pokemon:{0:{pokemonId:200}, 2:{pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}} } });
 	});
 	
 	// setting the generation of the team
