@@ -127,7 +127,6 @@ function teambuilder(generation) {
 	// creating knobs for both IVs and EVs
 	
 	var knob_event = function(param) {
-		
 		var element = param.target != undefined ? $(param.target) : this.$;
 		var generation = self.getTeamInfo('generation');
 		var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
@@ -229,7 +228,6 @@ function teambuilder(generation) {
 	$(".pokemon-slot-name").on('autocompleteselect', function(e, ui) {
 		
 		e.preventDefault();
-		ui = ui != undefined ? ui : {item:{label:pokedex.pokes.pokemons[0], value:0}};
 		// We need to reset all the field relative to this pokemon before we start filling them again
 		var pokemonId = ui.item.value;
 		var slot = $(this).closest('.pokemon-slot');
@@ -291,7 +289,7 @@ function teambuilder(generation) {
 		var moves_container = $('<table class="moves-list"></table>'), move_type_id, move_damage_class_id;
 		var moves_block = "";
 		var learnset = pokedex.pokes.all_moves[generation][pokemonId] != undefined ? pokedex.pokes.all_moves[generation][pokemonId] : pokedex.pokes.all_moves[generation][self.getSpecieId(pokemonId)];
-		learnset = learnset != undefined ? learnset: {};
+		learnset = learnset != undefined ? learnset: [];
 		learnset.sort(function(a, b) {	if(pokedex.moves.moves[a] > pokedex.moves.moves[b])	{ return 1; } else if(pokedex.moves.moves[a] < pokedex.moves.moves[b]) { return -1; } return 0; });
 
 		$.each(learnset, function(index, move_id) {
@@ -326,7 +324,7 @@ function teambuilder(generation) {
 	// SAVING THE TEAM
 	$("#save-team").on('click', function(e) {
 		//alert(self.getLoadedTeam(true));
-		self.loadTeamInfos({generation:2});
+		self.loadPokemonInfos(0, {pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}});
 	});
 	
 	// setting the generation of the team
@@ -369,7 +367,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 			var pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
 			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != $(e.target).val())
 			{
-				$('.pokemon-slot-name').trigger('autocompleteselect');
+				$('.pokemon-slot-name').eq($(e.target).index('.pokemon-slot-item')).trigger('autocompleteselect', [{item:{label:pokedex.pokes.pokemons[0], value:0}}]);
 			}
 		});
 	}
@@ -431,7 +429,7 @@ teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	slot.find(".pokemon-slot-name").val('Missingno').data('pokemon_id', 0);
 	
 	// types
-	slot.find('.pokemon-slot-type-block').html('<span class="pokemon-slot-type type_'+settings.unknown_type_id+'">'+pokedex.types.types[settings.unknown_type_id]+'</span>');
+	slot.find('.pokemon-slot-type-block').html('<span class="pokemon-slot-type type_'+pokedex.pokes.type1[generation][0]+'">'+pokedex.types.types[pokedex.pokes.type1[generation][0]]+'</span>');
 		
 	// gender
 	slot.find(".pokemon-slot-gender-selection .pokemon-slot-gender-radio[value='"+settings.gender+"']").val(settings.gender).trigger('change').parent().hide();
@@ -652,6 +650,7 @@ teambuilder.prototype.getPokemonInfos = function(pokemonIndex) {
 		pokemon[index].pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
 		pokemon[index].shiny = self.getGenerationInfo(generation, 'shiny') ? slot.find('.pokemon-slot-shiny').prop('checked') : undefined;
 		pokemon[index].gender = (self.getGenerationInfo(generation, 'gender') && slot.find(".pokemon-slot-gender-selection").css('display') != 'none') ? slot.find("#"+slot.find('.pokemon-slot-gender-checked').attr('for')).val() : 'neutral';
+		pokemon[index].nickname = slot.find('.pokemon-slot-nickname').val();
 		pokemon[index].level = slot.find('.pokemon-level-value').slider('value');
 		pokemon[index].happiness = self.getGenerationInfo(generation, 'happiness') ? slot.find('.pokemon-happiness-value').slider('value') : undefined;
 		pokemon[index].ivs = {};
@@ -715,9 +714,100 @@ teambuilder.prototype.loadTeamInfos = function(infos) {
 
 teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
 	
+	// ITEM MUST BE CALLED LAST
+	pokemonIndex = $.isArray(pokemonIndex) ? pokemonIndex : [pokemonIndex];
+	var slot, self = this, generation = self.getTeamInfo('generation'), data, pokemon = {};
+	
+	$.each(pokemonIndex, function(key, index) {
+		
+		slot = $(".pokemon-slot").eq(index);
+		data = pokemonIndex.length > 1 ? infos[index] : infos;
+		if(data.pokemonId != undefined)
+		{
+			slot.find('.pokemon-slot-name').eq(index).trigger('autocompleteselect', [{ item: { label:pokedex.pokes.pokemons[data.pokemonId], value:data.pokemonId } }]);
+		}
+
+		if(self.getGenerationInfo(generation, 'shiny') && data.shiny != undefined && slot.find('.pokemon-slot-shiny').prop('checked') != data.shiny)
+		{
+			slot.find('.pokemon-slot-sprite').trigger('click');
+		}
+		
+		if(self.getGenerationInfo(generation, 'gender') && data.gender != undefined)
+		{
+			if(data.gender == 'neutral')
+			{
+				slot.find('.pokemon-slot-gender-selection').hide();
+			}
+			else
+			{
+				slot.find('.pokemon-slot-gender-radio[value="'+data.gender+'"]').trigger('change');
+			}
+		}
+		
+		if(data.nickname != undefined)
+		{
+			slot.find('.pokemon-slot-nickname').val(data.nickname);
+		}
+		
+		if(data.level != undefined)
+		{
+			slot.find('.pokemon-level-value').slider('value', data.level);
+			self.recalculateStats(index);
+		}
+		
+		if(data.happiness != undefined)
+		{
+			slot.find('.pokemon-happiness-value').slider('value', data.happiness);
+		}
+		
+		if(data.ivs != undefined)
+		{
+			$.each(data.ivs, function(stat_id, value) {
+				slot.find('input[name="pokemon-slot-ivs-'+stat_id+'"]').val(value).trigger('change').trigger('keyup');
+			});
+		}
+		
+		if(self.getGenerationInfo(generation, 'ability') && data.abilityId != undefined)
+		{
+			slot.find('.pokemon-slot-ability').val(data.abilityId).combobox('refresh');
+		}
+		
+		if(self.getGenerationInfo(generation, 'nature') && data.natureId != undefined)
+		{
+			slot.find('.pokemon-slot-nature').val(data.natureId).combobox('select').combobox('refresh');
+		}
+		
+		if(self.getGenerationInfo(generation, 'evs') && data.evs != undefined)
+		{
+			$.each(data.evs, function(stat_id, value) {
+				slot.find('input[name="pokemon-slot-evs-'+stat_id+'"]').val(value).trigger('change');
+			});
+		}
+		
+		if(data.movesIds != undefined)
+		{
+			$.each(data.movesIds, function(moveIndex, move_id) {
+				if(move_id != 0 && pokedex.moves.moves[move_id] != undefined)
+				{
+					slot.find('.pokemon-move-selection').eq(moveIndex).val(pokedex.moves.moves[move_id]);
+				}
+			});
+		}
+		
+		if(self.getGenerationInfo(generation, 'item') && data.itemId != undefined)
+		{
+			slot.find('.pokemon-slot-item').val(data.itemId).combobox('select').combobox('refresh');
+		}
+		
+	});
 };
 
 teambuilder.prototype.loadTeam = function(team, isString) {
+	
+	team = (isString != undefined && isString == true) ? JSON.parse(team) : team;
+	
+	this.loadTeamInfos(team.infos);
+	this.loadPokemonInfos([0, 1, 2, 3, 4, 5], team.pokemon);
 	
 };
 
