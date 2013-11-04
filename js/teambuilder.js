@@ -185,7 +185,6 @@ function teambuilder(generation) {
 		max:100,
 		create: function( event, ui ) {
 			$(this).parent().find('.pokemon-level-display-value').text($(this).slider('value'));
-			//self.recalculateStats($(this).index('.pokemon-level-value'));
 		},
 		slide: function( event, ui ) {
 			$(this).parent().find('.pokemon-level-display-value').text($(this).slider('value'));
@@ -197,7 +196,6 @@ function teambuilder(generation) {
 		},
 		stop: function( event, ui ) {
 			$(this).parent().find('.pokemon-level-display-value').text($(this).slider('value'));
-			//self.recalculateStats($(this).index('.pokemon-level-value'));
 		}
 	});
 	
