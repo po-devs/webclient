@@ -587,6 +587,7 @@ ul#rankings li {
 }
 
 .pokemon-slot-name {
+	width:200px;
 	color:#363636;
 	background:transparent;
 	margin-bottom:10px;
