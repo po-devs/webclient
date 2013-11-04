@@ -289,11 +289,15 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 	width:150px;
 	height:40px;
 	text-indent:10px;
-	line-height:40px;
+	line-height:1px; /* fixing a problem with Safari's placeholder text */
 	background-color:#f9f9f9;
 	border:1px solid #f2f2f2;
 	-moz-border-radius:3px;
 	border-radius:3px;
+}
+
+#search_filter:focus {
+	line-height:40px;
 }
 
 ul#player-list, ul#player-list li {
