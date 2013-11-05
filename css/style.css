@@ -112,7 +112,8 @@ input:focus:-ms-input-placeholder {
 	background-color:#f7f7f7;
 }
 
-#teambuilder {
+#teambuilder_content {
+	width:100%;
 	overflow:auto;
 	position:relative;
 }
@@ -260,9 +261,13 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 .send_chat_message p input {
 	width:100%;
 	height:48px;
-	line-height:48px;
+	line-height:1px; /* fixing a problem with Safari's placeholder text */
 	text-indent:20px;
 	border:none;
+}
+
+.send_chat_message p input:focus {
+	line-height:48px;
 }
 
 .send_chat_message i {
