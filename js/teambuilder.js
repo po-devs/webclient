@@ -142,7 +142,7 @@ function teambuilder(generation) {
 		
 		if(value_type == 'evs' && (param.type == undefined || param.type != 'keyup'))
 		{
-			element.val(self.getCorrectEVs(element)).trigger('change');
+			element.val(self.getCorrectEVs(element));
 		}
 		
 		if(!self.getGenerationInfo(generation, 'special_stat') && self.getGenerationInfo(generation, 'special_stats_same') && self.default_settings.special_stat.replace_ids.indexOf(parseInt(stat_id)) != -1)
@@ -324,6 +324,11 @@ function teambuilder(generation) {
 		self.recalculateStats(pokemonIndex);
 	});
 	
+	// recalculating the height of the moves list to fit the resolution
+	var moves_list_container_height = $(window).height() - $('.moves-list-container').eq(0).offset().top - 220;
+	var moves_list_container_max_height = moves_list_container_height > $(".moves-list-container").css('min-height') ? moves_list_container_height : $(".moves-list-container").css('min-height');
+	$(".moves-list-container").css({ 'height':moves_list_container_height+'px', 'max-height':moves_list_container_max_height+'px' });
+	
 	// saving the team
 	$("#save-team").on('click', function(e) {
 		//self.loadPokemonInfos(0, {pokemonId:151, level:50});
@@ -359,6 +364,9 @@ teambuilder.prototype.setGeneration = function(generation) {
 	$(".pokemon-ivs-value").val(ivs_limit);
 	$(".pokemon-ivs-stat-name strong").html(ivs_limit == 15 ? 'DVs' : 'EVs');
 	$(".pokemon-ivs, .pokemon-evs").css('width', (100/($(".pokemon-ivs").filter(function(){ return $(this).css('display') != 'none';}).length/$(".pokemon-slot").length))+'%');
+	
+	// shiny helper message
+	$(".pokemon-slot-sprite-helper").attr('title', self.getGenerationInfo(generation, 'shiny') ? 'Click here to swich between shiny states' : '');
 	
 	// loading the list of items
 	if(self.getGenerationInfo(generation, 'item'))
@@ -484,6 +492,7 @@ teambuilder.prototype.recalculateStats = function(pokemonIndex) {
 		
 		stat_ivs = parseInt(slot.find(".pokemon-ivs.stat-id-"+stat_id+" .pokemon-ivs-value").val());
 		stat_evs = parseInt(slot.find(".pokemon-evs.stat-id-"+stat_id+" .pokemon-evs-value").val());
+		stat_ivs = isNaN(stat_ivs) ? 0 : stat_ivs, stat_evs = isNaN(stat_evs) ? 0 : stat_evs;
 		nature = self.getNatureEffect(slot.find(".pokemon-slot-nature").val(), stat_id);
 		base_stat = parseInt(baseStats[stat_id]);
 		
@@ -584,13 +593,13 @@ teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 			
 			var items = {}, berries = {};
 			$.each(pokedex.items.released_items[generation], function(key, value) {
-				items[key] = pokedex.items.items[key];
+				items['i'+key] = pokedex.items.items[key];
 			});
 			$.each(pokedex.items.released_berries[generation], function(key, value) {
-				berries[key] = pokedex.items.berries[key];
+				berries['b'+key] = pokedex.items.berries[key];
 			});
 			
-			return $.extend({}, items, $.updateObjectKeys(berries, 10000));
+			return $.extend(items, berries);
 			
 		break;
 		

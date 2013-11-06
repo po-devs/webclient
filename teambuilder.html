@@ -138,15 +138,19 @@
 				</div>
 				<div class="pokemon-slot active-pokemon-slot">
 					<div class="pokemon-slot-top-left">
-						<span class="pokemon-slot-sprite">
-							<table>
-								<td>
-									<img src="" alt="" />
-									<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
-								</td>
-							</table>
-						</span>
-						<input type="text" name="pokemon-slot-name[]" value="" class="pokemon-slot-name" /><br />
+						<acronym class="pokemon-slot-sprite-helper">
+							<span class="pokemon-slot-sprite">
+								<table>
+									<td>
+										<img src="" alt="" />
+										<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
+									</td>
+								</table>
+							</span>
+						</acronym>
+						<acronym title="Select a pokemon by writting their name here">
+						<input type="text" spellcheck="false" name="pokemon-slot-name[]" value="" class="pokemon-slot-name" />
+						</acronym><br />
 						<span class="pokemon-slot-type-block">
 							
 						</span>
@@ -157,7 +161,7 @@
 							<label class="pokemon-slot-gender-female-icon" for="pokemon-slot-gender-female-1"></label>
 							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
 						</div><br style="clear:left;" />
-						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+						<input class="pokemon-slot-nickname" spellcheck="false" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
 					</div>
 					<div class="pokemon-slot-top-right">
 						<div class="pokemon-slot-stats">
@@ -183,8 +187,13 @@
 						</div>
 						<br style="clear:both;" />
 					</div>
-					<div class="pokemon-slot-hidden-power-container">
-						<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+					<div class="pokemon-slot-nature-container">
+						<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+							
+						</select>
+					</div>
+					<div class="pokemon-slot-item-container">
+						<select name="pokemon-slot-item[]" class="pokemon-slot-item">
 							
 						</select>
 					</div>
@@ -193,13 +202,8 @@
 							
 						</select>
 					</div>
-					<div class="pokemon-slot-nature-container">
-						<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
-							
-						</select>
-					</div>
-					<div class="pokemon-slot-item-container">
-						<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+					<div class="pokemon-slot-hidden-power-container">
+						<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
 							
 						</select>
 					</div>
@@ -213,10 +217,10 @@
 					<div class="moves-list-container">
 						
 					</div>
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
 					<br style="clear:both;" />
 				</div>
 			</div>

@@ -63,6 +63,9 @@ ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
 	/*visibility:hidden;*/
 	padding:0px;
 	border:none;
+	border-top-left-radius:0px;
+	border-top-right-radius:0px;
+	margin-top:-1px;
 }
 
 ul.ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
