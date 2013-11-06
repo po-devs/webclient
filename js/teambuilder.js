@@ -142,7 +142,7 @@ function teambuilder(generation) {
 		
 		if(value_type == 'evs' && (param.type == undefined || param.type != 'keyup'))
 		{
-			element.val(self.getCorrectEVs(element));
+			element.val(self.getCorrectEVs(element)).trigger('change');
 		}
 		
 		if(!self.getGenerationInfo(generation, 'special_stat') && self.getGenerationInfo(generation, 'special_stats_same') && self.default_settings.special_stat.replace_ids.indexOf(parseInt(stat_id)) != -1)
@@ -325,10 +325,11 @@ function teambuilder(generation) {
 	});
 	
 	// recalculating the height of the moves list to fit the resolution
-	var moves_list_container_height = $(window).height() - $('.moves-list-container').eq(0).offset().top - 220;
+	var moves_list_container_offset_top = $('.moves-list-container').eq(0).offset().top;
+	var moves_list_container_height = $("body").height() - moves_list_container_offset_top - 120;
 	var moves_list_container_max_height = moves_list_container_height > $(".moves-list-container").css('min-height') ? moves_list_container_height : $(".moves-list-container").css('min-height');
 	$(".moves-list-container").css({ 'height':moves_list_container_height+'px', 'max-height':moves_list_container_max_height+'px' });
-	
+	alert("height: "+$("body").height()+" - offset:"+moves_list_container_offset_top+" - 120");
 	// saving the team
 	$("#save-team").on('click', function(e) {
 		//self.loadPokemonInfos(0, {pokemonId:151, level:50});
