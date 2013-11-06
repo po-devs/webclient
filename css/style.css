@@ -8,11 +8,11 @@ html, body {
 	overflow:hidden;
 }
 
-html, body {
+/*html, body {
 	width:1920px !important;
 	height:1080px !important;
 	overflow:auto !important;
-}
+}*/
 
 .page {
     width:100%;

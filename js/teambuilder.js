@@ -325,11 +325,9 @@ function teambuilder(generation) {
 	});
 	
 	// recalculating the height of the moves list to fit the resolution
-	var moves_list_container_offset_top = $('.moves-list-container').eq(0).offset().top;
-	var moves_list_container_height = $("body").height() - moves_list_container_offset_top - 120;
+	var moves_list_container_height = $("body").height() - 570;
 	var moves_list_container_max_height = moves_list_container_height > $(".moves-list-container").css('min-height') ? moves_list_container_height : $(".moves-list-container").css('min-height');
 	$(".moves-list-container").css({ 'height':moves_list_container_height+'px', 'max-height':moves_list_container_max_height+'px' });
-	alert("height: "+$("body").height()+" - offset:"+moves_list_container_offset_top+" - 120");
 	// saving the team
 	$("#save-team").on('click', function(e) {
 		//self.loadPokemonInfos(0, {pokemonId:151, level:50});
