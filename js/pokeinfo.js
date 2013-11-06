@@ -116,7 +116,11 @@ pokeinfo.allMoves = function(poke, gen) {
     if (!pokedex.pokes.all_moves[this.toNum(poke)]) {
         poke %= 65536;
     }
-    return pokedex.pokes.all_moves[gen][this.toNum(poke)];
+    var moves = pokedex.pokes.all_moves[gen][this.toNum(poke)];
+    if (! (moves instanceof Array)) {
+        moves = [moves];
+    }
+    return moves;
 };
 
 pokeinfo.typesList = function(gen) {
