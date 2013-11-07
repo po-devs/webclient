@@ -99,7 +99,18 @@ function teambuilder(generation) {
 	$(".pokemon-slot-name").autocomplete().on('autocompletefocus', function(e, ui) {
 		e.preventDefault();
 		$(this).val(ui.item.label).data('pokemon_id', ui.item.value);
-	});
+	}).on('click', function(e) {
+		$(this).select();
+		if($(this).val() == '')
+		{
+			$(this).autocomplete('search', '');
+		}
+	}).on('keypress', function(e) {
+		if(e.which == 13)
+		{
+			$(this).autocomplete('search', $(this).val()).autocomplete('close');
+		}
+	}).eq(0).focus();
 	
 	// pokemon sprite reset
 	$(".pokemon-slot-sprite").on('click', function(e) {
@@ -246,7 +257,7 @@ function teambuilder(generation) {
 		// if this pokemon has a mandatory held item we attach it
 		if(pokedex.pokes.items[pokemonId] != undefined)
 		{
-			slot.find('.pokemon-slot-item').val(pokedex.pokes.items[pokemonId]).combobox('refresh');
+			slot.find('.pokemon-slot-item').val('i'+pokedex.pokes.items[pokemonId]).combobox('refresh');
 		}
 		
 		// loading the sprite
@@ -343,7 +354,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 	var self = this, settings = self.default_settings;
 	
 	// loading the list of pokemon
-	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label':pokedex.pokes.pokemons[id], 'value':id}; } else { return false; } }));
+	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label':pokedex.pokes.pokemons[id], 'value':id}; } else { return false; } })).autocomplete('option', 'minLength', 0).autocomplete('option', 'autoFocus', true);
 	
 	// settings stats, ivs and evs
 	var ivs_limit = self.getGenerationInfo(generation, 'ivs_limit');
@@ -374,7 +385,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 		$('.pokemon-slot-item').reloadCombobox(items, $.getFirstPropertyIndex(items), function(e, ui) {
 			var slot = $(e.target).closest('.pokemon-slot');
 			var pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
-			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != $(e.target).val())
+			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != 'i'+$(e.target).val())
 			{
 				$('.pokemon-slot-name').eq($(e.target).index('.pokemon-slot-item')).trigger('autocompleteselect', [{item:{label:pokedex.pokes.pokemons[0], value:0}}]);
 			}
