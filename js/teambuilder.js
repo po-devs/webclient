@@ -897,7 +897,7 @@ teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs,
 	var type;
 	if(generation >= 3)
 	{
-		type = (((hp_ivs%2)+(2*(atk_ivs%2))+(4*(def_ivs%2))+(8*(spe_ivs%2))+(16*(satk_ivs%2))+(32*(sdef_ivs%2)))*15)/63;
+		type = ((((hp_ivs%2)+(2*(atk_ivs%2))+(4*(def_ivs%2))+(8*(spe_ivs%2))+(16*(satk_ivs%2))+(32*(sdef_ivs%2)))*15)/63)+1;
 	}
 	else
 	{
