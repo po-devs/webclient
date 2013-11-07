@@ -126,6 +126,10 @@
 				selected = this.element.children( ":selected" );
 				this.input.val(selected.text());
 			},
+			
+			select: function() {
+				this.input.trigger('autocompleteselect', [{item:{option:{value:this.input.val()}}}]);
+			},
 
 			_destroy: function() {
 				this.element.removeClass('ui-combobox-input');

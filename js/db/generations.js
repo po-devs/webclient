@@ -4,5 +4,6 @@ pokedex.generations.generations = {
 2:"Generation 2",
 3:"Generation 3",
 4:"Generation 4",
-5:"Generation 5"
+5:"Generation 5",
+6:"Generation 6"
 };

@@ -8,6 +8,12 @@ html, body {
 	overflow:hidden;
 }
 
+/*html, body {
+	width:1920px !important;
+	height:1080px !important;
+	overflow:auto !important;
+}*/
+
 .page {
     width:100%;
     height: 100%;
@@ -15,6 +21,10 @@ html, body {
 
 input {
 	outline:none; /* Removing Webkit's effect on inputs */
+}
+
+acronym[title] {
+	border-bottom-width:0px;
 }
 
 h1 {
@@ -112,7 +122,9 @@ input:focus:-ms-input-placeholder {
 	background-color:#f7f7f7;
 }
 
-#teambuilder {
+#teambuilder_content {
+	width:100%;
+	height:100%;
 	overflow:auto;
 	position:relative;
 }
@@ -260,9 +272,13 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 .send_chat_message p input {
 	width:100%;
 	height:48px;
-	line-height:48px;
+	line-height:1px; /* fixing a problem with Safari's placeholder text */
 	text-indent:20px;
 	border:none;
+}
+
+.send_chat_message p input:focus {
+	line-height:48px;
 }
 
 .send_chat_message i {
@@ -289,11 +305,15 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 	width:150px;
 	height:40px;
 	text-indent:10px;
-	line-height:40px;
+	line-height:1px; /* fixing a problem with Safari's placeholder text */
 	background-color:#f9f9f9;
 	border:1px solid #f2f2f2;
 	-moz-border-radius:3px;
 	border-radius:3px;
+}
+
+#search_filter:focus {
+	line-height:40px;
 }
 
 ul#player-list, ul#player-list li {
@@ -566,6 +586,7 @@ ul#rankings li {
 	background-color:#ffffff;
 	border:1px solid #f2f2f2;
 	border-radius:3px;
+	cursor:pointer;
 }
 
 .pokemon-slot-sprite table {
@@ -579,7 +600,6 @@ ul#rankings li {
 
 .pokemon-slot-sprite img {
 	margin:auto;
-	cursor:pointer;
 }
 
 .pokemon-slot-shiny {
@@ -587,7 +607,9 @@ ul#rankings li {
 }
 
 .pokemon-slot-name {
+	width:200px;
 	color:#363636;
+	text-decoration:none;
 	background:transparent;
 	margin-bottom:10px;
 	border:none;
@@ -636,7 +658,7 @@ ul#rankings li {
 }
 
 .pokemon-slot-gender-checked {
-	background-color:#e4e4e4;
+	background-color:#ececec;
 }
 
 .pokemon-slot-nickname {
@@ -718,6 +740,7 @@ ul#rankings li {
 
 .pokemon-slot-advanced-content {
 	display:none;
+	text-align:center;
 	margin:25px 0px;
 }
 
@@ -877,9 +900,10 @@ ul#rankings li {
 }
 
 .moves-list-container {
-	width:100%;
-	max-height:160px;
+	width:auto;
+	min-height:160px;
 	overflow:auto;
+	box-sizing:border-box;
 }
 
 .moves-list {
@@ -959,7 +983,7 @@ ul#rankings li {
 	text-indent:10px;
 	margin:0.5%;
 	margin-top:10px;
-	border:1px solid #f2f2f2;
+	border:1px solid #dddddd; /*#f2f2f2*/
 	-moz-box-sizing:border-box;
 	box-sizing:border-box;
 	-moz-border-radius:5px;
@@ -1076,4 +1100,8 @@ div.player-info-battle {
 	font-weight:bold;
 	text-align:center;
 	font-style:italic;
+}
+
+.pokemon-slot-hidden-power-container, .pokemon-slot-ability-container, .pokemon-slot-nature-container, .pokemon-slot-item-container {
+	display:inline;
 }

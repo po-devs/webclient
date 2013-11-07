@@ -744,4 +744,8 @@ parseCommand = function(message) {
         var result = JSON.parse(data.slice(id.length+1));
         console.log(JSON.stringify(result));
     }
+	else if (cmd == "tiers") {
+		var params = JSON.parse(data);
+		tiersList = params;
+	}
 };

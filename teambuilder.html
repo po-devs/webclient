@@ -6,28 +6,32 @@
 
 <script type="text/javascript" src="js/db/categories/categories.js"></script>
 
+<script type="text/javascript" src="js/db/pokes/1G/released.js"></script>
 <script type="text/javascript" src="js/db/pokes/2G/released.js"></script>
 <script type="text/javascript" src="js/db/pokes/3G/released.js"></script>
 <script type="text/javascript" src="js/db/pokes/4G/released.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/released.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/released.js"></script>
 
 <script type="text/javascript" src="js/db/pokes/1G/all_moves.js"></script>
 <script type="text/javascript" src="js/db/pokes/2G/all_moves.js"></script>
 <script type="text/javascript" src="js/db/pokes/3G/all_moves.js"></script>
 <script type="text/javascript" src="js/db/pokes/4G/all_moves.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/all_moves.js"></script>
-
+<script type="text/javascript" src="js/db/pokes/6G/all_moves.js"></script>
 
 <script type="text/javascript" src="js/db/pokes/1G/type1.js"></script>
 <script type="text/javascript" src="js/db/pokes/2G/type1.js"></script>
 <script type="text/javascript" src="js/db/pokes/3G/type1.js"></script>
 <script type="text/javascript" src="js/db/pokes/4G/type1.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/type1.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/type1.js"></script>
 <script type="text/javascript" src="js/db/pokes/1G/type2.js"></script>
 <script type="text/javascript" src="js/db/pokes/2G/type2.js"></script>
 <script type="text/javascript" src="js/db/pokes/3G/type2.js"></script>
 <script type="text/javascript" src="js/db/pokes/4G/type2.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/type2.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/type2.js"></script>
 
 <script type="text/javascript" src="js/db/pokes/pokemons.js"></script>
 <script type="text/javascript" src="js/db/pokes/gender.js"></script>
@@ -39,8 +43,13 @@
 <script type="text/javascript" src="js/db/pokes/5G/ability1.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/ability2.js"></script>
 <script type="text/javascript" src="js/db/pokes/5G/ability3.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/ability1.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/ability2.js"></script>
+<script type="text/javascript" src="js/db/pokes/6G/ability3.js"></script>
 
 <script type="text/javascript" src="js/db/pokes/stats.js"></script>
+
+<script type="text/javascript" src="js/db/pokes/pokemon_items.js"></script>
 
 <script type="text/javascript" src="js/db/moves/moves.js"></script>
 <script type="text/javascript" src="js/db/moves/move_message.js"></script>
@@ -70,6 +79,11 @@
 <script type="text/javascript" src="js/db/moves/5G/power.js"></script>
 <script type="text/javascript" src="js/db/moves/5G/pp.js"></script>
 <script type="text/javascript" src="js/db/moves/5G/type.js"></script>
+<script type="text/javascript" src="js/db/moves/6G/accuracy.js"></script>
+<script type="text/javascript" src="js/db/moves/6G/damage_class.js"></script>
+<script type="text/javascript" src="js/db/moves/6G/power.js"></script>
+<script type="text/javascript" src="js/db/moves/6G/pp.js"></script>
+<script type="text/javascript" src="js/db/moves/6G/type.js"></script>
 
 <script type="text/javascript" src="js/db/natures/nature.js"></script>
 
@@ -87,6 +101,8 @@
 <script type="text/javascript" src="js/db/items/4G/released_berries.js"></script>
 <script type="text/javascript" src="js/db/items/5G/released_items.js"></script>
 <script type="text/javascript" src="js/db/items/5G/released_berries.js"></script>
+<script type="text/javascript" src="js/db/items/6G/released_items.js"></script>
+<script type="text/javascript" src="js/db/items/6G/released_berries.js"></script>
 
 <script type="text/javascript" src="js/db/status/stats.js"></script>
 <script type="text/javascript" src="js/db/status/status.js"></script>
@@ -97,7 +113,7 @@
 <script type="text/javascript" src="js/db/abilities/ability_messages.js"></script>
 
 <script type="text/javascript" src="js/teambuilder.js"></script>
-
+	<div id="teambuilder_content">
         <div id="pokemon-tabs">
 			<span class="pokemon-tab active-pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
 			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
@@ -122,27 +138,30 @@
 				</div>
 				<div class="pokemon-slot active-pokemon-slot">
 					<div class="pokemon-slot-top-left">
-						<span class="pokemon-slot-sprite">
-							<table>
-								<td>
-									<img src="" alt="" />
-									<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
-								</td>
-							</table>
-						</span>
-						<input type="text" name="pokemon-slot-name[]" value="Venusaur" class="pokemon-slot-name" /><br />
+						<acronym class="pokemon-slot-sprite-helper">
+							<span class="pokemon-slot-sprite">
+								<table>
+									<td>
+										<img src="" alt="" />
+										<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
+									</td>
+								</table>
+							</span>
+						</acronym>
+						<acronym title="Select a pokemon by writting their name here">
+						<input type="text" spellcheck="false" name="pokemon-slot-name[]" value="" class="pokemon-slot-name" />
+						</acronym><br />
 						<span class="pokemon-slot-type-block">
 							
 						</span>
 						<br />
 						<div class="pokemon-slot-gender-selection">
-							<label class="pokemon-slot-gender-male-icon" for="pokemon-slot-gender-male-1"></label>
+							<label class="pokemon-slot-gender-male-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-male-1"></label>
 							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
-							<label class="pokemon-slot-gender-female-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-female-1"></label>
-							<input checked="checked" class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
-							<br style="clear:left;" />
-						</div>
-						<input class="pokemon-slot-nickname" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+							<label class="pokemon-slot-gender-female-icon" for="pokemon-slot-gender-female-1"></label>
+							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
+						</div><br style="clear:left;" />
+						<input class="pokemon-slot-nickname" spellcheck="false" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
 					</div>
 					<div class="pokemon-slot-top-right">
 						<div class="pokemon-slot-stats">
@@ -164,80 +183,47 @@
 						</span>
 						<br style="clear:both;" />
 						<div class="pokemon-ivs-selectors">
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> HP</span>
-								<input name="pokemon-slot-ivs-hp[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Attack</span>
-								<input name="pokemon-slot-ivs-attack[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Defense</span>
-								<input name="pokemon-slot-ivs-defense[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Atk</span>
-								<input name="pokemon-slot-ivs-spattack[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Sp.Def</span>
-								<input name="pokemon-slot-ivs-spdefense[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
-							<span class="pokemon-ivs">
-								<span class="pokemon-ivs-stat-name"><strong>IVs</strong> Speed</span>
-								<input name="pokemon-slot-ivs-speed[]" type="text" value="0" class="pokemon-ivs-value" />
-							</span>
+							
 						</div>
 						<br style="clear:both;" />
 					</div>
-					<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
-						
-					</select>
-					<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
-						
-					</select>
-					<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
-						
-					</select>
-					<select name="pokemon-slot-item[]" class="pokemon-slot-item">
-						
-					</select>
+					<div class="pokemon-slot-nature-container">
+						<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+							
+						</select>
+					</div>
+					<div class="pokemon-slot-item-container">
+						<select name="pokemon-slot-item[]" class="pokemon-slot-item">
+							
+						</select>
+					</div>
+					<div class="pokemon-slot-ability-container">
+						<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+							
+						</select>
+					</div>
+					<div class="pokemon-slot-hidden-power-container">
+						<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+							
+						</select>
+					</div>
 					<br />
 					<div class="pokemon-hidden-power-ivs-selection"></div>
 					<br />
 					<div class="pokemon-evs-selectors">
-						<span class="pokemon-evs">
-							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Attack</span>
-							<input name="pokemon-slot-evs-attack[]" type="text" value="0" class="pokemon-evs-value" />
-						</span>
-						<span class="pokemon-evs">
-							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Defense</span>
-							<input name="pokemon-slot-evs-defense[]" type="text" value="0" class="pokemon-evs-value" />
-						</span>
-						<span class="pokemon-evs">
-							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Atk</span>
-							<input name="pokemon-slot-evs-spattack[]" type="text" value="0" class="pokemon-evs-value" />
-						</span>
-						<span class="pokemon-evs">
-							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Sp.Def</span>
-							<input name="pokemon-slot-evs-spdefense[]" type="text" value="0" class="pokemon-evs-value" />
-						</span>
-						<span class="pokemon-evs">
-							<span class="pokemon-evs-stat-name"><strong>EVs</strong> Speed</span>
-							<input name="pokemon-slot-evs-speed[]" type="text" value="0" class="pokemon-evs-value" />
-						</span>
+						
 					</div>
 					<br style="clear:both;" /><br />
 					<div class="moves-list-container">
 						
 					</div>
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
 					<br style="clear:both;" />
 				</div>
 			</div>
 			<input id="save-team" class="click_button" type="submit" name="save_team" value="Save" />
 		</form>
+	<div>
