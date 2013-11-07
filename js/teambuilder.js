@@ -345,6 +345,8 @@ function teambuilder(generation) {
 		//self.loadTeam({infos:{tier:'aaa', name:'el yoyo'}, pokemon:{0:{pokemonId:200}, 2:{pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}} } });
 	});
 	
+	alert(JSON.stringify(this.getHiddenPowerIVs(1, 5)));
+	
 	// setting the generation of the team
 	this.setGeneration(generation);
 }
@@ -873,4 +875,35 @@ teambuilder.prototype.getTiersList = function(list) {
 	});
 	
 	return tiers;
+};
+
+teambuilder.prototype.getHiddenPowerIVs = function(type , generation) {
+    var ret = [], gt;
+
+    for (var i=63;i>=0;i--) 
+	{
+        gt = this.getHiddenPowerType(generation, i & 1, (i & 2)!=0, (i & 4)!=0, (i & 8)!=0, (i & 16)!=0, (i & 32)!=0);
+        if (gt == type) 
+		{
+			ret.push([(((i&1)!=0)+30), (((i&2)!=0)+30), (((i&4)!=0)+30), (((i&8)!=0)+30), (((i&16)!=0)+30), (((i&32)!=0)+30)]);
+        }
+    }
+
+    return ret;
+};
+
+teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+	
+	var type;
+	if(generation >= 3)
+	{
+		type = (((hp_ivs%2)+(2*(atk_ivs%2))+(4*(def_ivs%2))+(8*(spe_ivs%2))+(16*(satk_ivs%2))+(32*(sdef_ivs%2)))*15)/63;
+	}
+	else
+	{
+		type = 4*(atk_ivs%4)+(def_ivs%4);
+	}
+	
+	return type;
+	
 };
