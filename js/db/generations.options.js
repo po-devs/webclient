@@ -9,6 +9,7 @@ pokedex.generations.options = {
 	happiness:false, // if this gen has happiness
 	ivs_limit:15, // the maximum number of ivs
 	hidden_power:false,
+	hidden_power_bp:false,
 	ability:false,
 	nature:false,
 	item:false,
@@ -25,6 +26,7 @@ pokedex.generations.options = {
 	happiness:true,
 	ivs_limit:15,
 	hidden_power:true,
+	hidden_power_bp:false,
 	ability:false,
 	nature:false,
 	item:true,
@@ -41,6 +43,7 @@ pokedex.generations.options = {
 	happiness:true,
 	ivs_limit:31,
 	hidden_power:true,
+	hidden_power_bp:false,
 	ability:true,
 	nature:true,
 	item:true,
@@ -57,6 +60,7 @@ pokedex.generations.options = {
 	happiness:true,
 	ivs_limit:31,
 	hidden_power:true,
+	hidden_power_bp:false,
 	ability:true,
 	nature:true,
 	item:true,
@@ -73,6 +77,7 @@ pokedex.generations.options = {
 	happiness:true,
 	ivs_limit:31,
 	hidden_power:true,
+	hidden_power_bp:false,
 	ability:true,
 	nature:true,
 	item:true,
@@ -89,11 +94,12 @@ pokedex.generations.options = {
 	happiness:true,
 	ivs_limit:31,
 	hidden_power:true,
+	hidden_power_bp:60,
 	ability:true,
 	nature:true,
 	item:true,
 	evs:true,
 	types_ids:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
-	sprite_folder:'http://pokemon-online.eu/images/pokemon/black-white/'
+	sprite_folder:'http://pokemon-online.eu/images/pokemon/x-y/'
 }
 };

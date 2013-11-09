@@ -272,13 +272,9 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 .send_chat_message p input {
 	width:100%;
 	height:48px;
-	line-height:1px; /* fixing a problem with Safari's placeholder text */
+	line-height:48px;
 	text-indent:20px;
 	border:none;
-}
-
-.send_chat_message p input:focus {
-	line-height:48px;
 }
 
 .send_chat_message i {
@@ -305,15 +301,11 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 	width:150px;
 	height:40px;
 	text-indent:10px;
-	line-height:1px; /* fixing a problem with Safari's placeholder text */
+	line-height:40px;
 	background-color:#f9f9f9;
 	border:1px solid #f2f2f2;
 	-moz-border-radius:3px;
 	border-radius:3px;
-}
-
-#search_filter:focus {
-	line-height:40px;
 }
 
 ul#player-list, ul#player-list li {
@@ -618,6 +610,11 @@ ul#rankings li {
 	font-weight:lighter;
 }
 
+.pokemon-slot-name:focus {
+	background-color:#f0f0f0;
+	border-radius:4px;
+}
+
 .pokemon-slot-type {
 	display:inline-block;
 	text-align:center;
@@ -841,7 +838,23 @@ ul#rankings li {
 /* end pokemon types */
 
 .pokemon-hidden-power-ivs-selection {
+	width:20%;
 	display:none;
+	float:right;
+	text-align:center;
+	margin:20px;
+	margin-left:5%;
+}
+
+.pokemon-slot-hidden-power-ivs-selection-close {
+	width:80%;
+	float:right;
+	margin-top:5px;
+	margin-right:10%;
+}
+
+.pokemon-slot-hidden-power-bp {
+	text-align:left;
 }
 
 .pokemon-evs-value, .pokemon-ivs-value {

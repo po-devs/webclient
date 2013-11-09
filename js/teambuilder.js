@@ -99,7 +99,18 @@ function teambuilder(generation) {
 	$(".pokemon-slot-name").autocomplete().on('autocompletefocus', function(e, ui) {
 		e.preventDefault();
 		$(this).val(ui.item.label).data('pokemon_id', ui.item.value);
-	});
+	}).on('click', function(e) {
+		$(this).select();
+		if($(this).val() == '')
+		{
+			$(this).autocomplete('search', '');
+		}
+	}).on('keypress', function(e) {
+		if(e.which == 13)
+		{
+			$(this).autocomplete('search', $(this).val()).autocomplete('close');
+		}
+	}).eq(0).focus();
 	
 	// pokemon sprite reset
 	$(".pokemon-slot-sprite").on('click', function(e) {
@@ -136,6 +147,7 @@ function teambuilder(generation) {
 	
 	var knob_event = function(param) {
 		var element = param.target != undefined ? $(param.target) : this.$;
+		var pokemonIndex = element.closest('.pokemon-slot').index('.pokemon-slot');
 		var generation = self.getTeamInfo('generation');
 		var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
 		var stat_id = element.closest('.pokemon-'+value_type).attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2];
@@ -149,7 +161,12 @@ function teambuilder(generation) {
 		{
 			element.closest('.pokemon-slot').find(".pokemon-"+value_type+".stat-id-"+$.grep(self.default_settings.special_stat.replace_ids, function(id) { return id != stat_id; }).join('')+" .pokemon-"+value_type+"-value").val(element.val()).trigger('change');
 		}
-		self.recalculateStats(element.closest('.pokemon-slot').index('.pokemon-slot'));
+		self.recalculateStats(pokemonIndex);
+		
+		if(value_type == 'ivs')
+		{
+			self.recalculateHiddenPowerInfos(pokemonIndex);
+		}
 	};
 		
 	var knob_params = {
@@ -226,7 +243,36 @@ function teambuilder(generation) {
 	$('.pokemon-slot-hidden-power-type, .pokemon-hidden-power-ivs-selection').empty();
 	var types = self.getGenerationInfo(2, 'types_list'); // gen2 types
 	delete types[0]; // remove Normal type from the list of possibilities
-	$('.pokemon-slot-hidden-power-type').reloadCombobox(types, 16);
+	$('.pokemon-slot-hidden-power-type').reloadCombobox(types, 16, function(e, ui) {
+		var generation = self.getTeamInfo('generation');
+		var slot = $(e.target).closest('.pokemon-slot');
+		if(self.getGenerationInfo(generation, 'hidden_power'))
+		{
+			var hidden_power_ivs = self.getHiddenPowerIVs(ui.item.value, generation);
+			if(hidden_power_ivs.length == 1)
+			{
+				//alert(JSON.stringify(hidden_power_ivs[0]));
+				$.each(hidden_power_ivs[0], function(stat_id, ivs_value) {
+						slot.find(".pokemon-ivs.stat-id-"+stat_id+" .pokemon-ivs-value").val(ivs_value).trigger('change');
+				});
+				slot.find(".pokemon-hidden-power-ivs-selection").hide().empty();
+				
+			}
+			else if(hidden_power_ivs.length > 1)
+			{
+				var select_options = "";
+				$.each(hidden_power_ivs, function(index, ivs_list) {
+					select_options += '<option value="'+ivs_list.join(' ')+'">'+ivs_list.join(' ')+'</option>';
+				});
+				var ivs_selection = $('<select size="'+hidden_power_ivs.length+'">'+select_options+'</select>').on('change', function(e) {
+					$.each($(this).val().split(' '), function(stat_id, ivs_value) {
+						slot.find(".pokemon-ivs.stat-id-"+stat_id+" .pokemon-ivs-value").val(ivs_value).trigger('change');
+					});
+				}).append('<br /><input type="button" name="selected_hp_ivs" value="Done" />');
+				slot.find(".pokemon-hidden-power-ivs-selection").html(ivs_selection).append($('<br />')).append($('<input class="click_button pokemon-slot-hidden-power-ivs-selection-close" type="button" name="selected_hp_ivs" value="Done" />').on('click', function(e) { slot.find(".pokemon-hidden-power-ivs-selection").hide(); })).show();
+			}
+		}
+	});
 	
 	// loading the list of natures and making it recalculate stats on select
 	$('.pokemon-slot-nature').reloadCombobox(pokedex.natures.nature, 0, function(e, ui) {
@@ -246,7 +292,7 @@ function teambuilder(generation) {
 		// if this pokemon has a mandatory held item we attach it
 		if(pokedex.pokes.items[pokemonId] != undefined)
 		{
-			slot.find('.pokemon-slot-item').val(pokedex.pokes.items[pokemonId]).combobox('refresh');
+			slot.find('.pokemon-slot-item').val('i'+pokedex.pokes.items[pokemonId]).combobox('refresh');
 		}
 		
 		// loading the sprite
@@ -334,6 +380,8 @@ function teambuilder(generation) {
 		//self.loadTeam({infos:{tier:'aaa', name:'el yoyo'}, pokemon:{0:{pokemonId:200}, 2:{pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}} } });
 	});
 	
+	//alert(JSON.stringify(this.getHiddenPowerIVs(1, 5)));
+	
 	// setting the generation of the team
 	this.setGeneration(generation);
 }
@@ -343,7 +391,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 	var self = this, settings = self.default_settings;
 	
 	// loading the list of pokemon
-	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label':pokedex.pokes.pokemons[id], 'value':id}; } else { return false; } }));
+	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label':pokedex.pokes.pokemons[id], 'value':id}; } else { return false; } })).autocomplete('option', 'minLength', 0).autocomplete('option', 'autoFocus', true);
 	
 	// settings stats, ivs and evs
 	var ivs_limit = self.getGenerationInfo(generation, 'ivs_limit');
@@ -361,7 +409,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 		$(".pokemon-slot-stat-content.stat-id-"+special_stat_second_id+", .pokemon-ivs.stat-id-"+special_stat_second_id+", .pokemon-evs.stat-id-"+special_stat_second_id).show();
 	}
 	$(".pokemon-ivs-value").val(ivs_limit);
-	$(".pokemon-ivs-stat-name strong").html(ivs_limit == 15 ? 'DVs' : 'EVs');
+	$(".pokemon-ivs-stat-name strong").html(ivs_limit == 15 ? 'DVs' : 'IVs');
 	$(".pokemon-ivs, .pokemon-evs").css('width', (100/($(".pokemon-ivs").filter(function(){ return $(this).css('display') != 'none';}).length/$(".pokemon-slot").length))+'%');
 	
 	// shiny helper message
@@ -374,7 +422,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 		$('.pokemon-slot-item').reloadCombobox(items, $.getFirstPropertyIndex(items), function(e, ui) {
 			var slot = $(e.target).closest('.pokemon-slot');
 			var pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
-			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != $(e.target).val())
+			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != 'i'+$(e.target).val())
 			{
 				$('.pokemon-slot-name').eq($(e.target).index('.pokemon-slot-item')).trigger('autocompleteselect', [{item:{label:pokedex.pokes.pokemons[0], value:0}}]);
 			}
@@ -459,6 +507,7 @@ teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	
 	// hidden power reset
 	slot.find('.pokemon-slot-hidden-power-type').val(16).combobox('refresh');
+	self.recalculateHiddenPowerInfos(pokemonIndex);
 	
 	// emptying the ability selection
 	slot.find('.pokemon-slot-ability').reloadCombobox({0:pokedex.abilities.abilities[0]}, 0);
@@ -562,6 +611,17 @@ teambuilder.prototype.calculateStat = function(infos) {
 	
 };
 
+teambuilder.prototype.recalculateHiddenPowerInfos = function(pokemonIndex) {
+	
+	var self = this, slot = $(".pokemon-slot").eq(pokemonIndex), generation = self.getTeamInfo('generation'), stats_list = self.getGenerationInfo(generation, 'stats_list'), ivs = [];
+	
+	$.each(stats_list, function(stat_id) {
+		ivs[stat_id] = slot.find(".pokemon-ivs.stat-id-"+stat_id+" .pokemon-ivs-value").val();
+	});
+	slot.find('.pokemon-slot-hidden-power-type').val(self.getHiddenPowerType(generation, ivs[0], ivs[1], ivs[2], ivs[3], ivs[4], ivs[5])).combobox('refresh');
+	slot.find('.pokemon-slot-hidden-power-bp-value').text(self.getHiddenPowerBP(generation, ivs[0], ivs[1], ivs[2], ivs[3], ivs[4], ivs[5]));
+};
+
 teambuilder.prototype.getTeamInfo = function(info_name) {
 
 	switch(info_name)
@@ -584,7 +644,7 @@ teambuilder.prototype.getTeamInfo = function(info_name) {
 teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 	switch(info_name)
 	{
-		case 'special_stats_same': case 'damage_classes_move_specific': case 'gender': case 'shiny': case 'special_stat': case 'happiness': case 'ivs_limit': case 'hidden_power': case 'ability': case 'nature': case 'item': case 'evs': case 'types_ids': case 'sprite_folder':
+		case 'special_stats_same': case 'damage_classes_move_specific': case 'gender': case 'shiny': case 'special_stat': case 'happiness': case 'ivs_limit': case 'hidden_power': case 'hidden_power_bp': case 'ability': case 'nature': case 'item': case 'evs': case 'types_ids': case 'sprite_folder':
 			return pokedex.generations.options[generation][info_name];
 		break;
 		
@@ -863,3 +923,57 @@ teambuilder.prototype.getTiersList = function(list) {
 	
 	return tiers;
 };
+
+teambuilder.prototype.getHiddenPowerIVs = function(type , generation) {
+    var ret = [], gt;
+
+    for (var i=63;i>=0;i--) 
+	{
+        gt = this.getHiddenPowerType(generation, i & 1, (i & 2)!=0, (i & 4)!=0, (i & 8)!=0, (i & 16)!=0, (i & 32)!=0);
+        if (gt == type) 
+		{
+			ret.push([(((i&1)!=0)+30), (((i&2)!=0)+30), (((i&4)!=0)+30), (((i&8)!=0)+30), (((i&16)!=0)+30), (((i&32)!=0)+30)]);
+        }
+    }
+
+    return ret;
+};
+
+teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+	
+	var type;
+	
+	if(generation >= 3)
+	{
+		type = ((((hp_ivs%2)+(2*(atk_ivs%2))+(4*(def_ivs%2))+(8*(spe_ivs%2))+(16*(satk_ivs%2))+(32*(sdef_ivs%2)))*15)/63)+1;
+	}
+	else
+	{
+		type = 4*(atk_ivs%4)+(def_ivs%4);
+	}
+	
+	return parseInt(type);
+	
+};
+
+teambuilder.prototype.getHiddenPowerBP = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+	
+	var bp;
+	if(!this.getGenerationInfo(generation, 'hidden_power_bp'))
+	{
+		if(generation >= 3)
+		{
+			bp = Math.floor(((hp_ivs%2 + (2*(atk_ivs%2)) + (4*(def_ivs%2)) + (8*(spe_ivs%2)) + (16*(satk_ivs%2)) + (32*(sdef_ivs%2)))*40)/63) + 30;
+		}
+		else
+		{
+			bp = Math.floor(((5 * ((satk_ivs%8 ? 1 : 0) + (2*(spe_ivs%8 ? 1 : 0)) + (4*(def_ivs%8 ? 1 : 0)) + (8*(atk_ivs%8 ? 1 : 0))) + (satk_ivs < 3 ? satk_ivs : 3))/2) + 31);
+		}
+	}
+	else
+	{
+		bp = this.getGenerationInfo(generation, 'hidden_power_bp');
+	}
+	
+	return bp;
+}
