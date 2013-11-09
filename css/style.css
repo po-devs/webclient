@@ -838,7 +838,23 @@ ul#rankings li {
 /* end pokemon types */
 
 .pokemon-hidden-power-ivs-selection {
+	width:20%;
 	display:none;
+	float:right;
+	text-align:center;
+	margin:20px;
+	margin-left:5%;
+}
+
+.pokemon-slot-hidden-power-ivs-selection-close {
+	width:80%;
+	float:right;
+	margin-top:5px;
+	margin-right:10%;
+}
+
+.pokemon-slot-hidden-power-bp {
+	text-align:left;
 }
 
 .pokemon-evs-value, .pokemon-ivs-value {
