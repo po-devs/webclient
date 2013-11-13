@@ -519,7 +519,7 @@ teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	slot.find('.pokemon-slot-item').val($(".pokemon-slot-item option:first").val()).combobox('refresh');
 	
 	// resetting the moves list
-	slot.find('.moves-list-container').empty();
+	slot.find('.moves-list-container').html('<table class="moves-list"></table>');
 	
 	// emptying move selection inputs
 	slot.find('.pokemon-move-selection').val('');

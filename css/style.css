@@ -496,7 +496,6 @@ ul#rankings li {
 
 .player-battling {
 	color:#b7b7b7;
-	font-style:italic;
 }
 
 /* Teambuilder */
@@ -922,6 +921,7 @@ ul#rankings li {
 
 .moves-list {
 	width:100%;
+    height: 100%;
 	background-color:#ffffff;
 	border-spacing:0px;
 	-moz-border-radius:5px;
