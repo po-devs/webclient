@@ -1,1 +1,1 @@
-pokedex = {}
+pokedex = {};
