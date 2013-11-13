@@ -13,7 +13,7 @@ The host of the official PO relay station is ws://server.pokemon-online.eu:10508
 Testing
 =======
 
-Thanks to github pages you can test the current repository with this url: http://po-devs.github.io/webclient/?server=default&autoconnect=true
+Thanks to github pages you can test the current repository with this url: http://po-devs.github.io/webclient/
 
 Add the query parameter 'user' to automatically have your username set up, or 'server' to use a different server than PO's main server.
 
