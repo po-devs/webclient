@@ -348,7 +348,7 @@ $("#player-list").on("click", "li", function(event) {
     dialog.dialog("option", "title", players.name(id));
     var buttons = [
         {
-            text: "Send Private Message",
+            text: "Private Message",
 			class: "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
