@@ -127,6 +127,7 @@ input:focus:-ms-input-placeholder {
 	height:100%;
 	overflow:auto;
 	position:relative;
+    background-color: rgb(230, 230, 230);
 }
 
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
