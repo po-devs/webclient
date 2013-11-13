@@ -1,5 +1,6 @@
 Webclient for Pokémon Online
 ============================
+[![Build Status](https://travis-ci.org/po-devs/webclient.png)](https://travis-ci.org/po-devs/webclient)
 
 It connects to a relay station, which in turns connects to a PO server. If
 you want multiple webclients to be able to connect to your server through
