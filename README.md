@@ -17,6 +17,8 @@ Thanks to github pages you can test the current repository with this url: http:/
 
 Add the query parameter 'user' to automatically have your username set up, or 'server' to use a different server than PO's main server.
 
+If you're cloning this repository, test locally with Firefox, as Chrome blocks some features when dealing with `file://`.
+
 Buster Testing
 ==============
 
