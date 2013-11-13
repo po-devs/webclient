@@ -57,6 +57,16 @@ pokeinfo.name = function(poke) {
     return pokedex.pokes.pokemons[this.toNum(poke)];
 };
 
+pokeinfo.getId = function(poke) {
+    var name = poke.toLowerCase();
+    for (var i in pokedex.pokes.pokemons) {
+        if (pokedex.pokes.pokemons[i] == name) {
+            return i;
+        }
+    }
+    return;
+};
+
 pokeinfo.genderList = function() {
     return pokedex.pokes.gender;
 };
@@ -225,7 +235,17 @@ natureinfo.list = function() {
 };
 
 natureinfo.name = function(nature) {
-    return pokedex.natured.natures[nature];
+    return pokedex.natures.natures[nature];
+};
+
+natureinfo.getId = function(nature) {
+    var name = nature.toLowerCase();
+    for (var i in pokedex.natures.natures) {
+        if (pokedex.natures.natures[i] == name) {
+            return i;
+        }
+    }
+    return;
 };
 
 natureinfo.getNatureEffect = function(nature_id, stat_id) {
@@ -239,6 +259,16 @@ moveinfo.list = function() {
 
 moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
+};
+
+moveinfo.getId = function(move) {
+    var name = move.toLowerCase();
+    for (var i in pokedex.moves.moves) {
+        if (pokedex.moves.moves[i] == name) {
+            return i;
+        }
+    }
+    return;
 };
 
 moveinfo.accuracyList = function(gen) {
@@ -328,6 +358,16 @@ categoryinfo.name = function(category) {
     return pokedex.categories.categories[category];
 };
 
+categoryinfo.getId = function(category) {
+    var name = category.toLowerCase();
+    for (var i in pokedex.categories.categories) {
+        if (pokedex.categories.categories[i] == name) {
+            return i;
+        }
+    }
+    return;
+};
+
 iteminfo.list = function() {
     var list = pokedex.items.items;
     for (var i in pokedex.items.berries) {
@@ -342,6 +382,25 @@ iteminfo.name = function(item) {
     } else {
         return pokedex.items.items[item];
     }
+};
+
+iteminfo.getId = function(item) {
+    var name = item.toLowerCase();
+    if (name.substr(name.length - 5, 5) == "berry") {
+        for (var i in pokedex.items.berries) {
+            if (pokedex.items.berries[i] == name) {
+                return i + 8000;
+            }
+        }
+    }
+    else {
+        for (var i in pokedex.items.items) {
+            if (pokedex.items.items[i] == name) {
+                return i;
+            }
+        }
+    }
+    return;
 };
 
 iteminfo.releasedList = function(gen) {
@@ -394,6 +453,16 @@ statinfo.name = function(stat) {
     return pokedex.status.stats[stat];
 };
 
+statinfo.getId = function(stat) {
+    var name = stat.toLowerCase();
+    for (var i in pokedex.status.stats) {
+        if (pokedex.status.stats[i] == name) {
+            return i;
+        }
+    }
+    return;
+};
+
 statusinfo.list = function() {
     return pokedex.status.status;
 };
@@ -402,12 +471,32 @@ statusinfo.name = function(status) {
     return pokedex.status.status[status];
 };
 
+statusinfo.getId = function(status) {
+    var name = status.toLowerCase();
+    for (var i in pokedex.status.status) {
+        if (pokedex.status.status[i] == name) {
+            return i;
+        }
+    }
+    return;
+};
+
 typeinfo.list = function() {
     return pokedex.types.types;
 };
 
 typeinfo.name = function(type) {
     return pokedex.types.types[type];
+};
+
+typeinfo.getId = function(type) {
+    var name = type.toLowerCase();
+    for (var i in pokedex.types.types) {
+        if (pokedex.types.types[i] == name) {
+            return i;
+        }
+    }
+    return;
 };
 
 typeinfo.categoryList = function() {
@@ -424,6 +513,16 @@ abilityinfo.list = function() {
 
 abilityinfo.name = function(ability) {
     return pokedex.abilities.abilities[ability];
+};
+
+abilityinfo.getId = function(ability) {
+    var name = ability.toLowerCase();
+    for (var i in pokedex.abilities.abilities) {
+        if (pokedex.abilities.abilities[i] == name) {
+            return i;
+        }
+    }
+    return;
 };
 
 abilityinfo.descList = function() {
