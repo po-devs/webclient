@@ -132,3 +132,7 @@ label[for="advanced-connection"], label[for="relay"], label[for="username"], lab
 .button:hover {
 	background-color:#3285d3;
 }
+
+.button.disabled, .button.disabled:hover {
+	background-color:#cfcfcf;
+}

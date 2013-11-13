@@ -9,7 +9,7 @@ function teambuilder(generation) {
 		happiness:255,
 		evs:0,
 		stats_ids:[0, 1, 2, 3, 4, 5],
-		hp_id:0, // to exclude it from the EVs
+		hp_id:0, // to differenciate between hp stat and the rest in calculations
 		special_stat:{ id:3, name:'Special', replace_ids:[3, 4]},
 		missingno:{icon:'http://pokemon-online.eu/images/poke_icons/0.png', sprite:'http://pokemon-online.eu/images/pokemon/black-white/0.png'},
 		unknown_type_id:18,
