@@ -98,6 +98,10 @@ input:focus:-ms-input-placeholder {
 	-webkit-box-shadow:4px 3px 5px rgba(157, 157, 157, 0.04);
 	-moz-box-shadow:4px 3px 5px rgba(157, 157, 157, 0.04);
 	box-shadow:4px 3px 5px rgba(157, 157, 157, 0.04);
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	border-right:1px solid rgb(230, 230, 230);
 }
 
 #users_list {
@@ -109,6 +113,10 @@ input:focus:-ms-input-placeholder {
 	-webkit-box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
 	-moz-box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
 	box-shadow:-5px 0px 5px rgba(157, 157, 157, 0.04);
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	border-left:1px solid rgb(230, 230, 230);
 }
 
 #content, #user_params, #teambuilder {
@@ -262,8 +270,10 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
 	right:20px;
 	padding-right:45px;
 	background-color:#ffffff;
-	border:1px solid #fefefe;
-	outline:1px solid #f2f2f2;
+	border:3px solid rgb(230, 230, 230);
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
 }
 
 .send_chat_message p {
