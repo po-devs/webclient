@@ -17,6 +17,12 @@ Thanks to github pages you can test the current repository with this url: http:/
 
 Add the query parameter 'user' to automatically have your username set up, or 'server' to use a different server than PO's main server.
 
+Buster Testing
+==============
+
+This uses [buster.js](http://docs.busterjs.org/en/latest/) to run tests. Those tests are run for each commit on the
+Travis-CI platform (check out the build icon!).
+
 Info
 ====
 
@@ -27,5 +33,4 @@ Libraries used:
 - md5 function http://www.webtoolkit.info/javascript-md5.html
 - farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
 - loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
-- Pokemon Showdown http://play.pokemonshowdown.com/
 - inheritance http://www.crockford.com/javascript/inheritance.html
