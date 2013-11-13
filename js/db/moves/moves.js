@@ -108,7 +108,7 @@ pokedex.moves.moves = {
 105:"Recover",
 106:"Harden",
 107:"Minimize",
-108:"Smoke Screen",
+108:"Smokescreen",
 109:"Confuse Ray",
 110:"Withdraw",
 111:"Defense Curl",

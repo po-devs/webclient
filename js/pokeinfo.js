@@ -25,28 +25,19 @@ pokeinfo.toNum = function(poke) {
     return poke.num + ( (poke.forme || 0) << 16);
 };
 
-pokeinfo.sprite = function(stuff) {
-    var id = stuff.id;
-    var gen = stuff.gen;
-    var type = stuff.type.toLowerCase();
-    var female = stuff.female;
-    var shiny = stuff.shiny;
-    if (!id) {
-        return;
-    }
-    gen = gen || lastgen;
-    if (type != "back" && type != "icon") {
-        type = "front";
-    }
-    if (type == "icon") {
-        return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
-    }
-    else {
-        var back = (type == "back");
-        return pokedex.generations.options[gen].sprite_folder + (gen == 5 ? "animated/" : "" ) + (back ? "back/" : "") + (shiny ? "shiny/" : "") + (female ? "female/" : "")
+pokeinfo.sprite = function(poke, params) {
+    params = params || {};
+    var gen = params.gen || poke.gen || lastgen;
+    var back = params.back || false;
+
+    return pokedex.generations.options[gen].sprite_folder + (gen == 5 ? "animated/" : "" ) + (back ? "back/" : "")
+        + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
         + (gen == 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
         + (gen == 5 ? ".gif" : ".png");
-    }
+};
+
+pokeinfo.icon = function(poke) {
+    return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
 };
 
 pokeinfo.list = function() {

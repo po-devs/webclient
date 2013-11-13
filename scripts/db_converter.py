@@ -14,13 +14,17 @@ def ensure_dir(f):
 def convert_line(line):
     lines = line.strip().split(' ', 1)
 
+    if lines[0].find(':') != -1:
+        nums = lines[0].split(':')
+        lines[0] = str(int(nums[0]) + int(nums[1])*65536)
+
     if len(lines) > 1:
-        if lines[1][0].isdigit():
+        if lines[1][0].isdigit() and (len(lines[1]) == 1 or lines[1][1].isdigit()) :
             lines[1] = ",".join(lines[1].split(' '))
             if lines[1].find(",") != -1:
                 lines[1] = "[" + lines[1] + "]"
         else:
-            lines[1] = '"'+lines[1]+'"'
+            lines[1] = '"'+lines[1].replace("\"", "\\\"") +'"'
     else:
         lines.append('true')
 

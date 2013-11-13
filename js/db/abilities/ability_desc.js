@@ -110,7 +110,7 @@ pokedex.abilities.ability_desc = {
 107:"Senses the foe's dangerous moves.",
 108:"Determines what moves the foe has.",
 109:"Ignores any change in ability by the foe.",
-110:"Powers up "not very effective" moves.",
+110:"Powers up \"not very effective\" moves.",
 111:"Powers down super-effective moves.",
 112:"Temporarily halves Attack and Speed.",
 113:"Enables moves to hit Ghost-type foes.",

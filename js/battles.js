@@ -217,7 +217,7 @@ BattleTab.prototype.updateFieldPoke = function(spot) {
     var $poke = this.$poke(spot);
     $poke.find(".pokemon_name").text(poke.name);
     $poke.find(".sprite").attr("src", "");
-    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, this.conf.gen, this.player(spot) == 0));
+    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, {"gen": this.conf.gen, "back": this.player(spot) == 0}));
     $poke.find(".battle-stat-value").text(poke.percent + "%");
 
     var $prog = $poke.find(".battle-stat-progress");

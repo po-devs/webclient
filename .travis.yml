@@ -1,0 +1,2 @@
+before_script: "npm install buster"
+script: "buster-test"
