@@ -28,5 +28,10 @@ buster.testCase("pokeinfo", {
         assert.equals(["Normal"], pokeinfo.types(35, 1).map(typeinfo.name));
         /* Test clefairy is fairy type in gen 6 */
         assert.equals(["Fairy"], pokeinfo.types(35).map(typeinfo.name));
+    },
+    "stats": function() {
+        /* Butterfree stats */
+        assert.equals([60,45,50,90,80,70], pokeinfo.stats(12, 6));
+        assert.equals([60,45,50,80,80,70], pokeinfo.stats(12, 3));
     }
 });

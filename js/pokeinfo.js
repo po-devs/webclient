@@ -99,34 +99,21 @@ if (!pokedex.pokes.weight[this.toNum(poke)]) {
     return pokedex.pokes.weight[this.toNum(poke)];
 };
 
-pokeinfo.stats = function(poke) {
-    return pokedex.pokes.stats[this.toNum(poke)];
+pokeinfo.stats = function(poke, gen) {
+    return this.find(poke, "stats", gen);
 };
 
-pokeinfo.stat = function(poke, stat) {
-    if (!pokedex.pokes.stats[this.toNum(poke)]) {
-        poke %= 65536;
-    }
-    return pokedex.pokes.stats[this.toNum(poke)][stat];
-};
-
-pokeinfo.allMovesList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.pokes.all_moves[gen.num];
+pokeinfo.stat = function(poke, stat, gen) {
+    return this.stats(poke, gen)[stat];
 };
 
 pokeinfo.allMoves = function(poke, gen) {
-    gen = getGen(gen);
-    if (!pokedex.pokes.all_moves[gen.num][this.toNum(poke)]) {
-        poke %= 65536;
-    }
-    var moves = pokedex.pokes.all_moves[gen.num][this.toNum(poke)];
+    var moves = this.find(poke, "all_moves", gen);
     if (!Array.isArray(moves)) {
         moves = [moves];
     }
     return moves;
 };
-
 
 pokeinfo.types = function(poke, gen) {
     var type1 = this.find(poke, "type1", gen);

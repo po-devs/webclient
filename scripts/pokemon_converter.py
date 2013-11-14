@@ -83,8 +83,8 @@ def main(argv):
         path = argv[1]
 
     gens = ['6', '5', '4', '3', '2', '1']
-    files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels']
-    base_files = ['gender', 'height', 'weight', 'stats', 'pokemons']
+    files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels', 'stats']
+    base_files = ['gender', 'height', 'weight', 'pokemons']
     unique_files = ['released']
     duplicates = {}
 
