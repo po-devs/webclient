@@ -257,6 +257,10 @@ BattleTab.prototype.dealWithSpectatorchat = function(params) {
     this.print(name + ": " + params.message);
 };
 
+BattleTab.prototype.dealWithClock = function(params) {
+    this.updateClock(params.player, params.time, params.status == "ticking")
+};
+
 BattleTab.prototype.dealWithNotarget = function(params) {
     this.print("But there was no target...");
 };

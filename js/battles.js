@@ -86,6 +86,8 @@ Battles.prototype.watchBattle = function(bid, conf) {
 };
 
 function BattleTab(pid, conf, team) {
+    var self = this;
+
     /* me and meIdent are needed by PS stuff */
     this.me = {
         name: players.myname()
@@ -105,11 +107,13 @@ function BattleTab(pid, conf, team) {
     this.teams = [[{},{},{},{},{},{}], [{},{},{},{},{},{}]];
     this.choices = {};
     this.spectators = {};
+    this.timers = [{'value':300, 'ticking': false}, {'value':300, 'ticking': false}];
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
         together with the damage done to the Showdown window.
      */
     this.damageCause={};
     this.players = [players.name(conf.players[0]), players.name(conf.players[1])];
+    this.timer = setInterval(function() {self.updateTimers()}, 1000);
 
     var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
 
@@ -207,6 +211,30 @@ BattleTab.onChatKeyDown = function(event, obj) {
 BattleTab.prototype.player = function(spot) {
     return spot % 2;
 };
+
+BattleTab.prototype.playercss = function(spot) {
+    return "p" + ((spot % 2)+1);
+};
+
+BattleTab.prototype.updateClock = function(player, time, ticking) {
+    this.timers[player] = {"time": time, "ticking": ticking, "lastupdate": new Date().getTime()};
+    this.updateTimers();
+};
+
+BattleTab.prototype.updateTimers = function() {
+    for (var i = 0; i < 2; i++) {
+        var time = this.timers[i].time;
+        if (this.timers[i].ticking) {
+            time -= (((new Date().getTime())-this.timers[i].lastupdate) /1000);
+            if (time < 0) {
+                time = 0;
+            }
+        }
+        //Full bar is 5 minutes, aka 300 seconds, so time/3 gives the percentage. (time is in seconds)
+        this.$content.find("." + this.playercss(i) + "_name .battler_bg").css("width", time/3 + "%");
+    }
+};
+
 
 BattleTab.prototype.slot = function(spot) {
     return spot >> 1;
@@ -332,6 +360,7 @@ BattleTab.prototype.isBattle = function() {
 
 BattleTab.prototype.close = function() {
     delete battles.battles[this.id];
+    clearInterval(this.timer);
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
     if (this.isBattle()) {
         websocket.send("forfeit|"+this.id);
