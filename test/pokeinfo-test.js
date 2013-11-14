@@ -17,6 +17,18 @@ buster.testCase("pokeinfo", {
     "compact database": function () {
         assert.equals(85, moveinfo.accuracy(3, 1));
         assert.equals(1, moveinfo.damageClass(44, 3));
+        assert.equals("Has a $effect_chance% chance to paralyze the target.", moveinfo.effect(34, 4));
+        assert.equals(140, moveinfo.power(140, 2));
+
+        /* Crabhammer
+            90 in 5th gen, 100 in 6th gen */
+        assert.equals(90, moveinfo.power(152, 5));
+        assert.equals(100, moveinfo.power(152, 6));
+        
+        assert.equals(25, moveinfo.pp(26, 2));
+        /* Flower Shield */
+        assert.equals(["Fairy"], moveinfo.type(592).map(typeinfo.name));
+
         /* Test Pidgeot types */
         assert.equals(["Normal", "Flying"], pokeinfo.types(18, 4).map(typeinfo.name));
         /* Test clefairy is normal type in gen 1 */
