@@ -35,6 +35,9 @@ geninfo.version = function(gen, subgen) {
 };
 
 pokeinfo.toNum = function(poke) {
+    if (typeof poke === 'number') {
+        poke = {num: poke, forme: 0};
+    }
     return poke.num + ( (poke.forme || 0) << 16);
 };
 
