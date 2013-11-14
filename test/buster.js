@@ -1,12 +1,13 @@
 var config = module.exports;
 
-config["My tests"] = {
-    environment: "node",        // or "node"
+config["Webclient"] = {
+    environment: "node",
     rootPath: "../",
     sources: [
         //"libs/*.js",    // Paths are relative to config file
         "js/db/initpokedex.js",
-        "js/db/**/*.js",      // Glob patterns supported
+        "js/db/**/*.js",
+        "js/expand-db.js",
         "js/pokeinfo.js"
     ],
     tests: [

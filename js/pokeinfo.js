@@ -10,6 +10,10 @@ var getGen = function(gen) {
     if (typeof gen != "object") {
         gen = {"num": gen};
     }
+    
+    if (gen.num < 1 || gen.num > lastgen.num) {
+        gen = lastgen;
+    }
 
     return gen;
 };
@@ -113,11 +117,11 @@ pokeinfo.allMovesList = function(gen) {
 
 pokeinfo.allMoves = function(poke, gen) {
     gen = getGen(gen);
-    if (!pokedex.pokes.all_moves[this.toNum(poke)]) {
+    if (!pokedex.pokes.all_moves[gen.num][this.toNum(poke)]) {
         poke %= 65536;
     }
     var moves = pokedex.pokes.all_moves[gen.num][this.toNum(poke)];
-    if (! (moves instanceof Array)) {
+    if (!Array.isArray(moves)) {
         moves = [moves];
     }
     return moves;
@@ -139,7 +143,7 @@ pokeinfo.types = function(poke, gen) {
     }
     var type1 = pokedex.pokes.type1[gen.num][id];
     var type2 = pokedex.pokes.type2[gen.num][id];
-    var types = [].push(type1);
+    var types = [type1];
     if (type2) {
         types.push(type2);
     }
@@ -152,7 +156,7 @@ pokeinfo.abilityList = function(gen) {
         1: pokedex.pokes.ability1[gen.num],
         2: pokedex.pokes.ability2[gen.num],
         3: pokedex.pokes.ability3[gen.num]
-    }
+    };
 };
 
 pokeinfo.ability = function(poke, hidden, gen) {
@@ -309,14 +313,12 @@ moveinfo.message = function(move, part) {
     var messages = pokedex.moves.move_message[move];
 
     if (!messages) {
-        return undefined;
+        return;
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
-    } else {
-        return undefined;
     }
 };
 
@@ -375,14 +377,12 @@ iteminfo.message = function(item, part) {
     var messages = (item >= 8000 ? pokedex.items.berry_messages[item-8000] : pokedex.items.item_messages[item]);
 
     if (!messages) {
-        return undefined;
+        return;
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
-    } else {
-        return undefined;
     }
 };
 
@@ -441,13 +441,11 @@ abilityinfo.message = function(ability, part) {
     var messages = pokedex.abilities.ability_messages[ability];
 
     if (!messages) {
-        return undefined;
+        return;
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
-    } else {
-        return undefined;
     }
 };
