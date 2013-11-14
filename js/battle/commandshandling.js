@@ -426,6 +426,7 @@ BattleTab.prototype.dealWithItemmessage = function(params) {
     if (mess.contains("%f")) mess = mess.replace("%f", this.nick(params.foe));
     if (mess.contains("%i")) mess = mess.replace("%i", iteminfo.name(params.berry));
     if (mess.contains("%m")) mess = mess.replace("%m", moveinfo.name(params.other));
+    if (mess.contains("%p")) mess = mess.replace("%p", pokeinfo.name(params.other));
 
     /* Balloon gets a really special treatment */
     if (params.item == 35)
