@@ -35,7 +35,11 @@ geninfo.version = function(gen, subgen) {
 };
 
 pokeinfo.toNum = function(poke) {
-    return poke.num + ( (poke.forme || 0) << 16);
+    if (typeof poke == "object") {
+        return poke.num + ( (poke.forme || 0) << 16);
+    } else {
+        return poke;
+    }
 };
 
 pokeinfo.sprite = function(poke, params) {
@@ -144,7 +148,7 @@ pokeinfo.types = function(poke, gen) {
     var type1 = pokedex.pokes.type1[gen.num][id];
     var type2 = pokedex.pokes.type2[gen.num][id];
     var types = [type1];
-    if (type2) {
+    if (type2 != 18) {
         types.push(type2);
     }
     return types;
