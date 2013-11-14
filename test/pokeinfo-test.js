@@ -10,6 +10,6 @@ buster.testCase("pokeinfo", {
     "compact database": function () {
         assert.equals(85, moveinfo.accuracy(3, 1));
         assert.equals(1, moveinfo.damageClass(44, 3));
-        assert.equals(2, pokeinfo.types(18, 4)[0]);
+        assert.equals([0, 2], pokeinfo.types(18, 4));
     }
 });
