@@ -4,7 +4,7 @@
         pokefiles = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels'],
         fileindex, fileslen, file;
     var lastGen = gens[gens.length - 1], gen, obj;
-    var numPokemon, i;
+    var numPokemon, numMoves, i;
 
     function previousGens(file, gen, poke) {
         var obj = pokedex.moves[file] || pokedex.pokes[file];
