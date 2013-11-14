@@ -11,8 +11,15 @@ def ensure_dir(f):
         os.makedirs(d)
 
 
-def convert_line(line):
+def convert_line(line, duplicates):
     lines = line.strip().split(' ', 1)
+
+    if duplicates != False:
+        if not line in duplicates:
+            duplicates.append(line)
+        else:
+            return ''
+
     nums = lines[0].split(':')
     if len(lines) > 1:
         if lines[1][0].isdigit():
@@ -27,7 +34,7 @@ def convert_line(line):
     return lines[0] + ':'+lines[1]+',\n'
 
 
-def deal_with_file(path, gen="0", file=""):
+def deal_with_file(path, gen="0", file="", duplicates=False):
     print ("gen: " + gen + ", file: " + file)
     if gen == "0":
         path2 = "/pokes/" + file
@@ -44,7 +51,7 @@ def deal_with_file(path, gen="0", file=""):
     if all_moves[0].startswith(codecs.BOM_UTF8):
         all_moves[0] = all_moves[0][3:]
 
-    all_moves = [convert_line(x) for x in all_moves]
+    all_moves = [convert_line(x, duplicates) for x in all_moves]
 
     output_name = "../js/db/"+ path2 + ".js";
     ensure_dir(output_name)
@@ -75,14 +82,19 @@ def main(argv):
     else:
         path = argv[1]
 
-    gens = ['1','2','3','4','5', '6']
-    files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels', 'released']
+    gens = ['6', '5', '4', '3', '2', '1']
+    files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels']
     base_files = ['gender', 'height', 'weight', 'stats', 'pokemons']
+    unique_files = ['released']
+    duplicates = {}
 
     for gen in gens:
         for file in files:
+            if not file in duplicates:
+                duplicates[file] = []
+            deal_with_file(path, gen=gen, file=file, duplicates=duplicates[file])
+        for file in unique_files:
             deal_with_file(path, gen=gen, file=file)
-
     for file in base_files:
         deal_with_file(path, file=file)
 

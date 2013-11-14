@@ -11,8 +11,14 @@ def ensure_dir(f):
         os.makedirs(d)
 
 
-def convert_line(line):
+def convert_line(line, duplicates):
     lines = line.strip().split(' ', 1)
+
+    if duplicates != False:
+        if not line in duplicates:
+            duplicates.append(line)
+        else:
+            return ''
 
     if lines[0].find(':') != -1:
         nums = lines[0].split(':')
@@ -31,7 +37,7 @@ def convert_line(line):
     return lines[0] + ':'+lines[1]+',\n'
 
 
-def deal_with_file(path, gen="0", file="", type="pokes"):
+def deal_with_file(path, gen="0", file="", type="pokes", duplicates=False):
     print ("gen: " + gen + ", file: " + file)
     if gen == "0":
         path2 = "/" + type  + "/" + file
@@ -48,7 +54,7 @@ def deal_with_file(path, gen="0", file="", type="pokes"):
     if all_moves[0].startswith(codecs.BOM_UTF8):
         all_moves[0] = all_moves[0][3:]
 
-    all_moves = [convert_line(x) for x in all_moves]
+    all_moves = [convert_line(x, duplicates) for x in all_moves]
 
     output_name = "../js/db/"+ path2 + ".js";
     ensure_dir(output_name)
@@ -88,7 +94,7 @@ def main(argv):
             'base_files': ['abilities', 'ability_desc', 'ability_messages']
         },
         'items': {
-            'files': ['released_items', 'released_berries'],
+            'unique_files': ['released_items', 'released_berries'],
             'base_files': ['items', 'berries', 'item_useful', 'item_messages', 'berry_messages']
         },
         'types': {
@@ -110,21 +116,22 @@ def main(argv):
             'base_files': ['versions', 'gens']
         }
     }
-    gens = ['1','2','3','4','5', '6']
+    gens = ['6', '5', '4', '3', '2', '1']
+    duplicates = {}
 
     for type in types.keys():
         for gen in gens:
-            try:
+            if 'files' in types[type]:
                 for file in types[type]["files"]:
+                    if not file in duplicates:
+                        duplicates[file] = []
+                    deal_with_file(path, gen=gen, type=type, file=file, duplicates=duplicates[file])
+            if 'unique_files' in types[type]:
+                for file in types[type]["unique_files"]:
                     deal_with_file(path, gen=gen, type=type, file=file)
-            except KeyError:
-                pass
-
-        try:
+        if 'base_files' in types[type]:
             for file in types[type]["base_files"]:
                 deal_with_file(path, type=type, file=file)
-        except KeyError:
-            pass
 
 if __name__ == "__main__":
     main(sys.argv)
