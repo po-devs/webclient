@@ -18,28 +18,40 @@ var getGen = function(gen) {
     return gen;
 };
 
-geninfo.list = function() {
-    return pokedex.generations.generations;
-};
-
-geninfo.name = function(gen) {
-    return pokedex.generations.generations[gen];
-};
-
-geninfo.versionList = function() {
-    return pokedex.gens.versions;
-};
-
-geninfo.version = function(gen, subgen) {
-    return pokedex.gens.versions[gen][subgen];
-};
-
 pokeinfo.toNum = function(poke) {
     if (typeof poke == "object") {
         return poke.num + ( (poke.forme || 0) << 16);
     } else {
         return poke;
     }
+};
+
+pokeinfo.species = function(poke) {
+    return poke & ((1 << 16) - 1);
+};
+
+pokeinfo.forme = function(poke) {
+    return poke >> 16;
+};
+
+
+pokeinfo.find = function(id, what, gen) {
+    gen = getGen(gen);
+    id = this.toNum(id);
+
+    var gennum = gen.num;
+    var array = pokedex.pokes[what][gen.num];
+    var ornum = this.species(id);
+
+    while (gennum < lastgen.num && ! (id in array) && !(ornum in array)) {
+        array = pokedex.pokes[what][++gennum];
+    }
+
+    if (!(id in array)) {
+        id = ornum;
+    }
+
+    return array[id];
 };
 
 pokeinfo.sprite = function(poke, params) {
@@ -57,16 +69,8 @@ pokeinfo.icon = function(poke) {
     return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
 };
 
-pokeinfo.list = function() {
-    return pokedex.pokes.pokemons;
-};
-
 pokeinfo.name = function(poke) {
     return pokedex.pokes.pokemons[this.toNum(poke)];
-};
-
-pokeinfo.genderList = function() {
-    return pokedex.pokes.gender;
 };
 
 pokeinfo.gender = function(poke) {
@@ -76,19 +80,11 @@ pokeinfo.gender = function(poke) {
     return pokedex.pokes.gender[this.toNum(poke)];
 };
 
-pokeinfo.heightList = function() {
-    return pokedex.pokes.height;
-};
-
 pokeinfo.height = function(poke) {
 if (!pokedex.pokes.height[this.toNum(poke)]) {
         poke %= 65536;
     }
     return pokedex.pokes.height[this.toNum(poke)];
-};
-
-pokeinfo.weightList = function() {
-    return pokedex.pokes.weight;
 };
 
 pokeinfo.weight = function(poke) {
@@ -98,13 +94,8 @@ if (!pokedex.pokes.weight[this.toNum(poke)]) {
     return pokedex.pokes.weight[this.toNum(poke)];
 };
 
-pokeinfo.statList = function(poke) {
-    if (!poke) {
-        return pokedex.pokes.stats;
-    }
-    else {
-        return pokedex.pokes.stats[this.toNum(poke)];
-    }
+pokeinfo.stats = function(poke) {
+    return pokedex.pokes.stats[this.toNum(poke)];
 };
 
 pokeinfo.stat = function(poke, stat) {
@@ -131,22 +122,10 @@ pokeinfo.allMoves = function(poke, gen) {
     return moves;
 };
 
-pokeinfo.typesList = function(gen) {
-    gen = getGen(gen);
-    return {
-        1: pokedex.pokes.type1[gen.num],
-        2: pokedex.pokes.type2[gen.num]
-    };
-};
 
 pokeinfo.types = function(poke, gen) {
-    gen = getGen(gen);
-    var id = this.toNum(poke);
-    if (!pokedex.pokes.type1[gen.num][id]) {
-        id %= 65536;
-    }
-    var type1 = pokedex.pokes.type1[gen.num][id];
-    var type2 = pokedex.pokes.type2[gen.num][id];
+    var type1 = this.find(poke, "type1", gen);
+    var type2 = this.find(poke, "type2", gen);
     var types = [type1];
     if (type2 != 18) {
         types.push(type2);
@@ -154,51 +133,18 @@ pokeinfo.types = function(poke, gen) {
     return types;
 };
 
-pokeinfo.abilityList = function(gen) {
-    gen = getGen(gen);
-    return {
-        1: pokedex.pokes.ability1[gen.num],
-        2: pokedex.pokes.ability2[gen.num],
-        3: pokedex.pokes.ability3[gen.num]
-    };
-};
-
-pokeinfo.ability = function(poke, hidden, gen) {
-    gen = getGen(gen);
-    var id = this.toNum(poke);
-    if (!pokedex.pokes.ability1[gen.num][id]) {
-        id %= 65536;
-    }
-    if (hidden) {
-        return pokedex.pokes.ability3[gen.num][id];
-    }
-    else {
-        var ability1 = pokedex.pokes.ability1[gen.num][id];
-        var ability2 = pokedex.pokes.ability2[gen.num][id];
-        var abilities = [].push(ability1);
-        if (ability2) {
-            abilities.push(ability2);
-        }
-        return abilities;
-    }
+pokeinfo.abilities = function(poke, gen) {
+    return [this.find(poke, "ablity1", gen),
+        this.find(poke, "ablity2", gen),
+        this.find(poke, "ablity3", gen)].filter(function(arg) {return arg != 0;});
 };
 
 pokeinfo.releasedList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.pokes.released[gen.num];
+    return pokedex.pokes.released[getGen(gen).num];
 };
 
 pokeinfo.released = function(poke, gen) {
-    gen = getGen(gen);
-    return pokedex.pokes.released[gen.num].hasOwnProperty(this.toNum(poke));
-};
-
-pokeinfo.getSpecieId = function(poke) {
-    return poke & ((1 << 16) - 1);
-};
-
-pokeinfo.getFormId = function(poke) {
-    return Math.floor(poke / 65536);
+    return pokedex.pokes.released[getGen(gen).num].hasOwnProperty(this.toNum(poke));
 };
 
 pokeinfo.calculateStat = function(infos) {
@@ -218,10 +164,6 @@ pokeinfo.calculateStat = function(infos) {
             return Math.floor(Math.floor((infos.stat_ivs + infos.base_stat + Math.sqrt(65535)/8) * infos.level)/50 + 5);
         }
     }
-};
-
-genderinfo.list = function() {
-    return pokedex.genders.genders;
 };
 
 genderinfo.name = function(gender) {
@@ -249,81 +191,56 @@ moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
 };
 
-moveinfo.accuracyList = function(gen) {
+moveinfo.find = function(id, what, gen) {
     gen = getGen(gen);
-    return pokedex.moves.accuracy[gen.num];
+
+    var gennum = gen.num;
+    var array = pokedex.moves[what][gen.num];
+
+    while (gennum < lastgen.num && ! (id in array)) {
+        array = pokedex.moves[what][++gennum];
+    }
+
+    return array[id];
 };
 
 moveinfo.accuracy = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.accuracy[gen.num][move];
-};
-
-moveinfo.damageClassList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.moves.damage_class[gen.num];
+    return this.find(move, "accuracy", gen);
 };
 
 moveinfo.damageClass = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.damage_class[gen.num][move];
-};
-
-moveinfo.effectList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.moves.effect[gen.num];
+    return this.find(move, "damage_class", gen);
 };
 
 moveinfo.effect = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.effect[gen.num][move];
-};
-
-moveinfo.powerList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.moves.power[gen.num];
+    return this.find(move, "effect", gen);
 };
 
 moveinfo.power = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.power[gen.num][move];
-};
-
-moveinfo.messageList = function() {
-    return pokedex.moves.move_message;
-};
-
-moveinfo.ppList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.moves.pp[gen.num];
+    return this.find(move, "power", gen);
 };
 
 moveinfo.pp = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.pp[gen.num][move];
-};
-
-moveinfo.typeList = function(gen) {
-    gen = getGen(gen);
-    return pokedex.moves.type[gen.num];
+    return this.find(move, "pp", gen);
 };
 
 moveinfo.type = function(move, gen) {
-    gen = getGen(gen);
-    return pokedex.moves.type[gen.num][move];
+    return this.find(move, "type", gen);
 };
 
 moveinfo.message = function(move, part) {
     var messages = pokedex.moves.move_message[move];
 
     if (!messages) {
-        return;
+        return '';
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
     }
+
+    return '';
 };
 
 categoryinfo.list = function() {
@@ -381,13 +298,15 @@ iteminfo.message = function(item, part) {
     var messages = (item >= 8000 ? pokedex.items.berry_messages[item-8000] : pokedex.items.item_messages[item]);
 
     if (!messages) {
-        return;
+        return '';
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
     }
+
+    return '';
 };
 
 statinfo.list = function() {
@@ -430,26 +349,21 @@ abilityinfo.name = function(ability) {
     return pokedex.abilities.abilities[ability];
 };
 
-abilityinfo.descList = function() {
-    return pokedex.abilities.ability_desc;
-};
 abilityinfo.desc = function(ability) {
     return pokedex.abilities.ability_desc[ability];
-};
-
-abilityinfo.messageList = function() {
-    return pokedex.abilities.ability_messages;
 };
 
 abilityinfo.message = function(ability, part) {
     var messages = pokedex.abilities.ability_messages[ability];
 
     if (!messages) {
-        return;
+        return '';
     }
 
     var parts = messages.split('|');
     if (part >= 0 && part < parts.length) {
         return parts[part];
     }
+
+    return '';
 };

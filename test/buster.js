@@ -7,7 +7,6 @@ config["Webclient"] = {
         //"libs/*.js",    // Paths are relative to config file
         "js/db/initpokedex.js",
         "js/db/**/*.js",
-        "js/expand-db.js",
         "js/pokeinfo.js"
     ],
     tests: [
