@@ -49,6 +49,11 @@ pokeinfo.find = function(id, what, gen) {
 
     if (!(id in array)) {
         id = ornum;
+    } else {
+        /* expand */
+        if (gennum != gen.num) {
+            pokedex.pokes[what][gen.num][id] = array[id];
+        }
     }
 
     return array[id];
@@ -199,6 +204,11 @@ moveinfo.find = function(id, what, gen) {
 
     while (gennum < lastgen.num && ! (id in array)) {
         array = pokedex.moves[what][++gennum];
+    }
+
+    /* expand */
+    if (gennum != gen.num && id in array) {
+        pokedex.moves[what][gen.num][id] = array[id];
     }
 
     return array[id];

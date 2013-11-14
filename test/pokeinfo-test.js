@@ -23,5 +23,10 @@ buster.testCase("pokeinfo", {
         assert.equals(["Normal"], pokeinfo.types(35, 1).map(typeinfo.name));
         /* Test clefairy is fairy type in gen 6 */
         assert.equals(["Fairy"], pokeinfo.types(35).map(typeinfo.name));
+        //Retest, to make sure internal expand didn't touch anything
+        /* Test clefairy is normal type in gen 1 */
+        assert.equals(["Normal"], pokeinfo.types(35, 1).map(typeinfo.name));
+        /* Test clefairy is fairy type in gen 6 */
+        assert.equals(["Fairy"], pokeinfo.types(35).map(typeinfo.name));
     }
 });
