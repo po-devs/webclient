@@ -98,6 +98,8 @@ function BattleTab(pid, conf, team) {
         named: 'init'
     };
 
+    new BattleAnimator(this);
+
     this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
@@ -142,6 +144,14 @@ function BattleTab(pid, conf, team) {
 }
 
 BattleTab.inherits(ChannelTab);
+
+BattleTab.prototype.pause = function() {
+
+};
+
+BattleTab.prototype.unpause = function() {
+
+};
 
 BattleTab.prototype.name = function(player) {
     return this.players[this.player(player)];
@@ -258,6 +268,10 @@ BattleTab.prototype.$poke = function(spot) {
     return this.$content.find(".p" + (this.player(spot)+1) + "_pokemon" + (this.slot(spot)+1));
 };
 
+BattleTab.prototype.$sprite = function(spot) {
+    return this.$poke(spot).find(".sprite");
+};
+
 BattleTab.prototype.tpoke = function(spot) {
     return this.teams[this.player(spot)][this.slot(spot)];
 };
@@ -282,7 +296,6 @@ BattleTab.prototype.updateTeamPokes = function(player, pokes) {
 /** Calls the onXxxxXxxx functions where xxxxXxxx is the name attribute of the button
  * in the controls that was clicked
  * @param event the click event
- * @param battle the object to use as this
  */
 BattleTab.prototype.dealWithControlsClick = function(event) {
     var $obj = $(event.target);
@@ -417,35 +430,50 @@ BattleTab.modes = {
     2: "Triples",
     3: "Rotation"
 };
-//
-//BattleTab.prototype.updateSide = function(sideData, midBattle) {
-//    for (var i = 0; i < sideData.pokemon.length; i++) {
-//        var pokemonData = sideData.pokemon[i];
-//        var pokemon;
-//        if (i == 0) {
-//            pokemon = this.battle.getPokemon(''+pokemonData.ident, pokemonData.details);
-//            pokemon.slot = 0;
-//            pokemon.side.pokemon = [pokemon];
-//            // if (pokemon.side.active[0] && pokemon.side.active[0].ident == pokemon.ident) pokemon.side.active[0] = pokemon;
-//        } else if (i < this.battle.mySide.active.length) {
-//            pokemon = this.battle.getPokemon('new: '+pokemonData.ident, pokemonData.details);
-//            pokemon.slot = i;
-//            // if (pokemon.side.active[i] && pokemon.side.active[i].ident == pokemon.ident) pokemon.side.active[i] = pokemon;
-//            if (pokemon.side.active[i] && pokemon.side.active[i].ident == pokemon.ident) {
-//                pokemon.side.active[i].item = pokemon.item;
-//                pokemon.side.active[i].ability = pokemon.ability;
-//                pokemon.side.active[i].baseAbility = pokemon.baseAbility;
-//            }
-//        } else {
-//            pokemon = this.battle.getPokemon('new: '+pokemonData.ident, pokemonData.details);
-//        }
-//        pokemon.healthParse(pokemonData.condition);
-//        if (pokemonData.baseAbility) {
-//            pokemon.baseAbility = pokemonData.baseAbility;
-//            if (!pokemon.ability) pokemon.ability = pokemon.baseAbility;
-//        }
-//        pokemon.item = pokemonData.item;
-//        pokemon.moves = pokemonData.moves;
-//    }
-//    this.battle.mySide.updateSidebar();
-//};
+
+/* All the animation code is done by a separate class in order to keep code clean, and easily change animation mechanics
+    as we're probably bound to do that.
+ */
+function BattleAnimator(battle) {
+    battle.animator = this;
+    this.battle = battle;
+}
+
+BattleAnimator.prototype.on = function(what) {
+    var funcName = "on"+what[0].toUpperCase()+what.slice(1);
+    if (funcName in BattleAnimator.prototype) {
+        this.pause();
+        this[funcName].call(this, arguments.slice(1));
+    }
+};
+
+BattleAnimator.prototype.pause = function () {
+    this.battle.pause();
+};
+
+BattleAnimator.prototype.unpause = BattleAnimator.prototype.finished = function() {
+    this.battle.unpause();
+};
+
+BattleAnimator.prototype.moveSprite = function(spot, x, y) {
+    var p = this.battle.player(spot);
+
+    if (p == 0) {
+        return {"bottom": "+=" + y, "left": "+=" + x}
+    } else {
+        return {"top": "-=" + y, "right": "-=" + x}
+    }
+};
+
+BattleAnimator.prototype.onKo = function(spot) {
+    var self = this;
+    var b = this.battle;
+    var sprite = b.$sprite(spot);
+
+    sprite.animate($.extend(this.moveSprite(spot, 0, -50), {"opacity": 0}), "slow", function() {
+        sprite.hide();
+        sprite.css("opacity", 100);
+        sprite.css(self.moveSprite(spot, 0, +50));//reset move
+        self.finished();
+    });
+};

@@ -29,7 +29,7 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.teams[pl][params.slot] = this.teams[pl][this.slot(params.spot)];
     this.teams[pl][this.slot(params.spot)] = poke;
 
-    this.$poke(params.spot).show();
+    this.$sprite(params.spot).show();
 
     this.updateFieldPoke(params.spot);
     this.updateTeamPokes(pl, [this.slot(params.spot), params.slot]);
@@ -65,14 +65,11 @@ BattleTab.prototype.dealWithOfferchoice = function(params) {
     this.choices[params.choice.slot] = params.choice;
 
     /* Force the user to switch */
-    if(params.choice.attack)
-        this.request.forceSwitch = false;
-    else
-        this.request.forceSwitch = true;
+    this.request.forceSwitch = !params.choice.attack;
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
-    this.$poke(params.spot).hide();
+    this.animator.onKo(params.spot);
     this.print("<strong>" + this.nick(params.spot) + " fainted!</strong>");
 
     this.pokes[params.spot].status = 31; //ko
