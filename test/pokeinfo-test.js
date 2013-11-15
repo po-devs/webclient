@@ -27,7 +27,7 @@ buster.testCase("pokeinfo", {
         
         assert.equals(25, moveinfo.pp(26, 2));
         /* Flower Shield */
-        assert.equals(["Fairy"], moveinfo.type(592).map(typeinfo.name));
+        assert.equals("Fairy", typeinfo.name(moveinfo.type(592)));
 
         /* Test Pidgeot types */
         assert.equals(["Normal", "Flying"], pokeinfo.types(18, 4).map(typeinfo.name));
