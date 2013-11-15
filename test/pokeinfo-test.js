@@ -18,7 +18,7 @@ buster.testCase("pokeinfo", {
         assert.equals(85, moveinfo.accuracy(3, 1));
         assert.equals(1, moveinfo.damageClass(44, 3));
         assert.equals("Has a $effect_chance% chance to paralyze the target.", moveinfo.effect(34, 4));
-        assert.equals(140, moveinfo.power(140, 2));
+        assert.equals(140, moveinfo.power(143, 2));
 
         /* Crabhammer
             90 in 5th gen, 100 in 6th gen */
