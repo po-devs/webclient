@@ -99,6 +99,9 @@ function BattleTab(pid, conf, team) {
     };
 
     new BattleAnimator(this);
+    this.paused = false;
+
+    this.queue = [];//Queues of message not yet processed
 
     this.shortHand = "battle";
     this.id = pid;
@@ -146,11 +149,32 @@ function BattleTab(pid, conf, team) {
 BattleTab.inherits(ChannelTab);
 
 BattleTab.prototype.pause = function() {
-
+    this.paused = true;
 };
 
 BattleTab.prototype.unpause = function() {
+    this.paused = false;
+    this.readQueue();
+};
 
+BattleTab.prototype.readQueue = function() {
+    if (this.queue.length == 0 || this.readingQueue) {
+        return;
+    }
+
+    this.readingQueue = true;
+
+    var i;
+
+    for (i = 0; i < this.queue.length; i++) {
+        if (this.paused) {
+            break;
+        }
+        this.dealWithCommand(this.queue[i]);
+    }
+
+    this.queue = this.queue.slice(i);
+    this.readingQueue = false;
 };
 
 BattleTab.prototype.name = function(player) {
@@ -382,15 +406,29 @@ BattleTab.prototype.close = function() {
     }
 };
 
-/* Receives a PO command, and translates it in PS language.
+/* Receives a battle command - a battle message.
 
-    PS language: |a|b|c|[xx=y]|[zz=ff] -> battle.runMinor/Major([a,b,c],{xx=y,zz=ff})
+   Calls the appropriate function from battle/commandshandling.js to handle it.
  */
 BattleTab.prototype.dealWithCommand = function(params) {
+    if (this.paused && !(params.command in BattleTab.immediateCommands)) {
+        this.queue.push(params);
+        return;
+    }
     var funcName = "dealWith"+params.command[0].toUpperCase() + params.command.slice(1);
     if (funcName in BattleTab.prototype) {
         this[funcName](params);
     }
+};
+
+BattleTab.immediateCommands = {
+    "clock": true,
+    "playerchat": true,
+    "spectatorjoin": true,
+    "spectatorleave": true,
+    "spectatorchat": true,
+    "disconnect": true,
+    "reconnect" : true
 };
 
 BattleTab.statuses = {
@@ -443,7 +481,14 @@ BattleAnimator.prototype.on = function(what) {
     var funcName = "on"+what[0].toUpperCase()+what.slice(1);
     if (funcName in BattleAnimator.prototype) {
         this.pause();
-        this[funcName].call(this, arguments.slice(1));
+
+        /* arguments.slice() doesn't work, unfortunately */
+        var newargs= [];
+        for (var i = 1; i < arguments.length; i++) {
+            newargs.push(arguments[i]);
+        }
+        /* Call the function with the same arguments, except the name of the command */
+        this[funcName].apply(this, newargs);
     }
 };
 
@@ -451,7 +496,11 @@ BattleAnimator.prototype.pause = function () {
     this.battle.pause();
 };
 
-BattleAnimator.prototype.unpause = BattleAnimator.prototype.finished = function() {
+BattleAnimator.prototype.unpause = function() {
+    this.battle.unpause();
+};
+
+BattleAnimator.prototype.finished = function() {
     this.battle.unpause();
 };
 
@@ -475,5 +524,26 @@ BattleAnimator.prototype.onKo = function(spot) {
         sprite.css("opacity", 100);
         sprite.css(self.moveSprite(spot, 0, +50));//reset move
         self.finished();
+    });
+};
+
+BattleAnimator.prototype.onHpchange = function(spot, oldpercent, newpercent) {
+    var self = this;
+    var $prog = this.battle.$poke(spot).find(".battle-stat-progress");
+    var $text = this.battle.$poke(spot).find(".battle-stat-value");
+
+    oldpercent = Math.floor(oldpercent);
+    newpercent = Math.floor(newpercent);
+    var duration = Math.abs(newpercent-oldpercent)*25;
+
+    $prog.animate({"width":newpercent+"%"}, {"duration": duration, "easing": "linear",
+        "progress": function(animation, progress, remaining) {
+            $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
+
+            var current = oldpercent + (newpercent-oldpercent)*progress;
+            $prog.addClass("battle-stat-progress-" + (Math.floor(current*4/100.1)+1) + "x");
+            $text.text(Math.floor(current) + "%");
+        },
+        "complete": function(){self.finished();}
     });
 };

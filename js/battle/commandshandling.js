@@ -69,7 +69,7 @@ BattleTab.prototype.dealWithOfferchoice = function(params) {
 };
 
 BattleTab.prototype.dealWithKo = function(params) {
-    this.animator.onKo(params.spot);
+    this.animator.on("ko", params.spot);
     this.print("<strong>" + this.nick(params.spot) + " fainted!</strong>");
 
     this.pokes[params.spot].status = 31; //ko
@@ -81,7 +81,7 @@ BattleTab.prototype.dealWithMove = function(params) {
 
 BattleTab.prototype.dealWithHpchange = function(params) {
     /* Checks & updates the pokemon in memory's life percent */
-    var current = this.pokes[params.spot].life || this.pokes[params.spot].percent;
+    var current = this.pokes[params.spot].percent;
     if (this.pokes[params.spot].life) {
         this.pokes[params.spot].life = params.newHP;
         this.pokes[params.spot].percent = params.newHP/this.pokes[params.spot].totalLife;
@@ -99,7 +99,7 @@ BattleTab.prototype.dealWithHpchange = function(params) {
     }
     this.damageCause = {};
     */
-    this.updateFieldPoke(params.spot);
+    this.animator.on("hpchange", params.spot, current, this.pokes[params.spot].percent);
 };
 
 BattleTab.prototype.dealWithHitcount = function(params) {
