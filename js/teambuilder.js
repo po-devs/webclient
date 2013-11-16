@@ -533,7 +533,7 @@ teambuilder.prototype.recalculateStats = function(pokemonIndex) {
 	var self = this, slot = $(".pokemon-slot").eq(pokemonIndex), generation = self.getTeamInfo('generation');
 	var stat, max_stat, stat_progress_class_id, stat_ivs, stat_evs, base_stat, nature, stat_percentage;
 	var level = parseInt(slot.find(".pokemon-level-value").slider('value'));
-	var baseStats = pokedex.pokes.stats[slot.find(".pokemon-slot-name").data('pokemon_id')] != undefined ? pokedex.pokes.stats[slot.find(".pokemon-slot-name").data('pokemon_id')] : pokedex.pokes.stats[self.getSpecieId(slot.find(".pokemon-slot-name").data('pokemon_id'))];
+	var baseStats = pokeinfo.stats(slot.find(".pokemon-slot-name").data('pokemon_id'), generation);
 	var stats_list = self.getGenerationInfo(self.getTeamInfo('generation'), 'stats_list');
 	
 	$.each(stats_list, function(stat_id, stat_name) {
