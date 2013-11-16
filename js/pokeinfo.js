@@ -34,14 +34,22 @@ pokeinfo.forme = function(poke) {
     return poke >> 16;
 };
 
-
 pokeinfo.find = function(id, what, gen) {
     gen = getGen(gen);
     id = this.toNum(id);
 
     var gennum = gen.num;
-    var array = pokedex.pokes[what][gen.num];
+    var array = pokedex.pokes[what][gennum];
+    
+    if (id in array) {
+        return array[id];
+    }
+    
     var ornum = this.species(id);
+    
+    if (ornum in array) {
+        return array[ornum];
+    }
 
     while (gennum < lastgen.num && ! (id in array) && !(ornum in array)) {
         array = pokedex.pokes[what][++gennum];
@@ -128,7 +136,7 @@ pokeinfo.types = function(poke, gen) {
 pokeinfo.abilities = function(poke, gen) {
     return [this.find(poke, "ablity1", gen),
         this.find(poke, "ablity2", gen),
-        this.find(poke, "ablity3", gen)].filter(function(arg) {return arg != 0;});
+        this.find(poke, "ablity3", gen)].filter(function(arg) {return arg !== 0;});
 };
 
 pokeinfo.releasedList = function(gen) {
@@ -140,19 +148,16 @@ pokeinfo.released = function(poke, gen) {
 };
 
 pokeinfo.calculateStat = function(infos) {
-    if(infos.stat_id == this.default_settings.hp_id) {
-        if(infos.generation > 2) {
+    if (infos.stat_id == this.default_settings.hp_id) {
+        if (infos.generation > 2) {
             return Math.floor(Math.floor((infos.stat_ivs + (2 * infos.base_stat) + Math.floor(infos.stat_evs/4) + 100) * infos.level)/100) + 10;
-        }
-        else {
+        } else {
             return Math.floor(((infos.stat_ivs + infos.base_stat + Math.sqrt(65535)/8 + 50) * infos.level)/50 + 10);
         }
-    }
-    else {
-        if(infos.generation > 2) {
+    } else {
+        if (infos.generation > 2) {
             return Math.floor(Math.floor(((infos.stat_ivs + (2 * infos.base_stat) + Math.floor(infos.stat_evs/4)) * infos.level)/100 + 5)*infos.nature);
-        }
-        else {
+        } else {
             return Math.floor(Math.floor((infos.stat_ivs + infos.base_stat + Math.sqrt(65535)/8) * infos.level)/50 + 5);
         }
     }
@@ -187,7 +192,11 @@ moveinfo.find = function(id, what, gen) {
     gen = getGen(gen);
 
     var gennum = gen.num;
-    var array = pokedex.moves[what][gen.num];
+    var array = pokedex.moves[what][gennum];
+
+    if (id in array) {
+        return array[id];
+    }
 
     while (gennum < lastgen.num && ! (id in array)) {
         array = pokedex.moves[what][++gennum];
@@ -277,8 +286,7 @@ iteminfo.released = function (item, gen) {
     gen = getGen(gen);
     if (item >= 8000) {
         return pokedex.items.released_berries[gen].hasOwnProperty(item-8000);
-    }
-    else {
+    } else {
         return pokedex.items.released_items[gen].hasOwnProperty(item);
     }
 };
