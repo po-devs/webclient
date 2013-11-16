@@ -29,7 +29,7 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.teams[pl][params.slot] = this.teams[pl][this.slot(params.spot)];
     this.teams[pl][this.slot(params.spot)] = poke;
 
-    this.$sprite(params.spot).show();
+    this.animator.on("send", params.spot);
 
     this.updateFieldPoke(params.spot);
     this.updateTeamPokes(pl, [this.slot(params.spot), params.slot]);

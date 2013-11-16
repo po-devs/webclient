@@ -143,6 +143,9 @@ function BattleTab(pid, conf, team) {
 
         this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
         this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
+
+        this.setPos(this.$sprite(0), 0);
+        this.setPos(this.$sprite(1), 1);
     }
 }
 
@@ -469,81 +472,23 @@ BattleTab.modes = {
     3: "Rotation"
 };
 
-/* All the animation code is done by a separate class in order to keep code clean, and easily change animation mechanics
-    as we're probably bound to do that.
- */
-function BattleAnimator(battle) {
-    battle.animator = this;
-    this.battle = battle;
-}
+/* Basic position of the pokemon sprite */
+BattleTab.prototype.pos = function(spot, effect) {
+    var wh = BattleTab.effects[effect] || BattleTab.effects.none;
 
-BattleAnimator.prototype.on = function(what) {
-    var funcName = "on"+what[0].toUpperCase()+what.slice(1);
-    if (funcName in BattleAnimator.prototype) {
-        this.pause();
-
-        /* arguments.slice() doesn't work, unfortunately */
-        var newargs= [];
-        for (var i = 1; i < arguments.length; i++) {
-            newargs.push(arguments[i]);
-        }
-        /* Call the function with the same arguments, except the name of the command */
-        this[funcName].apply(this, newargs);
-    }
-};
-
-BattleAnimator.prototype.pause = function () {
-    this.battle.pause();
-};
-
-BattleAnimator.prototype.unpause = function() {
-    this.battle.unpause();
-};
-
-BattleAnimator.prototype.finished = function() {
-    this.battle.unpause();
-};
-
-BattleAnimator.prototype.moveSprite = function(spot, x, y) {
-    var p = this.battle.player(spot);
-
-    if (p == 0) {
-        return {"bottom": "+=" + y, "left": "+=" + x}
+    if (spot == 0) {
+        return {"bottom":"103" - wh.h/2,"left":"105" - wh.w / 2, "transform": "scale(1.5)"};
     } else {
-        return {"top": "-=" + y, "right": "-=" + x}
+        return {"top":"140" - wh.h/2,"right":"105" - wh.w / 2};
     }
 };
 
-BattleAnimator.prototype.onKo = function(spot) {
-    var self = this;
-    var b = this.battle;
-    var sprite = b.$sprite(spot);
-
-    sprite.animate($.extend(this.moveSprite(spot, 0, -50), {"opacity": 0}), "slow", function() {
-        sprite.hide();
-        sprite.css("opacity", 100);
-        sprite.css(self.moveSprite(spot, 0, +50));//reset move
-        self.finished();
-    });
+BattleTab.prototype.setPos = function(img, spot, effect) {
+    var p = this.pos(spot, effect);
+    img.css(p);
+    img.spot = spot;
+    var wh = BattleTab.effects[effect] || BattleTab.effects.none;
+    img.w = wh.w;
+    img.h = wh.h;
 };
 
-BattleAnimator.prototype.onHpchange = function(spot, oldpercent, newpercent) {
-    var self = this;
-    var $prog = this.battle.$poke(spot).find(".battle-stat-progress");
-    var $text = this.battle.$poke(spot).find(".battle-stat-value");
-
-    oldpercent = Math.floor(oldpercent);
-    newpercent = Math.floor(newpercent);
-    var duration = Math.abs(newpercent-oldpercent)*25;
-
-    $prog.animate({"width":newpercent+"%"}, {"duration": duration, "easing": "linear",
-        "progress": function(animation, progress, remaining) {
-            $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
-
-            var current = oldpercent + (newpercent-oldpercent)*progress;
-            $prog.addClass("battle-stat-progress-" + (Math.floor(current*4/100.1)+1) + "x");
-            $text.text(Math.floor(current) + "%");
-        },
-        "complete": function(){self.finished();}
-    });
-};

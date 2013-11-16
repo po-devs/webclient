@@ -63,17 +63,13 @@
 	left:10px;
 }
 
-.p2_pokemon1 .sprite, .p1_pokemon1 .sprite {
+.sprite {
 	position:absolute;
-    transform-origin: bottom;
+    /*transform-origin: bottom;*/
     image-rendering: optimize-contrast;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor
-}
-
-.p1_pokemon1 .sprite {
-    transform: scale(1.5);
 }
 
 .battle_window_pokemon_infos {
