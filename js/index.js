@@ -57,7 +57,9 @@ $(function() {
     }
 
     $("#servers-list tbody").on('click', 'tr', function() {
-        $("#advanced-connection").val($(this).find(' td:last-child').text());
+        var $this = $(this);
+        $("#advanced-connection").val($this.find('.server-ip').text());
+        showHtmlInFrame("#server-description", serverDescriptions[$this.find('.server-name').text()]);
     }).on('dblclick', 'tr', function () {
         connect();
     });
@@ -278,20 +280,11 @@ $("#player-dialog").dialog({
     }
 });
 
-var hasIframeSrcdoc = false;
-var testIframe = document.createElement('iframe');
-
-hasIframeSrcdoc = typeof testIframe.srcDoc === 'string' || typeof testIframe.srcdoc === 'string';
-
 var updatePlayerInfo = function(player) {
     $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
-    var info = player.info || '';
-    if (info.indexOf("<") !== -1 && hasIframeSrcdoc) {
-        $("#player-dialog .trainer-info").html("<iframe frameBorder='0' width='100%' seamless sandbox='' srcdoc='" + cleanHtmlAttribute(format(info)) + "'></iframe>");
-    } else {
-        $("#player-dialog .trainer-info").text(info);
-    }
+    showHtmlInFrame("#player-dialog .trainer-info", player.info);
 };
+
 $("#player-list").on("click", "li", function(event) {
     var id = event.currentTarget.id.split("-")[1];
     currentOpenPlayer = id;
@@ -509,10 +502,13 @@ function checkSocket()
 }
 
 function connect() {
-    websocket.send("connect|" + $("#advanced-connection").val());
-    $(".page").toggle();
+    if (websocket) {
+        websocket.send("connect|" + $("#advanced-connection").val());
+        $(".page").toggle();
+    }
 }
 
+var serverDescriptions = {};
 parseCommand = function(message) {
     var cmd = message.substr(0, message.indexOf("|"));
     var data = message.slice(message.indexOf("|")+1);
@@ -536,15 +532,17 @@ parseCommand = function(message) {
             websocket.send("registry");
         }
     } else if (cmd == "servers") {
-        var servers = JSON.parse(data);
+        var servers = JSON.parse(data), html = "";
 
         for (var i = 0; i < servers.length; i++) {
             var server = servers[i];
-            var html = "<tr><td>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>"
-                + "<td>"+server.ip+":" + server.port + "</td></tr>";
-            $("#servers-list tbody").prepend(html);
+            html += "<tr><td class='server-name'>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>"
+                + "<td class='server-ip'>"+server.ip+":" + server.port + "</td></tr>";
+            serverDescriptions[server.name] = server.description;
         }
-
+        
+        
+        $("#servers-list tbody").prepend(html);
         $("#servers-list").tablesorter({sortList: [[1,1]]});
     } else if (cmd == "connected") {
         displayMessage("Connected to server!");
