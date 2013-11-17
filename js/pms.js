@@ -50,7 +50,7 @@ function PM(pid) {
     }
 }
 
-PM.inherits(ChannelTab);
+Function.inherits(PM, ChannelTab);
 
 PM.prototype.playerIds = function() {
     var ret = [players.myid];

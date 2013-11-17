@@ -182,3 +182,19 @@ function escapeSlashes(str) {
 function unescapeSlashes(str) {
     return str.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
 }
+
+var hasIframeSrcdoc = false;
+var testIframe = document.createElement('iframe');
+
+hasIframeSrcdoc = typeof testIframe.srcDoc === 'string' || typeof testIframe.srcdoc === 'string';
+
+// TODO: Support for older browsers (that have the sandbox attribute).
+function showHtmlInFrame(selector, html) {
+    var elem = $(selector);
+    html = html || '';
+    if (html.indexOf("<") !== -1 && hasIframeSrcdoc) {
+        elem.html("<iframe frameBorder='0' width='100%' seamless sandbox='' srcdoc='<link rel=\"stylesheet\" href=\"css/style.css\">" + cleanHtmlAttribute(format(html)) + "'></iframe>");
+    } else {
+        elem.text(html);
+    }
+}
