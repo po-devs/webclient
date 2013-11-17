@@ -282,7 +282,7 @@ BattleTab.prototype.updateFieldPoke = function(spot) {
     var $poke = this.$poke(spot);
     $poke.find(".pokemon_name").text(poke.name);
     $poke.find(".sprite").attr("src", "");
-    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, {"gen": this.conf.gen, "back": this.player(spot) == 0}));
+    $poke.find(".sprite").attr("src", pokeinfo.battlesprite(poke, {"gen": this.conf.gen, "back": this.player(spot) == 0}));
     $poke.find(".battle-stat-value").text(poke.percent + "%");
 
     var $prog = $poke.find(".battle-stat-progress");
@@ -472,9 +472,17 @@ BattleTab.modes = {
     3: "Rotation"
 };
 
+BattleTab.prototype.effects = function(spot, effect) {
+    if (typeof effect == "object") {
+        return pokeinfo.spriteData(effect, {"back":spot==0});
+    } else {
+        return BattleTab.effects[effect] || BattleTab.effects.none;
+    }
+};
+
 /* Basic position of the pokemon sprite */
 BattleTab.prototype.pos = function(spot, effect) {
-    var wh = BattleTab.effects[effect] || BattleTab.effects.none;
+    var wh = this.effects(spot, effect);
 
     if (spot == 0) {
         return {"bottom":"103" - wh.h/2,"left":"105" - wh.w / 2, "transform": "scale(1.5)"};
@@ -487,7 +495,7 @@ BattleTab.prototype.setPos = function(img, spot, effect) {
     var p = this.pos(spot, effect);
     img.css(p);
     img.spot = spot;
-    var wh = BattleTab.effects[effect] || BattleTab.effects.none;
+    var wh = this.effects(spot, effect);
     img.w = wh.w;
     img.h = wh.h;
 };

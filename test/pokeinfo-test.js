@@ -6,10 +6,14 @@ buster.testCase("pokeinfo", {
         assert.equals(pokeinfo.toNum(40), 40, "Expecting toNum(40) to be 40");
         assert.equals(pokeinfo.toNum({"num": 3, "forme": 1}), (1<<16)+3, "Testing toNum({num: 3, forme: 1})");
     },
-    "bulbasaur sprite url": function () {
+    "sprites": function () {
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/1.png", pokeinfo.sprite({num: 1, gen: 6}));
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/1.png", pokeinfo.sprite({num: 1, gen: {num: 6}}));
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/1.png", pokeinfo.sprite({num: 1}));
+        assert.equals("http://pokemon-online.eu/images/pokemon/x-y/3-1.png", pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}));
+        assert.equals("http://pokemon-online.eu/images/pokemon/x-y/back/3-1.png", pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}, {back:true}));
+        assert.equals("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif", pokeinfo.battlesprite({num: 1, gen: {num: 6}}));
+        assert.equals(pokeinfo.spriteData(212, {"back":true}).w, 68);
     },
     "typeinfo": function() {
         assert.equals("Fairy", typeinfo.name(17));

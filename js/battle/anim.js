@@ -140,7 +140,8 @@ BattleAnimator.prototype.onSend = function(spot) {
 
     $poke.find(".pokemon_name").text(poke.name);
     $poke.find(".sprite").attr("src", "");
-    $poke.find(".sprite").attr("src", pokeinfo.sprite(poke, {"gen": b.conf.gen, "back": b.player(spot) == 0}));
+    $poke.find(".sprite").attr("src", pokeinfo.battlesprite(poke, {"gen": b.conf.gen, "back": b.player(spot) == 0}));
+    b.setPos(sprite, spot, poke);
     $poke.find(".battle-stat-value").text(poke.percent + "%");
 
     var $prog = $poke.find(".battle-stat-progress");
@@ -149,7 +150,7 @@ BattleAnimator.prototype.onSend = function(spot) {
     $prog.css("width", poke.percent + "%");
 
     this.showEffect(spot, "pokeball", {"relx": -100, "y": 60, "zoom": 0.7},
-        {"relx": 100, "y": -70}, "fade",
+        {"relx": 100, "y": -60}, "fade",
 
         function() {
             sprite.css("opacity", 100);

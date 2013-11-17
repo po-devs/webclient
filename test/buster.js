@@ -6,6 +6,7 @@ config["Webclient"] = {
     sources: [
         //"libs/*.js",    // Paths are relative to config file
         "js/db/initpokedex.js",
+        "js/db/pokes/images.js",
         "js/db/**/*.js",
         "js/pokeinfo.js"
     ],

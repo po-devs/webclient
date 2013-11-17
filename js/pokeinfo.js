@@ -78,6 +78,26 @@ pokeinfo.sprite = function(poke, params) {
         + (gen.num == 5 ? ".gif" : ".png");
 };
 
+pokeinfo.battlesprite = function(poke, params) {
+    params = params || {};
+
+    var back = params.back || false;
+    var num = this.toNum(poke);
+    var data = pokeinfo.spriteData(poke, params);
+
+    return pokedex.generations.options[lastgen.num].sprite_folder + ( (data.ext || "gif") == "gif" ? "animated/" : "" ) + (back ? "back/" : "")
+        + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
+        + ((data.ext || "gif") == "gif" ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
+        + ("." + (data.ext || "gif"));
+};
+
+pokeinfo.spriteData = function(poke, params) {
+    var back = params.back || false;
+    var num = this.toNum(poke);
+
+    return (back ? pokedex.pokes.images.back[num] : pokedex.pokes.images[num]) || {"w":96,"h":96};
+};
+
 pokeinfo.icon = function(poke) {
     return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
 };
