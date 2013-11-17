@@ -40,6 +40,7 @@ BattleAnimator.prototype.finished = function() {
 BattleAnimator.prototype.move = function(img, x, y) {
     var p = this.battle.player(img.spot);
 
+    //this.battle.print("Player: " + p + ", spot: " + img.spot);
     if (p == 0) {
         return {"bottom": "+=" + y, "left": "+=" + x}
     } else {

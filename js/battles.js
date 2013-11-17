@@ -103,6 +103,11 @@ function BattleTab(pid, conf, team) {
 
     this.queue = [];//Queues of message not yet processed
 
+    /* ui data */
+    this.data = {
+        sprites: {}
+    };
+
     this.shortHand = "battle";
     this.id = pid;
     this.conf = conf;
@@ -296,7 +301,7 @@ BattleTab.prototype.$poke = function(spot) {
 };
 
 BattleTab.prototype.$sprite = function(spot) {
-    return this.$poke(spot).find(".sprite");
+    return this.data.sprites[spot] || (this.data.sprites[spot] = this.$poke(spot).find(".sprite"));
 };
 
 BattleTab.prototype.tpoke = function(spot) {
