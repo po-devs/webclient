@@ -36,22 +36,6 @@ h1 {
 	color:#000000;
 }
 
-input::-webkit-input-placeholder {
-	color:#bdbaba;
-}
-
-input:-moz-placeholder {
-	color:#bdbaba;
-}
-
-input::-moz-placeholder {
-	color:#bdbaba;
-}
-
-input:-ms-input-placeholder {
-	color:#bdbaba;
-}
-
 input:focus::-webkit-input-placeholder {
 	color:transparent;
 }
