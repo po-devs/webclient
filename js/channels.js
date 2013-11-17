@@ -128,7 +128,7 @@ function Channel(id, name) {
     }
 }
 
-Channel.inherits(ChannelTab);
+Function.inherits(Channel, ChannelTab);
 
 Channel.prototype.close = function() {
     channels.leaveChannel(this.id)
@@ -224,7 +224,9 @@ Channel.prototype.print = function (msg, html, noParse) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
     if (scrollDown) {
-        chatTextArea.scrollTop = chatTextArea.scrollHeight;
+        var chattextarea = $(chatTextArea);
+        chattextarea.animate({scrollTop: chatTextArea.scrollHeight}, "fast");
+        //chatTextArea.scrollTop = chatTextArea.scrollHeight;
     }
 };
 

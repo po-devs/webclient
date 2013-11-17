@@ -74,7 +74,7 @@ $(function() {
     /* Gets the current object owning a tab from the hrefid of the tab */
     objFromId = function(hrefid) {
         var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
-        var ret = undefined;
+        var ret;
         if (/^#channel-/.test(hrefid)) {
             ret = channels.hasChannel(id) ? channels.channel(id) : undefined;
         } else if (/^#pm-/.test(hrefid)) {
@@ -115,8 +115,9 @@ $(function() {
 
         /* Resizes chat area in funciton of the height of the channel tab */
         /* Scrolls down the chat of the current tab */
-        $(hrefid+" #chatTextArea").get(0).scrollTop = $(hrefid+" #chatTextArea").get(0).scrollHeight;
-
+        var chattextarea = $(hrefid+" #chatTextArea").get(0);
+        chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
+            
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
     });
@@ -231,7 +232,7 @@ $(function() {
         }
     });
 
-    $(window).bind("beforeunload", function () {
+    /*$(window).bind("beforeunload", function () {
         if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
             return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
         }
@@ -241,7 +242,7 @@ $(function() {
 
     $(window).unload(function () {
         localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
-    });
+    });*/
 
     if ($.cookie("autoload")) {
         $("#autoload").attr("checked", true);

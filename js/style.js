@@ -33,11 +33,7 @@ $(document).ready(function() {
 	});
     $("#battle-html").load("battle.html");
 	$("#teambuilder").load("teambuilder.html", function() {
-		
 		/* Teambuilder */
-
-        $(document).ready(function() {
-		    var tb = new teambuilder();
-        });
+        var tb = new teambuilder();
 	})
 });
