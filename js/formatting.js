@@ -7,32 +7,14 @@
     and browsers that don't have it in the first place.
 */
 defineOn = function (core, props) {
-    var x,
-        hasDefineProperty = true;
+    var x;
+    for (x in props) {
+        Object.defineProperty(core, x, {
+            "value": props[x],
 
-    if ($.browser.msie) {
-        if (parseInt($.browser.version, 10) < 9) {
-            hasDefineProperty = false;
-        }
-    }
-
-    if (!Object.defineProperty) {
-        hasDefineProperty = false;
-    }
-
-    if (hasDefineProperty) {
-        for (x in props) {
-            Object.defineProperty(core, x, {
-                "value": props[x],
-
-                writable: true,
-                configurable: true
-            });
-        }
-    } else {
-        for (x in props) {
-            core[x] = props[x];
-        }
+            writable: true,
+            configurable: true
+        });
     }
 };
 
