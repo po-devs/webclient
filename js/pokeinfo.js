@@ -82,12 +82,13 @@ pokeinfo.battlesprite = function(poke, params) {
     params = params || {};
 
     var back = params.back || false;
-    var num = this.toNum(poke);
     var data = pokeinfo.spriteData(poke, params);
+
+    console.log(data);
 
     return pokedex.generations.options[lastgen.num].sprite_folder + ( (data.ext || "gif") == "gif" ? "animated/" : "" ) + (back ? "back/" : "")
         + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
-        + ((data.ext || "gif") == "gif" ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
+        + ((data.ext || "gif") == "gif" ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme && !data.noforme ? "-" + poke.forme : "")
         + ("." + (data.ext || "gif"));
 };
 
@@ -95,7 +96,12 @@ pokeinfo.spriteData = function(poke, params) {
     var back = params.back || false;
     var num = this.toNum(poke);
 
-    return (back ? pokedex.pokes.images.back[num] : pokedex.pokes.images[num]) || {"w":96,"h":96};
+    var ret = (back ? pokedex.pokes.images.back[num] : pokedex.pokes.images[num]);
+    if (!ret) {
+        ret = (back ? pokedex.pokes.images.back[num%65356] : pokedex.pokes.images[num%65356]) || {"w":96,"h":96};
+        ret.noforme = true;
+    }
+    return ret;
 };
 
 pokeinfo.icon = function(poke) {

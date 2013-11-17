@@ -12,6 +12,7 @@ buster.testCase("pokeinfo", {
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/1.png", pokeinfo.sprite({num: 1}));
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/3-1.png", pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}));
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/back/3-1.png", pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}, {back:true}));
+        assert.equals("http://pokemon-online.eu/images/pokemon/x-y/back/671.png", pokeinfo.battlesprite({num: 671, gen: {num: 6}}, {back:true}));
         assert.equals("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif", pokeinfo.battlesprite({num: 1, gen: {num: 6}}));
         assert.equals(pokeinfo.spriteData(212, {"back":true}).w, 68);
     },

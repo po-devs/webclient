@@ -160,6 +160,22 @@ BattleAnimator.prototype.onSend = function(spot) {
     );
 };
 
+BattleAnimator.prototype.onSendback = function(spot) {
+    var b = this.battle;
+    var sprite = b.$sprite(spot);
+    var self = this;
+
+    sprite.css("opacity", 0);
+
+    this.showEffect(spot, "pokeball", {},
+        {"relx": -100, "y": +60, "zoom": 0.7}, "fade",
+
+        function() {
+            self.finished();
+        }
+    );
+};
+
 BattleAnimator.prototype.onHpchange = function(spot, oldpercent, newpercent) {
     var self = this;
     var $prog = this.battle.$poke(spot).find(".battle-stat-progress");

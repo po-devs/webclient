@@ -41,6 +41,17 @@ BattleTab.prototype.dealWithSend = function(params) {
     }
 };
 
+BattleTab.prototype.dealWithSendback = function(params) {
+    var poke = this.pokes[params.spot];
+    var pl = this.player(params.spot);
+
+    this.animator.on("sendback", params.spot);
+
+    if (!params.silent) {
+        this.print(this.name(pl) + " called " + poke.name + " back!");
+    }
+};
+
 BattleTab.prototype.dealWithTeampreview = function(params) {
     var team = params.team;
     var player = params.player;
