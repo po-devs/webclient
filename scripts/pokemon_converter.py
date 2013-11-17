@@ -34,42 +34,53 @@ def convert_line(line, duplicates):
     return lines[0] + ':'+lines[1]+',\n'
 
 
-def deal_with_file(path, gen="0", file="", duplicates=False):
-    print ("gen: " + gen + ", file: " + file)
-    if gen == "0":
-        path2 = "/pokes/" + file
+def deal_with_file(path, do_gens=False, file="", duplicates=False):
+    print ("file: " + file)
+    gens = ['6', '5', '4', '3', '2', '1']
+    full_moves = ''
+
+    typepath = "pokedex.pokes"
+    filepath = typepath+"."+file
+
+    if do_gens:
+        for gen in gens:
+            try:
+                all_moves_f = open(path + "/pokes/" + gen + "G/" + file + ".txt", "r");
+                all_moves = all_moves_f.readlines()
+                all_moves_f.close()
+            except IOError:
+                continue
+
+            if all_moves[0].startswith(codecs.BOM_UTF8):
+                all_moves[0] = all_moves[0][3:]
+
+            all_moves = [convert_line(x, duplicates) for x in all_moves]
+            full_moves += filepath + "[" + gen + "] = {\n" + ''.join(all_moves) + '};\n'
     else:
-        path2 = "/pokes/" + gen + "G/" + file
+        try:
+            all_moves_f = open(path + "/pokes/" + file + ".txt", "r");
+            all_moves = all_moves_f.readlines()
+            all_moves_f.close()
+        except IOError:
+            return
 
-    try:
-        all_moves_f = open(path + path2 + ".txt", "r");
-        all_moves = all_moves_f.readlines()
-        all_moves_f.close()
-    except IOError:
-        return
+        if all_moves[0].startswith(codecs.BOM_UTF8):
+            all_moves[0] = all_moves[0][3:]
 
-    if all_moves[0].startswith(codecs.BOM_UTF8):
-        all_moves[0] = all_moves[0][3:]
+        all_moves = [convert_line(x, duplicates) for x in all_moves]
+        full_moves += filepath + " = {\n" + ''.join(all_moves) + '};'
 
-    all_moves = [convert_line(x, duplicates) for x in all_moves]
-
-    output_name = "../js/db/"+ path2 + ".js";
+    output_name = "../js/db/pokes/"+ file + ".js"
     ensure_dir(output_name)
 
     print ("writing into " + output_name)
     output = open(output_name, "wb");
 
-    typepath = "pokedex.pokes"
-    filepath = typepath+"."+file
     output.write("if(!"+typepath+")"+typepath+"={};\n")
-    if gen != "0":
+    if do_gens:
         output.write("if(!"+filepath+")"+filepath+"=[];\n")
-    output.write(filepath);
-    if gen != "0":
-        output.write("[" + gen + "]")
-    output.write(" = {\n")
-    output.writelines(all_moves)
-    output.write("};")
+
+    output.write(full_moves)
 
     output.close()
 
@@ -82,19 +93,18 @@ def main(argv):
     else:
         path = argv[1]
 
-    gens = ['6', '5', '4', '3', '2', '1']
+    # gens = ['6', '5', '4', '3', '2', '1']
     files = ['all_moves', 'type1', 'type2', 'ability1', 'ability2', 'ability3', 'min_levels', 'stats']
     base_files = ['gender', 'height', 'weight', 'pokemons']
     unique_files = ['released']
     duplicates = {}
 
-    for gen in gens:
-        for file in files:
-            if not file in duplicates:
-                duplicates[file] = []
-            deal_with_file(path, gen=gen, file=file, duplicates=duplicates[file])
-        for file in unique_files:
-            deal_with_file(path, gen=gen, file=file)
+    for file in files:
+        if not file in duplicates:
+            duplicates[file] = []
+        deal_with_file(path, do_gens=True, file=file, duplicates=duplicates[file])
+    for file in unique_files:
+        deal_with_file(path, do_gens=True, file=file)
     for file in base_files:
         deal_with_file(path, file=file)
 
