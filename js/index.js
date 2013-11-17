@@ -58,7 +58,10 @@ $(function() {
 
     $("#servers-list tbody").on('click', 'tr', function() {
         $("#advanced-connection").val($(this).find(' td:last-child').text());
+    }).on('dblclick', 'tr', function () {
+        connect();
     });
+    
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
