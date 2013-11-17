@@ -10,8 +10,12 @@ $(document).ready(function() {
 	});
 	
 	$(".dropdown_button").on('click', function() {
-		$(this).find('i').toggle();
-		$(this).parent().find('.dropdown_content').toggle();
+        var $this = $(this);
+		$this.find('i').toggle();
+		$this.parent().find('.dropdown_content').toggle();
+        if ($this.data('teambuilder')) {
+            teambuilder.init();
+        }
 	});
 	
 	$("#trainer_username, #create_team, #po_title").on('click', function() {
@@ -35,7 +39,7 @@ $(document).ready(function() {
 	$("#teambuilder").load("teambuilder.html", function() {
         setTimeout(function () {
             /* Teambuilder */
-            var tb = new teambuilder();
+            teambuilder = new Teambuilder();
         }, 4); // 4 is the minimum delay
 	})
 });

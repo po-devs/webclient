@@ -44,6 +44,7 @@ $(function() {
     $('#search_filter').keyup(function(){playerList.filter=$(this).val().toLowerCase();});
 });
 
+teambuilder = null;
 $(function() {
     var cookieRelay = $.cookie("relay");
     if (cookieRelay) {
@@ -428,8 +429,11 @@ function initWebsocket()
     {
         if ( typeof MozWebSocket == 'function' )
             WebSocket = MozWebSocket;
-        if ( websocket && websocket.readyState == 1 )
+        
+        if ( websocket && websocket.readyState == 1 ) {
             websocket.close();
+            $("#servers-list tbody").html('');
+        }
 
         var fullIP = $("#relay").val();
         displayMessage("Connecting to " + fullIP);
