@@ -1,6 +1,6 @@
 // teambuilder class
 	
-function teambuilder(generation) {
+function Teambuilder(generation) {
 	
 	this.default_settings = {
 		generation:6,
@@ -15,7 +15,19 @@ function teambuilder(generation) {
 		unknown_type_id:18,
 		icons_folder:'http://pokemon-online.eu/images/poke_icons/'
 	};
-	
+    
+    this.initialized = false;
+    this.generation = generation;
+}
+
+Teambuilder.prototype.init = function () {
+    if (this.initialized) {
+        return;
+    }
+    
+    this.initialized = true;
+    var generation = this.generation;
+    
 	// Initialize the teambuilder
 	
 	var self = this, settings = self.default_settings;
@@ -384,9 +396,10 @@ function teambuilder(generation) {
 	
 	// setting the generation of the team
 	this.setGeneration(generation);
-}
+};
+
 	
-teambuilder.prototype.setGeneration = function(generation) {
+Teambuilder.prototype.setGeneration = function(generation) {
 	
 	var self = this, settings = self.default_settings;
 	
@@ -450,7 +463,7 @@ teambuilder.prototype.setGeneration = function(generation) {
 	this.resetTeamBuilder();
 };
 	
-teambuilder.prototype.resetTeamBuilder = function() {
+Teambuilder.prototype.resetTeamBuilder = function() {
 	
 	var self = this;
 	$("#tb-team-name, #tb-team-tier-value").val('');
@@ -463,7 +476,7 @@ teambuilder.prototype.resetTeamBuilder = function() {
 	self.resetPokemon([0, 1, 2, 3, 4, 5]);
 };
 
-teambuilder.prototype.resetPokemon = function(pokemonIndex) {
+Teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	
 	var self = this, generation = self.getTeamInfo('generation'), settings = self.default_settings, slot_selectors = [], tab_selectors = [];
 	pokemonIndex = $.isArray(pokemonIndex) ? pokemonIndex : [pokemonIndex];
@@ -528,7 +541,7 @@ teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	$.each(pokemonIndex, function(index, value) { self.recalculateStats(value); });
 };
 
-teambuilder.prototype.recalculateStats = function(pokemonIndex) {
+Teambuilder.prototype.recalculateStats = function(pokemonIndex) {
 	
 	var self = this, slot = $(".pokemon-slot").eq(pokemonIndex), generation = self.getTeamInfo('generation');
 	var stat, max_stat, stat_progress_class_id, stat_ivs, stat_evs, base_stat, nature, stat_percentage;
@@ -584,7 +597,7 @@ teambuilder.prototype.recalculateStats = function(pokemonIndex) {
 	
 };
 
-teambuilder.prototype.calculateStat = function(infos) {
+Teambuilder.prototype.calculateStat = function(infos) {
 	
 	if(infos.stat_id == this.default_settings.hp_id)
 	{
@@ -611,7 +624,7 @@ teambuilder.prototype.calculateStat = function(infos) {
 	
 };
 
-teambuilder.prototype.recalculateHiddenPowerInfos = function(pokemonIndex) {
+Teambuilder.prototype.recalculateHiddenPowerInfos = function(pokemonIndex) {
 	
 	var self = this, slot = $(".pokemon-slot").eq(pokemonIndex), generation = self.getTeamInfo('generation'), stats_list = self.getGenerationInfo(generation, 'stats_list'), ivs = [];
 	
@@ -622,7 +635,7 @@ teambuilder.prototype.recalculateHiddenPowerInfos = function(pokemonIndex) {
 	slot.find('.pokemon-slot-hidden-power-bp-value').text(self.getHiddenPowerBP(generation, ivs[0], ivs[1], ivs[2], ivs[3], ivs[4], ivs[5]));
 };
 
-teambuilder.prototype.getTeamInfo = function(info_name) {
+Teambuilder.prototype.getTeamInfo = function(info_name) {
 
 	switch(info_name)
 	{
@@ -641,7 +654,7 @@ teambuilder.prototype.getTeamInfo = function(info_name) {
 	
 };
 
-teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
+Teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 	switch(info_name)
 	{
 		case 'special_stats_same': case 'damage_classes_move_specific': case 'gender': case 'shiny': case 'special_stat': case 'happiness': case 'ivs_limit': case 'hidden_power': case 'hidden_power_bp': case 'ability': case 'nature': case 'item': case 'evs': case 'types_ids': case 'sprite_folder':
@@ -678,7 +691,7 @@ teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 	}
 };
 
-teambuilder.prototype.TeamInfoIdsToPairs = function(info_name, values) {
+Teambuilder.prototype.TeamInfoIdsToPairs = function(info_name, values) {
 	switch(info_name)
 	{
 		case 'types_list':
@@ -691,7 +704,7 @@ teambuilder.prototype.TeamInfoIdsToPairs = function(info_name, values) {
 	}
 };
 
-teambuilder.prototype.getTeamInfos = function() {
+Teambuilder.prototype.getTeamInfos = function() {
 	
 	var infos = {};
 	
@@ -702,7 +715,7 @@ teambuilder.prototype.getTeamInfos = function() {
 	return infos;
 };
 
-teambuilder.prototype.getPokemonInfos = function(pokemonIndex) {
+Teambuilder.prototype.getPokemonInfos = function(pokemonIndex) {
 	
 	pokemonIndex = $.isArray(pokemonIndex) ? pokemonIndex : [pokemonIndex];
 	var slot, self = this, generation = self.getTeamInfo('generation'), pokemon = {};
@@ -748,7 +761,7 @@ teambuilder.prototype.getPokemonInfos = function(pokemonIndex) {
 	return pokemonIndex.length > 1 ? pokemon : pokemon[pokemonIndex[0]];
 };
 
-teambuilder.prototype.getLoadedTeam = function(isString) {
+Teambuilder.prototype.getLoadedTeam = function(isString) {
 	
 	var team = {};
 	team.infos = this.getTeamInfos();
@@ -757,7 +770,7 @@ teambuilder.prototype.getLoadedTeam = function(isString) {
 	return (isString != undefined && isString == true) ? JSON.stringify(team) : team;
 };
 
-teambuilder.prototype.loadTeamInfos = function(infos) {
+Teambuilder.prototype.loadTeamInfos = function(infos) {
 	
 	if(infos.name != undefined)
 	{
@@ -776,7 +789,7 @@ teambuilder.prototype.loadTeamInfos = function(infos) {
 	
 };
 
-teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
+Teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
 	
 	pokemonIndex = $.isArray(pokemonIndex) ? pokemonIndex : [pokemonIndex];
 	var slot, self = this, generation = self.getTeamInfo('generation'), data, pokemon = {};
@@ -864,7 +877,7 @@ teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
 	});
 };
 
-teambuilder.prototype.loadTeam = function(team) {
+Teambuilder.prototype.loadTeam = function(team) {
 	
 	team = !$.isPlainObject(team) ? JSON.parse(team) : team;
 	this.loadTeamInfos(team.infos);
@@ -872,20 +885,20 @@ teambuilder.prototype.loadTeam = function(team) {
 	
 };
 
-teambuilder.prototype.getSpecieId = function(pokemonId) {
+Teambuilder.prototype.getSpecieId = function(pokemonId) {
 	return pokemonId & ((1 << 16) - 1);
 };
 
-teambuilder.prototype.getFormId = function(pokemonId) {
+Teambuilder.prototype.getFormId = function(pokemonId) {
 	return Math.floor(pokemonId / 65536);
 };
 
-teambuilder.prototype.getNatureEffect = function(nature_id, stat_id) {
+Teambuilder.prototype.getNatureEffect = function(nature_id, stat_id) {
 	var arr = {0:0, 1:1, 2:2, 3:4, 4:5, 5:3};
 	return (10+(-(nature_id%5 == arr[stat_id]-1) + (Math.floor(nature_id/5) == arr[stat_id]-1)))/10;
 };
 
-teambuilder.prototype.getCorrectEVs = function(evs_element) {
+Teambuilder.prototype.getCorrectEVs = function(evs_element) {
 	
 	var total_evs = 0;
 	evs_element.closest('.pokemon-evs-selectors').find('.pokemon-evs-value').each(function() {
@@ -903,7 +916,7 @@ teambuilder.prototype.getCorrectEVs = function(evs_element) {
 	}
 };
 
-teambuilder.prototype.getTiersList = function(list) {
+Teambuilder.prototype.getTiersList = function(list) {
 	
 	var self = this, tiers = [];
 	list = list != undefined ? list : (window.tiersList != undefined ? tiersList : {});
@@ -924,7 +937,7 @@ teambuilder.prototype.getTiersList = function(list) {
 	return tiers;
 };
 
-teambuilder.prototype.getHiddenPowerIVs = function(type , generation) {
+Teambuilder.prototype.getHiddenPowerIVs = function(type , generation) {
     var ret = [], gt;
 
     for (var i=63;i>=0;i--) 
@@ -939,7 +952,7 @@ teambuilder.prototype.getHiddenPowerIVs = function(type , generation) {
     return ret;
 };
 
-teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+Teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
 	
 	var type;
 	
@@ -956,7 +969,7 @@ teambuilder.prototype.getHiddenPowerType = function(generation, hp_ivs, atk_ivs,
 	
 };
 
-teambuilder.prototype.getHiddenPowerBP = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+Teambuilder.prototype.getHiddenPowerBP = function(generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
 	
 	var bp;
 	if(!this.getGenerationInfo(generation, 'hidden_power_bp'))
