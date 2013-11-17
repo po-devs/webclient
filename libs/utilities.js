@@ -5,6 +5,10 @@ function sanitize(str, jsEscapeToo) {
     return str;
 }
 
+function cleanHtmlAttribute(str) {
+    return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 String.prototype.startsWith = function(str) { return this.lastIndexOf(str, 0) === 0; }
