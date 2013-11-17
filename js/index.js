@@ -259,35 +259,11 @@ $(function() {
 
 var dataInitiated = false;
 initBattleData = function() {
-    if (dataInitiated) {
+    /*if (dataInitiated) {
         return;
     }
-
-    /* Loading PS files */
-    /* TODO: Show a loading image for the time it takes to load all this */
-    dataInitiated = 'loading';
-
-//                loadjscssfile("libs/ps/js/battledata.js", "js");
-//                loadjscssfile("libs/ps/data/pokedex-mini.js", "js");
-//                loadjscssfile("libs/ps/js/battle.js", "js");
-//                /* loadjscssfile("libs/ps/js/sim.js", "js");*/
-//                /* loadjscssfile("libs/ps/data/learnsets.js", "js"); */
-//                loadjscssfile("libs/ps/data/graphics.js", "js");
-//                loadjscssfile("libs/ps/data/pokedex.js", "js");
-//                loadjscssfile("libs/ps/formats-data.js", "js");
-//                loadjscssfile("libs/ps/data/moves.js", "js");
-//                loadjscssfile("libs/ps/data/items.js", "js");
-//                loadjscssfile("libs/ps/data/abilities.js", "js");
-//                loadjscssfile("libs/ps/data/formats.js", "js");
-//                /* loadjscssfile("libs/data/typechart.js", "js"); */
-//                loadjscssfile("libs/ps/js/utilichart.js", "js");
-//                /* loadjscssfile("libs/data/aliases.js", "js"); */
-    loadjscssfile("ps/style/battle.css", "css");
-    loadjscssfile("ps/style/sim-types.css", "css");
-    loadjscssfile("ps/style/replayer.css", "css");
-    loadjscssfile("css/ps.css", "css");
-
-    dataInitiated = true;
+    
+    dataInitiated = true;*/
 };
 
 /* Player that is shown in the trainer window */
