@@ -277,28 +277,16 @@ $("#player-dialog").dialog({
     }
 });
 
+var hasIframeSrcdoc = false;
+var testIframe = document.createElement('iframe');
+
+hasIframeSrcdoc = typeof testIframe.srcDoc === 'string' || typeof testIframe.srcdoc === 'string';
+
 var updatePlayerInfo = function(player) {
     $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
     var info = player.info || '';
-    if (info.indexOf("<") != -1) {
-
-        /* If there's even the slightest risk of XSS attack, use an iframe to protect ourselves */
-        /* Use two different domain names depending on where the webclient is hosted */
-        var remotepage = "http://po-devs.github.com/webclient/trainerinfo.html";
-        if (window.location.protocol !== "file:" && remotepage.indexOf(document.domain) !== -1) {
-            remotepage = "http://pokemon-online.eu/webclient/trainerinfo.html";
-        }
-
-        /* Make sure to use a different domain to block XSS */
-        if (window.location.protocol === "file:" || remotepage.indexOf(document.domain) === -1) {
-            var path = window.location.pathname;
-            var dir = path.substr(0, path.lastIndexOf("/"));
-            info = "<div class='iframe-trainer-info'>"+info+"</div>"
-            $("#player-dialog .trainer-info").html("<iframe frameBorder='0' width='100%' src='" + remotepage + "?content=" + window.btoa(format(info))+"&css="
-                + window.btoa(window.location.protocol + "//" + window.location.hostname + dir + "/css/webclient.css") + "'></iframe>");
-        } else {
-            $("#player-dialog .trainer-info").text(info);
-        }
+    if (info.indexOf("<") !== -1 && hasIframeSrcdoc) {
+        $("#player-dialog .trainer-info").html("<iframe frameBorder='0' width='100%' seamless sandbox='' srcdoc='" + cleanHtmlAttribute(format(info)) + "'></iframe>");
     } else {
         $("#player-dialog .trainer-info").text(info);
     }
@@ -396,7 +384,12 @@ function sendMessage(sender)
         var message = $.trim($inputText.val()).split("\n");
         var idsender = $inputText.attr("id");
         var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
-
+        
+        if (!message.length) {
+            console.log('Empty message');
+            return;
+        }
+        
         message.forEach(function(msg) {
             if (/^send-channel-/.test(idsender)) {
                 /* Temporary until interface is improved */
