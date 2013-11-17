@@ -1052,19 +1052,21 @@ div.ui-dialog.ui-widget.ui-widget-content {
 	border-radius:0px;
 }
 
+/* Background of the header of the trainer info window */
 div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header {
 	height:40px;
 	line-height:40px;
 	padding:0px;
-	background:#dddddd;
+	background: #3C3C3C;
 	border:none;
 	border-bottom:1px solid #d9d9d9;
 	border-radius:0px;
 	cursor:pointer;
 }
 
+/* Title of the trainer info window */
 div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header, div.ui-dialog.ui-widget.ui-widget-content .ui-dialog-titlebar.ui-widget-header .ui-dialog-title {
-	color:#abaaaa;
+	color: rgb(230,230,230);
 	text-indent:5px;
 	font-weight:inherit;
 }
@@ -1075,6 +1077,11 @@ div#player-dialog.ui-dialog-content.ui-widget-content {
 	margin:1%;
 	padding:0px;
 	background:none;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
 }
 
 .ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix  {
