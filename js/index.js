@@ -529,7 +529,9 @@ parseCommand = function(message) {
         if (getQueryString("autoconnect") === "true") {
             connect();
         } else {
-            websocket.send("registry");
+            try {
+                websocket.send("registry");
+            } catch (ex) {} // Ignore InvalidStateErrors when you spam the 'Load' button. 
         }
     } else if (cmd == "servers") {
         var servers = JSON.parse(data), html = "";
