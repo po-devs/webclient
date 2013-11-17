@@ -35,7 +35,10 @@ def main(argv):
         wh = ls[1].split(',')
         ext = ls[0][-3:]
 
-        images[num] = "{ext:'" + ext + "',w:" + wh[0] + ",h:" + wh[1] + "}"
+        if ext == 'gif':
+            images[num] = "{w:" + wh[0] + ",h:" + wh[1] + "}"
+        else:
+            images[num] = "{ext:'" + ext + "',w:" + wh[0] + ",h:" + wh[1] + "}"
 
     lines = []
     for k,v in images.items():
