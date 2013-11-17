@@ -153,10 +153,10 @@ pokeinfo.types = function(poke, gen) {
     return types;
 };
 
-pokeinfo.abilities = function(poke, gen) {
-    return [this.find(poke, "ablity1", gen),
-        this.find(poke, "ablity2", gen),
-        this.find(poke, "ablity3", gen)].filter(function(arg) {return arg !== 0;});
+pokeinfo.abilities = function(poke, gen, keep) {
+    return [this.find(poke, "ability1", gen),
+        this.find(poke, "ability2", gen),
+        this.find(poke, "ability3", gen)].filter(function(arg) { if (keep) { return true; } else { return arg !== 0; }});
 };
 
 pokeinfo.releasedList = function(gen) {
@@ -202,6 +202,10 @@ natureinfo.getNatureEffect = function(nature_id, stat_id) {
 
 moveinfo.list = function() {
     return pokedex.moves.moves;
+};
+
+moveinfo.hasMove = function (move) {
+    return move in pokedex.moves.moves;
 };
 
 moveinfo.name = function(move) {
@@ -285,12 +289,24 @@ iteminfo.list = function() {
     return list;
 };
 
+iteminfo.hasItem = function(item) {
+    if (item >= 8000) {
+        return (item-8000) in pokedex.items.berries;
+    } else {
+        return item in pokedex.items.items;
+    }
+};
+
 iteminfo.name = function(item) {
     if (item >= 8000) {
         return pokedex.items.berries[item-8000];
     } else {
         return pokedex.items.items[item];
     }
+};
+
+iteminfo.berryName = function (item) {
+    return pokedex.items.berries[item];
 };
 
 iteminfo.releasedList = function(gen) {

@@ -313,8 +313,9 @@ Teambuilder.prototype.init = function () {
 		slot.find(".pokemon-slot-sprite table img").attr('src', self.getGenerationInfo(generation, 'sprite_folder')+sprite_name+'.png');
 		
 		// loading type(s)
-		var type1 = (pokedex.pokes.type1[generation][pokemonId] != undefined ? pokedex.pokes.type1[generation][pokemonId] : pokedex.pokes.type1[generation][self.getSpecieId(pokemonId)]), type2 = (pokedex.pokes.type2[generation][pokemonId] != undefined ? pokedex.pokes.type2[generation][pokemonId] : pokedex.pokes.type2[generation][self.getSpecieId(pokemonId)]);
-		var types = '<span class="pokemon-slot-type type_'+type1+'">'+pokedex.types.types[type1]+'</span>'+(type2 != settings.unknown_type_id ? '<span class="pokemon-slot-type type_'+type2+'">'+pokedex.types.types[type2]+'</span>' : '');
+        var pokemon_types = pokeinfo.types(pokemonId, generation);
+		var type1 = pokemon_types[0], type2 = pokemon_types[1];
+		var types = '<span class="pokemon-slot-type type_'+type1+'">'+typeinfo.name(type1)+'</span>'+(type2 != settings.unknown_type_id ? '<span class="pokemon-slot-type type_'+type2+'">'+typeinfo.name(type2)+'</span>' : '');
 		slot.find(".pokemon-slot-type-block").html(types);
 		
 		var gender = slot.find('.pokemon-slot-gender-radio');
@@ -337,13 +338,13 @@ Teambuilder.prototype.init = function () {
 		
 		if(self.getGenerationInfo(generation, 'ability'))
 		{
-			var abilities_ids = [(pokedex.pokes.ability1[generation][pokemonId] != undefined ? pokedex.pokes.ability1[generation][pokemonId] : pokedex.pokes.ability1[generation][self.getSpecieId(pokemonId)]), (pokedex.pokes.ability2[generation][pokemonId] != undefined ? pokedex.pokes.ability2[generation][pokemonId] : pokedex.pokes.ability2[generation][self.getSpecieId(pokemonId)]), (pokedex.pokes.ability3[generation] != undefined ? (pokedex.pokes.ability3[generation][pokemonId] != undefined ? pokedex.pokes.ability3[generation][pokemonId] : pokedex.pokes.ability3[generation][self.getSpecieId(pokemonId)]) : undefined)];
+            var abilities_ids = pokeinfo.abilities(pokemonId, generation, true);
 			var abilities = {};
 			
 			$.each(abilities_ids, function(index, ability_id) {
 				if(ability_id != undefined && ability_id != 0)
 				{
-					abilities[ability_id] = pokedex.abilities.abilities[ability_id];
+					abilities[ability_id] = abilityinfo.name(ability_id);
 				}
 			});
 			abilities = !$.isEmptyObject(abilities) ? abilities : {0:pokedex.abilities.abilities[0]};
@@ -351,14 +352,25 @@ Teambuilder.prototype.init = function () {
 		}		
 		// loading moves
 		var moves_container = $('<table class="moves-list"></table>'), move_type_id, move_damage_class_id, moves_block = "";
-		var learnset = pokedex.pokes.all_moves[generation][pokemonId] != undefined ? pokedex.pokes.all_moves[generation][pokemonId] : pokedex.pokes.all_moves[generation][self.getSpecieId(pokemonId)];
-		learnset = learnset != undefined ? learnset: [];
-		learnset.sort(function(a, b) {	if(pokedex.moves.moves[a] > pokedex.moves.moves[b])	{ return 1; } else if(pokedex.moves.moves[a] < pokedex.moves.moves[b]) { return -1; } return 0; });
+        var all_moves = pokeinfo.allMoves(pokemonId, generation);
+		var learnset = all_moves || pokeinfo.allMoves(self.getSpecieId(pokemonId), generation);
+		learnset = learnset || [];
+		learnset.sort(function(a, b) {
+            var moveA = moveinfo.name(a), moveB = moveinfo.name(b);
+            if(moveA > moveB)	{
+                return 1;
+            } else if(moveA < moveB) {
+                return -1;
+            } 
+            return 0; 
+        });
 
 		$.each(learnset, function(index, move_id) {
-			move_type_id = pokedex.moves.type[generation][move_id] != undefined ? pokedex.moves.type[generation][move_id] : 0;
-			move_damage_class_id = pokedex.moves.damage_class[generation][move_id] != undefined ? pokedex.moves.damage_class[generation][move_id] : 0;
-			moves_block += '<tr class="move-infos"><td class="move-type"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type type_'+move_type_id+'">'+pokedex.types.types[move_type_id]+'</span></span></td><td class="move-category"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type damage_class_'+move_damage_class_id+'">'+pokedex.categories.categories[move_damage_class_id]+'</span></span></td><td class="move-name">'+pokedex.moves.moves[move_id]+'</td><td class="move-pp"><strong>'+pokedex.moves.pp[generation][move_id]+'</strong> <em>PP</em></td><td class="move-bp"><strong>'+(pokedex.moves.power[generation][move_id] != undefined ? (pokedex.moves.power[generation][move_id] != 1 ? pokedex.moves.power[generation][move_id] : '??') : '--')+'</strong> <em>Power</em></td><td class="move-accuracy"><strong>'+(pokedex.moves.accuracy[generation][move_id] != 101 ? pokedex.moves.accuracy[generation][move_id]+'%' : '--')+'</strong> <em>Accuracy</em></td></tr>';
+			move_type_id = moveinfo.type(move_id, generation) || 0;
+			move_damage_class_id = moveinfo.damageClass(move_id, generation) || 0;
+            move_power = moveinfo.power(move_id, generation);
+            move_acc = moveinfo.accuracy(move_id, generation);
+			moves_block += '<tr class="move-infos"><td class="move-type"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type type_'+move_type_id+'">'+typeinfo.name(move_type_id)+'</span></span></td><td class="move-category"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type damage_class_'+move_damage_class_id+'">'+categoryinfo.name(move_damage_class_id)+'</span></span></td><td class="move-name">'+moveinfo.name(move_id)+'</td><td class="move-pp"><strong>'+moveinfo.pp(move_id, generation)+'</strong> <em>PP</em></td><td class="move-bp"><strong>'+(move_power ? (move_power != 1 ? move_power : '??') : '--')+'</strong> <em>Power</em></td><td class="move-accuracy"><strong>'+(move_acc != 101 ? move_acc+'%' : '--')+'</strong> <em>Accuracy</em></td></tr>';
 		});
 		
 		moves_block = $(moves_block);
@@ -404,7 +416,7 @@ Teambuilder.prototype.setGeneration = function(generation) {
 	var self = this, settings = self.default_settings;
 	
 	// loading the list of pokemon
-	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label':pokedex.pokes.pokemons[id], 'value':id}; } else { return false; } })).autocomplete('option', 'minLength', 0).autocomplete('option', 'autoFocus', true);
+	$(".pokemon-slot-name").autocomplete('option', 'source', $.map(pokedex.pokes.released[generation], function(name, id) { if(name) { return {'label': pokeinfo.name(id), 'value':id}; } else { return false; } })).autocomplete('option', 'minLength', 0).autocomplete('option', 'autoFocus', true);
 	
 	// settings stats, ivs and evs
 	var ivs_limit = self.getGenerationInfo(generation, 'ivs_limit');
@@ -426,7 +438,7 @@ Teambuilder.prototype.setGeneration = function(generation) {
 	$(".pokemon-ivs, .pokemon-evs").css('width', (100/($(".pokemon-ivs").filter(function(){ return $(this).css('display') != 'none';}).length/$(".pokemon-slot").length))+'%');
 	
 	// shiny helper message
-	$(".pokemon-slot-sprite-helper").attr('title', self.getGenerationInfo(generation, 'shiny') ? 'Click here to swich between shiny states' : '');
+	$(".pokemon-slot-sprite-helper").attr('title', self.getGenerationInfo(generation, 'shiny') ? 'Click here to switch between shiny states' : '');
 	
 	// loading the list of items
 	if(self.getGenerationInfo(generation, 'item'))
@@ -435,8 +447,8 @@ Teambuilder.prototype.setGeneration = function(generation) {
 		$('.pokemon-slot-item').reloadCombobox(items, $.getFirstPropertyIndex(items), function(e, ui) {
 			var slot = $(e.target).closest('.pokemon-slot');
 			var pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
-			if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != 'i'+$(e.target).val())
-			{
+            if(pokedex.pokes.items[pokemonId] != undefined && pokedex.pokes.items[pokemonId] != 'i'+$(e.target).val())
+            {
 				$('.pokemon-slot-name').eq($(e.target).index('.pokemon-slot-item')).trigger('autocompleteselect', [{item:{label:pokedex.pokes.pokemons[0], value:0}}]);
 			}
 		});
@@ -495,7 +507,8 @@ Teambuilder.prototype.resetPokemon = function(pokemonIndex) {
 	slot.find(".pokemon-slot-name").val('Missingno').data('pokemon_id', 0);
 	
 	// types
-	slot.find('.pokemon-slot-type-block').html('<span class="pokemon-slot-type type_'+pokedex.pokes.type1[generation][0]+'">'+pokedex.types.types[pokedex.pokes.type1[generation][0]]+'</span>');
+    var types = pokeinfo.types(0, generation);
+	slot.find('.pokemon-slot-type-block').html('<span class="pokemon-slot-type type_'+types[0]+'">'+typeinfo.name(types[0])+'</span>');
 		
 	// gender
 	slot.find(".pokemon-slot-gender-selection .pokemon-slot-gender-radio[value='"+settings.gender+"']").val(settings.gender).trigger('change').parent().hide();
@@ -665,10 +678,10 @@ Teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 			
 			var items = {}, berries = {};
 			$.each(pokedex.items.released_items[generation], function(key, value) {
-				items['i'+key] = pokedex.items.items[key];
+				items['i'+key] = pokeinfo.name(key);
 			});
 			$.each(pokedex.items.released_berries[generation], function(key, value) {
-				berries['b'+key] = pokedex.items.berries[key];
+				berries['b'+key] = iteminfo.berryName(key);
 			});
 			
 			return $.extend(items, berries);
@@ -679,7 +692,7 @@ Teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 			var stats = {}, self = this;
 			
 			$.each(this.default_settings.stats_ids, function(stat_id) {
-				stats[stat_id] = pokedex.status.stats[stat_id];
+				stats[stat_id] = statinfo.name(stat_id);
 			});
 			
 			return stats;
@@ -697,7 +710,7 @@ Teambuilder.prototype.TeamInfoIdsToPairs = function(info_name, values) {
 		case 'types_list':
 			var pairs = {};
 			$.each(values, function(index, type_id) {
-				pairs[type_id] = pokedex.types.types[type_id];
+				pairs[type_id] = typeinfo.name(type_id);
 			});
 			return pairs;
 		break;
@@ -800,7 +813,7 @@ Teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
 		
 		if(data.pokemonId != undefined)
 		{
-			slot.find('.pokemon-slot-name').trigger('autocompleteselect', [{ item: { label:pokedex.pokes.pokemons[data.pokemonId], value:data.pokemonId } }]);
+			slot.find('.pokemon-slot-name').trigger('autocompleteselect', [{ item: { label: pokeinfo.name(data.pokemonId), value:data.pokemonId } }]);
 		}
 		
 		if(self.getGenerationInfo(generation, 'shiny') && data.shiny != undefined && slot.find('.pokemon-slot-shiny').prop('checked') != data.shiny)
@@ -862,9 +875,9 @@ Teambuilder.prototype.loadPokemonInfos = function(pokemonIndex, infos) {
 		if(data.movesIds != undefined)
 		{
 			$.each(data.movesIds, function(moveIndex, move_id) {
-				if(move_id != 0 && pokedex.moves.moves[move_id] != undefined)
+				if(move_id != 0 && moveinfo.hasMove(move_id))
 				{
-					slot.find('.pokemon-move-selection').eq(moveIndex).val(pokedex.moves.moves[move_id]);
+					slot.find('.pokemon-move-selection').eq(moveIndex).val(moveinfo.move(move_id));
 				}
 			});
 		}
