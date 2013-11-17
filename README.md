@@ -36,3 +36,8 @@ Libraries used:
 - farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
 - loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
 - inherits https://github.com/isaacs/inherits
+
+License
+=======
+
+Same license as PS' client (AGPL).
