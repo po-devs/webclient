@@ -384,13 +384,11 @@ function sendMessage(sender)
         var message = $.trim($inputText.val()).split("\n");
         var idsender = $inputText.attr("id");
         var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
-        
-        if (!message.length) {
-            console.log('Empty message');
-            return;
-        }
-        
+
         message.forEach(function(msg) {
+            if (!msg.length) {
+                return;
+            }
             if (/^send-channel-/.test(idsender)) {
                 /* Temporary until interface is improved */
                 if (/^\/pm/i.test(msg)) {
@@ -713,8 +711,21 @@ parseCommand = function(message) {
         battles.battleEnded(battleid, result);
     } else if (cmd === "rankings") {
         var id = data.split("|")[0];
-        var result = JSON.parse(data.slice(id.length+1));
-        console.log(JSON.stringify(result));
+        var rankings = JSON.parse(data.split("|")[1]), tier, rank;
+        var html = "";
+        
+        for (tier in rankings) {
+            rank = rankings[tier];
+            if (rank.ranking === -1) {
+                html += "<li><strong>Unranked</strong>";
+            } else {
+                html += "<li><strong>#" + rank.ranking + "/" + rank.total + "</strong> <em>(" + rank.rating + ")</em>";
+            }
+            
+            html += " - <strong>" + tier + "</strong></li>";
+        }
+        
+        $("#rankings").html(html);
     }
 	else if (cmd == "tiers") {
 		var params = JSON.parse(data);
