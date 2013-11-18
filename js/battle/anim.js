@@ -126,23 +126,7 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
 
 /* Accomodating PS's struct */
 BattleAnimator.prototype.psEffect = function(effect, beginning, end, after) {
-    var img = this.createImage(beginning, effect);
-    var css = this.fullCss(img, beginning);
-    img.css(css);
-
-    var anim = this.transition(this.fullCss(img, end), "ballistic2");
-
-    img.animate(anim, function() {
-        if (after == "fade") {
-            img.animate({
-                opacity: 0
-            }, 100, function() {
-                img.remove();
-            });
-        } else {
-            img.remove();
-        }
-    });
+    /* Todo : everything. Help yourself based on this.showEffect */
 };
 
 BattleAnimator.prototype.onKo = function(spot) {
@@ -229,8 +213,59 @@ BattleAnimator.onAttack = function(spot, move) {
 
     var anim = BattleOtherAnims[toId(moveinfo.name(move))];
 
-    //Todo: make code compatible
-    //anim(this, [0,0]);
+    var attacker = spot;
+    var defender = 1-spot;
+
+    attacker = this.makeAnimObject(attacker);
+    defender = this.makeAnimObject(defender);
+
+    anim(this, [attacker,defender]);
+};
+
+BattleAnimator.prototype.makeAnimObject = function(spot) {
+    var pos = this.battle.pos(spot, "null");
+
+    var content = b.$content.find(".battle_window_content");
+    var width = content.width();
+    var height = content.height();
+
+    var x, y, z;
+    if ("top" in pos) {
+        y = height - pos.top;
+        x = width - pos.right;
+    } else {
+        x = pos.left;
+        y = pos.bottom;
+    }
+    z = 0;
+
+    return new Sprite(spot==0, x, y, z);
+};
+
+function Sprite(back, x, y, z) {
+    this.x = x;
+    this.y = y;
+    /* Overshoot. Use this to make an animation go further */
+    this.z = z;
+    this.back = back;
+
+    /* Todo: anim, delay */
+}
+
+Sprite.prototype.behind = function(z) {
+    if (this.back) {
+        return this.z - z;
+    } else {
+        return this.z + z;
+    }
+};
+
+Sprite.prototype.leftof = function(x) {
+    if (this.back) {
+        return this.x - x;
+    } else {
+        return this.x + x;
+    }
 };
 
 BattleAnimator.prototype.transition = function (movement, transition) {
@@ -400,6 +435,9 @@ BattleTab.effects = {
     none: {
         // this is for passing to battle.pos() and battle.posT() for CSS effects
         w: 100, h: 100
+    },
+    null: {
+        w:1, h:1
     }
 };
 
@@ -734,7 +772,7 @@ var BattleOtherAnims = {
             }, 'accel');
             attacker.anim({
                 x: defender.x,
-                y: defender.x,
+                y: defender.y,
                 z: defender.behind(100),
                 opacity: 0,
                 time: 100
@@ -6365,7 +6403,7 @@ var BattleMoveAnims = {
             }, 'decel', 'explode');
         }
     }
-}
+};
 
 // placeholder animations
 BattleMoveAnims['vcreate'] = {anim:BattleMoveAnims['flareblitz'].anim};
