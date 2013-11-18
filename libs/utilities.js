@@ -22,7 +22,6 @@ function getQueryString(key, default_,query_) {
 function loadjscssfile(filename, filetype){
     if (filetype=="js"){ //if filename is a external JavaScript file
         var fileref=document.createElement('script');
-        fileref.setAttribute("type", "text/javascript");
         fileref.setAttribute("src", filename);
     }
     else if (filetype=="css"){ //if filename is an external CSS file
@@ -40,6 +39,13 @@ function push_properties(from, to) {
     for (var p in from) {
         to[p] = from[p];
     }
+}
+
+function toId(text) {
+    text = text || '';
+    if (typeof text === 'number') text = ''+text;
+    if (typeof text !== 'string') return toId(text && text.id);
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
 /* https://github.com/isaacs/inherits/blob/master/inherits_browser.js */

@@ -88,6 +88,8 @@ BattleTab.prototype.dealWithKo = function(params) {
 
 BattleTab.prototype.dealWithMove = function(params) {
     this.print(this.nick(params.spot) + " used <strong>" + moveinfo.name(params.move) + "</strong>!");
+
+    this.animator.on("attack", params.spot, params.move);
 };
 
 BattleTab.prototype.dealWithHpchange = function(params) {
