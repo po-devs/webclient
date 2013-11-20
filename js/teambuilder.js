@@ -678,7 +678,7 @@ Teambuilder.prototype.getGenerationInfo = function(generation, info_name) {
 			
 			var items = {}, berries = {};
 			$.each(pokedex.items.released_items[generation], function(key, value) {
-				items['i'+key] = pokeinfo.name(key);
+				items['i'+key] = iteminfo.name(key);
 			});
 			$.each(pokedex.items.released_berries[generation], function(key, value) {
 				berries['b'+key] = iteminfo.berryName(key);

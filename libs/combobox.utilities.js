@@ -1,58 +1,62 @@
-(function($) {	
-	
-	jQuery.getFirstPropertyIndex = function(object) {
-		
-		var first;
-		
-		$.each(object, function(index) {
-			first = index;
-			return false;
-		});
-		
-		return first;
+(function($) {
+	$.getFirstPropertyIndex = function(object) {
+        var i;
+		for (i in object) {
+            if (object.hasOwnProperty(i)) {
+                return i;
+            }
+        }
 	};
 	
 	
-	jQuery.fn.fillSelect = function(object){
-		
+	$.fn.fillSelect = function(object){
 		var select = $(this);
 		var options = "";
-		
-		$.each(object, function(key, value) {
-			options += '<option value="'+key+'">'+value+'</option>';
-		});
+        var key;
+        
+        for (key in object) {
+            if (object.hasOwnProperty(key)) {
+                options += '<option value="'+key+'">'+object[key]+'</option>';
+            }
+        }
+
 		select.append(options);
-		
-		return $(this);
+		return select;
 	};
 	
-	jQuery.fn.destroyCombobox = function() {
-		if($(this).hasClass('ui-combobox-input'))
+	$.fn.destroyCombobox = function() {
+        var $this = $(this);
+		if($this.hasClass('ui-combobox-input'))
 		{
-			$(this).combobox('destroy');
+			$this.combobox('destroy');
 		}
 		
-		return $(this);
+		return $this;
 	};
 	
-	jQuery.fn.destroyAutocomplete = function() {
-		if($(this).hasClass('ui-autocomplete-input'))
+	$.fn.destroyAutocomplete = function() {
+        var $this = $(this);
+		if($this.hasClass('ui-autocomplete-input'))
 		{
-			$(this).autocomplete('destroy');
+			$this.autocomplete('destroy');
 		}
 		
-		return $(this);
+		return $this;
 	};
 	
-	jQuery.fn.reloadCombobox = function(data, default_value, select_event) {
-		$(this).destroyCombobox().find('option').remove().end().fillSelect(data).val(default_value).combobox(select_event != undefined ? { select: function(e, ui) { select_event(e, ui) } } : {});
-		return $(this);
+	$.fn.reloadCombobox = function(data, default_value, select_event) {
+        var $this = $(this);
+		$this.destroyCombobox().find('option').remove().end().fillSelect(data).val(default_value).combobox(select_event != undefined ? { select: function(e, ui) { select_event(e, ui) } } : {});
+		return $this;
 	};
 	
-	jQuery.updateObjectKeys = function(object, integer) {
+	$.updateObjectKeys = function(object, integer) {
 		var obj = {};
+        
+        integer = parseInt(integer);
+
 		$.each(object, function(index, value) {
-			obj[parseInt(integer)+parseInt(index)] = value;
+			obj[integer+parseInt(index)] = value;
 		});
 		
 		return obj;
