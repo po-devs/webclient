@@ -166,6 +166,7 @@ BattleTab.prototype.dealWithStatus = function(params) {
     }
 
     var messages = [
+        "",
         "%1 is paralyzed! It may be unable to move!",
         "%1 fell asleep!",
         "%1 was frozen solid!",
