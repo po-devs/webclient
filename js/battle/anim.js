@@ -100,12 +100,14 @@ BattleAnimator.prototype.fullCss = function(img, dict) {
 };
 
 /* Shows an image, starting at beginning, ending at end */
-BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, after, callback) {
+BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, after, callback, easing) {
     var img = this.createImage(spot, effect);
-    var css = this.fullCss(img, beginning);
-    img.css(css);
+    var begCss = this.fullCss(img, beginning);
+    var endCss = this.fullCss(img, end);
+    var easing = easing || "ballistic2";
 
-    var anim = this.transition(this.fullCss(img, end), "ballistic2");
+    img.css(begCss);
+    var anim = this.transition(endCss, easing);
 
     img.animate(anim, function() {
         if (after == "fade") {
@@ -125,8 +127,24 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
 };
 
 /* Accomodating PS's struct */
-BattleAnimator.prototype.psEffect = function(effect, beginning, end, after) {
+BattleAnimator.prototype.psEffect = function(effect, beginning, end, easing, after) {
     /* Todo : everything. Help yourself based on this.showEffect */
+    /* Todo : next step, take beginning.time and end.time into account,
+            try always using icebeam animation to test (in onAttack) */
+    console.log("Showing effect for " + effect);
+
+    /* PS contains the full x/y pos, but we don't want that in this.showEffect */
+    var aspot = beginning.z > 0 ? 0 : 1;
+    var attacker = this.makeAnimObject(aspot);
+    beginning.x -= attacker.x;
+    beginning.y -= attacker.y;
+    end.x -= attacker.x;
+    end.y -= attacker.y;
+
+    console.log(JSON.stringify(beginning) +"   -    " + JSON.stringify(attacker));
+    console.log(JSON.stringify(end) +"   -    " + JSON.stringify(attacker));
+
+    this.showEffect(beginning.z > 0 ? 0 : 1, effect, beginning, end, after, null, easing);
 };
 
 BattleAnimator.prototype.onKo = function(spot) {
@@ -205,13 +223,14 @@ BattleAnimator.prototype.onHpchange = function(spot, oldpercent, newpercent) {
     });
 };
 
-BattleAnimator.onAttack = function(spot, move) {
+BattleAnimator.prototype.onAttack = function(spot, move) {
     var self = this;
 
     //Here for now, until all anims are done
     self.finished();
 
-    var anim = BattleOtherAnims[toId(moveinfo.name(move))];
+    var moveid = toId(moveinfo.name(move));
+    var animObject = BattleMoveAnims[moveid] || BattleOtherAnims.attack;
 
     var attacker = spot;
     var defender = 1-spot;
@@ -219,11 +238,13 @@ BattleAnimator.onAttack = function(spot, move) {
     attacker = this.makeAnimObject(attacker);
     defender = this.makeAnimObject(defender);
 
-    anim(this, [attacker,defender]);
+    console.log("Anim for " + moveid + ", original: " + (moveid in BattleMoveAnims));
+    animObject.anim(this, [attacker,defender]);
 };
 
 BattleAnimator.prototype.makeAnimObject = function(spot) {
-    var pos = this.battle.pos(spot, "null");
+    var b = this.battle;
+    var pos = b.pos(spot, "null");
 
     var content = b.$content.find(".battle_window_content");
     var width = content.width();
@@ -237,9 +258,11 @@ BattleAnimator.prototype.makeAnimObject = function(spot) {
         x = pos.left;
         y = pos.bottom;
     }
-    z = 0;
 
-    return new Sprite(spot==0, x, y, z);
+    var back = spot == 0;
+    z = back ? 100 : - 100;
+
+    return new Sprite(back, x, y, z);
 };
 
 function Sprite(back, x, y, z) {
