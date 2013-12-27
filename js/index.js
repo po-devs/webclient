@@ -65,6 +65,12 @@ $(function() {
         connect();
     });
     
+    $("#advanced-connection, #username, #password").on("keydown", function (e) {
+        if (e.keyCode === 13) { // Enter
+            connect();
+        }
+    });
+    
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
