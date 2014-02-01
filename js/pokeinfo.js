@@ -1,16 +1,29 @@
-geninfo = {}; pokeinfo = {}; genderinfo = {}; natureinfo = {}; moveinfo = {}; categoryinfo = {}; statinfo = {}; statusinfo = {}; iteminfo = {}; typeinfo = {}; abilityinfo = {};
-var lastgen;
+geninfo = {};
+pokeinfo = {};
+genderinfo = {};
+natureinfo = {};
+moveinfo = {};
+categoryinfo = {};
+statinfo = {};
+statusinfo = {};
+iteminfo = {};
+typeinfo = {};
+abilityinfo = {};
+lastgen = null;
 
-for (var i in pokedex.generations.generations) {
-    lastgen = {num: i};
-}
+(function () {
+    var i;
+    for (i in pokedex.generations.generations) {
+        lastgen = {num: +i};
+    }
+}());
 
 var getGen = function(gen) {
     gen = gen || lastgen;
     if (typeof gen != "object") {
         gen = {"num": gen};
     }
-    
+
     if (gen.num < 1 || gen.num > lastgen.num) {
         gen = lastgen;
     }
@@ -18,12 +31,30 @@ var getGen = function(gen) {
     return gen;
 };
 
+geninfo.getGen = getGen;
+geninfo.list = function () {
+    return pokedex.generations.generations;
+};
+
+geninfo.name = function (num) {
+    return pokedex.generations.generations[num];
+};
+
+geninfo.options = function (num) {
+    num = +num;
+    if (!isNaN(num)) {
+        return pokedex.generations.options[num];
+    }
+
+    return pokedex.generations.options;
+};
+
 pokeinfo.toNum = function(poke) {
     if (typeof poke == "object") {
         return poke.num + ( (poke.forme || 0) << 16);
-    } else {
-        return poke;
     }
+
+    return poke;
 };
 
 pokeinfo.species = function(poke) {
@@ -40,13 +71,13 @@ pokeinfo.find = function(id, what, gen) {
 
     var gennum = gen.num;
     var array = pokedex.pokes[what][gennum];
-    
+
     if (id in array) {
         return array[id];
     }
-    
+
     var ornum = this.species(id);
-    
+
     if (ornum in array) {
         return array[ornum];
     }
@@ -120,17 +151,21 @@ pokeinfo.gender = function(poke) {
 };
 
 pokeinfo.height = function(poke) {
-if (!pokedex.pokes.height[this.toNum(poke)]) {
+    if (!pokedex.pokes.height[this.toNum(poke)]) {
         poke %= 65536;
     }
     return pokedex.pokes.height[this.toNum(poke)];
 };
 
 pokeinfo.weight = function(poke) {
-if (!pokedex.pokes.weight[this.toNum(poke)]) {
+    if (!pokedex.pokes.weight[this.toNum(poke)]) {
         poke %= 65536;
     }
     return pokedex.pokes.weight[this.toNum(poke)];
+};
+
+pokeinfo.heldItem = function (poke) {
+    return pokedex.pokes.items[this.toNum(poke)];
 };
 
 pokeinfo.stats = function(poke, gen) {
@@ -165,9 +200,25 @@ pokeinfo.abilities = function(poke, gen, keep) {
         this.find(poke, "ability3", gen)].filter(function(arg) { if (keep) { return true; } else { return arg !== 0; }});
 };
 
-pokeinfo.releasedList = function(gen) {
-    return pokedex.pokes.released[getGen(gen).num];
+pokeinfo.releasedList = function(gen, excludeFormes) {
+    var list = pokedex.pokes.released[getGen(gen).num],
+        formeless = {}, num, i;
+
+    if (excludeFormes) {
+        for (i in list) {
+            num = +i;
+            if (num < 65536) {
+                formeless[num] = list[i];
+            }
+        }
+
+        list = formeless;
+    }
+
+    return list;
 };
+
+pokeinfo.excludeFormes = true;
 
 pokeinfo.released = function(poke, gen) {
     return pokedex.pokes.released[getGen(gen).num].hasOwnProperty(this.toNum(poke));
@@ -190,15 +241,15 @@ pokeinfo.calculateStat = function(infos) {
 };
 
 genderinfo.name = function(gender) {
-    return pokedex.genders.genders[gender];
+    return {1: 'male', 2: 'female', 3: 'neutral'}[gender];
 };
 
 natureinfo.list = function() {
-    return pokedex.natures.natures;
+    return pokedex.natures.nature;
 };
 
 natureinfo.name = function(nature) {
-    return pokedex.natured.natures[nature];
+    return pokedex.natured.nature[nature];
 };
 
 natureinfo.getNatureEffect = function(nature_id, stat_id) {
@@ -217,6 +268,21 @@ moveinfo.hasMove = function (move) {
 moveinfo.name = function(move) {
     return pokedex.moves.moves[move];
 };
+
+moveinfo.findId = function (move) {
+    var list = pokedex.moves.moves,
+        moveNum, moveName;
+
+    for (moveNum in list) {
+        moveName = list[moveNum];
+
+        if (move === moveName) {
+            return +moveNum;
+        }
+    }
+
+    return 0;
+}
 
 moveinfo.find = function(id, what, gen) {
     gen = getGen(gen);
@@ -316,16 +382,23 @@ iteminfo.berryName = function (item) {
 };
 
 iteminfo.releasedList = function(gen) {
-    gen = getGen(gen);
-    var list = pokedex.items.released_items[gen];
-    for (var i in pokedex.items.released_berries[gen]) {
-        list[y + 8000] = pokedex.items.released_berries[gen][i];
+    gen = getGen(gen).num;
+    var list = {},
+        releasedItems = pokedex.items.released_items[gen],
+        releasedBerries = pokedex.items.released_berries[gen],
+        i;
+
+    for (i in releasedItems) {
+        list[i] = true;
+    }
+    for (i in releasedBerries) {
+        list[i + 8000] = true;
     }
     return list;
 };
 
 iteminfo.released = function (item, gen) {
-    gen = getGen(gen);
+    gen = getGen(gen).num;
     if (item >= 8000) {
         return pokedex.items.released_berries[gen].hasOwnProperty(item-8000);
     } else {
