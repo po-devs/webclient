@@ -46,15 +46,16 @@ $(function() {
 
 teambuilder = null;
 $(function() {
-    var cookieRelay = $.cookie("relay");
-    if (cookieRelay) {
-        $("#relay").val(cookieRelay);
+    var storedRelayIp = poStorage("relay");
+    if (storedRelayIp) {
+        $("#relay").val(storedRelayIp);
     }
-    if ($.cookie("username")) {
-        $("#username").val($.cookie("username"));
+    var username = poStorage("username"), password = poStorage("password");
+    if (username) {
+        $("#username").val(username);
     }
-    if ($.cookie("password")) {
-        $("#password").val($.cookie("password"));
+    if (password) {
+        $("#password").val(password);
     }
 
     $("#servers-list tbody").on('click', 'tr', function() {
@@ -64,13 +65,13 @@ $(function() {
     }).on('dblclick', 'tr', function () {
         connect();
     });
-    
+
     $("#advanced-connection, #username, #password").on("keydown", function (e) {
         if (e.keyCode === 13) { // Enter
             connect();
         }
     });
-    
+
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
@@ -126,7 +127,7 @@ $(function() {
         /* Scrolls down the chat of the current tab */
         var chattextarea = $(hrefid+" #chatTextArea").get(0);
         chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
-            
+
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
     });
@@ -140,7 +141,7 @@ $(function() {
         websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
     }
     });
-	
+
     $(document).on("click", "a", function (event) {
         var href = this.href;
 
@@ -253,16 +254,16 @@ $(function() {
         localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
     });*/
 
-    if ($.cookie("autoload")) {
+    if (poStorage("autoload", "boolean")) {
         $("#autoload").attr("checked", true);
         initWebsocket();
     }
 
     $("#autoload").click(function() {
         if($(this).is(':checked')) {
-            $.cookie("autoload", true, {expires:365});
+            poStorage.set("autoload", true);
         } else {
-            $.removeCookie("autoload");
+            poStorage.remove("autoload");
         }
     });
 });
@@ -272,7 +273,7 @@ initBattleData = function() {
     /*if (dataInitiated) {
         return;
     }
-    
+
     dataInitiated = true;*/
 };
 
@@ -317,25 +318,25 @@ $("#player-list").on("click", "li", function(event) {
     var buttons = [
         {
             text: "Private Message",
-			class: "click_button",
+            class: "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
     ];
     if (players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
-			class: "click_button",
+            class: "click_button",
             click: function() { players.removeIgnore(id); dialog.dialog("close"); }
         });
     } else {
         buttons.push({
             text: "Ignore",
-			class: "click_button",
+            class: "click_button",
             click: function() { players.addIgnore(id); dialog.dialog("close"); }
         });
     }
     dialog.dialog("option", "buttons", buttons);
-	dialog.dialog({ position: { my: "center top", at: "center top+40px", of: window } });
+    dialog.dialog({ position: { my: "center top", at: "center top+40px", of: window } });
     dialog.dialog("open");
 });
 
@@ -435,7 +436,7 @@ function initWebsocket()
     {
         if ( typeof MozWebSocket == 'function' )
             WebSocket = MozWebSocket;
-        
+
         if ( websocket && websocket.readyState == 1 ) {
             websocket.close();
             $("#servers-list tbody").html('');
@@ -447,7 +448,7 @@ function initWebsocket()
         relayIP = fullIP;
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-        $.cookie("relay", fullIP, { expires: 365 });
+        poStorage("relay", fullIP);
 
         websocket = new WebSocket( "ws://"+fullIP );
         websocket.onopen = function( evt ) {
@@ -541,7 +542,7 @@ parseCommand = function(message) {
         } else {
             try {
                 websocket.send("registry");
-            } catch (ex) {} // Ignore InvalidStateErrors when you spam the 'Load' button. 
+            } catch (ex) {} // Ignore InvalidStateErrors when you spam the 'Load' button.
         }
     } else if (cmd == "servers") {
         var servers = JSON.parse(data), html = "";
@@ -552,8 +553,8 @@ parseCommand = function(message) {
                 + "<td class='server-ip'>"+server.ip+":" + server.port + "</td></tr>";
             serverDescriptions[server.name] = server.description;
         }
-        
-        
+
+
         $("#servers-list tbody").prepend(html);
         $("#servers-list").tablesorter({sortList: [[1,1]]});
     } else if (cmd == "connected") {
@@ -561,9 +562,9 @@ parseCommand = function(message) {
 
         var username = $("#username").val();
         if (username && username.length > 0) {
-            $.cookie("username", username, {expires:365});
+            poStorage.set("username", username);
         } else {
-            $.removeCookie("username");
+            poStorage.remove("username");
         }
 
         var data = {version: 1};
@@ -609,11 +610,13 @@ parseCommand = function(message) {
         var password = $("#password").val();
         if (password) {
             var hash = MD5(MD5(password)+data);
-            $.cookie("pass-"+data, hash, {expires:365});
+
+            poStorage.set("passhash", hash);
             websocket.send("auth|" + hash);
         } else {
-            if ($.cookie("pass-"+data)) {
-                websocket.send("auth|" + $.cookie("pass-"+data));
+            var passHash = poStorage("passhash");
+            if (passHash) {
+                websocket.send("auth|" + passHash);
             } else {
                 alertify.pass("Please enter your password", function (e, str) {
                     if (e) {
@@ -724,7 +727,7 @@ parseCommand = function(message) {
         var id = data.split("|")[0];
         var rankings = JSON.parse(data.split("|")[1]), tier, rank;
         var html = "";
-        
+
         for (tier in rankings) {
             rank = rankings[tier];
             if (rank.ranking === -1) {
@@ -732,14 +735,14 @@ parseCommand = function(message) {
             } else {
                 html += "<li><strong>#" + rank.ranking + "/" + rank.total + "</strong> <em>(" + rank.rating + ")</em>";
             }
-            
+
             html += " - <strong>" + tier + "</strong></li>";
         }
-        
+
         $("#rankings").html(html);
     }
-	else if (cmd == "tiers") {
-		var params = JSON.parse(data);
-		tiersList = params;
-	}
+    else if (cmd == "tiers") {
+        var params = JSON.parse(data);
+        tiersList = params;
+    }
 };

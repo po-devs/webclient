@@ -29,7 +29,7 @@ Info
 ====
 
 Libraries used:
-- jQuery (jquery.cookie, jquery.formValues, jquery.knob, jquery.tablesorter)
+- jQuery (jquery.formValues, jquery.knob, jquery.tablesorter)
 - jQuery UI
 - alertify https://github.com/fabien-d/alertify.js
 - md5 function http://www.webtoolkit.info/javascript-md5.html
