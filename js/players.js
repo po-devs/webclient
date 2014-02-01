@@ -147,30 +147,31 @@ Players.prototype.color = function (id) {
 };
 
 /* Fast index search in a sorted array */
-Array.prototype.dichotomy = function(func) {
-    if (this.length === 0) return 0;
+Object.defineProperty(Array.prototype, 'dichotomy', {
+    value: function (func) {
+        if (this.length === 0) return 0;
 
-    var min = 0;
-    var max = this.length-1;
+        var min = 0;
+        var max = this.length-1;
 
-    while (1) {
-        var half = Math.floor(min+(max-min)/2);
+        while (1) {
+            var half = Math.floor(min+(max-min)/2);
 
-        var cmp = func(this[half]);
-        if (min === max) {
-            return half + (cmp > 0 ? 1 : 0);
+            var cmp = func(this[half]);
+            if (min === max) {
+                return half + (cmp > 0 ? 1 : 0);
+            }
+
+            if (cmp < 0) {
+                max = half;
+            } else if (cmp > 0) {
+                min = (min === half ? max : half);
+            } else {
+                return half;
+            }
         }
-
-        if (cmp < 0) {
-            max = half;
-        } else if (cmp > 0) {
-            min = (min === half ? max : half);
-        } else {
-            return half;
-        }
-
     }
-};
+});
 
 /* The list of players */
 function PlayerList () {
