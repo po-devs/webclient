@@ -213,6 +213,9 @@ Channel.prototype.print = function (msg, html, noParse) {
                 }
 
                 msg = pref + addChannelLinks(msg.slice(msg.indexOf(":") + 1));
+                if (poStorage("chat.timestamps", "boolean")) {
+                    msg += "<span class='timestamp'>" + timestamp() + "</span>";
+                }
             }
         }
     }

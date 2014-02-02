@@ -27,3 +27,9 @@
 .action {
     color: magenta;
 }
+
+.timestamp {
+    float: right;
+    color: #B7B7B7;
+    opacity: 0.7;
+}

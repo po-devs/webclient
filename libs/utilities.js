@@ -48,6 +48,22 @@ function toId(text) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
+// Add an option for UTC dates too?
+// And AM/PM (date.getHours() < x)
+function addDatePadding(date) {
+    date = date.toString();
+    if (date.length === 1) {
+        date = "0" + date;
+    }
+
+    return date;
+}
+
+function timestamp() {
+    var date = new Date;
+    return addDatePadding(date.getHours()) + ":" + addDatePadding(date.getMinutes()) + ":" + addDatePadding(date.getSeconds());
+}
+
 /* https://github.com/isaacs/inherits/blob/master/inherits_browser.js */
 
 Function.inherits = function (ctor, superCtor) {
