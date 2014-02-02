@@ -243,16 +243,18 @@ $(function() {
     });
 
     /*$(window).bind("beforeunload", function () {
-        if (websocket && websocket.readyState === 1 && $("#option-ConfirmExit").is(":checked")) {
+        if (websocket && websocket.readyState === 1 && poStorage("confirm-exit", "boolean")) {
             return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
         }
     });
 
-    $("#option-ConfirmExit").attr("checked",  localStorage.getItem("ConfirmExit") === "true");
+    $("#confirmexit-option").change(poStorage("confirm-exit", "boolean"));
+    $("#confirmexit-option").change(function () {
+        poStorage.set("confirm-exit", $(this).is(":checked"));
+    });
+    */
 
-    $(window).unload(function () {
-        localStorage.setItem("ConfirmExit", $("#option-ConfirmExit").is(":checked"));
-    });*/
+    //poStorage.set("chat.timestamps", true);
 
     if (poStorage("autoload", "boolean")) {
         $("#autoload").attr("checked", true);
@@ -448,7 +450,7 @@ function initWebsocket()
         relayIP = fullIP;
         relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
 
-        poStorage("relay", fullIP);
+        poStorage.set("relay", fullIP);
 
         websocket = new WebSocket( "ws://"+fullIP );
         websocket.onopen = function( evt ) {
@@ -470,6 +472,7 @@ function initWebsocket()
     }
     catch( exception )
     {
+        console.log('Websocket error:', exception);
         displayMessage( 'ERROR: ' + exception );
     }
 }

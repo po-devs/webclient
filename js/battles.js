@@ -34,6 +34,10 @@ Battles.prototype.addBattle = function (battles) {
 
 Battles.prototype.battleEnded = function(battleid, result) {
     //console.log("battle ended");
+    if (!this.battleList.hasOwnProperty(battleid)) {
+        return;
+    }
+
     var ids = this.battleList[battleid].ids;
     this.removeBattle(battleid);
 
