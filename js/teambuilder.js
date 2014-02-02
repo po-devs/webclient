@@ -138,18 +138,14 @@
 
         // pokemon sprite reset
         $(".pokemon-slot-sprite").on('click', function (e) {
-            var pokeId, spriteName, $this;
+            var pokeNum, formeNum, $this;
             if (self.getGenerationInfo(self.getTeamInfo('generation'), 'shiny')) {
                 $this = $(this);
-                pokeId = self.getFormId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
-                spriteName = self.getSpecieId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
-
-                if (pokeId !== 0) {
-                    spriteName += '-' + pokeId;
-                }
+                formeNum = self.getFormId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
+                pokeNum = self.getSpecieId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
 
                 $this.find('.pokemon-slot-shiny').prop('checked', !($this.find('.pokemon-slot-shiny').prop('checked')));
-                $this.find('img').attr('src', self.getGenerationInfo(self.getTeamInfo('generation'), 'sprite_folder') + ($this.find('.pokemon-slot-shiny').prop('checked') ? 'shiny/' : '') + spriteName + '.png');
+                $this.find('img').attr('src', pokeinfo.sprite({num: pokeNum, forme: formeNum, gen: +self.getTeamInfo('generation'), shiny: $this.find('.pokemon-slot-shiny').prop('checked')}));
             }
         });
 
@@ -356,11 +352,10 @@
             }
 
             // loading the sprite
-            var spriteForm = self.getFormId(ui.item.value),
-                sprite_name = self.getSpecieId(ui.item.value) + (spriteForm !== 0 ? '-' + spriteForm : '');
+            var spriteForm = self.getFormId(ui.item.value);
 
-            $("#pokemon-tabs .pokemon-tab:eq(" + pokemonIndex + ")").html('<img src="' + defaultSettings.icons_folder + sprite_name + '.png' + '" alt="" />' + ui.item.label + '</span>');
-            slot.find(".pokemon-slot-sprite table img").attr('src', self.getGenerationInfo(generation, 'sprite_folder') + sprite_name + '.png');
+            $("#pokemon-tabs .pokemon-tab:eq(" + pokemonIndex + ")").html('<img src="' + pokeinfo.icon({num: +ui.item.value, forme: spriteForm}) + '" alt="" />' + ui.item.label + '</span>');
+            slot.find(".pokemon-slot-sprite table img").attr('src', pokeinfo.sprite({num: +ui.item.value, forme: spriteForm, gen: +self.getTeamInfo('generation'), shiny: slot.find('.pokemon-slot-shiny').prop('checked')}));
 
             // loading type(s)
             var pokemon_types = pokeinfo.types(pokemonId, generation);

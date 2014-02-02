@@ -107,6 +107,7 @@ pokeinfo.sprite = function(poke, params) {
     params = params || {};
     var gen = getGen(params.gen || poke.gen);
     var back = params.back || false;
+
     // Use last gen when dealing with missingno.
     if (poke.num === 0) {
         gen.num = lastgen.num;
@@ -212,19 +213,22 @@ pokeinfo.abilities = function(poke, gen, keep) {
 };
 
 pokeinfo.releasedList = function(gen, excludeFormes) {
-    var list = pokedex.pokes.released[getGen(gen).num],
-        formeless = {}, num, i;
+    var releasedList = pokedex.pokes.released[getGen(gen).num],
+        list = {}, num, i;
 
-    if (excludeFormes) {
-        for (i in list) {
-            num = +i;
-            if (num < 65536) {
-                formeless[num] = list[i];
-            }
+    for (i in releasedList) {
+        num = +i;
+        if (excludeFormes && num > 65535) {
+            continue;
         }
-
-        list = formeless;
+        // In gens 1-3, the values are true instead of the pokemon names.
+        if (releasedList[i] === true) {
+            list[num] = pokeinfo.name(num);
+        } else {
+            list[num] = releasedList[i];
+        }
     }
+
 
     return list;
 };
