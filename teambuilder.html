@@ -10,7 +10,7 @@
 <script src="js/db/pokes/released.js"></script>
 
 <script src="js/db/pokes/all_moves.js"></script>
-    
+
 <script src="js/db/pokes/stats.js"></script>
 
 <script src="js/db/pokes/type1.js"></script>
@@ -59,122 +59,122 @@
 <script src="js/pokeinfo.js"></script>
 
 <script src="js/teambuilder.js"></script>
-	<div id="teambuilder_content">
+    <div id="teambuilder_content">
         <div id="pokemon-tabs">
-			<span class="pokemon-tab active-pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-			<span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
-		</div><br style="clear:both;" />
-		<form id="team_form" action="" method="post">
-			<div id="pokemon-parameters">
-				<i class="icon-gear icon-large"></i>
-				<div id="team-infos">
-					<label for="tb-team-name">Team Name</label><input type="text" name="team-name" id="tb-team-name" /><br style="clear:both;" />
-					<br />
-					<div id="tb-team-tier">
-						<label for="tb-team-tier-value">Tier Name</label><input type="text" name="team-tier" id="tb-team-tier-value" /><br style="clear:both;" />
-					</div>
-					<div id="tb-team-generation">
-						<label for="tb-team-generation-value">Generation</label><select name="team-generation" id="tb-team-generation-value"></select>
-						<br style="clear:both;" />					
-					</div>
-				</div>
-				<div class="pokemon-slot active-pokemon-slot">
-					<div class="pokemon-slot-top-left">
-						<acronym class="pokemon-slot-sprite-helper">
-							<span class="pokemon-slot-sprite">
-								<table>
-									<td>
-										<img src="" alt="" />
-										<input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
-									</td>
-								</table>
-							</span>
-						</acronym>
-						<acronym title="Select a pokemon by writting their name here">
-						<input style="display:block;float:left;" type="text" spellcheck="false" name="pokemon-slot-name[]" value="" class="pokemon-slot-name" />
-						</acronym><br />
-						<span class="pokemon-slot-type-block">
-							
-						</span>
-						<br />
-						<div class="pokemon-slot-gender-selection">
-							<label class="pokemon-slot-gender-male-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-male-1"></label>
-							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
-							<label class="pokemon-slot-gender-female-icon" for="pokemon-slot-gender-female-1"></label>
-							<input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
-						</div><br style="clear:left;" />
-						<input class="pokemon-slot-nickname" spellcheck="false" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
-					</div>
-					<div class="pokemon-slot-top-right">
-						<div class="pokemon-slot-stats">
-							
-						</div>
-						<br />
-						<span class="click_button pokemon-slot-advanced">Advanced</span>
-					</div>
-					<br style="clear:both;" />
-					<br />
-					<div class="pokemon-slot-advanced-content">
-						<span class="pokemon-level">
-							<span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
-							<div class="pokemon-level-value"></div>
-						</span>
-						<span class="pokemon-happiness">
-							<span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
-							<div class="pokemon-happiness-value"></div>
-						</span>
-						<br style="clear:both;" />
-						<div class="pokemon-ivs-selectors">
-							
-						</div>
-						<br style="clear:both;" />
-						<br />
-						<div class="pokemon-slot-hidden-power-bp">
-							<strong>Hidden Power BP:</strong> <span class="pokemon-slot-hidden-power-bp-value"></span>
-						</div>
-					</div>
-					<div class="pokemon-slot-nature-container">
-						<select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
-							
-						</select>
-					</div>
-					<div class="pokemon-slot-item-container">
-						<select name="pokemon-slot-item[]" class="pokemon-slot-item">
-							
-						</select>
-					</div>
-					<div class="pokemon-slot-ability-container">
-						<select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
-							
-						</select>
-					</div>
-					<div class="pokemon-slot-hidden-power-container">
-						<select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
-							
-						</select>
-					</div>
-					<br />
-					<div class="pokemon-hidden-power-ivs-selection"></div>
-					<br style="clear:both;" />
-					<div class="pokemon-evs-selectors">
-						
-					</div>
-					<br style="clear:both;" /><br />
-					<div class="moves-list-container">
-						<table class="moves-list"></table>
-					</div>
-					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
-					<br style="clear:both;" />
-				</div>
-			</div>
-			<input id="save-team" class="click_button" type="submit" name="save_team" value="Save" />
-		</form>
-	</div>
+            <span class="pokemon-tab active-pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+            <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+            <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+            <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+            <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+            <span class="pokemon-tab"><img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />Missingo</span>
+        </div><br style="clear:both;" />
+        <form id="team_form" action="" method="post">
+            <div id="pokemon-parameters">
+                <i class="icon-gear icon-large"></i>
+                <div id="team-infos">
+                    <label for="tb-team-name">Team Name</label><input type="text" name="team-name" id="tb-team-name" /><br style="clear:both;" />
+                    <br />
+                    <div id="tb-team-tier">
+                        <label for="tb-team-tier-value">Tier Name</label><input type="text" name="team-tier" id="tb-team-tier-value" /><br style="clear:both;" />
+                    </div>
+                    <div id="tb-team-generation">
+                        <label for="tb-team-generation-value">Generation</label><select name="team-generation" id="tb-team-generation-value"></select>
+                        <br style="clear:both;" />
+                    </div>
+                </div>
+                <div class="pokemon-slot active-pokemon-slot">
+                    <div class="pokemon-slot-top-left">
+                        <acronym class="pokemon-slot-sprite-helper">
+                            <span class="pokemon-slot-sprite">
+                                <table>
+                                    <td>
+                                        <img src="" alt="" />
+                                        <input type="checkbox" name="pokemon-slot-shiny[]" class="pokemon-slot-shiny" />
+                                    </td>
+                                </table>
+                            </span>
+                        </acronym>
+                        <acronym title="Select a pokemon by writting their name here">
+                        <input style="display:block;float:left;" type="text" spellcheck="false" name="pokemon-slot-name[]" value="" class="pokemon-slot-name" />
+                        </acronym><br />
+                        <span class="pokemon-slot-type-block">
+
+                        </span>
+                        <br />
+                        <div class="pokemon-slot-gender-selection">
+                            <label class="pokemon-slot-gender-male-icon pokemon-slot-gender-checked" for="pokemon-slot-gender-male-1"></label>
+                            <input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-male-1" type="radio" name="pokemon-slot-gender[]" value="male" />
+                            <label class="pokemon-slot-gender-female-icon" for="pokemon-slot-gender-female-1"></label>
+                            <input class="pokemon-slot-gender-radio" id="pokemon-slot-gender-female-1" type="radio" name="pokemon-slot-gender[]" value="female" />
+                        </div><br style="clear:left;" />
+                        <input class="pokemon-slot-nickname" spellcheck="false" type="text" placeholder="Nickname" name="pokemon-slot-nickname[]" />
+                    </div>
+                    <div class="pokemon-slot-top-right">
+                        <div class="pokemon-slot-stats">
+
+                        </div>
+                        <br />
+                        <span class="click_button pokemon-slot-advanced">Advanced</span>
+                    </div>
+                    <br style="clear:both;" />
+                    <br />
+                    <div class="pokemon-slot-advanced-content">
+                        <span class="pokemon-level">
+                            <span class="pokemon-level-name">Level <span class="pokemon-level-display-value"></span></span>
+                            <div class="pokemon-level-value"></div>
+                        </span>
+                        <span class="pokemon-happiness">
+                            <span class="pokemon-happiness-name">Happiness <span class="pokemon-happiness-display-value"></span></span>
+                            <div class="pokemon-happiness-value"></div>
+                        </span>
+                        <br style="clear:both;" />
+                        <div class="pokemon-ivs-selectors">
+
+                        </div>
+                        <br style="clear:both;" />
+                        <br />
+                        <div class="pokemon-slot-hidden-power-bp">
+                            <strong>Hidden Power BP:</strong> <span class="pokemon-slot-hidden-power-bp-value"></span>
+                        </div>
+                    </div>
+                    <div class="pokemon-slot-nature-container">
+                        <select name="pokemon-slot-nature[]" class="pokemon-slot-nature">
+
+                        </select>
+                    </div>
+                    <div class="pokemon-slot-item-container">
+                        <select name="pokemon-slot-item[]" class="pokemon-slot-item">
+
+                        </select>
+                    </div>
+                    <div class="pokemon-slot-ability-container">
+                        <select name="pokemon-slot-ability[]" class="pokemon-slot-ability">
+
+                        </select>
+                    </div>
+                    <div class="pokemon-slot-hidden-power-container">
+                        <select name="pokemon-slot-hidden-power-type[]" class="pokemon-slot-hidden-power-type">
+
+                        </select>
+                    </div>
+                    <br />
+                    <div class="pokemon-hidden-power-ivs-selection"></div>
+                    <br style="clear:both;" />
+                    <div class="pokemon-evs-selectors">
+
+                    </div>
+                    <br style="clear:both;" /><br />
+                    <div class="moves-list-container">
+                        <table class="moves-list"></table>
+                    </div>
+                    <input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+                    <input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+                    <input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+                    <input type="text" spellcheck="false" name="pokemon-move-selection[]" class="pokemon-move-selection" />
+                    <br style="clear:both;" />
+                </div>
+            </div>
+            <input id="save-team" class="click_button" type="submit" name="save_team" value="Save" />
+        </form>
+    </div>
 </html>

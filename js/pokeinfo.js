@@ -72,6 +72,11 @@ pokeinfo.find = function(id, what, gen) {
     var gennum = gen.num;
     var array = pokedex.pokes[what][gennum];
 
+    // ability3 in < gen 5
+    if (!array) {
+        return 0;
+    }
+
     if (id in array) {
         return array[id];
     }
@@ -102,6 +107,11 @@ pokeinfo.sprite = function(poke, params) {
     params = params || {};
     var gen = getGen(params.gen || poke.gen);
     var back = params.back || false;
+
+    // Use last gen when dealing with missingno.
+    if (poke.num === 0) {
+        gen.num = lastgen.num;
+    }
 
     return pokedex.generations.options[gen.num].sprite_folder + (gen.num == 5 ? "animated/" : "" ) + (back ? "back/" : "")
         + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
@@ -136,7 +146,9 @@ pokeinfo.spriteData = function(poke, params) {
 };
 
 pokeinfo.icon = function(poke) {
-    return "http://pokemon-online.eu/images/poke_icons/" + poke.num + (poke.forme ? "-" + poke.forme : "") + ".png";
+    var num = this.toNum(poke),
+        forme = this.forme(num);
+    return "http://pokemon-online.eu/images/poke_icons/" + num + (forme ? "-" + forme : "") + ".png";
 };
 
 pokeinfo.name = function(poke) {
@@ -201,19 +213,22 @@ pokeinfo.abilities = function(poke, gen, keep) {
 };
 
 pokeinfo.releasedList = function(gen, excludeFormes) {
-    var list = pokedex.pokes.released[getGen(gen).num],
-        formeless = {}, num, i;
+    var releasedList = pokedex.pokes.released[getGen(gen).num],
+        list = {}, num, i;
 
-    if (excludeFormes) {
-        for (i in list) {
-            num = +i;
-            if (num < 65536) {
-                formeless[num] = list[i];
-            }
+    for (i in releasedList) {
+        num = +i;
+        if (excludeFormes && num > 65535) {
+            continue;
         }
-
-        list = formeless;
+        // In gens 1-3, the values are true instead of the pokemon names.
+        if (releasedList[i] === true) {
+            list[num] = pokeinfo.name(num);
+        } else {
+            list[num] = releasedList[i];
+        }
     }
+
 
     return list;
 };
@@ -343,6 +358,50 @@ moveinfo.message = function(move, part) {
     }
 
     return '';
+};
+
+moveinfo.getHiddenPowerIVs = function (type, generation) {
+    generation = getGen(generation).num;
+    var ret = [],
+        gt;
+
+    for (var i = 63; i >= 0; i--) {
+        gt = moveinfo.getHiddenPowerType(generation, i & 1, (i & 2) !== 0, (i & 4) !== 0, (i & 8) !== 0, (i & 16) !== 0, (i & 32) !== 0);
+        if (gt == type) {
+            ret.push([(((i & 1) !== 0) + 30), (((i & 2) !== 0) + 30), (((i & 4) !== 0) + 30), (((i & 8) !== 0) + 30), (((i & 16) !== 0) + 30), (((i & 32) !== 0) + 30)]);
+        }
+    }
+
+    return ret;
+};
+
+moveinfo.getHiddenPowerType = function (generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+    generation = getGen(generation).num;
+    var type;
+
+    if (generation >= 3) {
+        type = ((((hp_ivs % 2) + (2 * (atk_ivs % 2)) + (4 * (def_ivs % 2)) + (8 * (spe_ivs % 2)) + (16 * (satk_ivs % 2)) + (32 * (sdef_ivs % 2))) * 15) / 63) + 1;
+    } else {
+        type = 4 * (atk_ivs % 4) + (def_ivs % 4);
+    }
+
+    return parseInt(type, 10);
+};
+
+moveinfo.getHiddenPowerBP = function (generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
+    generation = getGen(generation).num;
+    var hpbp = geninfo.options(generation).hidden_power_bp, bp;
+    if (!hpbp) {
+        if (generation >= 3) {
+            bp = Math.floor(((hp_ivs % 2 + (2 * (atk_ivs % 2)) + (4 * (def_ivs % 2)) + (8 * (spe_ivs % 2)) + (16 * (satk_ivs % 2)) + (32 * (sdef_ivs % 2))) * 40) / 63) + 30;
+        } else {
+            bp = Math.floor(((5 * ((satk_ivs % 8 ? 1 : 0) + (2 * (spe_ivs % 8 ? 1 : 0)) + (4 * (def_ivs % 8 ? 1 : 0)) + (8 * (atk_ivs % 8 ? 1 : 0))) + (satk_ivs < 3 ? satk_ivs : 3)) / 2) + 31);
+        }
+    } else {
+        bp = hpbp;
+    }
+
+    return bp;
 };
 
 categoryinfo.list = function() {

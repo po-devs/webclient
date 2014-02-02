@@ -5,6 +5,10 @@
 
     poStorage.set = function (name, val) {
         var namespace = window.webclientStorageNamespace || 'po.';
+        if (Array.isArray(val) || (val && val.toString() === '[object Object]')) {
+            val = JSON.stringify(val);
+        }
+
         localStorage.setItem(namespace + name, val);
     };
 
