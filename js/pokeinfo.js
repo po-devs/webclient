@@ -537,6 +537,7 @@ abilityinfo.desc = function(ability) {
 
 abilityinfo.message = function(ability, part) {
     var messages = pokedex.abilities.ability_messages[ability];
+    part = part || 0;
 
     if (!messages) {
         return '';
