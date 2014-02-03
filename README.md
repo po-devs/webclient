@@ -33,7 +33,7 @@ Info
 Libraries used:
 - jQuery (jquery.formValues, jquery.knob, jquery.tablesorter)
 - jQuery UI
-- alertify https://github.com/fabien-d/alertify.js
+- Vex http://github.hubspot.com/vex/
 - md5 function http://www.webtoolkit.info/javascript-md5.html
 - farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
 - loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
