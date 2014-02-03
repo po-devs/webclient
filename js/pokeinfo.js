@@ -243,7 +243,7 @@ pokeinfo.released = function(poke, gen) {
 };
 
 pokeinfo.calculateStat = function(infos) {
-    if (infos.stat_id == this.default_settings.hp_id) {
+    if (infos.stat_id === 0) { // HP
         if (infos.generation > 2) {
             return Math.floor(Math.floor((infos.stat_ivs + (2 * infos.base_stat) + Math.floor(infos.stat_evs/4) + 100) * infos.level)/100) + 10;
         } else {
