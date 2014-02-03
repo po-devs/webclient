@@ -44,6 +44,7 @@ $(function() {
     $('#search_filter').keyup(function(){playerList.filter=$(this).val().toLowerCase();});
 });
 
+vex.defaultOptions.className = 'vex-theme-os';
 teambuilder = null;
 $(function() {
     var storedRelayIp = poStorage("relay");
@@ -580,20 +581,21 @@ parseCommand = function(message) {
             }
             websocket.send("login|"+JSON.stringify(data));
         } else {
-            var oldLabel = alertify.labels.cancel + '';
-
-            alertify.labels.cancel = "Login as Guest";
-            alertify.prompt("Username", function (e, str) {
-
-                if (e && str) {
-                    data.name = str;
+            vex.dialog.open({
+                message: 'Enter your username:',
+                input: '<input name="username" type="text" placeholder="Username"/>',
+                buttons: [
+                    $.extend({}, vex.dialog.buttons.YES, {text: 'Login'}),
+                    $.extend({}, vex.dialog.buttons.NO, {text: 'Login as Guest'})
+                ],
+                callback: function (res) {
+                    if (res && res.username) {
+                        data.name = res.username;
+                    }
+                    /* Optional parameters: away, color, ladder */
+                    websocket.send("login|"+JSON.stringify(data));
                 }
-
-                /* Optional parameters: away, color, ladder */
-                websocket.send("login|"+JSON.stringify(data));
             });
-
-            alertify.labels.cancel = oldLabel;
         }
     } else if (cmd == "disconnected") {
         displayMessage("Disconnected from server!");
@@ -614,22 +616,26 @@ parseCommand = function(message) {
         if (password) {
             var hash = MD5(MD5(password)+data);
 
-            poStorage.set("passhash", hash);
+            poStorage.set("passhash-" + data, hash);
             websocket.send("auth|" + hash);
         } else {
-            var passHash = poStorage("passhash");
+            var passHash = poStorage("passhash-" + data);
             if (passHash) {
                 websocket.send("auth|" + passHash);
             } else {
-                alertify.pass("Please enter your password", function (e, str) {
-                    if (e) {
-                        // after clicking OK
-                        // str is the value from the textbox
-                        var hash = MD5(MD5(str)+data);
-                        websocket.send("auth|" + hash);
-                    } else {
-                        // after clicking Cancel
-                        stopWebsocket();
+                vex.dialog.open({
+                    message: 'Enter your password:',
+                    input: '<input name="password" type="password" placeholder="Password" required />',
+                    callback: function (res) {
+                        if (res && res.password) {
+                            // after clicking OK
+                            // res.password is the value from the textbox
+                            var hash = MD5(MD5(res.password)+data);
+                            websocket.send("auth|" + hash);
+                        } else {
+                            // after clicking Cancel
+                            stopWebsocket();
+                        }
                     }
                 });
             }
