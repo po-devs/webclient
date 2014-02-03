@@ -125,8 +125,6 @@ pokeinfo.battlesprite = function(poke, params) {
     var back = params.back || false;
     var data = pokeinfo.spriteData(poke, params);
 
-    console.log(data);
-
     return pokedex.generations.options[lastgen.num].sprite_folder + ( (data.ext || "gif") == "gif" ? "animated/" : "" ) + (back ? "back/" : "")
         + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
         + ((data.ext || "gif") == "gif" ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme && !data.noforme ? "-" + poke.forme : "")
