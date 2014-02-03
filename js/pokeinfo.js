@@ -18,13 +18,16 @@ lastgen = null;
     }
 }());
 
-var getGen = function(gen) {
-    gen = gen || lastgen;
-    if (typeof gen != "object") {
+var getGen = function(gen, correct) {
+    if (correct !== false) {
+        gen = gen || lastgen;
+    }
+
+    if (typeof gen !== "object") {
         gen = {"num": gen};
     }
 
-    if (gen.num < 1 || gen.num > lastgen.num) {
+    if (correct !== false && (gen.num < 1 || gen.num > lastgen.num)) {
         gen = lastgen;
     }
 
@@ -36,13 +39,15 @@ geninfo.list = function () {
     return pokedex.generations.generations;
 };
 
-geninfo.name = function (num) {
+geninfo.name = function (gen) {
+    var num = getGen(gen, false).num;
     return pokedex.generations.generations[num];
 };
 
-geninfo.options = function (num) {
-    num = +num;
-    if (!isNaN(num)) {
+geninfo.options = function (gen) {
+    var num = getGen(gen, false).num;
+
+    if (num && typeof num === "number") {
         return pokedex.generations.options[num];
     }
 
@@ -295,7 +300,7 @@ moveinfo.findId = function (move) {
     }
 
     return 0;
-}
+};
 
 moveinfo.find = function(id, what, gen) {
     gen = getGen(gen);
