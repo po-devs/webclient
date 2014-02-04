@@ -19,16 +19,30 @@ lastgen = null;
 }());
 
 var getGen = function(gen, correct) {
-    if (correct !== false) {
+    var shouldCorrect = correct !== false;
+    if (shouldCorrect) {
         gen = gen || lastgen;
+        if (typeof gen === "object") {
+            if ("num" in gen) {
+                gen.num = +gen.num;
+            }
+        } else {
+            gen = +gen;
+        }
     }
 
     if (typeof gen !== "object") {
         gen = {"num": gen};
     }
 
-    if (correct !== false && (gen.num < 1 || gen.num > lastgen.num)) {
-        gen = lastgen;
+    if (shouldCorrect) {
+        if ("num" in gen) {
+            gen.num = +gen.num;
+        }
+
+        if (isNaN(gen.num) || gen.num < 1 || gen.num > lastgen.num) {
+            gen = lastgen;
+        }
     }
 
     return gen;
@@ -44,14 +58,12 @@ geninfo.name = function (gen) {
     return pokedex.generations.generations[num];
 };
 
-geninfo.options = function (gen) {
-    var num = getGen(gen, false).num;
-
-    if (num && typeof num === "number") {
-        return pokedex.generations.options[num];
-    }
-
+geninfo.options = function () {
     return pokedex.generations.options;
+};
+
+geninfo.option = function (gen) {
+    return pokedex.generations.options[getGen(gen, false).num];
 };
 
 pokeinfo.toNum = function(poke) {
@@ -393,7 +405,7 @@ moveinfo.getHiddenPowerType = function (generation, hp_ivs, atk_ivs, def_ivs, sa
 
 moveinfo.getHiddenPowerBP = function (generation, hp_ivs, atk_ivs, def_ivs, satk_ivs, sdef_ivs, spe_ivs) {
     generation = getGen(generation).num;
-    var hpbp = geninfo.options(generation).hidden_power_bp, bp;
+    var hpbp = geninfo.option(generation).hidden_power_bp, bp;
     if (!hpbp) {
         if (generation >= 3) {
             bp = Math.floor(((hp_ivs % 2 + (2 * (atk_ivs % 2)) + (4 * (def_ivs % 2)) + (8 * (spe_ivs % 2)) + (16 * (satk_ivs % 2)) + (32 * (sdef_ivs % 2))) * 40) / 63) + 30;

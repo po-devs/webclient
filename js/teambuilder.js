@@ -793,7 +793,7 @@
         case 'evs':
         case 'types_ids':
         case 'sprite_folder':
-            return geninfo.options(generation)[info_name];
+            return geninfo.option(generation)[info_name];
         case 'items_list':
             // TODO: Improve this
             var items = {},
