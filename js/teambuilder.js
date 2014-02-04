@@ -179,13 +179,13 @@
 
         // creating knobs for both IVs and EVs
         var knob_event = function (param) {
-            var element = param.target ? $(param.target) : this.$;
+            var element = param.target != null ? $(param.target) : this.$;
             var pokemonIndex = element.closest('.pokemon-slot').index('.pokemon-slot');
             var generation = self.getTeamInfo('generation');
             var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
             var stat_id = element.closest('.pokemon-' + value_type).attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2];
 
-            if (value_type === 'evs' && (!param.type || param.type !== 'keyup')) {
+            if (value_type === 'evs' && (param.type == null || param.type !== 'keyup')) {
                 element.val(self.getCorrectEVs(element)).trigger('change');
             }
 
@@ -201,7 +201,6 @@
             }
         };
 
-        // TODO: Clean this up
         var knob_params = {
             min: 0,
             width: 75,
@@ -216,13 +215,13 @@
             'change': knob_event
         };
 
-        var knob_ivs_params = knob_params;
+        var knob_ivs_params = $.extend({}, knob_params);
         knob_ivs_params.max = ivs_limit;
         knob_ivs_params.step = 1;
 
         $(".pokemon-ivs-value").knob(knob_ivs_params).on('keyup', knob_event);
 
-        var knob_evs_params = knob_params;
+        var knob_evs_params = $.extend({}, knob_params);
         knob_evs_params.max = 255;
         knob_evs_params.step = 4;
 
@@ -1093,7 +1092,7 @@
 
     Teambuilder.prototype.updateTeamPreview = function (teamId, $element) {
         var images, team, poke;
-        var elem = $element || $("[data-teamid='" + teamId + "'");
+        var elem = $element || $("[data-teamid='" + teamId + "']");
 
         try {
             teamObj = poStorage.get('teams.' + teamId, 'object');

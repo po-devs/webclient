@@ -47,12 +47,6 @@ $(function() {
 vex.defaultOptions.className = 'vex-theme-os';
 teambuilder = null;
 
-$(document).ready(NProgress.start);
-$(window).load(NProgress.done);
-$.ajaxSetup({
-    cache: true
-});
-
 $(function() {
     var storedRelayIp = poStorage("relay");
     if (storedRelayIp) {
