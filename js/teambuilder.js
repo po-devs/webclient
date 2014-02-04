@@ -1093,7 +1093,7 @@
 
     Teambuilder.prototype.updateTeamPreview = function (teamId, $element) {
         var images, team, poke;
-        var elem = $element || $("[data-teamid='" + teamId + "'");
+        var elem = $element || $("[data-teamid='" + teamId + "']");
 
         try {
             teamObj = poStorage.get('teams.' + teamId, 'object');
