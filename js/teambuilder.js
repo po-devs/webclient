@@ -1014,9 +1014,12 @@
     };
 
     Teambuilder.prototype.getCorrectEVs = function (evs_element) {
-        var total_evs = 0;
+        var total_evs = 0, val;
         evs_element.closest('.pokemon-evs-selectors').find('.pokemon-evs-value').each(function () {
-            total_evs += parseInt($(this).val());
+            val = parseInt(this.value, 10);
+            if (!isNaN(val)) {
+                total_evs += val;
+            }
         });
 
         if (total_evs > 510) {

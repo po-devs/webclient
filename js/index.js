@@ -46,6 +46,82 @@ $(function() {
 
 vex.defaultOptions.className = 'vex-theme-os';
 teambuilder = null;
+$(function() {
+    var mode = 'content',
+        $teambuilder = $("#teambuilder"),
+        $user_params = $("#user_params"),
+        $content = $("#content"),
+        $middle_block = $(".middle_block"),
+        $teampreview = $(".team_preview"),
+        previewsInit = false;
+
+    $("#tab-titles").on('click', 'li i', function() {
+        if($("#tab-titles li").length > 1)
+        {
+            var dparent = $(this).parent().parent();
+            var href = dparent.attr("href");
+            objFromId(href).close();
+        }
+    });
+
+    $(".dropdown_button").click(function() {
+        var $this = $(this);
+        $this.find('i').toggle();
+        $this.parent().find('.dropdown_content').toggle();
+        if ($this.data('teambuilder') && !previewsInit) {
+            previewsInit = true;
+            teambuilder.loadTeamPreviews();
+        }
+    });
+
+    $teampreview.click(function () {
+        var $this = $(this);
+        $teampreview.removeClass('current_team');
+        $this.addClass('current_team');
+    }).dblclick(function () {
+        toggleContent('teambuilder');
+        teambuilder.loadTeamFrom($(this));
+    });
+
+    // Type should be one of: content, user_params, teambuilder
+    function toggleContent(type) {
+        if (mode === 'user_params' || mode === 'teambuilder' || type === 'content') {
+            $content.show();
+            type = 'content';
+        } else if (type === 'user_params') {
+            $user_params.show();
+        } else if (mode === 'content' || type === 'teambuilder') {
+            teambuilder.init();
+            $teambuilder.show();
+            type = 'teambuilder';
+        }
+
+        mode = type;
+    }
+
+    $("#trainer_username, #create_team, #po_title").on('click', function() {
+        $middle_block.hide();
+
+        switch(this.id) {
+        case 'trainer_username':
+            toggleContent('user_params');
+        break;
+        case 'create_team':
+            toggleContent('teambuilder');
+        break;
+        case 'po_title':
+            toggleContent();
+        break;
+        }
+    });
+    $("#battle-html").load("battle.html");
+    $("#teambuilder").load("teambuilder.html", function() {
+        setTimeout(function () {
+            /* Teambuilder */
+            teambuilder = new Teambuilder();
+        }, 4); // 4 is the minimum delay
+    });
+});
 
 $(function() {
     var storedRelayIp = poStorage("relay");
@@ -315,7 +391,7 @@ $("#player-list").on("click", "li", function(event) {
             var battle = battles.battlesByPlayer[id][bid];
             var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
             dialog.append($("<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against "
-                + escapeHtml(players.name(opp)) +"</div>"));
+                + utils.escapeHtml(players.name(opp)) +"</div>"));
         }
     }
     dialog.dialog("option", "title", players.name(id));
@@ -534,7 +610,7 @@ parseCommand = function(message) {
          send localhost */
         var server = data.replace("localhost", relayIP);
 
-        var qserver = getQueryString("server");
+        var qserver = utils.queryField("server");
 
         if (qserver != "default" && qserver) {
             $("#advanced-connection").val(qserver);
@@ -542,7 +618,7 @@ parseCommand = function(message) {
             $("#advanced-connection").val(server);
         }
 
-        if (getQueryString("autoconnect") === "true") {
+        if (utils.queryField("autoconnect") === "true") {
             connect();
         } else {
             try {
@@ -573,10 +649,10 @@ parseCommand = function(message) {
         }
 
         var data = {version: 1};
-        if (getQueryString("user") || username) {
-            data.name = getQueryString("user") || username;
-            data.default = getQueryString("channel");
-            data.autojoin = getQueryString("autojoin");
+        if (utils.queryField("user") || username) {
+            data.name = utils.queryField("user") || username;
+            data.default = utils.queryField("channel");
+            data.autojoin = utils.queryField("autojoin");
             if (data.autojoin) {
                 data.autojoin = data.autojoin.split(",");
             }

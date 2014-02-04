@@ -18,7 +18,7 @@ BattleTab.prototype.dealWithSend = function(params) {
             this.request.side.pokemon[0] = this.request.side.pokemon[params.slot];
             this.request.side.pokemon[params.slot] = tpoke;
 
-            push_properties(this.request.side.pokemon[0], poke);
+            $.extend(poke, this.request.side.pokemon[0]);
         }
     }
     /* Stores the pokemon in field memory */
