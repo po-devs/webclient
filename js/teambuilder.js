@@ -15,7 +15,7 @@
         },
         missingno: {
             icon: 'http://pokemon-online.eu/images/poke_icons/0.png',
-            sprite: 'http://pokemon-online.eu/images/pokemon/black-white/0.png'
+            sprite: 'http://pokemon-online.eu/images/pokemon/x-y/0.png'
         },
         unknown_type_id: 18,
         icons_folder: 'http://pokemon-online.eu/images/poke_icons/'
@@ -793,7 +793,7 @@
         case 'evs':
         case 'types_ids':
         case 'sprite_folder':
-            return geninfo.options(generation)[info_name];
+            return geninfo.option(generation)[info_name];
         case 'items_list':
             // TODO: Improve this
             var items = {},

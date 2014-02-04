@@ -35,19 +35,17 @@ describe('geninfo', function () {
         });
     });
     describe('.options', function () {
-        it('should return options specific to a generation if given', function () {
-            geninfo.options(1).sprite_folder.should.equal('http://pokemon-online.eu/images/pokemon/red-blue/');
-            geninfo.options(2).ability.should.equal(false);
-            geninfo.options({num: 4}).gender.should.equal(true);
-            should(geninfo.options(-1)).equal(undefined);
-        });
-        it("should return all options if the given gen number isn't a number", function () {
-            // It returns a reference, so don't use eql here
+        it('should return the list of generation options', function () {
             geninfo.options().should.equal(pokedex.generations.options);
-            geninfo.options(NaN).should.equal(pokedex.generations.options);
-            geninfo.options("Generation 3").should.equal(pokedex.generations.options);
-            geninfo.options({gen: "Generation 3"}).should.equal(pokedex.generations.options);
-            geninfo.options({num: {}}).should.equal(pokedex.generations.options);
+            Object.keys(geninfo.options()).length.should.equal(numGens);
+        });
+    });
+    describe('.option', function () {
+        it('should return options specific to a generation if given', function () {
+            geninfo.option(1).sprite_folder.should.equal('http://pokemon-online.eu/images/pokemon/red-blue/');
+            geninfo.option(2).ability.should.equal(false);
+            geninfo.option({num: 4}).gender.should.equal(true);
+            should(geninfo.option(-1)).equal(undefined);
         });
     });
 });
