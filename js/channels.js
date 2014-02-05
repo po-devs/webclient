@@ -84,12 +84,13 @@ Channels.prototype.idFromIndex = function (index) {
     return hrefid.substr(hrefid.indexOf("-") + 1);
 };
 
-Channels.prototype.channelsByName = function () {
-    var that = this;
+Channels.prototype.channelsByName = function (lowercase) {
+    var that = this, name;
 
-    return Object.keys(this.names).map(function (value, index, array) {
-        return that.names[value];
-    })
+    return Object.keys(this.names).map(function (value) {
+        name = that.names[value];
+        return lowercase ? name.toLowerCase() : name;
+    });
 };
 
 Channels.prototype.leaveChannel = function(chanid) {
@@ -128,10 +129,10 @@ function Channel(id, name) {
     }
 }
 
-Function.inherits(Channel, ChannelTab);
+utils.inherits(Channel, ChannelTab);
 
 Channel.prototype.close = function() {
-    channels.leaveChannel(this.id)
+    channels.leaveChannel(this.id);
 };
 
 Channel.prototype.setPlayers = function(players) {
@@ -166,7 +167,7 @@ Channel.prototype.removePlayer = function(player) {
             this.close2();
         } else {
             this.closable |= 1;
-            this.print("<i>You were removed from this channel</i>", true)
+            this.print("<i>You were removed from this channel</i>", true);
         }
     }
 };
@@ -188,7 +189,7 @@ Channel.prototype.print = function (msg, html, noParse) {
             msg = format(msg) || msg;
         } else {
             var action = false;
-            msg = escapeHtml(msg);
+            msg = utils.escapeHtml(msg);
 
             if (msg.substr(0, 3) === "***") {
                 msg = "<span class='action'>" + msg + "</span>";
@@ -212,9 +213,9 @@ Channel.prototype.print = function (msg, html, noParse) {
                     this.activateTab();
                 }
 
-                msg = pref + addChannelLinks(msg.slice(msg.indexOf(":") + 1));
+                msg = pref + utils.addChannelLinks(msg.slice(msg.indexOf(":") + 1), channels.channelsByName(true));
                 if (poStorage("chat.timestamps", "boolean")) {
-                    msg += "<span class='timestamp'>" + timestamp() + "</span>";
+                    msg += "<span class='timestamp'>" + utils.timestamp() + "</span>";
                 }
             }
         }
@@ -239,9 +240,11 @@ Channel.prototype.changeName = function (name) {
 };
 
 Channel.prototype.disconnect = function() {
-    var pl = this.players;
+    var pl = this.players, id;
     this.players = {};
-    for(var id in pl) {players.testPlayerOnline(id)};
+    for (id in pl) {
+        players.testPlayerOnline(id);
+    }
 };
 
 Channel.prototype.close2 = function () {

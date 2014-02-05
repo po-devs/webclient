@@ -158,7 +158,7 @@ function BattleTab(pid, conf, team) {
     }
 }
 
-Function.inherits(BattleTab, ChannelTab);
+utils.inherits(BattleTab, ChannelTab);
 
 BattleTab.prototype.pause = function() {
     this.paused = true;
@@ -227,7 +227,7 @@ BattleTab.prototype.print = function(msg, args) {
             msg = escapeHtml(msg);
             var pid = this.conf.players[args.player];
             var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
-            msg = pref + " " + addChannelLinks(msg);
+            msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
         } else if ("css" in args && args.css == "turn") {
             this.blankMessage = true;
         }

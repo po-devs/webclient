@@ -50,7 +50,7 @@ function PM(pid) {
     }
 }
 
-Function.inherits(PM, ChannelTab);
+utils.inherits(PM, ChannelTab);
 
 PM.prototype.playerIds = function() {
     var ret = [players.myid];
@@ -83,14 +83,13 @@ PM.prototype.chat = function () {
     return $("#pm-" + this.id + " #chatTextArea");
 };
 
-
 PM.prototype.print = function(pid, msg) {
     var chatTextArea = this.chat().get(0);
 
     if (pid !== -1) {
-        msg = escapeHtml(msg);
+        msg = utils.escapeHtml(msg);
         var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
-        msg = pref + " " + addChannelLinks(msg);
+        msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
 
         this.activateTab();
     }

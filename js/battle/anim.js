@@ -229,7 +229,7 @@ BattleAnimator.prototype.onAttack = function(spot, move) {
     //Here for now, until all anims are done
     self.finished();
 
-    var moveid = toId(moveinfo.name(move));
+    var moveid = utils.toAlphanumeric(moveinfo.name(move));
     var animObject = BattleMoveAnims[moveid] || BattleOtherAnims.attack;
 
     var attacker = spot;
