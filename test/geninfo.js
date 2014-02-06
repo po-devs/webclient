@@ -48,4 +48,11 @@ describe('geninfo', function () {
             should(geninfo.option(-1)).equal(undefined);
         });
     });
+    describe('.hasOption', function () {
+        it('should return true or false depending on if given gen has that option enabled', function () {
+            geninfo.hasOption(1, 'sprite_folder').should.equal(true);
+            geninfo.hasOption(2, 'ability').should.equal(false);
+            geninfo.hasOption({num: 4}, 'gender').should.equal(true);
+        });
+    });
 });
