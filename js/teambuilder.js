@@ -1,4 +1,4 @@
-(function () {
+(function (window, document, pokeinfo, geninfo, poStorage) {
     // teambuilder class
     var defaultSettings = {
         generation: 6,
@@ -25,6 +25,7 @@
         this.initialized = false;
         this.generation = generation;
         this.team = -1;
+        this._cache = {};
     }
 
     Teambuilder.prototype.init = function () {
@@ -34,7 +35,8 @@
 
         this.initialized = true;
         var self = this,
-            generation = this.generation || defaultSettings.generation;
+            generation = this.generation || defaultSettings.generation,
+            len, i;
 
         // make it so the form doesn't get submitted at all and reloads the page
         $("#team_form").on('submit', function (e) {
@@ -139,7 +141,7 @@
         // pokemon sprite reset
         $(".pokemon-slot-sprite").on('click', function (e) {
             var pokeNum, formeNum, $this;
-            if (self.getGenerationInfo(self.getTeamInfo('generation'), 'shiny')) {
+            if (geninfo.hasOption(self.getTeamInfo('generation'), 'shiny')) {
                 $this = $(this);
                 formeNum = self.getFormId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
                 pokeNum = self.getSpecieId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
@@ -162,34 +164,41 @@
             ivs_block = "",
             evs_block = "",
             stats_list = self.getGenerationInfo(generation, 'stats_list'),
-            ivs_limit = self.getGenerationInfo(generation, 'ivs_limit');
+            ivs_limit = geninfo.option(generation).ivs_limit,
+            stat_id,
+            stat_name;
 
         // TODO: Get rid of $.each here
-        $.each(stats_list, function (stat_id, stat_name) {
+        for (stat_id in stats_list) {
+            stat_name = stats_list[stat_id];
             stats_block += '<div class="pokemon-slot-stat-content stat-id-' + stat_id + '"><span class="pokemon-slot-stat-name">' + stat_name + '</span><span class="pokemon-slot-stat-block"><span class="pokemon-slot-stat-progress"></span><span class="pokemon-slot-stat-value">0</span></span></div>';
             ivs_block += '<span class="pokemon-ivs stat-id-' + stat_id + '"><span class="pokemon-ivs-stat-name"><strong>' + (ivs_limit == 15 ? 'DVs' : 'IVs') + '</strong> ' + stat_name + '</span><input name="pokemon-slot-ivs-' + stat_id + '" type="text" value="' + ivs_limit + '" class="pokemon-ivs-value" /></span>';
             evs_block += '<span class="pokemon-evs stat-id-' + stat_id + '"><span class="pokemon-evs-stat-name"><strong>EVs</strong> ' + stat_name + '</span><input name="pokemon-slot-evs-' + stat_id + '" type="text" value="' + defaultSettings.evs + '" class="pokemon-evs-value" /></span>';
-        });
+        }
 
         $('.pokemon-slot-stats').html(stats_block);
         $(".pokemon-ivs-selectors").html(ivs_block);
-        if (self.getGenerationInfo(generation, 'evs')) {
+        if (geninfo.hasOption(generation, 'evs')) {
             $(".pokemon-evs-selectors").html(evs_block);
         }
 
         // creating knobs for both IVs and EVs
-        var knob_event = function (param) {
-            var element = param.target != null ? $(param.target) : this.$;
+        var knob_event = function (value) {
+            if (value < 0) {
+                return;
+            }
+
+            var element = value.target ? $(value.target) : this.$;
             var pokemonIndex = element.closest('.pokemon-slot').index('.pokemon-slot');
             var generation = self.getTeamInfo('generation');
             var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
             var stat_id = element.closest('.pokemon-' + value_type).attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2];
 
-            if (value_type === 'evs' && (param.type == null || param.type !== 'keyup')) {
+            if (value_type === 'evs') {
                 element.val(self.getCorrectEVs(element)).trigger('change');
             }
 
-            if (!self.getGenerationInfo(generation, 'special_stat') && self.getGenerationInfo(generation, 'special_stats_same') && defaultSettings.special_stat.replace_ids.indexOf(parseInt(stat_id, 10)) !== -1) {
+            if (!geninfo.hasOption(generation, 'special_stat') && geninfo.hasOption(generation, 'special_stats_same') && defaultSettings.special_stat.replace_ids.indexOf(parseInt(stat_id, 10)) !== -1) {
                 element.closest('.pokemon-slot').find(".pokemon-" + value_type + ".stat-id-" + $.grep(defaultSettings.special_stat.replace_ids, function (id) {
                     return id !== stat_id;
                 }).join('') + " .pokemon-" + value_type + "-value").val(element.val()).trigger('change');
@@ -211,21 +220,21 @@
             bgColor: '#f0f0f0',
             font: 'inherit',
             inputColor: '#757575',
-            'release': knob_event,
-            'change': knob_event
+            release: knob_event,
+            change: knob_event
         };
 
         var knob_ivs_params = $.extend({}, knob_params);
         knob_ivs_params.max = ivs_limit;
         knob_ivs_params.step = 1;
 
-        $(".pokemon-ivs-value").knob(knob_ivs_params).on('keyup', knob_event);
+        $(".pokemon-ivs-value").knob(knob_ivs_params).keyup(knob_event);
 
         var knob_evs_params = $.extend({}, knob_params);
         knob_evs_params.max = 255;
         knob_evs_params.step = 4;
 
-        $(".pokemon-evs-value").knob(knob_evs_params).on('keyup', knob_event);
+        $(".pokemon-evs-value").knob(knob_evs_params).keyup(knob_event);
 
         // initializing the slider for level
         $(".pokemon-level-value").slider({
@@ -287,7 +296,7 @@
         $('.pokemon-slot-hidden-power-type').reloadCombobox(types, 16, function (e, ui) {
             var generation = self.getTeamInfo('generation');
             var slot = $(e.target).closest('.pokemon-slot');
-            if (self.getGenerationInfo(generation, 'hidden_power')) {
+            if (geninfo.hasOption(generation, 'hidden_power')) {
                 var hidden_power_ivs = moveinfo.getHiddenPowerIVs(ui.item.value, generation);
                 if (hidden_power_ivs.length === 1) {
                     // alert(JSON.stringify(hidden_power_ivs[0]));
@@ -381,17 +390,17 @@
             }
 
             // loading the abilities
-
-            if (self.getGenerationInfo(generation, 'ability')) {
+            if (geninfo.hasOption(generation, 'ability')) {
                 var abilities_ids = pokeinfo.abilities(pokemonId, generation, true),
-                    abilities = {};
+                    abilities = {},
+                    ability_id;
 
-                // TODO: Don't use $.each here.
-                $.each(abilities_ids, function (index, ability_id) {
+                for (i = 0, len = abilities_ids; i < len; i += 1) {
+                    ability_id = abilities_ids[i];
                     if (ability_id) {
                         abilities[ability_id] = abilityinfo.name(ability_id);
                     }
-                });
+                }
 
                 abilities = !$.isEmptyObject(abilities) ? abilities : {
                     0: abilityinfo.name(0)
@@ -423,8 +432,9 @@
                 return 0;
             });
 
-            // TODO: Don't use $.each here
-            $.each(learnset, function (index, move_id) {
+            var move_id;
+            for (i = 0, len = learnset.length; i < len; i += 1) {
+                move_id = learnset[i];
                 move_type_id = moveinfo.type(move_id, generation) || 0;
                 move_damage_class_id = moveinfo.damageClass(move_id, generation) || 0;
                 move_power = moveinfo.power(move_id, generation);
@@ -432,10 +442,10 @@
 
                 // TODO: Clean up this html
                 moves_block += '<tr class="move-infos"><td class="move-type"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type type_' + move_type_id + '">' + typeinfo.name(move_type_id) + '</span></span></td><td class="move-category"><span class="pokemon-slot-type-block"><span class="pokemon-slot-type damage_class_' + move_damage_class_id + '">' + categoryinfo.name(move_damage_class_id) + '</span></span></td><td class="move-name">' + moveinfo.name(move_id) + '</td><td class="move-pp"><strong>' + moveinfo.pp(move_id, generation) + '</strong> <em>PP</em></td><td class="move-bp"><strong>' + (move_power ? (move_power != 1 ? move_power : '??') : '--') + '</strong> <em>Power</em></td><td class="move-accuracy"><strong>' + (move_acc != 101 ? move_acc + '%' : '--') + '</strong> <em>Accuracy</em></td></tr>';
-            });
+            }
 
             moves_block = $(moves_block);
-            if (!self.getGenerationInfo(generation, 'damage_classes_move_specific')) {
+            if (geninfo.hasOption(generation, 'damage_classes_move_specific')) {
                 moves_block.find('.move-category').hide();
             }
 
@@ -509,13 +519,13 @@
         $(".pokemon-slot-name").autocomplete('option', 'source', autocompletePokes).autocomplete('option', 'minLength', 0).autocomplete('option', 'autoFocus', true);
 
         // settings stats, ivs and evs
-        var ivs_limit = self.getGenerationInfo(generation, 'ivs_limit');
+        var ivs_limit = geninfo.option(generation).ivs_limit;
         // TODO: Get rid of grep here
         var special_stat_second_id = $.grep(defaultSettings.special_stat.replace_ids, function (id) {
             return id !== defaultSettings.special_stat.id;
         }).join('');
 
-        if (self.getGenerationInfo(generation, 'special_stat')) {
+        if (geninfo.hasOption(generation, 'special_stat')) {
             $(".pokemon-slot-stat-content.stat-id-" + defaultSettings.special_stat.id + " .pokemon-slot-stat-name").html(defaultSettings.special_stat.name);
             $(".pokemon-ivs.stat-id-" + defaultSettings.special_stat.id + " .pokemon-ivs-stat-name").html('<strong>' + (ivs_limit == 15 ? 'DVs' : 'IVs') + '</strong> ' + defaultSettings.special_stat.name + '</span>');
             $(".pokemon-evs.stat-id-" + defaultSettings.special_stat.id + " .pokemon-evs-stat-name").html('<strong>EVs</strong> ' + defaultSettings.special_stat.name + '</span>');
@@ -531,10 +541,10 @@
         }).length / $(".pokemon-slot").length)) + '%');
 
         // shiny helper message
-        $(".pokemon-slot-sprite-helper").attr('title', self.getGenerationInfo(generation, 'shiny') ? 'Click here to switch between shiny states' : '');
+        $(".pokemon-slot-sprite-helper").attr('title', geninfo.hasOption(generation, 'shiny') ? 'Click here to switch between shiny states' : '');
 
         // loading the list of items
-        if (self.getGenerationInfo(generation, 'item')) {
+        if (geninfo.hasOption(generation, 'item')) {
             var items = self.getGenerationInfo(generation, 'items_list');
             $('.pokemon-slot-item').reloadCombobox(items, $.getFirstPropertyIndex(items), function (e, ui) {
                 var slot = $(e.target).closest('.pokemon-slot');
@@ -573,7 +583,7 @@
             evs: '.pokemon-evs-selectors'
         }, function (index, selector) {
             selectors.push(selector);
-            if (!self.getGenerationInfo(generation, index)) {
+            if (!geninfo.hasOption(generation, index)) {
                 hidden_selectors.push(selector);
             }
         });
@@ -642,7 +652,7 @@
         slot.find(".pokemon-happiness-value").slider('value', defaultSettings.happiness);
 
         // reset IVs
-        slot.find(".pokemon-ivs-value").val(self.getGenerationInfo(generation, 'ivs_limit')).trigger('change');
+        slot.find(".pokemon-ivs-value").val(geninfo.option(generation).ivs_limit).trigger('change');
 
         // reset EVs
         slot.find(".pokemon-evs-value").val(0).trigger('change');
@@ -681,14 +691,14 @@
             generation = self.getTeamInfo('generation');
 
         var stat, max_stat, stat_progress_class_id, stat_ivs, stat_evs, base_stat, nature, stat_percentage;
-        var level = parseInt(slot.find(".pokemon-level-value").slider('value'));
+        var level = parseInt(slot.find(".pokemon-level-value").slider('value'), 10);
         var baseStats = pokeinfo.stats(slot.find(".pokemon-slot-name").data('pokemon_id'), generation);
         var stats_list = self.getGenerationInfo(self.getTeamInfo('generation'), 'stats_list');
 
         // TODO: Get rid of each here
         $.each(stats_list, function (stat_id, stat_name) {
-            stat_ivs = parseInt(slot.find(".pokemon-ivs.stat-id-" + stat_id + " .pokemon-ivs-value").val());
-            stat_evs = parseInt(slot.find(".pokemon-evs.stat-id-" + stat_id + " .pokemon-evs-value").val());
+            stat_ivs = parseInt(slot.find(".pokemon-ivs.stat-id-" + stat_id + " .pokemon-ivs-value").val(), 10);
+            stat_evs = parseInt(slot.find(".pokemon-evs.stat-id-" + stat_id + " .pokemon-evs-value").val(), 10);
             stat_ivs = isNaN(stat_ivs) ? 0 : stat_ivs;
             stat_evs = isNaN(stat_evs) ? 0 : stat_evs;
             nature = self.getNatureEffect(slot.find(".pokemon-slot-nature").val(), stat_id);
@@ -722,7 +732,7 @@
                 'base_stat': base_stat,
                 'level': level,
                 'nature': 1.1,
-                'stat_ivs': self.getGenerationInfo(generation, 'ivs_limit'),
+                'stat_ivs': geninfo.option(generation).ivs_limit,
                 'stat_evs': 255
             });
 
@@ -776,56 +786,54 @@
     };
 
     Teambuilder.prototype.getGenerationInfo = function (generation, info_name) {
+        var len, i;
         switch (info_name) {
-        case 'special_stats_same':
-        case 'damage_classes_move_specific':
-        case 'gender':
-        case 'shiny':
-        case 'special_stat':
-        case 'happiness':
-        case 'ivs_limit':
-        case 'hidden_power':
-        case 'hidden_power_bp':
-        case 'ability':
-        case 'nature':
-        case 'item':
-        case 'evs':
-        case 'types_ids':
-        case 'sprite_folder':
-            return geninfo.option(generation)[info_name];
         case 'items_list':
+            if (this._cache['items_list_gen' + generation]) {
+                return this._cache['items_list_gen' + generation];
+            }
+
             // TODO: Improve this
             var items = {},
-                itemlist = iteminfo.releasedList(generation), i, num;
+                itemlist = iteminfo.releasedList(generation), num;
 
             for (i in itemlist) {
                 num = +i;
                 items[(num < 8000 ? 'i' : 'b') + num] = iteminfo.name(num);
             }
 
+            this._cache['items_list_gen' + generation] = items;
             return items;
         case 'stats_list':
-            var stats = {};
+            if (this._cache['stats_list_gen' + generation]) {
+                return this._cache['stats_list_gen' + generation];
+            }
 
-            // TODO: Get rid of each here
-            $.each(defaultSettings.stats_ids, function (stat_id) {
-                stats[stat_id] = statinfo.name(stat_id);
-            });
+            var stats = {},
+                statId;
 
+            for (i = 0, len = defaultSettings.stats_ids.length; i < len; i += 1) {
+                statId = defaultSettings.stats_ids[i];
+                stats[statId] = statinfo.name(statId);
+            }
+
+            this._cache['stats_list_gen' + generation] = stats;
             return stats;
         case 'types_list':
-            return this.TeamInfoIdsToPairs(info_name, this.getGenerationInfo(generation, 'types_ids'));
-        }
-    };
+            if (this._cache['types_list_gen' + generation]) {
+                return this._cache['types_list_gen' + generation];
+            }
 
-    Teambuilder.prototype.TeamInfoIdsToPairs = function (info_name, values) {
-        switch (info_name) {
-        case 'types_list':
-            var pairs = {};
-            // TODO: Get rid of each here
-            $.each(values, function (index, type_id) {
+            var types = geninfo.option(generation).types_ids,
+                pairs = {},
+                type_id;
+
+            for (i in types) {
+                type_id = types[i];
                 pairs[type_id] = typeinfo.name(type_id);
-            });
+            }
+
+            this._cache['types_list_gen' + generation] = pairs;
             return pairs;
         }
     };
@@ -851,20 +859,20 @@
             pokemon[index] = {};
 
             pokemon[index].pokemonId = slot.find('.pokemon-slot-name').data('pokemon_id');
-            pokemon[index].shiny = self.getGenerationInfo(generation, 'shiny') ? slot.find('.pokemon-slot-shiny').prop('checked') : false;
-            pokemon[index].gender = (self.getGenerationInfo(generation, 'gender') && slot.find(".pokemon-slot-gender-selection").css('display') != 'none') ? slot.find("#" + slot.find('.pokemon-slot-gender-checked').attr('for')).val() : 'neutral';
+            pokemon[index].shiny = geninfo.hasOption(generation, 'shiny') ? slot.find('.pokemon-slot-shiny').prop('checked') : false;
+            pokemon[index].gender = (geninfo.hasOption(generation, 'gender') && slot.find(".pokemon-slot-gender-selection").css('display') !== 'none') ? slot.find("#" + slot.find('.pokemon-slot-gender-checked').attr('for')).val() : 'neutral';
             pokemon[index].nickname = slot.find('.pokemon-slot-nickname').val();
             pokemon[index].level = slot.find('.pokemon-level-value').slider('value');
-            pokemon[index].happiness = self.getGenerationInfo(generation, 'happiness') ? slot.find('.pokemon-happiness-value').slider('value') : 0;
+            pokemon[index].happiness = geninfo.hasOption(generation, 'happiness') ? slot.find('.pokemon-happiness-value').slider('value') : 0;
             pokemon[index].ivs = {};
             slot.find('.pokemon-ivs-value').each(function () {
                 var $this = $(this);
                 pokemon[index].ivs[$this.closest('.pokemon-ivs').attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2]] = $this.val();
             });
-            pokemon[index].abilityId = self.getGenerationInfo(generation, 'ability') ? slot.find('.pokemon-slot-ability').val() : undefined;
-            pokemon[index].natureId = self.getGenerationInfo(generation, 'nature') ? slot.find('.pokemon-slot-nature').val() : undefined;
-            pokemon[index].itemId = self.getGenerationInfo(generation, 'item') ? slot.find('.pokemon-slot-item').val() : undefined;
-            if (self.getGenerationInfo(generation, 'evs')) {
+            pokemon[index].abilityId = geninfo.hasOption(generation, 'ability') ? slot.find('.pokemon-slot-ability').val() : undefined;
+            pokemon[index].natureId = geninfo.hasOption(generation, 'nature') ? slot.find('.pokemon-slot-nature').val() : undefined;
+            pokemon[index].itemId = geninfo.hasOption(generation, 'item') ? slot.find('.pokemon-slot-item').val() : undefined;
+            if (geninfo.hasOption(generation, 'evs')) {
                 pokemon[index].evs = {};
                 slot.find('.pokemon-evs-value').each(function () {
                     var $this = $(this);
@@ -925,11 +933,11 @@
                 }]);
             }
 
-            if (self.getGenerationInfo(generation, 'shiny') && data.shiny !== undefined && slot.find('.pokemon-slot-shiny').prop('checked') != data.shiny) {
+            if (geninfo.hasOption(generation, 'shiny') && data.shiny !== undefined && slot.find('.pokemon-slot-shiny').prop('checked') != data.shiny) {
                 slot.find('.pokemon-slot-sprite').trigger('click');
             }
 
-            if (self.getGenerationInfo(generation, 'gender') && data.gender !== undefined) {
+            if (geninfo.hasOption(generation, 'gender') && data.gender !== undefined) {
                 if (data.gender == 'neutral') {
                     slot.find('.pokemon-slot-gender-selection').hide();
                 } else {
@@ -956,15 +964,15 @@
                 });
             }
 
-            if (self.getGenerationInfo(generation, 'ability') && data.abilityId !== undefined) {
+            if (geninfo.hasOption(generation, 'ability') && data.abilityId !== undefined) {
                 slot.find('.pokemon-slot-ability').val(data.abilityId).combobox('refresh');
             }
 
-            if (self.getGenerationInfo(generation, 'nature') && data.natureId !== undefined) {
+            if (geninfo.hasOption(generation, 'nature') && data.natureId !== undefined) {
                 slot.find('.pokemon-slot-nature').val(data.natureId).combobox('select').combobox('refresh');
             }
 
-            if (self.getGenerationInfo(generation, 'evs') && data.evs !== undefined) {
+            if (geninfo.hasOption(generation, 'evs') && data.evs !== undefined) {
                 // TODO: Get rid of each here
                 $.each(data.evs, function (stat_id, value) {
                     slot.find('input[name="pokemon-slot-evs-' + stat_id + '"]').val(value).trigger('change').trigger('keyup');
@@ -980,7 +988,7 @@
                 });
             }
 
-            if (self.getGenerationInfo(generation, 'item') && data.itemId !== undefined) {
+            if (geninfo.hasOption(generation, 'item') && data.itemId !== undefined) {
                 slot.find('.pokemon-slot-item').val(data.itemId).combobox('select').combobox('refresh');
             }
         });
@@ -1033,28 +1041,31 @@
     Teambuilder.prototype.getTiersList = function (list) {
         var self = this,
             tiers = [];
+        var tier, name, i, j;
         list = list || (window.tiersList ? window.tiersList : {});
 
-        // TODO: Get rid of each here
-        $.each(list, function (key, tier) {
+        for (i in list) {
+            tier = list[i];
             if (!tier.tiers) {
-                return;
+                continue;
             }
 
-            $.each(tier.tiers, function (key, name) {
+            for (j in tier.tiers) {
+                name = tier.tiers[j];
                 if ($.isPlainObject(name)) {
-                    tiers.concat(self.getTiersList([name]));
+                    tiers = tiers.concat(self.getTiersList([name]));
                 } else {
                     tiers.push(name);
                 }
-            });
-        });
+            }
+        }
 
         return tiers;
     };
 
-    Teambuilder.prototype.loadTeamFrom = function (element) {
-        var teamId = element.data('teamid');
+    // Crankshaft does not optimize try-catch,
+    // however by separating it to a different function the main function can still be JIT'd
+    Teambuilder.prototype.loadTeamObject = function (teamId) {
         var teamObj;
         try {
             teamObj = poStorage.get('teams.' + teamId, 'object');
@@ -1063,6 +1074,13 @@
             console.error('Could not load team ' + teamId + ':', ex);
             console.log(poStorage.get('teams.' + teamId));
         }
+
+        return teamObj;
+    };
+
+    Teambuilder.prototype.loadTeamFrom = function (element) {
+        var teamId = element.data('teamid');
+        var teamObj = this.loadTeamObject(teamId);
 
         this.team = teamId;
         teamObj = teamObj || {
@@ -1126,4 +1144,4 @@
 
     Teambuilder.defaultSettings = defaultSettings;
     window.Teambuilder = Teambuilder;
-}());
+}(window, document, pokeinfo, geninfo, poStorage));

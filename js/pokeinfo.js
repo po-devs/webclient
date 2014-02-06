@@ -66,6 +66,10 @@ geninfo.option = function (gen) {
     return pokedex.generations.options[getGen(gen, false).num];
 };
 
+geninfo.hasOption = function (gen, option) {
+    return !!geninfo.option(gen)[option];
+};
+
 pokeinfo.toNum = function(poke) {
     if (typeof poke == "object") {
         return poke.num + ( (poke.forme || 0) << 16);
