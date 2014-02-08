@@ -445,6 +445,7 @@ var announcement = $("#announcement");
 
 function displayMessage(message, html, parseExtras)
 {
+    var id;
     if (!html) {
         html = false;
     }
@@ -682,11 +683,12 @@ parseCommand = function(message) {
     } else if (cmd == "chat") {
         var params = JSON.parse(data);
         var msg = params.message;
+        var chan = channels.channel(params.channel);
 
-        if (params.channel == -1 && params.message.charAt(0) != "~") {
+        if ((params.channel == -1 && params.message.charAt(0) != "~") || !chan) {
             displayMessage(msg, params.html, true);
         } else {
-            channels.channel(params.channel).print(msg, params.html);
+            chan.print(msg, params.html);
         }
     } else if (cmd == "challenge") {
         var password = $("#password").val();

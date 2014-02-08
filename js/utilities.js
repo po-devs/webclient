@@ -45,7 +45,7 @@ utils = {
     },
     timestamp: function () {
         var date = new Date();
-        return addDatePadding(date.getHours()) + ":" + addDatePadding(date.getMinutes()) + ":" + addDatePadding(date.getSeconds());
+        return utils.addDatePadding(date.getHours()) + ":" + utils.addDatePadding(date.getMinutes()) + ":" + utils.addDatePadding(date.getSeconds());
     },
     // channelNames must be a list of lowercase names
     addChannelLinks: function (line, channelNames) {
@@ -88,13 +88,39 @@ utils = {
     },
     unenumerable: function (obj, key, value) {
         if (!obj.hasOwnProperty(key)) {
-            // Unenumerable, writable, configurable false
+            // Enumerable, writable, configurable are false
             Object.defineProperty(obj, key, {
                 value: value
             });
         }
+    },
+    rank: function (auth, set) {
+        set = set || utils.rankSet;
+
+        if (auth < 0) {
+            auth = 0;
+        } else if (auth > 4) {
+            auth = 4;
+        }
+
+        return set[auth] || '';
+    },
+    rankStyle: function (str, auth, set) {
+        set = set || utils.rankStyleSet;
+
+        if (auth < 0) {
+            auth = 0;
+        } else if (auth > 4) {
+            auth = 4;
+        }
+
+        return (set[auth] || '').replace(/\{name\}/gi, str);
     }
 };
+
+// User, Mod, Admin, Owner, Hidden
+utils.rankSet = ['', '+', '+', '+', ''];
+utils.rankStyleSet = ['', '<i>{name}</i>', '<i>{name}</i>', '<i>{name}</i>', ''];
 
 utils.unenumerable(String.prototype, 'contains', function (needle) {
     return this.indexOf(needle) !== -1;
