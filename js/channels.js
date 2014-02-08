@@ -199,6 +199,7 @@ Channel.prototype.print = function (msg, html, noParse) {
             if (msg.indexOf(":") !== -1 && !action) {
                 var pref = msg.substr(0, msg.indexOf(":"));
                 var id = players.id(pref);
+                var auth = players.auth(id);
                 if (players.isIgnored(id))
                     return;
 
@@ -209,7 +210,7 @@ Channel.prototype.print = function (msg, html, noParse) {
                 } else if (id === -1) {
                     pref = "<span class='script-message'>" + pref + ":</span>";
                 } else {
-                    pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + pref + ":</span>";
+                    pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + utils.rank(auth) + utils.rankStyle(pref + ":", auth) + "</span>";
                     this.activateTab();
                 }
 

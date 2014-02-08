@@ -12,7 +12,7 @@ function convertPOLinks(element) {
             case "pokemon":
                 query = "?" + query;
                 var poke = utils.queryField("num", query.slice(1).split("&")[0], query) || "1",
-                    gen = utils.queryField("gen", "5", query),
+                    gen = utils.queryField("gen", "6", query),
                     shiny = utils.queryField("shiny", "false", query) === "true",
                     gender = utils.queryField("gender", "male", query),
                     back = utils.queryField("back", "false", query) === "true",
@@ -21,10 +21,14 @@ function convertPOLinks(element) {
                 img.error(function () {
                     if (gender == "female") {
                         gender = "male";
+                    } else if (gen < 6) {
+                        gen = 6;
+                    } else if (gen === 6) {
+                        gen = 5;
                     } else if (shiny) {
                         shiny = false;
-                    } else if (gen < 5) {
-                        gen = 5;
+                    } else if (back) {
+                        back = false;
                     } else {
                         return;
                     }
