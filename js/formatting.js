@@ -3,10 +3,11 @@
  */
 
 function convertPOLinks(element) {
-    $(element).find("img").each(function (index, img) {
+    return $(element).find("img").each(function (index, img) {
         img = $(img);
-        var proto = img.attr("src").split(":")[0],
-            query = img.attr("src").split(":")[1];
+        var src = img.attr("src").split(":"),
+            proto = src[0],
+            query = src[1];
 
         switch (proto) {
             case "pokemon":
@@ -49,26 +50,52 @@ function convertPOLinks(element) {
 
 /* Alias */
 function format(element) {
-    if (typeof element === "object") {
-        convertPOLinks(element);
+    if (typeof element !== "string") {
+        return convertPOLinks(element).html();
     } else {
         var el = $("<div>");
         el.html(element);
-        convertPOLinks(el);
-        return el.html();
+        return convertPOLinks(el).html();
     }
 }
 
 (function () {
-    var testIframe = document.createElement('iframe');
-    var hasIframeSrcdoc = typeof testIframe.srcDoc === 'string' || typeof testIframe.srcdoc === 'string';
+    var iframe = document.createElement('iframe');
+    var hasIframeSandbox = 'sandbox' in iframe;
 
-    // TODO: Support for older browsers (that have the sandbox attribute).
     function showHtmlInFrame(selector, html) {
-        var elem = $(selector);
         html = html || '';
-        if (html.indexOf("<") !== -1 && hasIframeSrcdoc) {
-            elem.html("<iframe frameBorder='0' width='100%' seamless sandbox='' srcdoc='<link rel=\"stylesheet\" href=\"css/style.css\">" + utils.escapeHtmlQuotes(format(html)) + "'></iframe>");
+        var elem = $(selector),
+            containsHtml = html.contains("<"),
+            secureIframe, formattedHtml;
+
+        if (containsHtml && hasIframeSandbox) {
+            // If we want to format html, we will have to use a sandboxed iframe.
+            // Otherwise things like
+            // <img src='xss' onerror='alert("xss");">
+            // Will execute
+
+            // To access the contentDocument, we must set allow-same-origin
+            elem.html("<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin'></iframe>");
+            secureIframe = elem.find("iframe").get(0);
+
+            // There is a really complicated security problem going on here.
+            // We can't just run format on html, otherwise events are executed:
+            // <img src='xss' onerror='alert("xss");">
+            // This is because html is executed on the master window ($("<div>").html(...))
+
+            // We first set the html (which is safe, thanks to sandbox)
+            secureIframe.contentDocument.body.innerHTML = html;
+            // Then format that
+            convertPOLinks(secureIframe.contentDocument.body);
+            formattedHtml = secureIframe.contentDocument.body.innerHTML;
+            // Then clear the entire document (probably not necessary but doing it anyway)
+            secureIframe.contentDocument.getElementsByTagName('html')[0].innerHTML = '';
+            // Then add the formatted html
+            secureIframe.contentDocument.body.innerHTML = "<link rel=\"stylesheet\" href=\"css/style.css\">" + formattedHtml;
+
+            // Remove allow-same-origin (just in case)
+            secureIframe.sandbox = '';
         } else {
             elem.text(html);
         }
