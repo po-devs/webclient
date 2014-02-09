@@ -234,7 +234,7 @@
         knob_evs_params.max = 255;
         knob_evs_params.step = 4;
 
-        $(".pokemon-evs-value").knob(knob_evs_params).on('keyup focusout', knob_event)
+        $(".pokemon-evs-value").knob(knob_evs_params).on('keyup focusout', knob_event);
 
         // initializing the slider for level
         $(".pokemon-level-value").slider({
