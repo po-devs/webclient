@@ -194,7 +194,7 @@
             var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
             var stat_id = element.closest('.pokemon-' + value_type).attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2];
 
-            if (value_type === 'evs') {
+            if(value_type == 'evs' && (value.type == undefined || value.type != 'keyup' || (value.type == 'keyup' && [37, 39].indexOf(value.which) != -1))) {
                 element.val(self.getCorrectEVs(element)).trigger('change');
             }
 
@@ -234,7 +234,7 @@
         knob_evs_params.max = 255;
         knob_evs_params.step = 4;
 
-        $(".pokemon-evs-value").knob(knob_evs_params).keyup(knob_event);
+        $(".pokemon-evs-value").knob(knob_evs_params).on('keyup focusout', knob_event);
 
         // initializing the slider for level
         $(".pokemon-level-value").slider({
