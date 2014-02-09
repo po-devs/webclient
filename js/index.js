@@ -125,9 +125,12 @@ $(function() {
 
 $(function() {
     var storedRelayIp = poStorage("relay");
-    if (storedRelayIp) {
-        $("#relay").val(storedRelayIp);
-    }
+    $("#relay").keydown(function (e) {
+        if (e.which === 13) { // Enter
+            initWebsocket();
+        }
+    }).val(storedRelayIp || "server.pokemon-online.eu:10508");
+
     var username = poStorage("username"), password = poStorage("password");
     if (username) {
         $("#username").val(username);
@@ -145,7 +148,7 @@ $(function() {
     });
 
     $("#advanced-connection, #username, #password").on("keydown", function (e) {
-        if (e.keyCode === 13) { // Enter
+        if (e.which === 13) { // Enter
             connect();
         }
     });
@@ -196,9 +199,7 @@ $(function() {
         }
         /* Update player list when switching channels */
         playerList.setPlayers(room.playerIds());
-    });
-
-    $("#channel-tabs").bind('tabsshow', function(event, ui) {
+    }).bind('tabsshow', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
         /* Resizes chat area in funciton of the height of the channel tab */
@@ -208,16 +209,16 @@ $(function() {
 
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
-    });
-
-    $("#channel-tabs").bind('tabscreate', function(event, ui) {
+    }).bind('tabscreate', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
         room = objFromId(hrefid);
     });
 
-    $("#colorDialog").dialog({autoOpen: false, beforeClose:function(event) {
-        websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
-    }
+    $("#colorDialog").dialog({
+        autoOpen: false,
+        beforeClose: function(event) {
+            websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
+        }
     });
 
     $(document).on("click", "a", function (event) {
@@ -347,15 +348,6 @@ $(function() {
         }
     });
 });
-
-var dataInitiated = false;
-initBattleData = function() {
-    /*if (dataInitiated) {
-        return;
-    }
-
-    dataInitiated = true;*/
-};
 
 /* Player that is shown in the trainer window */
 currentOpenPlayer = -1;
