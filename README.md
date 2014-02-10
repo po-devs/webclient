@@ -9,7 +9,6 @@ in your server config.
 
 The host of the official PO relay station is ws://server.pokemon-online.eu:10508
 
-
 Testing
 =======
 
@@ -19,13 +18,22 @@ Add the query parameter 'user' to automatically have your username set up, or 's
 
 If you're cloning this repository, test locally with Firefox, as Chrome blocks some features when dealing with `file://`.
 
-Testing
-=======
+Test suite
+==========
 
 This uses [Mocha](http://visionmedia.github.io/mocha/) to run tests. Those tests are run for each commit on the
 Travis-CI platform (check out the build icon!).
 
-If you want to run them manually, have [Node.js](http://nodejs.com) installed and type `npm test` in a console. If you haven't installed Mocha yet, do that first (after you install node): `npm install`.
+If you want to run them manually, have [Node.js](http://nodejs.com) installed and type `npm test` in a terminal. If you haven't installed Mocha yet, do that first (after you install node): `npm install`.
+
+Tasks
+=====
+
+Grunt is used to run a few (build) tasks. Currently, only `grunt-autoprefixer` is used, which "[parses CSS and add vendor prefixes to CSS rules using values from the Can I Use.](https://github.com/ai/autoprefixer)".
+
+First, you will need grunt-cli installed globally. For that, you will need node/npm. Run `npm install grunt-cli -g` in a terminal to install it. The grunt tasks are bundled as `devDependencies`, so an `npm install` will do the trick.
+
+Then finally type `grunt` in a terminal, it will do all the work for you.
 
 Info
 ====
