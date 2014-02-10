@@ -117,13 +117,13 @@ function Channel(id, name) {
 
     if ($("#channel-" + id).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id))+'<i class="icon-remove-circle"></i>');
+        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id))+'<i class="fa fa-times-circle"></i>');
         /* Cleaner solution would be appreciated */
         $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
             +'<div class="send_chat_message">\
             <p>\
                 <input name="message" type="text" history="true" id="send-channel-'+id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />\
-                <i class="icon-circle-arrow-right icon-large"></i>\
+                <i class="fa fa-arrow-circle-o-right fa-2x"></i>\
             </p>\
         </div>');
     }
@@ -237,7 +237,7 @@ Channel.prototype.print = function (msg, html, noParse) {
 
 Channel.prototype.changeName = function (name) {
     this.name = name;
-    $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html("<span>"+name+'<i class="icon-remove-circle"></i></span>');
+    $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html("<span>"+name+'<i class="fa fa-times-circle"></i></span>');
 };
 
 Channel.prototype.disconnect = function() {

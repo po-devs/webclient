@@ -392,7 +392,7 @@ ul#player-list {
 	margin-left:25px;
 }
 
-.dropdown .icon-chevron-up  {
+.dropdown .fa-chevron-up  {
 	display:none;
 }
 
@@ -466,17 +466,17 @@ ul#player-list {
 	cursor:pointer;
 }
 
-.team_preview_options .icon-stack {
+/*.team_preview_options .fa-stack {
 	font-size:11px;
 }
 
-.team_preview_options .icon-stack-base:hover {
+.team_preview_options .fa-stack-2x:hover {
 	color:#c3c3c3;
 }
 
-.team_preview_options .icon-stack i:first-child {
+.team_preview_options .fa-stack i:first-child {
 	color:#d4d4d4;
-}
+}*/
 
 ul#rankings, ul#rankings li {
 	margin:0;
@@ -532,7 +532,7 @@ ul#rankings li {
 	margin:15px;
 }
 
-#pokemon-parameters .icon-gear {
+#pokemon-parameters .fa-gear {
 	cursor:pointer;
 }
 
@@ -1122,4 +1122,109 @@ div.player-info-battle {
 
 .pokemon-slot-hidden-power-container, .pokemon-slot-ability-container, .pokemon-slot-nature-container, .pokemon-slot-item-container {
 	display:inline;
+}
+
+#user_params {
+	padding-top:30px;
+	position:relative;
+	overflow:auto;
+}
+
+#user_params label {
+	width:30%;
+	height:40px;
+	line-height:40px;
+	float:left;
+	font-weight:bold;
+}
+
+#user_params table {
+	width:100%;
+	border:none;
+	border-collapse:collapse;
+}
+
+#user_params table td {
+	vertical-align:top;
+}
+
+#user_params_left {
+	width:48%;
+	padding-left:1%;
+	padding-right:1%;
+	border-right:1px solid black;
+}
+
+#user_params_right {
+	width:48%;
+	padding-left:1%;
+	padding-right:1%;
+}
+
+.user_params_input {
+	margin-left:25px;
+	padding-right:5px;
+	width:50%;
+	height:40px;
+	text-indent:10px;
+	line-height:40px;
+	background-color:#ffffff;
+	border:1px solid #f2f2f2;
+	-moz-border-radius:3px;
+	border-radius:3px;
+}
+
+#user_params_register_username {
+	position:absolute;
+	bottom:50px;
+	left:50%;
+	margin-left:-120px;
+}
+
+#user_params_submit {
+	position:absolute;
+	bottom:50px;
+	left:50%;
+	margin-left:0px;
+}
+
+#user_params_color_picker .farbtastic {
+	margin:auto;
+}
+
+#user_params_avatar_image {
+	width:80px;
+	height:80px;
+	padding:5px;
+	background-color:#ffffff;
+	margin-left:50%;
+}
+
+
+#user_params_avatar_icon {
+	margin-left:-30px;
+}
+
+#user_params_idle_text, #user_params_ladder_text, #user_params_timestamp_text {
+	width:30%;
+	display:block;
+	float:left;
+	height:1.2em;
+	line-height:1.2em;
+	font-weight:bold;
+}
+
+#user_params_idle, #user_params_ladder, #user_params_timestamp {
+	width:20px;
+	float:left;
+	margin-left:10%;
+	
+}
+
+#user_params_idle_status, #user_params_ladder_status, #user_params_timestamp_status {
+	display:block;
+	height:1.2em;
+	line-height:1.2em;
+	float:left;
+	margin-left:10%;
 }

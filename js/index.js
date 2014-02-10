@@ -110,11 +110,16 @@ $(function() {
             toggleContent('teambuilder');
         break;
         case 'po_title':
-            toggleContent();
+            //toggleContent();
+			toggleContent('content');
         break;
         }
     });
     $("#battle-html").load("battle.html");
+	$("#user_params").load("user_params.html", function() {
+		$("#user_params_color_picker").farbtastic("#user_params_color");
+		$("#user_params_idle, #user_params_ladder, #user_params_timestamp").slider({min:0, max:1});
+	});
     $("#teambuilder").load("teambuilder.html", function() {
         setTimeout(function () {
             /* Teambuilder */

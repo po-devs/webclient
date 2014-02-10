@@ -103,7 +103,7 @@
         });
 
         // toggling the icon gear to be able to show informations regarding the team such as the generation or the name of the team
-        $("#pokemon-parameters .icon-gear").on('click', function () {
+        $("#pokemon-parameters .fa-gear").on('click', function () {
             $("#team-infos").toggle();
         });
 
