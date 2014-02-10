@@ -22,31 +22,7 @@
   }
 }
 
-@-moz-keyframes vex-fadein {
-  /* line 9, ../sass/_keyframes.sass */
-  0% {
-    opacity: 0;
-  }
-
-  /* line 11, ../sass/_keyframes.sass */
-  100% {
-    opacity: 1;
-  }
-}
-
 @-ms-keyframes vex-fadein {
-  /* line 9, ../sass/_keyframes.sass */
-  0% {
-    opacity: 0;
-  }
-
-  /* line 11, ../sass/_keyframes.sass */
-  100% {
-    opacity: 1;
-  }
-}
-
-@-o-keyframes vex-fadein {
   /* line 9, ../sass/_keyframes.sass */
   0% {
     opacity: 0;
@@ -82,31 +58,7 @@
   }
 }
 
-@-moz-keyframes vex-fadeout {
-  /* line 16, ../sass/_keyframes.sass */
-  0% {
-    opacity: 1;
-  }
-
-  /* line 18, ../sass/_keyframes.sass */
-  100% {
-    opacity: 0;
-  }
-}
-
 @-ms-keyframes vex-fadeout {
-  /* line 16, ../sass/_keyframes.sass */
-  0% {
-    opacity: 1;
-  }
-
-  /* line 18, ../sass/_keyframes.sass */
-  100% {
-    opacity: 0;
-  }
-}
-
-@-o-keyframes vex-fadeout {
   /* line 16, ../sass/_keyframes.sass */
   0% {
     opacity: 1;
@@ -121,6 +73,8 @@
 @keyframes vex-rotation {
   /* line 95, ../sass/_keyframes.sass */
   0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -130,6 +84,8 @@
 
   /* line 97, ../sass/_keyframes.sass */
   100% {
+    -webkit-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
     transform: rotate(359deg);
     -webkit-transform: rotate(359deg);
     -moz-transform: rotate(359deg);
@@ -141,6 +97,7 @@
 @-webkit-keyframes vex-rotation {
   /* line 95, ../sass/_keyframes.sass */
   0% {
+    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -150,26 +107,7 @@
 
   /* line 97, ../sass/_keyframes.sass */
   100% {
-    transform: rotate(359deg);
     -webkit-transform: rotate(359deg);
-    -moz-transform: rotate(359deg);
-    -ms-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-  }
-}
-
-@-moz-keyframes vex-rotation {
-  /* line 95, ../sass/_keyframes.sass */
-  0% {
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-  }
-
-  /* line 97, ../sass/_keyframes.sass */
-  100% {
     transform: rotate(359deg);
     -webkit-transform: rotate(359deg);
     -moz-transform: rotate(359deg);
@@ -181,6 +119,7 @@
 @-ms-keyframes vex-rotation {
   /* line 95, ../sass/_keyframes.sass */
   0% {
+    -ms-transform: rotate(0deg);
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -190,26 +129,7 @@
 
   /* line 97, ../sass/_keyframes.sass */
   100% {
-    transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    -moz-transform: rotate(359deg);
     -ms-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-  }
-}
-
-@-o-keyframes vex-rotation {
-  /* line 95, ../sass/_keyframes.sass */
-  0% {
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-  }
-
-  /* line 97, ../sass/_keyframes.sass */
-  100% {
     transform: rotate(359deg);
     -webkit-transform: rotate(359deg);
     -moz-transform: rotate(359deg);
@@ -246,6 +166,7 @@
 
 /* line 30, ../sass/vex.sass */
 .vex-overlay {
+  -webkit-animation: vex-fadein 0.5s;
   animation: vex-fadein 0.5s;
   -webkit-animation: vex-fadein 0.5s;
   -moz-animation: vex-fadein 0.5s;
@@ -261,6 +182,7 @@
 }
 /* line 39, ../sass/vex.sass */
 .vex.vex-closing .vex-overlay {
+  -webkit-animation: vex-fadeout 0.5s;
   animation: vex-fadeout 0.5s;
   -webkit-animation: vex-fadeout 0.5s;
   -moz-animation: vex-fadeout 0.5s;
@@ -271,6 +193,7 @@
 
 /* line 42, ../sass/vex.sass */
 .vex-content {
+  -webkit-animation: vex-fadein 0.5s;
   animation: vex-fadein 0.5s;
   -webkit-animation: vex-fadein 0.5s;
   -moz-animation: vex-fadein 0.5s;
@@ -281,6 +204,7 @@
 }
 /* line 46, ../sass/vex.sass */
 .vex.vex-closing .vex-content {
+  -webkit-animation: vex-fadeout 0.5s;
   animation: vex-fadeout 0.5s;
   -webkit-animation: vex-fadeout 0.5s;
   -moz-animation: vex-fadeout 0.5s;
@@ -308,6 +232,7 @@
 
 /* line 60, ../sass/vex.sass */
 .vex-loading-spinner {
+  -webkit-animation: vex-rotation 0.7s linear infinite;
   animation: vex-rotation 0.7s linear infinite;
   -webkit-animation: vex-rotation 0.7s linear infinite;
   -moz-animation: vex-rotation 0.7s linear infinite;
@@ -315,7 +240,6 @@
   -o-animation: vex-rotation 0.7s linear infinite;
   -webkit-backface-visibility: hidden;
   -webkit-box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
   position: fixed;
   z-index: 1112;

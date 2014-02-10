@@ -50,7 +50,6 @@ html, body {
 	background-color:#ffffff;
 	border-collapse:collapse;
 	border:1px solid #f2f2f2;
-	-moz-border-radius:3px;
 	border-radius:3px;
 }
 
@@ -86,7 +85,6 @@ html, body {
 	overflow:auto;
 	background-color:#ffffff;
 	border:1px solid #f2f2f2;
-	-moz-border-radius:3px;
 	border-radius:3px;
 }
 
@@ -108,7 +106,6 @@ label[for="advanced-connection"], label[for="relay"], label[for="username"], lab
 	text-indent:5px;
 	border:none;
 	background-color:#f0f0f0;
-	-moz-border-radius:3px;
 	border-radius:3px;
 }
 
@@ -123,7 +120,6 @@ label[for="advanced-connection"], label[for="relay"], label[for="username"], lab
 	padding:10px 0px;
 	background-color:#1f5d96;
 	border:1px solid transparent;
-	-moz-border-radius:3px;
 	border-radius:3px;
 	cursor:pointer;
 	text-transform:uppercase;
