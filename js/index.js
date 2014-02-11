@@ -84,13 +84,19 @@ $(function() {
     });
 
     // Type should be one of: content, user_params, teambuilder
-    function toggleContent(type) {
+    function toggleContent(type, checks) {
+        // From user_params
+        if (mode === 'user_params' && checks !== false) {
+            $("#user_params_submit").trigger('click', [true]);
+        }
+
+        // From user_params/teambuilder, to content
         if (mode === 'user_params' || mode === 'teambuilder' || type === 'content') {
             $content.show();
             type = 'content';
-        } else if (type === 'user_params') {
+        } else if (type === 'user_params') { // To user_params
             $user_params.show();
-        } else if (mode === 'content' || type === 'teambuilder') {
+        } else if (mode === 'content' || type === 'teambuilder') { // From content, to teambuilder
             teambuilder.init();
             $teambuilder.show();
             type = 'teambuilder';
@@ -105,21 +111,18 @@ $(function() {
         switch(this.id) {
         case 'trainer_username':
             toggleContent('user_params');
-        break;
+            break;
         case 'create_team':
             toggleContent('teambuilder');
-        break;
+            break;
         case 'po_title':
-            //toggleContent();
-			toggleContent('content');
-        break;
+            toggleContent();
+            break;
         }
     });
+
     $("#battle-html").load("battle.html");
-	$("#user_params").load("user_params.html", function() {
-		$("#user_params_color_picker").farbtastic("#user_params_color");
-		$("#user_params_idle, #user_params_ladder, #user_params_timestamp").slider({min:0, max:1});
-	});
+    $("#user_params").load("user_params.html");
     $("#teambuilder").load("teambuilder.html", function() {
         setTimeout(function () {
             /* Teambuilder */
@@ -136,12 +139,9 @@ $(function() {
         }
     }).val(storedRelayIp || "server.pokemon-online.eu:10508");
 
-    var username = poStorage("username"), password = poStorage("password");
+    var username = poStorage("player.name");
     if (username) {
         $("#username").val(username);
-    }
-    if (password) {
-        $("#password").val(password);
     }
 
     $("#servers-list tbody").on('click', 'tr', function() {
@@ -325,20 +325,6 @@ $(function() {
             return false;
         }
     });
-
-    /*$(window).bind("beforeunload", function () {
-        if (websocket && websocket.readyState === 1 && poStorage("confirm-exit", "boolean")) {
-            return "Are you sure that you want to close the Pokémon Online Webclient?\n\nYou are currently connected to a server.";
-        }
-    });
-
-    $("#confirmexit-option").change(poStorage("confirm-exit", "boolean"));
-    $("#confirmexit-option").change(function () {
-        poStorage.set("confirm-exit", $(this).is(":checked"));
-    });
-    */
-
-    //poStorage.set("chat.timestamps", true);
 
     if (poStorage("autoload", "boolean")) {
         $("#autoload").attr("checked", true);
@@ -654,6 +640,17 @@ parseCommand = function(message) {
             if (data.autojoin) {
                 data.autojoin = data.autojoin.split(",");
             }
+
+            data.ladder = poStorage.get('player.ladder', 'boolean');
+            if (data.ladder == null) {
+                data.ladder = true;
+            }
+
+            data.idle = poStorage.get('player.idle', 'boolean');
+            if (data.idle == null) {
+                data.idle = false;
+            }
+
             websocket.send("login|"+JSON.stringify(data));
         } else {
             vex.dialog.open({

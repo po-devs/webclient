@@ -13,7 +13,7 @@ Players.prototype.login = function(id, info) {
     obj[id] = info;
     this.addPlayer(obj);
 
-    $("#trainer_username").text(this.myname());
+    $("#trainer_username").text(this.myname()).trigger('received');
 };
 
 Players.prototype.hasPlayer = function(pid) {
@@ -46,7 +46,7 @@ Players.prototype.addPlayer = function (players) {
         pms.playerLogin(id);
 
         if (id == this.myid) {
-            $("#trainer_username").text(this.myname());
+            $("#trainer_username").text(this.myname()).trigger('received');
         }
     }
 };
