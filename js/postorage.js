@@ -1,3 +1,17 @@
+/* Currently, these keys are used:
+    * player.name: string
+    * player.idle: boolean
+    * player.avatar: number
+    *
+    * teams.{num}: object
+    *
+    * chat.timestamps: boolean
+    *
+    * relay: string
+    * autoload: boolean
+    * passhash-{data}: string
+*/
+
 (function () {
     function poStorage(name, type) {
         return poStorage.get(name, type);

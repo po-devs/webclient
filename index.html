@@ -8,19 +8,19 @@
     <!--<link rel="stylesheet" href="css/reset.css" />-->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
-    <link href="css/combobox.css" rel="stylesheet" />
-    <link rel="stylesheet" href="libs/farbtastic.css" type="text/css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/combobox.css" />
+    <link rel="stylesheet" href="libs/farbtastic.css"  />
     <!--<link rel="stylesheet" href="css/webclient.css" />-->
     <link rel="stylesheet" href="libs/css/vex.css" />
     <link rel="stylesheet" href="libs/css/vex-theme-os.css" />
     <link rel="stylesheet" href="libs/css/nprogress.css" />
+    <link rel="stylesheet" href="libs/css/toggles-light.css" />
     <link rel="stylesheet" href="css/chat.css" />
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="css/midreso.css" media="screen and (max-width: 1024px)" rel="stylesheet" />
-    <link type="text/css" rel="stylesheet" href="css/battle.css" />
-    <link href="css/registry.css" rel="stylesheet" />
-	<link rel="stylesheet" media="screen" type="text/css" href="libs/css/colorpicker.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/midreso.css" media="screen and (max-width: 1024px)" />
+    <link rel="stylesheet" href="css/battle.css" />
+    <link rel="stylesheet" href="css/registry.css" />
 </head>
 <body>
 <div id="overlay" style="display:none"></div>
@@ -67,7 +67,7 @@
 <div id="sidebar">
     <span id="po_title">Pokémon <span>Online</span></span>
     <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
-    <span id="trainer_username">Guest</span>
+    <span id="trainer_username"></span>
     <br style="clear:both;" />
     <span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
     <div class="dropdown">
@@ -76,13 +76,13 @@
             <div class="team_preview current_team" data-teamid='0'>
                 <div class="team_preview_options">
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-times fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-cog fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
                 </div>
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
@@ -95,13 +95,13 @@
             <div class="team_preview" data-teamid='1'>
                 <div class="team_preview_options">
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-times fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-cog fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
                 </div>
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
@@ -114,13 +114,13 @@
             <div class="team_preview" data-teamid='2'>
                 <div class="team_preview_options">
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-times fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
                             <span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-								<i class="fa fa-cog fa-stack-1x"></i>
-							</span>
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
                 </div>
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
                 <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
@@ -137,13 +137,13 @@
         </div>
     </div>
     <br style="clear:both;" />
-	<div class="dropdown">
+    <div class="dropdown">
         <span class="dropdown_button">Tiers<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
         <div class="dropdown_content push_right">
             Tiers list
         </div>
     </div><br />
-	<div class="dropdown">
+    <div class="dropdown">
         <span class="dropdown_button">Channels<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
         <div class="dropdown_content push_right">
             Channels list
@@ -209,6 +209,7 @@
 <script src="libs/js/vex.combined.min.js"></script>
 <script src="libs/combobox.js"></script>
 <script src="libs/combobox.utilities.js"></script>
+<script src="libs/js/toggles.js"></script>
 <script src="libs/md5.js"></script>
 <script src="js/configuration.js"></script>
 <script src="js/postorage.js"></script>
@@ -219,7 +220,6 @@
 <script src="js/pms.js"></script>
 <script src="js/channels.js"></script>
 <script src="js/formatting.js"></script>
-<script src="libs/js/colorpicker.js"></script>
 <script src="js/index.js"></script>
 
 <script src="js/battle/anim.js"></script>
