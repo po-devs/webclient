@@ -120,7 +120,7 @@ utils = {
 
 // User, Mod, Admin, Owner, Hidden
 utils.rankSet = ['', '+', '+', '+', ''];
-utils.rankStyleSet = ['', '<i>{name}</i>', '<i>{name}</i>', '<i>{name}</i>', ''];
+utils.rankStyleSet = ['{name}', '<i>{name}</i>', '<i>{name}</i>', '<i>{name}</i>', '{name}'];
 
 utils.unenumerable(String.prototype, 'contains', function (needle) {
     return this.indexOf(needle) !== -1;
