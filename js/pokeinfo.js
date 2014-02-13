@@ -165,7 +165,7 @@ pokeinfo.spriteData = function(poke, params) {
 };
 
 pokeinfo.icon = function(poke) {
-    var num = this.toNum(poke),
+    var num = typeof poke === "object" ? poke.num : poke,
         forme = this.forme(num);
     return "http://pokemon-online.eu/images/poke_icons/" + num + (forme ? "-" + forme : "") + ".png";
 };
