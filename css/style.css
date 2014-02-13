@@ -578,6 +578,8 @@ ul#rankings li {
 
 .pokemon-slot-sprite img {
 	margin:auto;
+    max-width:96px;
+    max-height:96px;
 }
 
 .pokemon-slot-shiny {
