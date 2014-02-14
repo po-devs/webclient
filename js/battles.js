@@ -400,7 +400,7 @@ BattleTab.prototype.playerIds = function() {
 
 BattleTab.prototype.choose = function(choice)
 {
-    websocket.send("battlechoice|"+this.id+"|"+JSON.stringify(choice));
+    network.command('battlechoice', {id: this.id, choice: choice});
 };
 
 BattleTab.prototype.isBattle = function() {
@@ -412,9 +412,9 @@ BattleTab.prototype.close = function() {
     clearInterval(this.timer);
     $('#channel-tabs').tabs("remove", "#battle-" + this.id);
     if (this.isBattle()) {
-        websocket.send("forfeit|"+this.id);
+        network.command('forfeit', {battle: this.id});
     } else {
-        websocket.send("stopwatching|"+this.id);
+        network.command('stopwatching', {battle: this.id});
     }
 };
 
