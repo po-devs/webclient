@@ -39,11 +39,11 @@ describe('pokeinfo', function () {
 
     describe('sprites', function () {
         it('should generate sprite urls from parameters', function () {
-            pokeinfo.sprite({num: 1, gen: 6}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/1.png");
-            pokeinfo.sprite({num: 1, gen: {num: 6}}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/1.png");
-            pokeinfo.sprite({num: 1}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/1.png");
-            pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/3-1.png");
-            pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}, {back: true}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/back/3-1.png");
+            pokeinfo.sprite({num: 1, gen: 6}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif");
+            pokeinfo.sprite({num: 1, gen: {num: 6}}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif");
+            pokeinfo.sprite({num: 1}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif");
+            pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/003-1.gif");
+            pokeinfo.sprite({num: 3, forme: 1, gen: {num: 6}}, {back: true}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/back/003-1.gif");
             pokeinfo.battlesprite({num: 671, gen: {num: 6}}, {back: true}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/back/671.png");
             pokeinfo.battlesprite({num: 1, gen: {num: 6}}).should.equal("http://pokemon-online.eu/images/pokemon/x-y/animated/001.gif");
             pokeinfo.spriteData(212, {"back": true}).w.should.equal(68);

@@ -131,13 +131,13 @@ pokeinfo.sprite = function(poke, params) {
 
     // Use last gen when dealing with missingno.
     if (poke.num === 0) {
-        gen.num = lastgen.num;
+        return pokedex.generations.options[lastgen.num].sprite_folder + "0.png";
     }
 
-    return pokedex.generations.options[gen.num].sprite_folder + (gen.num == 5 ? "animated/" : "" ) + (back ? "back/" : "")
-        + (poke.shiny ? "shiny/" : "") + (poke.female ? "female/" : "")
-        + (gen.num == 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
-        + (gen.num == 5 ? ".gif" : ".png");
+    return pokedex.generations.options[gen.num].sprite_folder + (gen.num >= 5 ? "animated/" : "" ) + (back ? "back/" : "")
+        + (poke.shiny && gen.num !== 6 ? "shiny/" : "") + (poke.female && gen.num !== 6 ? "female/" : "")
+        + (gen.num >= 5 ? ("00"+poke.num).slice(-3) : poke.num ) + (poke.forme ? "-" + poke.forme : "")
+        + (gen.num >= 5 ? ".gif" : ".png");
 };
 
 pokeinfo.battlesprite = function(poke, params) {
@@ -165,7 +165,7 @@ pokeinfo.spriteData = function(poke, params) {
 };
 
 pokeinfo.icon = function(poke) {
-    var num = this.toNum(poke),
+    var num = typeof poke === "object" ? poke.num : poke,
         forme = this.forme(num);
     return "http://pokemon-online.eu/images/poke_icons/" + num + (forme ? "-" + forme : "") + ".png";
 };

@@ -17,8 +17,7 @@
             icon: 'http://pokemon-online.eu/images/poke_icons/0.png',
             sprite: 'http://pokemon-online.eu/images/pokemon/x-y/0.png'
         },
-        unknown_type_id: 18,
-        icons_folder: 'http://pokemon-online.eu/images/poke_icons/'
+        unknown_type_id: 18
     };
 
     function Teambuilder(generation) {
@@ -28,6 +27,8 @@
         this._cache = {};
     }
 
+    // TODO: Instead of storing everything in the DOM,
+    // store a copy of the team in memory and update it on DOM changes
     Teambuilder.prototype.init = function () {
         if (this.initialized) {
             return;
@@ -119,11 +120,7 @@
             source: self.getTiersList()
         });
 
-        // attaching the pokemon id when we select a pokemon
-        $(".pokemon-slot-name").autocomplete().on('autocompletefocus', function (e, ui) {
-            e.preventDefault();
-            $(this).val(ui.item.label).data('pokemon_id', ui.item.value);
-        }).on('click', function (e) {
+        $(".pokemon-slot-name").autocomplete().on('click', function (e) {
             var $this = $(this);
 
             $this.select();
@@ -140,11 +137,12 @@
 
         // pokemon sprite reset
         $(".pokemon-slot-sprite").on('click', function (e) {
-            var pokeNum, formeNum, $this;
+            var pokeNum, formeNum, pokeid, $this;
             if (geninfo.hasOption(self.getTeamInfo('generation'), 'shiny')) {
                 $this = $(this);
-                formeNum = self.getFormId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
-                pokeNum = self.getSpecieId($this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id'));
+                pokeid = $this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id');
+                formeNum = pokeinfo.forme(pokeid);
+                pokeNum = pokenfo.species(pokeid);
 
                 $this.find('.pokemon-slot-shiny').prop('checked', !($this.find('.pokemon-slot-shiny').prop('checked')));
                 $this.find('img').attr('src', pokeinfo.sprite({num: pokeNum, forme: formeNum, gen: +self.getTeamInfo('generation'), shiny: $this.find('.pokemon-slot-shiny').prop('checked')}));
@@ -194,7 +192,7 @@
             var value_type = element.hasClass('pokemon-evs-value') ? 'evs' : 'ivs';
             var stat_id = element.closest('.pokemon-' + value_type).attr('class').match(/stat-id-[0-9]/g).join('').split('-')[2];
 
-            if(value_type == 'evs' && (value.type == undefined || value.type != 'keyup' || (value.type == 'keyup' && [37, 39].indexOf(value.which) != -1))) {
+            if (value_type === 'evs' && (value.type == null || value.type !== 'keyup' || (value.type === 'keyup' && [37, 39].indexOf(value.which) !== -1))) {
                 element.val(self.getCorrectEVs(element)).trigger('change');
             }
 
@@ -360,10 +358,11 @@
             }
 
             // loading the sprite
-            var spriteForm = self.getFormId(ui.item.value);
+            var pokeId = pokeinfo.species(+ui.item.value);
+            var spriteForm = pokeinfo.forme(+ui.item.value);
 
-            $("#pokemon-tabs .pokemon-tab:eq(" + pokemonIndex + ")").html('<img src="' + pokeinfo.icon({num: +ui.item.value, forme: spriteForm}) + '" alt="" />' + ui.item.label + '</span>');
-            slot.find(".pokemon-slot-sprite table img").attr('src', pokeinfo.sprite({num: +ui.item.value, forme: spriteForm, gen: +self.getTeamInfo('generation'), shiny: slot.find('.pokemon-slot-shiny').prop('checked')}));
+            $("#pokemon-tabs .pokemon-tab:eq(" + pokemonIndex + ")").html('<img src="' + pokeinfo.icon({num: pokeId, forme: spriteForm}) + '" alt="" />' + ui.item.label + '</span>');
+            slot.find(".pokemon-slot-sprite table img").attr('src', pokeinfo.sprite({num: pokeId, forme: spriteForm, gen: +self.getTeamInfo('generation'), shiny: slot.find('.pokemon-slot-shiny').prop('checked')}));
 
             // loading type(s)
             var pokemon_types = pokeinfo.types(pokemonId, generation);
@@ -412,7 +411,7 @@
             var moves_container = $('<table class="moves-list"></table>'),
                 move_type_id, move_damage_class_id, moves_block = "";
             var all_moves = pokeinfo.allMoves(pokemonId, generation);
-            var learnset = all_moves || pokeinfo.allMoves(self.getSpecieId(pokemonId), generation);
+            var learnset = all_moves || pokeinfo.allMoves(pokeinfo.species(pokemonId), generation);
 
             learnset = learnset || [];
             // MissingNo
@@ -486,8 +485,6 @@
             //self.loadTeam({infos:{tier:'aaa', name:'el yoyo'}, pokemon:{0:{pokemonId:200}, 2:{pokemonId:2, shiny:true, gender:'female', nickname:'hurr durr!', level:50, happiness:132, ivs:{ 3:7 }, evs:{3:232, 4:400, 0:33}, abilityId:65, natureId:3, itemId:134, movesIds:{0:4, 1:0, 3:173}} } });
         });
 
-        //alert(JSON.stringify(moveinfo.getHiddenPowerIVs(1, 5)));
-
         // setting the generation of the team
         this.setGeneration(generation);
     };
@@ -503,10 +500,12 @@
 
     Teambuilder.prototype.setGeneration = function (generation) {
         var self = this;
-
+        var numPokes = geninfo.option(generation).num_pokemon;
+        
         // loading the list of pokemon
         var autocompletePokes = [],
-            releasedPokes = pokeinfo.releasedList(generation, pokeinfo.excludeFormes),
+            // TODO: Add pokeinfo.excludeFormes back and be able to change formes in some settings menu instead of the autocomplete
+            releasedPokes = pokeinfo.releasedList(generation),
             poke;
 
         for (poke in releasedPokes) {
@@ -589,6 +588,19 @@
         });
         $(selectors.join(', ')).show().filter(hidden_selectors.join(', ')).hide();
 
+        // Remove pokemon out-of-bounds for the given generation
+        // TODO: Other generation-specific checks
+        var outofbounds = [], 
+            checkpoke, i;
+        for (i = 0; i <= 5; i += 1) {
+            checkpoke = $(".pokemon-slot:eq(" + i + ")");
+            if (checkpoke.find(".pokemon-slot-name").data('pokemon_id') > numPokes) {
+                outofbounds.push(i);
+            }
+        }
+        
+        self.resetPokemon(outofbounds);
+        
         // we reset all the informations in the teambuilder
         //this.resetTeamBuilder();
     };
@@ -612,6 +624,10 @@
             tab_selectors = [];
 
         pokemonIndex = Array.isArray(pokemonIndex) ? pokemonIndex : [pokemonIndex];
+        if (pokemonIndex.length === 0) {
+            return;
+        }
+        
         // TODO: Get rid of each here
         $.each(pokemonIndex, function (index, value) {
             slot_selectors.push(".pokemon-slot:eq(" + value + ")");
@@ -998,14 +1014,6 @@
         team = !$.isPlainObject(team) ? JSON.parse(team) : team;
         this.loadTeamInfos(team.infos);
         this.loadPokemonInfos([0, 1, 2, 3, 4, 5], team.pokemon);
-    };
-
-    Teambuilder.prototype.getSpecieId = function (pokemonId) {
-        return pokemonId & ((1 << 16) - 1);
-    };
-
-    Teambuilder.prototype.getFormId = function (pokemonId) {
-        return Math.floor(pokemonId / 65536);
     };
 
     Teambuilder.prototype.getNatureEffect = function (nature_id, stat_id) {
