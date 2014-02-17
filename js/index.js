@@ -222,7 +222,7 @@ $(function() {
     $("#colorDialog").dialog({
         autoOpen: false,
         beforeClose: function(event) {
-            websocket.send("teamChange|" + JSON.stringify({"color": colorPickerColor, "name": $("#trainer-name").val() || players.myname()}));
+            network.command('teamchange', {color: colorPickerColor, name: $("#trainer-name").val() || players.myname()});
         }
     });
 
@@ -253,8 +253,7 @@ $(function() {
                     }
                 }
             } else if (params[0] == "watch") {
-                var bid = params[1];
-                websocket.send("watch|"+bid);
+                network.command('watch', {battle: params[1]});
             }
             // TODO: watchbattle(id/name), reconnect(void)
         } else {
@@ -366,8 +365,9 @@ $("#player-list").on("click", "li", function(event) {
     if (player.hasOwnProperty("info")) {
         updatePlayerInfo(player);
     } else {
-        websocket.send("player|"+id);
+        network.command('player', {id: id});
     }
+
     /* Show the list of battles in the player info */
     if (battles.isBattling(id)) {
         for (var bid in battles.battlesByPlayer[id]) {
@@ -407,10 +407,7 @@ $("#player-list").on("click", "li", function(event) {
 $("#register").attr("disabled", true);
 
 function wannaRegister() {
-    if (!(websocket && websocket.readyState === 1)) {
-        return;
-    }
-    websocket.send("register|");
+    network.command('register');
 }
 
 colorPickerTriggered = false;
@@ -423,9 +420,7 @@ function openColorPicker() {
     $("#trainer-name").val(players.name(players.myid));
 }
 
-websocket = null;
 var announcement = $("#announcement");
-
 function displayMessage(message, html, parseExtras)
 {
     var id;
@@ -440,12 +435,12 @@ function displayMessage(message, html, parseExtras)
 
 function findBattle()
 {
-    websocket.send("findbattle|"+JSON.stringify({"sameTier":true, "range":300}));
+    network.command('findbattle', {sameTier: true, range: 300});
 }
 
 function sendMessage(sender)
 {
-    if (websocket !== null) {
+    if (network.isOpen()) {
         var $inputText = $(sender);
         var message = $.trim($inputText.val()).split("\n");
         var idsender = $inputText.attr("id");
@@ -464,16 +459,14 @@ function sendMessage(sender)
                         return;
                     }
                 }
-                var strToSend = "chat|" + JSON.stringify({"channel": targetid, message: msg});
+                network.command('chat', {channel: targetid, message: msg});
             } else if (/^send-pm-/.test(idsender)) {
-                var strToSend = "pm|" + JSON.stringify({"to": targetid, message: msg});
                 pms.pm(targetid).print(players.myid, msg);
+                network.command('pm', {to: targetid, message: msg});
             } else if (/^send-battle-/.test(idsender)) {
                 var battle = battles.battles[targetid];
-                var strToSend = (battle.isBattle() ? "battlechat|": "spectatingchat|") + targetid + "|" + msg;
+                network.command((battle.isBattle() ? "battlechat": "spectatingchat"), {battle: targetid, message: msg});
             }
-            websocket.send( strToSend );
-            console.log( "Message sent :", '"'+strToSend+'"' );
         });
     } else {
         displayMessage("ERROR: Connect to the relay station before sending a message.");
@@ -482,13 +475,11 @@ function sendMessage(sender)
 
 function joinChannel(chan)
 {
-    if (websocket)  {
-        var $inputChannel = $("#join-channel");
-        var channel = chan || $inputChannel.val();
+    var $inputChannel = $("#join-channel");
+    var channel = chan || $inputChannel.val();
 
-        $inputChannel.val("");
-        websocket.send("join|"+channel);
-    }
+    $inputChannel.val("");
+    network.command('joinchannel', {channel: channel});
 }
 
 var parseCommand;
@@ -498,11 +489,8 @@ function initWebsocket()
 {
     try
     {
-        if ( typeof MozWebSocket == 'function' )
-            WebSocket = MozWebSocket;
-
-        if ( websocket && websocket.readyState == 1 ) {
-            websocket.close();
+        if (network.isOpen()) {
+            network.close();
             $("#servers-list tbody").html('');
         }
 
@@ -514,23 +502,21 @@ function initWebsocket()
 
         poStorage.set("relay", fullIP);
 
-        websocket = new WebSocket( "ws://"+fullIP );
-        websocket.onopen = function( evt ) {
-            displayMessage( "CONNECTED" );
-        };
-        websocket.onclose = function( evt ) {
-            displayMessage( "DISCONNECTED" );
-        };
-        websocket.onmessage = function( evt ) {
-            if (evt.data.length < 120) {
-                //console.log( "Message received :", evt.data );
+        network.open(
+            fullIP,
+            // open
+            function () {
+                displayMessage("Connected to relay.");
+            },
+            // error
+            function (e) {
+                displayMessage("Error: " + e.data);
+            },
+            // close
+            function () {
+                displayMessage("Disconnected from relay.");
             }
-
-            if (evt.data.indexOf("|") != -1) { parseCommand(evt.data);} else displayMessage( evt.data );
-        };
-        websocket.onerror = function( evt ) {
-            displayMessage( 'ERROR: ' + evt.data );
-        };
+        );
     }
     catch( exception )
     {
@@ -539,292 +525,11 @@ function initWebsocket()
     }
 }
 
-function stopWebsocket()
-{
-    if ( websocket ) {
-        websocket.close();
-    }
-}
-
-function checkSocket()
-{
-    if ( websocket != null )
-    {
-        var stateStr;
-        switch ( websocket.readyState )
-        {
-            case 0:
-                stateStr = "CONNECTING";
-                break;
-            case 1:
-                stateStr = "OPEN";
-                break;
-            case 2:
-                stateStr = "CLOSING";
-                break;
-            case 3:
-                stateStr = "CLOSED";
-                break;
-            default:
-                stateStr = "UNKNOW";
-                break;
-        }
-        displayMessage( "Websocket state = " + websocket.readyState + " ( " + stateStr + " )" );
-    }
-    else
-    {
-        displayMessage( "Websocket is null" );
-    }
-}
-
 function connect() {
-    if (websocket) {
-        websocket.send("connect|" + $("#advanced-connection").val());
+    if (network.isOpen()) {
+        network.command('connect', {ip: $("#advanced-connection").val()});
         $(".page").toggle();
     }
 }
 
 var serverDescriptions = {};
-parseCommand = function(message) {
-    var cmd = message.substr(0, message.indexOf("|"));
-    var data = message.slice(message.indexOf("|")+1);
-
-    if (cmd == "defaultserver") {
-        /* If the server is on the same IP as the relay, we display the server IP but
-         send localhost */
-        var server = data.replace("localhost", relayIP);
-
-        var qserver = utils.queryField("server");
-
-        if (qserver != "default" && qserver) {
-            $("#advanced-connection").val(qserver);
-        } else {
-            $("#advanced-connection").val(server);
-        }
-
-        if (utils.queryField("autoconnect") === "true") {
-            connect();
-        } else {
-            try {
-                websocket.send("registry");
-            } catch (ex) {} // Ignore InvalidStateErrors when you spam the 'Load' button.
-        }
-    } else if (cmd == "servers") {
-        var servers = JSON.parse(data), html = "";
-
-        for (var i = 0; i < servers.length; i++) {
-            var server = servers[i];
-            html += "<tr><td class='server-name'>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>"
-                + "<td class='server-ip'>"+server.ip+":" + server.port + "</td></tr>";
-            serverDescriptions[server.name] = server.description;
-        }
-
-
-        $("#servers-list tbody").prepend(html);
-        $("#servers-list").tablesorter({sortList: [[1,1]]});
-    } else if (cmd == "connected") {
-        displayMessage("Connected to server!");
-
-        var username = $("#username").val();
-        if (username && username.length > 0) {
-            poStorage.set("username", username);
-        } else {
-            poStorage.remove("username");
-        }
-
-        var data = {version: 1};
-        if (utils.queryField("user") || username) {
-            data.name = utils.queryField("user") || username;
-            data.default = utils.queryField("channel");
-            data.autojoin = utils.queryField("autojoin");
-            if (data.autojoin) {
-                data.autojoin = data.autojoin.split(",");
-            }
-
-            data.ladder = poStorage.get('player.ladder', 'boolean');
-            if (data.ladder == null) {
-                data.ladder = true;
-            }
-
-            data.idle = poStorage.get('player.idle', 'boolean');
-            if (data.idle == null) {
-                data.idle = false;
-            }
-
-            websocket.send("login|"+JSON.stringify(data));
-        } else {
-            vex.dialog.open({
-                message: 'Enter your username:',
-                input: '<input name="username" type="text" placeholder="Username"/>',
-                buttons: [
-                    $.extend({}, vex.dialog.buttons.YES, {text: 'Login'}),
-                    $.extend({}, vex.dialog.buttons.NO, {text: 'Login as Guest'})
-                ],
-                callback: function (res) {
-                    if (res && res.username) {
-                        data.name = res.username;
-                    }
-                    /* Optional parameters: away, color, ladder */
-                    websocket.send("login|"+JSON.stringify(data));
-                }
-            });
-        }
-    } else if (cmd == "disconnected") {
-        displayMessage("Disconnected from server!");
-        announcement.hide("slow");
-    } else if (cmd == "msg" || cmd == "error") {
-        displayMessage(data);
-    } else if (cmd == "chat") {
-        var params = JSON.parse(data);
-        var msg = params.message;
-        var chan = channels.channel(params.channel);
-
-        if ((params.channel == -1 && params.message.charAt(0) != "~") || !chan) {
-            displayMessage(msg, params.html, true);
-        } else {
-            chan.print(msg, params.html);
-        }
-    } else if (cmd == "challenge") {
-        var password = $("#password").val();
-        if (password) {
-            var hash = MD5(MD5(password)+data);
-
-            poStorage.set("passhash-" + data, hash);
-            websocket.send("auth|" + hash);
-        } else {
-            var passHash = poStorage("passhash-" + data);
-            if (passHash) {
-                websocket.send("auth|" + passHash);
-            } else {
-                vex.dialog.open({
-                    message: 'Enter your password:',
-                    input: '<input name="password" type="password" placeholder="Password" required />',
-                    callback: function (res) {
-                        if (res && res.password) {
-                            // after clicking OK
-                            // res.password is the value from the textbox
-                            var hash = MD5(MD5(res.password)+data);
-                            websocket.send("auth|" + hash);
-                        } else {
-                            // after clicking Cancel
-                            stopWebsocket();
-                        }
-                    }
-                });
-            }
-        }
-    } else if (cmd == "announcement") {
-        announcement.html(data);
-        format(announcement);
-
-        announcement.css("visibility", "visible");
-    } else if (cmd == "channels") {
-        var params = JSON.parse(data);
-        channels.setNames(params);
-    } else if (cmd == "newchannel") {
-        var params = JSON.parse(data);
-        channels.newChannel(params.id, params.name);
-    } else if (cmd == "removechannel") {
-        channels.removeChannel(data);
-    } else if (cmd == "channelnamechange") {
-        var params = JSON.parse(data);
-        channels.changeChannelName(params.id, params.name);
-    } else if (cmd === "players") {
-        /* Can contain multiple players */
-        var params = JSON.parse(data);
-        players.addPlayer(params);
-
-        if (currentOpenPlayer !== -1 && currentOpenPlayer in params && "info" in params[currentOpenPlayer]) {
-            updatePlayerInfo(params[currentOpenPlayer]);
-        }
-    } else if (cmd === "playerlogout") {
-        players.removePlayer(data);
-    } else if (cmd === "join") {
-        var channel = data.split("|")[0];
-        var player = data.split("|")[1];
-
-        channels.channel(channel).newPlayer(player);
-    } else if (cmd === "leave") {
-        var channel = data.split("|")[0];
-        var player = data.split("|")[1];
-
-        channels.channel(channel).removePlayer(player);
-        players.testPlayerOnline(player);
-    } else if (cmd === "channelplayers") {
-        var params = JSON.parse(data);
-        channels.channel(params.channel).setPlayers(params.players);
-    } else if (cmd === "login") {
-        var params = JSON.parse(data);
-        players.login(params.id, params.info);
-
-        websocket.send("getrankings|" + params.id);
-    } else if (cmd === "unregistered") {
-        $("#register").attr("disabled", false);
-    } else if (cmd === "pm") {
-        var params = JSON.parse(data);
-        pms.pm(params.src).print(params.src, params.message);
-    } else if (cmd === "watchbattle") {
-        initBattleData();
-        var id = data.split("|")[0];
-        var params = JSON.parse(data.slice(id.length+1));
-        battles.watchBattle(+(id), params);
-    } else if (cmd === "battlecommand") {
-        var battleid = data.split("|")[0];
-        if (battleid in battles.battles) {
-            battles.battle(battleid).dealWithCommand(JSON.parse(data.slice(battleid.length+1)));
-        }
-    } else if (cmd === "battlestarted") {
-        var battleid = data.split("|")[0];
-        var battle = JSON.parse(data.slice(battleid.length+1));
-
-        if (battle.team) {
-            initBattleData();
-        }
-
-        var obj = {};
-        obj[battleid] = battle;
-        battles.addBattle(obj);
-    } else if (cmd === "channelbattle") {
-        var chanid = data.split("|")[0];
-        var params = JSON.parse(data.slice(chanid.length+1));
-        var battleid = params.battleid;
-        var battle = params.battle;
-        var obj = {};
-        obj[battleid] = battle;
-        battles.addBattle(obj);
-    } else if (cmd === "channelbattlelist") {
-        var chanid = data.split("|")[0];
-        var batt = JSON.parse(data.slice(chanid.length+1));
-        battles.addBattle(batt);
-
-        /* Update whole player list */
-        if (chanid == currentChannel) {
-            playerList.setPlayers(room.playerIds());
-        }
-    } else if (cmd === "battlefinished") {
-        var battleid = data.split("|")[0];
-        var result = JSON.parse(data.slice(battleid.length+1));
-        battles.battleEnded(battleid, result);
-    } else if (cmd === "rankings") {
-        var id = data.split("|")[0];
-        var rankings = JSON.parse(data.split("|")[1]), tier, rank;
-        var html = "";
-
-        for (tier in rankings) {
-            rank = rankings[tier];
-            if (rank.ranking === -1) {
-                html += "<li><strong>Unranked</strong>";
-            } else {
-                html += "<li><strong>#" + rank.ranking + "/" + rank.total + "</strong> <em>(" + rank.rating + ")</em>";
-            }
-
-            html += " - <strong>" + tier + "</strong></li>";
-        }
-
-        $("#rankings").html(html);
-    }
-    else if (cmd == "tiers") {
-        var params = JSON.parse(data);
-        tiersList = params;
-    }
-};

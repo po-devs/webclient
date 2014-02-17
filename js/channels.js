@@ -98,7 +98,7 @@ Channels.prototype.leaveChannel = function(chanid) {
         $('#channel-tabs').tabs("remove", "#channel-" + chanid);
     } else {
         this.channel(chanid).closable |= 2;
-        websocket.send("leave|"+chanid);
+        network.command('leavechannel', {channel: chanid});
     }
 };
 
