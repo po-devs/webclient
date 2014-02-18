@@ -225,30 +225,39 @@ pokeinfo.types = function(poke, gen) {
     return types;
 };
 
-pokeinfo.abilities = function(poke, gen, keep) {
-    return [this.find(poke, "ability1", gen),
-        this.find(poke, "ability2", gen),
-        this.find(poke, "ability3", gen)].filter(function(arg) { if (keep) { return true; } else { return arg !== 0; }});
+pokeinfo.abilities = function(poke, gen) {
+    return [
+        this.find(poke, "ability1", gen) || 0,
+        this.find(poke, "ability2", gen) || 0,
+        this.find(poke, "ability3", gen) || 0
+    ];
 };
 
+pokeinfo._releasedCache = {};
 pokeinfo.releasedList = function(gen, excludeFormes) {
-    var releasedList = pokedex.pokes.released[getGen(gen).num],
-        list = {}, num, i;
+    var gnum = getGen(gen).num;
+    if ((gnum + '_ef' + excludeFormes) in pokeinfo._releasedCache) {
+        return pokeinfo._releasedCache[gnum + '_ef' + excludeFormes];
+    }
+
+    var releasedList = pokedex.pokes.released[gnum],
+        list = {},
+        num;
 
     for (i in releasedList) {
-        num = +i;
-        if (excludeFormes && num > 65535) {
+        if (excludeFormes && +i > 65535) {
             continue;
         }
+
         // In gens 1-3, the values are true instead of the pokemon names.
         if (releasedList[i] === true) {
-            list[num] = pokeinfo.name(num);
+            list[i] = pokeinfo.name(+i);
         } else {
-            list[num] = releasedList[i];
+            list[i] = releasedList[i];
         }
     }
 
-
+    pokeinfo._releasedCache[gnum + '_ef' + excludeFormes] = list;
     return list;
 };
 
@@ -459,19 +468,28 @@ iteminfo.berryName = function (item) {
     return pokedex.items.berries[item];
 };
 
+iteminfo._releasedCache = {};
 iteminfo.releasedList = function(gen) {
-    gen = getGen(gen).num;
+    var gnum = getGen(gen).num;
+    if (gnum in iteminfo._releasedCache) {
+        return iteminfo._releasedCache[gnum];
+    }
+
     var list = {},
-        releasedItems = pokedex.items.released_items[gen],
-        releasedBerries = pokedex.items.released_berries[gen],
+        releasedItems = pokedex.items.released_items[gnum],
+        releasedBerries = pokedex.items.released_berries[gnum],
         i;
 
+    // Inline access for speed
     for (i in releasedItems) {
-        list[i] = true;
+        list[i] = pokedex.items.items[i];
     }
+
     for (i in releasedBerries) {
-        list[i + 8000] = true;
+        list[i + 8000] = pokedex.items.berries[i];
     }
+
+    iteminfo._releasedCache[gnum] = list;
     return list;
 };
 

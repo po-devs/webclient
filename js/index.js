@@ -83,6 +83,10 @@ $(function() {
         teambuilder.loadTeamFrom($(this));
     });
 
+    var animframe = function (fn) {
+        return requestAnimationFrame(fn) || setTimeout(fn, 1000 / 60);
+    };
+
     // Type should be one of: content, user_params, teambuilder
     function toggleContent(type, checks) {
         // From user_params
@@ -97,8 +101,12 @@ $(function() {
         } else if (type === 'user_params') { // To user_params
             $user_params.show();
         } else if (mode === 'content' || type === 'teambuilder') { // From content, to teambuilder
+            NProgress.start();
             teambuilder.init();
-            $teambuilder.show();
+            animframe(function () {
+                $teambuilder.show();
+                NProgress.done();
+            });
             type = 'teambuilder';
         }
 
