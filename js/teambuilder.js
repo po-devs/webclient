@@ -92,7 +92,7 @@
                 $(".pokemon-slot").eq(index).attr('id', 'tb_tab_content_temporary_id_' + index);
             });
         }).on('sortupdate', function (event, ui) {
-            var element = $("#tb_tab_content_ " + ui.item.get(0).id.substr(7)),
+            var element = $("#tb_tab_content_ " + ui.item[0].id.substr(7)),
                 index = ui.item.index();
 
             if (index > element.index()) {
@@ -164,7 +164,7 @@
             var $this = $(this);
 
             $this.parent().find('.pokemon-slot-gender-checked').removeClass('pokemon-slot-gender-checked');
-            $("label[for='" + $this.get(0).id + "']").addClass('pokemon-slot-gender-checked');
+            $("label[for='" + $this[0].id + "']").addClass('pokemon-slot-gender-checked');
         });
 
         // loading stats, ivs and evs
@@ -1145,5 +1145,6 @@
     };
 
     Teambuilder.defaultSettings = defaultSettings;
-    window.Teambuilder = Teambuilder;
+    webclient.teambuilder = new Teambuilder();
+    webclient.classes.Teambuilder = Teambuilder;
 }(window, document, pokeinfo, geninfo, poStorage));

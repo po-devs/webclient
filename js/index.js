@@ -1,51 +1,3 @@
-/* Function to search names in the playerlist */
-(function($) {
-    $.fn.extend({
-        filterFor: function(listSelector) {
-            var   self = this
-                , $titles = $(listSelector)
-            // The list with keys to skip (esc, arrows, return, etc)
-            // 8 is backspace, you might want to remove that for better usability
-                , keys = [13, 27, 32, 37, 38, 39, 40 /*,8*/ ]
-                ;
-
-            if ($titles.length !== 0) {
-                if(!$titles.is('ul,ol')){
-                    $titles = $titles.find('ul,ol');
-                }
-//                                    $titles.each(function(index, node) {
-//                                        cache[index] = $(node);
-//                                    });
-
-                $(this).keyup(function(e) {
-                    var val = $(self).val().toLowerCase();
-                    if ($.inArray(e.keyCode, keys) === -1) {
-                        $titles.find('li').each(function() {
-                            var $node = $(this);
-
-                            if ($node.html().toLowerCase().indexOf(val) === -1) {
-                                $node.hide();
-                            } else {
-                                $node.show();
-                            }
-                        });
-                    }
-                });
-            }
-
-            return this;
-        }
-    });
-}(jQuery));
-
-$(function() {
-    $('#search_filter').filterFor('#player-list', {caseSensitive : false});
-    /* The Player list also needs to know the filter, when it adds new elements whether to show them or not */
-    $('#search_filter').keyup(function(){playerList.filter=$(this).val().toLowerCase();});
-});
-
-vex.defaultOptions.className = 'vex-theme-os';
-teambuilder = null;
 $(function() {
     var mode = 'content',
         $teambuilder = $("#teambuilder"),
@@ -56,8 +8,7 @@ $(function() {
         previewsInit = false;
 
     $("#tab-titles").on('click', 'li i', function() {
-        if($("#tab-titles li").length > 1)
-        {
+        if ($("#tab-titles li").length > 1) {
             var dparent = $(this).parent().parent();
             var href = dparent.attr("href");
             objFromId(href).close();
@@ -70,7 +21,7 @@ $(function() {
         $this.parent().find('.dropdown_content').toggle();
         if ($this.data('teambuilder') && !previewsInit) {
             previewsInit = true;
-            teambuilder.loadTeamPreviews();
+            webclient.teambuilder.loadTeamPreviews();
         }
     });
 
@@ -80,7 +31,7 @@ $(function() {
         $this.addClass('current_team');
     }).dblclick(function () {
         toggleContent('teambuilder');
-        teambuilder.loadTeamFrom($(this));
+        webclient.teambuilder.loadTeamFrom($(this));
     });
 
     var animframe = function (fn) {
@@ -102,7 +53,7 @@ $(function() {
             $user_params.show();
         } else if (mode === 'content' || type === 'teambuilder') { // From content, to teambuilder
             NProgress.start();
-            teambuilder.init();
+            webclient.teambuilder.init();
             animframe(function () {
                 $teambuilder.show();
                 NProgress.done();
@@ -131,12 +82,7 @@ $(function() {
 
     $("#battle-html").load("battle.html");
     $("#user_params").load("user_params.html");
-    $("#teambuilder").load("teambuilder.html", function() {
-        setTimeout(function () {
-            /* Teambuilder */
-            teambuilder = new Teambuilder();
-        }, 4); // 4 is the minimum delay
-    });
+    $teambuilder.load("teambuilder.html");
 });
 
 $(function() {
@@ -155,7 +101,7 @@ $(function() {
     $("#servers-list tbody").on('click', 'tr', function() {
         var $this = $(this);
         $("#advanced-connection").val($this.find('.server-ip').text());
-        showHtmlInFrame("#server-description", serverDescriptions[$this.find('.server-name').text()]);
+        showHtmlInFrame("#server-description", webclient.registry.descriptions[$this.find('.server-name').text()]);
     }).on('dblclick', 'tr', function () {
         connect();
     });
@@ -166,19 +112,21 @@ $(function() {
         }
     });
 
+    var $channeltabs = $("#channel-tabs");
     $('#channel-tabs').tabs()
         .find(".ui-tabs-nav")
         .sortable({
             axis: "x",
             stop: function() {
-                $("#channel-tabs").tabs("refresh");
+                $channeltabs.tabs("refresh");
             }
         }); // Makes the channel tabs sortable.
 
     /* Gets the current object owning a tab from the hrefid of the tab */
     objFromId = function(hrefid) {
-        var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
-        var ret;
+        var id = hrefid.substr(hrefid.lastIndexOf("-") + 1),
+            ret;
+
         if (/^#channel-/.test(hrefid)) {
             ret = channels.hasChannel(id) ? channels.channel(id) : undefined;
         } else if (/^#pm-/.test(hrefid)) {
@@ -189,48 +137,41 @@ $(function() {
         return ret;
     };
 
-    room = null;
-    currentChannel = -1;
-
     switchToTab = function(hrefid) {
-        room = objFromId(hrefid);
+        webclient.channel = objFromId(hrefid);
         $('#channel-tabs').tabs("select", hrefid);
     };
 
     $("#channel-tabs").on('tabsselect', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
-        var id = hrefid.substr(hrefid.lastIndexOf("-")+1);
 
         /* Changes the current object in memory */
-        room = objFromId(hrefid);
-        currentChannel = -1;
+        webclient.channel = objFromId(hrefid);
 
-        if (/^#channel-/.test(hrefid)) {
-            if (channels.hasChannel(id)) {
-                currentChannel = id;
-            }
-        }
         /* Update player list when switching channels */
-        playerList.setPlayers(room.playerIds());
+        playerList.setPlayers(webclient.channel.playerIds());
     }).bind('tabsshow', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
         /* Resizes chat area in funciton of the height of the channel tab */
         /* Scrolls down the chat of the current tab */
-        var chattextarea = $(hrefid+" #chatTextArea").get(0);
+        var chattextarea = $(hrefid+" #chatTextArea")[0];
         chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
 
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
     }).bind('tabscreate', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
-        room = objFromId(hrefid);
+        webclient.channel = objFromId(hrefid);
     });
 
     $("#colorDialog").dialog({
         autoOpen: false,
         beforeClose: function(event) {
-            network.command('teamchange', {color: colorPickerColor, name: $("#trainer-name").val() || players.myname()});
+            network.command('teamchange', {
+                color: colorPickerColor,
+                name: $("#trainer-name").val() || players.myname()
+            });
         }
     });
 
@@ -304,7 +245,6 @@ $(function() {
     pms = new PMs();
     channels = new Channels();
     battles = new Battles();
-    currentChannel = 0;
 
     $("#join-channel").autocomplete({
         source: function (request, response) {
@@ -312,7 +252,7 @@ $(function() {
                 return channels.names[value];
             }));
 
-            var req = new RegExp("^"+$.ui.autocomplete.escapeRegex(request.term), "gi");
+            var req = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "gi");
             var possibleChannels = [];
 
             channelNames.forEach(function (value, index, array) {
@@ -333,17 +273,25 @@ $(function() {
         }
     });
 
+    var $autoload = $("#autoload");
+
     if (poStorage("autoload", "boolean")) {
-        $("#autoload").attr("checked", true);
+        $autoload.attr("checked", true);
         initWebsocket();
     }
 
-    $("#autoload").click(function() {
-        if($(this).is(':checked')) {
+    $autoload.click(function() {
+        if ($autoload.is(':checked')) {
             poStorage.set("autoload", true);
         } else {
             poStorage.remove("autoload");
         }
+    });
+
+    $('#search_filter').filterFor('#player-list', {
+        caseSensitive: false
+    }).keyup(function () { /* The players list also needs to know the filter, when it adds new elements whether to show them or not */
+        playerList.filter = $(this).val().toLowerCase();
     });
 });
 
@@ -381,34 +329,37 @@ $("#player-list").on("click", "li", function(event) {
         for (var bid in battles.battlesByPlayer[id]) {
             var battle = battles.battlesByPlayer[id][bid];
             var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
-            dialog.append($("<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against "
-                + utils.escapeHtml(players.name(opp)) +"</div>"));
+            dialog.append($(
+                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against " + utils.escapeHtml(players.name(opp)) + "</div>"
+            ));
         }
     }
-    dialog.dialog("option", "title", players.name(id));
     var buttons = [
         {
             text: "Private Message",
-            class: "click_button",
+            'class': "click_button",
             click: function() { pms.pm(id); dialog.dialog("close"); }
         }
     ];
     if (players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
-            class: "click_button",
+            'class': "click_button",
             click: function() { players.removeIgnore(id); dialog.dialog("close"); }
         });
     } else {
         buttons.push({
             text: "Ignore",
-            class: "click_button",
+            'class': "click_button",
             click: function() { players.addIgnore(id); dialog.dialog("close"); }
         });
     }
-    dialog.dialog("option", "buttons", buttons);
-    dialog.dialog({ position: { my: "center top", at: "center top+40px", of: window } });
-    dialog.dialog("open");
+
+    dialog
+        .dialog("option", "title", players.name(id))
+        .dialog("option", "buttons", buttons)
+        .dialog({ position: { my: "center top", at: "center top+40px", of: window } })
+        .dialog("open");
 });
 
 // Make register button disabled
@@ -423,91 +374,81 @@ var colorPickerColor;
 function openColorPicker() {
     $("#colorDialog").dialog("open");
     var colorPicker = $("#colorPicker");
-    colorPicker.farbtastic(function(color) {colorPickerColor = color;});
+    colorPicker.farbtastic(function(color) {
+        colorPickerColor = color;
+    });
 
     $("#trainer-name").val(players.name(players.myid));
 }
 
 var announcement = $("#announcement");
-function displayMessage(message, html, parseExtras)
-{
+function displayMessage(message, html, parseExtras) {
     var id;
-    if (!html) {
-        html = false;
-    }
+    html = !!html;
 
     for (id in channels.channels) {
         channels.channel(id).print(message, html, !parseExtras);
     }
 }
 
-function findBattle()
-{
+function findBattle() {
     network.command('findbattle', {sameTier: true, range: 300});
 }
 
-function sendMessage(sender)
-{
-    if (network.isOpen()) {
-        var $inputText = $(sender);
-        var message = $.trim($inputText.val()).split("\n");
-        var idsender = $inputText.attr("id");
-        var targetid = idsender.substr(idsender.lastIndexOf("-")+1);
-
-        message.forEach(function(msg) {
-            if (!msg.length) {
-                return;
-            }
-            if (/^send-channel-/.test(idsender)) {
-                /* Temporary until interface is improved */
-                if (/^\/pm/i.test(msg)) {
-                    var pid = players.id(msg.slice(4));
-                    if (pid !== -1) {
-                        pms.pm(pid);
-                        return;
-                    }
-                }
-                network.command('chat', {channel: targetid, message: msg});
-            } else if (/^send-pm-/.test(idsender)) {
-                pms.pm(targetid).print(players.myid, msg);
-                network.command('pm', {to: targetid, message: msg});
-            } else if (/^send-battle-/.test(idsender)) {
-                var battle = battles.battles[targetid];
-                network.command((battle.isBattle() ? "battlechat": "spectatingchat"), {battle: targetid, message: msg});
-            }
-        });
-    } else {
+function sendMessage(sender) {
+    if (!network.isOpen()) {
         displayMessage("ERROR: Connect to the relay station before sending a message.");
+        return;
     }
+
+    var $inputText = $(sender),
+        message = $inputText.val().trim().split("\n"),
+        idsender = $inputText[0].id,
+        targetid = idsender.substr(idsender.lastIndexOf("-") + 1);
+
+    message.forEach(function(msg) {
+        if (!msg.length) {
+            return;
+        }
+
+        if (/^send-channel-/.test(idsender)) {
+            /* Temporary until interface is improved */
+            if (/^\/pm/i.test(msg)) {
+                var pid = players.id(msg.slice(4));
+                if (pid !== -1) {
+                    pms.pm(pid);
+                    return;
+                }
+            }
+            network.command('chat', {channel: targetid, message: msg});
+        } else if (/^send-pm-/.test(idsender)) {
+            pms.pm(targetid).print(players.myid, msg);
+            network.command('pm', {to: targetid, message: msg});
+        } else if (/^send-battle-/.test(idsender)) {
+            var battle = battles.battles[targetid];
+            network.command((battle.isBattle() ? "battlechat": "spectatingchat"), {battle: targetid, message: msg});
+        }
+    });
 }
 
-function joinChannel(chan)
-{
-    var $inputChannel = $("#join-channel");
-    var channel = chan || $inputChannel.val();
+function joinChannel(chan) {
+    var $inputChannel = $("#join-channel"),
+        channel = chan || $inputChannel.val();
 
     $inputChannel.val("");
     network.command('joinchannel', {channel: channel});
 }
 
-var parseCommand;
-var relayIP;
-
-function initWebsocket()
-{
-    try
-    {
+function initWebsocket() {
+    try {
         if (network.isOpen()) {
             network.close();
             $("#servers-list tbody").html('');
         }
 
         var fullIP = $("#relay").val();
+
         displayMessage("Connecting to " + fullIP);
-
-        relayIP = fullIP;
-        relayIP = relayIP.substr(0, relayIP.lastIndexOf(":"));
-
         poStorage.set("relay", fullIP);
 
         network.open(
@@ -525,9 +466,7 @@ function initWebsocket()
                 displayMessage("Disconnected from relay.");
             }
         );
-    }
-    catch( exception )
-    {
+    } catch(exception) {
         console.log('Websocket error:', exception);
         displayMessage( 'ERROR: ' + exception );
     }
@@ -539,5 +478,3 @@ function connect() {
         $(".page").toggle();
     }
 }
-
-var serverDescriptions = {};

@@ -84,7 +84,7 @@ PM.prototype.chat = function () {
 };
 
 PM.prototype.print = function(pid, msg) {
-    var chatTextArea = this.chat().get(0);
+    var chatTextArea = this.chat()[0];
 
     if (pid !== -1) {
         msg = utils.escapeHtml(msg);

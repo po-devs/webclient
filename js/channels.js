@@ -2,8 +2,7 @@ function Channels() {
     this.channels = {"0": new Channel(0, "Main channel")};
     this.names = {};
 
-    room = this.channels[0];
-    currentChannel = 0;
+    webclient.channel = this.channels[0];
 }
 
 Channels.prototype.channel = function (id) {
@@ -16,8 +15,7 @@ Channels.prototype.channel = function (id) {
 
         /* Hack to detect when the first channel is opened */
         if (Object.keys(this.channels).length === 1) {
-            room = this.channels[id];
-            currentChannel = id;
+            webclient.channel = this.channels[id];
         }
     }
 
@@ -71,7 +69,7 @@ Channels.prototype.current = function () {
 Channels.prototype.currentId = function() {
 //    var index = $("#channel-tabs").tabs("option", "active");
 //    return this.idFromIndex(index);
-    return currentChannel;
+    return webclient.channelId();
 };
 
 Channels.prototype.idFromIndex = function (index) {
@@ -181,7 +179,7 @@ Channel.prototype.chat = function () {
 };
 
 Channel.prototype.print = function (msg, html, noParse) {
-    var chatTextArea = this.chat().get(0);
+    var chatTextArea = this.chat()[0];
     var scrollDown = chatTextArea.scrollTop >= chatTextArea.scrollHeight - chatTextArea.offsetHeight;
 
     if (!noParse) {

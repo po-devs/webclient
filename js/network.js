@@ -92,7 +92,7 @@
         defaultserver: function (payload) {
             /* If the server is on the same IP as the relay, we display the server IP but
                 send localhost */
-            var server = payload.replace("localhost", relayIP),
+            var server = payload.replace("localhost", this.relay),
                 qserver = utils.queryField("server");
 
             $("#advanced-connection").val((qserver && qserver !== "default") ? qserver : server);
@@ -111,7 +111,7 @@
             for (i = 0, len = servers.length; i < len; i += 1) {
                 server = servers[i];
                 html += "<tr><td class='server-name'>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>" + "<td class='server-ip'>" + server.ip + ":" + server.port + "</td></tr>";
-                serverDescriptions[server.name] = server.description;
+                webclient.registry.descriptions[server.name] = server.description;
             }
 
             $("#servers-list tbody").prepend(html);
@@ -310,8 +310,8 @@
             battles.addBattle(battle);
 
             /* Update whole player list */
-            if (chanid == currentChannel) {
-                playerList.setPlayers(room.playerIds());
+            if (chanid === webclient.channelId()) {
+                playerList.setPlayers(webclient.channel.playerIds());
             }
         },
         battlefinished: function (payload) {
@@ -345,10 +345,13 @@
     };
 
     function Network() {
-        this.socket = null;
-        this._opened = false;
-
         this.buffer = [];
+        this.socket = null;
+
+        this.relay = '';
+        this.ip = '';
+
+        this._opened = false;
     }
 
     var proto = Network.prototype;
@@ -358,6 +361,9 @@
         }
 
         this.socket = new WebSocket("ws://" + ip);
+        this.ip = ip;
+        this.relay = ip.substr(0, ip.lastIndexOf(":"));
+
         this._opened = true;
         this.socket.onopen = this.onopen(onopen);
         this.socket.onmessage = this.onmessage();

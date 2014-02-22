@@ -6,7 +6,7 @@ function ChannelTab(/* id */)
 
 ChannelTab.prototype.isCurrent = function()
 {
-    return room == this;
+    return this === webclient.channel;
 };
 
 ChannelTab.prototype.activateTab = function()

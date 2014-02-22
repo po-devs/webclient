@@ -40,12 +40,13 @@ Players.prototype.addPlayer = function (players) {
 
         this.names[name] = this.players[id];
 
-        if (currentChannel != -1 && channels.current().hasPlayer(id)) {
+        if (webclient.channelId() !== -1 && channels.current().hasPlayer(id)) {
             playerList.updatePlayer(id);
         }
+
         pms.playerLogin(id);
 
-        if (id == this.myid) {
+        if (id === this.myid) {
             $("#trainer_username").text(this.myname()).trigger('received');
         }
     }

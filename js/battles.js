@@ -220,7 +220,7 @@ BattleTab.prototype.print = function(msg, args) {
         this.blankMessage = false;
     }
 
-    var chatTextArea = this.chat().get(0);
+    var chatTextArea = this.chat()[0];
 
     if (args) {
         if ("player" in args) {

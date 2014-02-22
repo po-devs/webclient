@@ -58,7 +58,8 @@ function convertPOLinks(element) {
         html = html || '';
         var elem = $(selector),
             containsHtml = html.contains("<"),
-            secureIframe, formattedHtml, contentDocument, docbody;
+            secureIframe, formattedHtml,
+            contentDocument, contentBody;
 
         if (containsHtml && hasIframeSandbox) {
             // If we want to format html, we will have to use a sandboxed iframe.
@@ -68,15 +69,14 @@ function convertPOLinks(element) {
 
             // To access the contentDocument, we must set allow-same-origin
             elem.html("<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin'></iframe>");
-            secureIframe = elem.find("iframe").get(0);
-            contentDocument = secureIframe.contentDocument;
-
-            if (!contentDocument) {
+            secureIframe = elem.find("iframe")[0];
+            if (!secureIframe) {
                 elem.text(html);
                 return;
             }
 
-            docbody = contentDocument.body;
+            contentDocument = secureIframe.contentDocument;
+            contentBody = contentDocument.body;
 
             // There is a really complicated security problem going on here.
             // We can't just run format on html, otherwise events are executed:
@@ -84,16 +84,16 @@ function convertPOLinks(element) {
             // This is because html is executed on the master window ($("<div>").html(...))
 
             // We first set the html (which is safe, thanks to sandbox)
-            docbody.innerHTML = html;
+            contentBody.innerHTML = html;
 
             // Then format that
-            convertPOLinks(docbody);
-            formattedHtml = docbody.innerHTML;
+            convertPOLinks(contentBody);
+            formattedHtml = contentBody.innerHTML;
 
             // Then clear the entire document (probably not necessary but doing it anyway)
             contentDocument.getElementsByTagName('html')[0].innerHTML = '';
             // Then add the formatted html
-            docbody.innerHTML = "<link rel=\"stylesheet\" href=\"css/style.css\">" + formattedHtml;
+            contentBody.innerHTML = "<link rel=\"stylesheet\" href=\"css/style.css\">" + formattedHtml;
 
             // Remove allow-same-origin (just in case)
             secureIframe.sandbox = '';
