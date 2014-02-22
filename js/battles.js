@@ -1,4 +1,6 @@
 function Battles() {
+    $.observable(this);
+
     this.battles = {};
     this.battleList = {};
     this.battlesByPlayer = {};
@@ -94,7 +96,7 @@ function BattleTab(pid, conf, team) {
 
     /* me and meIdent are needed by PS stuff */
     this.me = {
-        name: webclient.players.myname()
+        name: webclient.ownName()
     };
 
     this.meIdent = {
@@ -144,7 +146,7 @@ function BattleTab(pid, conf, team) {
         switchToTab("#battle-"+pid);
 
         if (team) {
-            this.myself = conf.players[1] == webclient.players.myid ? 1 : 0;
+            this.myself = conf.players[1] == webclient.ownId ? 1 : 0;
         }
 
         this.$content.find(".p1_name_content").text(this.name(0));
@@ -406,7 +408,7 @@ BattleTab.prototype.choose = function(choice)
 };
 
 BattleTab.prototype.isBattle = function() {
-    return this.conf.players[0] == webclient.players.myid || this.conf.players[1] == webclient.players.myid;
+    return this.conf.players[0] == webclient.ownId || this.conf.players[1] == webclient.ownId;
 };
 
 BattleTab.prototype.close = function() {

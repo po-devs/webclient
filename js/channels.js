@@ -1,7 +1,8 @@
 function Channels() {
+    $.observable(this);
+
     this.channels = {"0": new Channel(0, "Main channel")};
     this.names = {};
-
     webclient.channel = this.channels[0];
 }
 
@@ -69,7 +70,7 @@ Channels.prototype.current = function () {
 Channels.prototype.currentId = function() {
 //    var index = $("#channel-tabs").tabs("option", "active");
 //    return this.idFromIndex(index);
-    return webclient.channelId();
+    return webclient.currentChannel();
 };
 
 Channels.prototype.idFromIndex = function (index) {
@@ -160,7 +161,7 @@ Channel.prototype.removePlayer = function(player) {
         webclient.ui.playerList.removePlayer(player);
     }
 
-    if (player == webclient.players.myid) {
+    if (player == webclient.ownId) {
         if (this.closable & 2) {
             this.close2();
         } else {
@@ -208,7 +209,7 @@ Channel.prototype.print = function (msg, html, noParse) {
                 } else if (id === -1) {
                     pref = "<span class='script-message'>" + pref + ":</span>";
                 } else {
-                    pref = "<span class='player-message' style='color: " + players.color(id) + "'>" + utils.rank(auth) + utils.rankStyle(pref + ":", auth) + "</span>";
+                    pref = "<span class='player-message' style='color: " + webclient.players.color(id) + "'>" + utils.rank(auth) + utils.rankStyle(pref + ":", auth) + "</span>";
                     this.activateTab();
                 }
 

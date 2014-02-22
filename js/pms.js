@@ -1,12 +1,13 @@
 function PMs() {
-    this.pms = {}
+    $.observable(this);
+    this.pms = {};
 }
 
 PMs.prototype.pm = function(pid) {
     if (pid in this.pms) {
         return this.pms[pid];
     }
-    if (players.isIgnored(pid))
+    if (webclient.players.isIgnored(pid))
         return;
     new PM(pid);
     return this.pms[pid];
@@ -29,9 +30,9 @@ function PM(pid) {
     this.shortHand = "pm";
     this.id = pid;
     this.disconnected = false;
-    players.addFriend(pid);
+    webclient.players.addFriend(pid);
 
-    var name = players.name(pid);
+    var name = webclient.players.name(pid);
 
     if ($("#pm-" + pid).length === 0) {
         /* Create new tab */
@@ -53,7 +54,7 @@ function PM(pid) {
 utils.inherits(PM, ChannelTab);
 
 PM.prototype.playerIds = function() {
-    var ret = [players.myid];
+    var ret = [webclient.ownId];
     if (!this.disconnected) {
         ret.push(this.id);
     }
@@ -65,7 +66,7 @@ PM.prototype.disconnect = function() {
         return;
     }
 
-    this.print(-1, "<i>"+players.name(this.id)+ " is no longer connected.</i>");
+    this.print(-1, "<i>" + webclient.players.name(this.id) + " is no longer connected.</i>");
     this.disconnected = true;
 };
 
@@ -74,8 +75,8 @@ PM.prototype.reconnect = function() {
         return;
     }
 
-    players.addFriend(this.id);
-    this.print(-1, "<i>"+players.name(this.id)+ " came back.</i>");
+    webclient.players.addFriend(this.id);
+    this.print(-1, "<i>" + webclient.players.name(this.id) + " came back.</i>");
     this.disconnected = false;
 };
 
@@ -88,7 +89,7 @@ PM.prototype.print = function(pid, msg) {
 
     if (pid !== -1) {
         msg = utils.escapeHtml(msg);
-        var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
+        var pref = "<span class='player-message' style='color: " + webclient.players.color(pid) + "'>" + webclient.players.name(pid) + ":</span>";
         msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
 
         this.activateTab();

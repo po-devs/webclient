@@ -2,6 +2,8 @@
     var namecolorlist = ['#5811b1', '#399bcd', '#0474bb', '#f8760d', '#a00c9e', '#0d762b', '#5f4c00', '#9a4f6d', '#d0990f', '#1b1390', '#028678', '#0324b1'];
 
     function PlayerHolder() {
+        $.observable(this);
+
         this.players = {};
         this.names = {};
 
@@ -9,13 +11,12 @@
     }
 
     PlayerHolder.prototype.login = function(id, info) {
-        this.myid = id;
-
         var obj = {};
+
         obj[id] = info;
         this.addPlayer(obj);
 
-        $.c("#trainer_username").text(this.myname()).trigger('received');
+        this.trigger("login", id, info);
     };
 
     PlayerHolder.prototype.hasPlayer = function(pid) {
@@ -23,7 +24,7 @@
     };
 
     PlayerHolder.prototype.addPlayer = function (players) {
-        var activeChannel = webclient.channelId(),
+        var activeChannel = webclient.currentChannel(),
             playerObj,
             player, name,
             id, x;
@@ -33,10 +34,10 @@
             name = player.name.toLowerCase();
 
             player.id = +id;
-
             playerObj = this.players[id];
+
             if (!playerObj) {
-                this.players[id] = player;
+                this.players[id] = playerObj = player;
             } else {
                 delete this.names[playerObj.name.toLowerCase()]; // Delete old names.
 
@@ -47,41 +48,47 @@
             }
 
             this.names[name] = playerObj;
-
-            if (activeChannel !== -1 && channels.current().hasPlayer(id)) {
-                webclient.ui.playerList.updatePlayer(id);
-            }
-
-            pms.playerLogin(id);
-
-            if (this.myid === id) {
-                $.c("#trainer_username").text(this.myname()).trigger('received');
-            }
+            this.trigger("playeradd", playerObj, +id, name);
         }
     };
 
     PlayerHolder.prototype.addFriend = function(id) {
-        if (this.friends.indexOf(id) === -1) {
-            this.friends.push(id);
+        if (this.friends.indexOf(id) !== -1) {
+            return;
         }
 
+        this.friends.push(id);
         if (id in this.players) {
             this.players[id].friend = true;
         }
+
+        this.trigger("friendadd", id);
     };
 
     PlayerHolder.prototype.addIgnore = function(id) {
+        if (id in this.ignores) {
+            return;
+        }
+
         this.ignores[id] = true;
         if (id in this.players) {
             this.players[id].ignored = true;
         }
+
+        this.trigger("ignoreadd", id);
     };
 
     PlayerHolder.prototype.removeIgnore = function(id) {
+        if (!(id in this.ignores)) {
+            return;
+        }
+
         delete this.ignores[id];
         if (id in this.players) {
             this.players[id].ignored = false;
         }
+
+        this.trigger("ignoreremove", id);
     };
 
     PlayerHolder.prototype.isIgnored = function(id) {
@@ -89,7 +96,8 @@
     };
 
     PlayerHolder.prototype.removePlayer = function (id) {
-        var player = this.players[id];
+        var player = this.players[id],
+            wasFriend = false;
 
         if (!player) {
             return;
@@ -97,13 +105,13 @@
 
         if (this.friends.indexOf(id) !== -1) {
             this.friends.splice(this.friends.indexOf(id), 1);
-            pms.playerLogout(id);
+            wasFriend = true;
         }
 
         delete this.names[player.name.toLowerCase()];
         delete this.players[id];
 
-        battles.removePlayer(id);
+        this.trigger("playerremove", id, wasFriend);
     };
 
     PlayerHolder.prototype.player = function (pid) {
@@ -124,10 +132,6 @@
 
     PlayerHolder.prototype.auth = function(pid) {
         return ((pid in this.players) ? this.players[pid].auth : 0);
-    };
-
-    PlayerHolder.prototype.myname = function() {
-        return this.name(this.myid);
     };
 
     PlayerHolder.prototype.id = function (name) {

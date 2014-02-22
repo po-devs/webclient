@@ -170,7 +170,7 @@ $(function() {
         beforeClose: function(event) {
             network.command('teamchange', {
                 color: colorPickerColor,
-                name: $("#trainer-name").val() || webclient.players.myname()
+                name: $("#trainer-name").val() || webclient.ownName()
             });
         }
     });
@@ -240,8 +240,32 @@ $(function() {
         }
     });
 
+    var $trainerUsername = $("#trainer_username");
+
     webclient.ui.playerList = new webclient.classes.PlayerList();
     webclient.players = new webclient.classes.PlayerHolder();
+    webclient.players.on("login", function (id, info) {
+        webclient.ownId = id;
+
+        $trainerUsername.text(webclient.ownName()).trigger('received');
+    }).on("playeradd", function (player, id, name) {
+        if (webclient.currentChannel() !== -1 && channels.current().hasPlayer(id)) {
+            webclient.ui.playerList.updatePlayer(id);
+        }
+
+        pms.playerLogin(id);
+
+        if (webclient.ownId === id) {
+            $trainerUsername.text(webclient.ownName()).trigger('received');
+        }
+    }).on("playerremove", function (id, friend) {
+        if (friend) {
+            pms.playerLogout(id);
+        }
+
+        battles.removePlayer(id);
+    });
+
     pms = new PMs();
     channels = new Channels();
     battles = new Battles();
@@ -388,7 +412,7 @@ function openColorPicker() {
         colorPickerColor = color;
     });
 
-    $("#trainer-name").val(webclient.players.name(webclient.players.myid));
+    $("#trainer-name").val(webclient.players.name(webclient.ownId));
 }
 
 var announcement = $("#announcement");
@@ -432,7 +456,7 @@ function sendMessage(sender) {
             }
             network.command('chat', {channel: targetid, message: msg});
         } else if (/^send-pm-/.test(idsender)) {
-            pms.pm(targetid).print(webclient.players.myid, msg);
+            pms.pm(targetid).print(webclient.ownId, msg);
             network.command('pm', {to: targetid, message: msg});
         } else if (/^send-battle-/.test(idsender)) {
             var battle = battles.battles[targetid];

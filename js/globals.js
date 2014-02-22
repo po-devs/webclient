@@ -21,12 +21,18 @@ webclient = {
 
     // Current channel
     channel: null,
-    channelId: function () {
+    currentChannel: function () {
         return webclient.channel ? webclient.channel.id : -1;
     },
 
     // Current player shown in the info dialog
-    shownPlayer: -1
+    shownPlayer: -1,
+
+    // The player's id
+    ownId: -1,
+    ownName: function () {
+        return webclient.players ? webclient.players.name(webclient.ownId) : "";
+    }
 };
 
 $.jqcache = {};

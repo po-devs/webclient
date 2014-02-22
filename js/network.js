@@ -310,7 +310,7 @@
             battles.addBattle(battle);
 
             /* Update whole player list */
-            if (chanid === webclient.channelId()) {
+            if (chanid === webclient.currentChannel()) {
                 webclient.ui.playerList.setPlayers(webclient.channel.playerIds());
             }
         },
