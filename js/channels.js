@@ -186,7 +186,7 @@ Channel.prototype.print = function (msg, html, noParse) {
 
     if (!noParse) {
         if (html) {
-            msg = format(msg) || msg;
+            msg = convertPOLinks($("<div>").html(msg)).html();
         } else {
             var action = false;
             msg = utils.escapeHtml(msg);

@@ -215,10 +215,7 @@
             }
         },
         announcement: function (payload) {
-            // TODO: Iframe this?
-            announcement.html(payload);
-            format(announcement);
-
+            showHtmlInFrame(announcement, payload);
             announcement.css("visibility", "visible");
         },
         channels: function (payload) {
