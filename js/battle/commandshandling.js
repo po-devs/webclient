@@ -250,7 +250,7 @@ BattleTab.prototype.dealWithSpectatorjoin = function(params) {
     this.print(params.name + " is watching the battle.");
 
     if (this.isCurrent()) {
-        playerList.addPlayer(params.id);
+        webclient.ui.playerList.addPlayer(params.id);
     }
 };
 
@@ -259,7 +259,7 @@ BattleTab.prototype.dealWithSpectatorleave = function(params) {
     delete this.spectators[params.id];
 
     if (this.isCurrent()) {
-        playerList.removePlayer(params.id);
+        webclient.ui.playerList.removePlayer(params.id);
     }
 };
 

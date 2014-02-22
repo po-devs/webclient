@@ -234,14 +234,14 @@
         },
         players: function (payload) {
             var params = JSON.parse(payload);
-            players.addPlayer(params);
+            webclient.players.addPlayer(params);
 
-            if (currentOpenPlayer !== -1 && currentOpenPlayer in params && "info" in params[currentOpenPlayer]) {
-                updatePlayerInfo(params[currentOpenPlayer]);
+            if (webclient.shownPlayer !== -1 && webclient.shownPlayer in params && "info" in params[webclient.shownPlayer]) {
+                updatePlayerInfo(params[webclient.shownPlayer]);
             }
         },
         playerlogout: function (payload) {
-            players.removePlayer(payload);
+            webclient.players.removePlayer(payload);
         },
         join: function (payload) {
             var parts = payload.split("|"),
@@ -256,7 +256,7 @@
                 player = parts[1];
 
             channels.channel(chan).removePlayer(player);
-            players.testPlayerOnline(player);
+            webclient.players.testPlayerOnline(player);
         },
         channelplayers: function (payload) {
             var params = JSON.parse(payload);
@@ -264,7 +264,7 @@
         },
         login: function (payload) {
             var params = JSON.parse(payload);
-            players.login(params.id, params.info);
+            webclient.players.login(params.id, params.info);
 
             this.command('getrankings', {id: params.id});
         },
@@ -311,7 +311,7 @@
 
             /* Update whole player list */
             if (chanid === webclient.channelId()) {
-                playerList.setPlayers(webclient.channel.playerIds());
+                webclient.ui.playerList.setPlayers(webclient.channel.playerIds());
             }
         },
         battlefinished: function (payload) {

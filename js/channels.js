@@ -149,7 +149,7 @@ Channel.prototype.newPlayer = function(player) {
     this.players[player] = true;
 
     if (this.isCurrent()) {
-        playerList.addPlayer(player);
+        webclient.ui.playerList.addPlayer(player);
     }
 };
 
@@ -157,10 +157,10 @@ Channel.prototype.removePlayer = function(player) {
     delete this.players[player];
 
     if (this.isCurrent()) {
-        playerList.removePlayer(player);
+        webclient.ui.playerList.removePlayer(player);
     }
 
-    if (player == players.myid) {
+    if (player == webclient.players.myid) {
         if (this.closable & 2) {
             this.close2();
         } else {
@@ -196,9 +196,9 @@ Channel.prototype.print = function (msg, html, noParse) {
 
             if (msg.indexOf(":") !== -1 && !action) {
                 var pref = msg.substr(0, msg.indexOf(":"));
-                var id = players.id(pref);
-                var auth = players.auth(id);
-                if (players.isIgnored(id))
+                var id = webclient.players.id(pref);
+                var auth = webclient.players.auth(id);
+                if (webclient.players.isIgnored(id))
                     return;
 
                 if (pref === "~~Server~~") {
@@ -242,7 +242,7 @@ Channel.prototype.disconnect = function() {
     var pl = this.players, id;
     this.players = {};
     for (id in pl) {
-        players.testPlayerOnline(id);
+        webclient.players.testPlayerOnline(id);
     }
 };
 
@@ -258,5 +258,5 @@ Channel.prototype.playerIds = function() {
 };
 
 Channel.prototype.generatePlayerList = function() {
-    playerList.setPlayers(this.playerIds());
+    webclient.ui.playerList.setPlayers(this.playerIds());
 };

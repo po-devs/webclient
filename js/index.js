@@ -149,7 +149,7 @@ $(function() {
         webclient.channel = objFromId(hrefid);
 
         /* Update player list when switching channels */
-        playerList.setPlayers(webclient.channel.playerIds());
+        webclient.ui.playerList.setPlayers(webclient.channel.playerIds());
     }).bind('tabsshow', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
@@ -170,7 +170,7 @@ $(function() {
         beforeClose: function(event) {
             network.command('teamchange', {
                 color: colorPickerColor,
-                name: $("#trainer-name").val() || players.myname()
+                name: $("#trainer-name").val() || webclient.players.myname()
             });
         }
     });
@@ -184,7 +184,7 @@ $(function() {
             var params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
 
             // Add other commands here..
-            var pid = players.id(params[1]);
+            var pid = webclient.players.id(params[1]);
             if (pid === -1)
                 pid = parseInt(params[1]);
             if (params[0] === "join") {
@@ -195,10 +195,10 @@ $(function() {
             } else if (params[0] == "ignore") {
                 // Ignore the user
                 if (!isNaN(pid)) {
-                    if (players.isIgnored(pid)) {
-                        players.addIgnore(pid);
+                    if (webclient.players.isIgnored(pid)) {
+                        webclient.players.addIgnore(pid);
                     } else {
-                        players.removeIgnore(pid);
+                        webclient.players.removeIgnore(pid);
                     }
                 }
             } else if (params[0] == "watch") {
@@ -240,8 +240,8 @@ $(function() {
         }
     });
 
-    playerList = new PlayerList();
-    players = new Players();
+    webclient.ui.playerList = new webclient.classes.PlayerList();
+    webclient.players = new webclient.classes.PlayerHolder();
     pms = new PMs();
     channels = new Channels();
     battles = new Battles();
@@ -291,18 +291,17 @@ $(function() {
     $('#search_filter').filterFor('#player-list', {
         caseSensitive: false
     }).keyup(function () { /* The players list also needs to know the filter, when it adds new elements whether to show them or not */
-        playerList.filter = $(this).val().toLowerCase();
+        webclient.ui.playerList.filter = $(this).val().toLowerCase();
     });
 });
 
 /* Player that is shown in the trainer window */
-currentOpenPlayer = -1;
 $("#player-dialog").dialog({
     autoOpen: false,
     modal: true,
     resizeable: false,
     close: function() {
-        currentOpenPlayer = -1;
+        webclient.shownPlayer = -1;
     }
 });
 
@@ -313,10 +312,11 @@ var updatePlayerInfo = function(player) {
 
 $("#player-list").on("click", "li", function(event) {
     var id = event.currentTarget.id.split("-")[1];
-    currentOpenPlayer = id;
+    webclient.shownPlayer = id;
+
     var dialog = $("#player-dialog");
     dialog.html('<div class="avatar"></div><div class="trainer-info">loading...</div>');
-    var player = players.id(id);
+    var player = webclient.players.id(id);
 
     if (player.hasOwnProperty("info")) {
         updatePlayerInfo(player);
@@ -330,7 +330,7 @@ $("#player-list").on("click", "li", function(event) {
             var battle = battles.battlesByPlayer[id][bid];
             var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
             dialog.append($(
-                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against " + utils.escapeHtml(players.name(opp)) + "</div>"
+                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
             ));
         }
     }
@@ -338,25 +338,35 @@ $("#player-list").on("click", "li", function(event) {
         {
             text: "Private Message",
             'class': "click_button",
-            click: function() { pms.pm(id); dialog.dialog("close"); }
+            click: function() {
+                pms.pm(id);
+                dialog.dialog("close");
+            }
         }
     ];
-    if (players.isIgnored(id)) {
+
+    if (webclient.players.isIgnored(id)) {
         buttons.push({
             text: "Unignore",
             'class': "click_button",
-            click: function() { players.removeIgnore(id); dialog.dialog("close"); }
+            click: function() {
+                webclient.players.removeIgnore(id);
+                dialog.dialog("close");
+            }
         });
     } else {
         buttons.push({
             text: "Ignore",
             'class': "click_button",
-            click: function() { players.addIgnore(id); dialog.dialog("close"); }
+            click: function() {
+                webclient.players.addIgnore(id);
+                dialog.dialog("close");
+            }
         });
     }
 
     dialog
-        .dialog("option", "title", players.name(id))
+        .dialog("option", "title", webclient.players.name(id))
         .dialog("option", "buttons", buttons)
         .dialog({ position: { my: "center top", at: "center top+40px", of: window } })
         .dialog("open");
@@ -378,7 +388,7 @@ function openColorPicker() {
         colorPickerColor = color;
     });
 
-    $("#trainer-name").val(players.name(players.myid));
+    $("#trainer-name").val(webclient.players.name(webclient.players.myid));
 }
 
 var announcement = $("#announcement");
@@ -414,7 +424,7 @@ function sendMessage(sender) {
         if (/^send-channel-/.test(idsender)) {
             /* Temporary until interface is improved */
             if (/^\/pm/i.test(msg)) {
-                var pid = players.id(msg.slice(4));
+                var pid = webclient.players.id(msg.slice(4));
                 if (pid !== -1) {
                     pms.pm(pid);
                     return;
@@ -422,7 +432,7 @@ function sendMessage(sender) {
             }
             network.command('chat', {channel: targetid, message: msg});
         } else if (/^send-pm-/.test(idsender)) {
-            pms.pm(targetid).print(players.myid, msg);
+            pms.pm(targetid).print(webclient.players.myid, msg);
             network.command('pm', {to: targetid, message: msg});
         } else if (/^send-battle-/.test(idsender)) {
             var battle = battles.battles[targetid];
