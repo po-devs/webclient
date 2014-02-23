@@ -4,7 +4,10 @@ $.ajaxSetup({
     cache: true
 });
 
-vex.defaultOptions.className = 'vex-theme-os';
+if (vex) {
+    vex.defaultOptions.className = 'vex-theme-os';
+}
+
 webclient = {
     registry: {
         descriptions: {}
@@ -15,9 +18,12 @@ webclient = {
     },
 
     classes: {},
+
+    // Initialized later
     teambuilder: null,
     players: null,
     channels: null,
+    pms: null,
 
     // Current channel
     channel: null,
@@ -34,3 +40,5 @@ webclient = {
         return webclient.players ? webclient.players.name(webclient.ownId) : "";
     }
 };
+
+$.observable(webclient);

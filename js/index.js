@@ -130,7 +130,7 @@ $(function() {
         if (/^#channel-/.test(hrefid)) {
             ret = channels.hasChannel(id) ? channels.channel(id) : undefined;
         } else if (/^#pm-/.test(hrefid)) {
-            ret = pms.pm(id);
+            ret = webclient.pms.pm(id);
         } else if (/^#battle-/.test(hrefid)) {
             ret = battles.battle(id);
         }
@@ -155,7 +155,7 @@ $(function() {
 
         /* Resizes chat area in funciton of the height of the channel tab */
         /* Scrolls down the chat of the current tab */
-        var chattextarea = $(hrefid+" .chatTextArea")[0];
+        var chattextarea = $(hrefid + " .chatTextArea");
         chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
 
         /* The tab is selected now, so any unseen activity is removed */
@@ -189,9 +189,10 @@ $(function() {
                 pid = parseInt(params[1]);
             if (params[0] === "join") {
                 joinChannel(params[1]);
-            } else if (params[0] == "pm") {
-                if (!isNaN(pid))
-                    pms.pm(pid);
+            } else if (params[0] == "pm") { // Create pm window
+                if (!isNaN(pid)) {
+                    webclient.pms.pm(pid).activateTab();
+                }
             } else if (params[0] == "ignore") {
                 // Ignore the user
                 if (!isNaN(pid)) {
@@ -215,6 +216,10 @@ $(function() {
 
     webclient.ui.playerList = new webclient.classes.PlayerList();
     webclient.players = new webclient.classes.PlayerHolder();
+    webclient.pms = new webclient.classes.PMHolder();
+    channels = new Channels();
+    battles = new Battles();
+
     webclient.players.on("login", function (id, info) {
         webclient.ownId = id;
 
@@ -224,22 +229,17 @@ $(function() {
             webclient.ui.playerList.updatePlayer(id);
         }
 
-        pms.playerLogin(id);
-
+        webclient.pms.trigger("playerlogin", id);
         if (webclient.ownId === id) {
             $trainerUsername.text(webclient.ownName()).trigger('received');
         }
     }).on("playerremove", function (id, friend) {
         if (friend) {
-            pms.playerLogout(id);
+            webclient.pms.trigger("playerlogout", id);
         }
 
         battles.removePlayer(id);
     });
-
-    pms = new PMs();
-    channels = new Channels();
-    battles = new Battles();
 
     $("#join-channel").autocomplete({
         source: function (request, response) {
@@ -337,7 +337,7 @@ $("#player-list").on("click", "li", function(event) {
             text: "Private Message",
             'class': "click_button",
             click: function() {
-                pms.pm(id);
+                webclient.pms.pm(id).activateTab();
                 dialog.dialog("close");
             }
         }
@@ -424,13 +424,13 @@ function sendMessage(sender) {
             if (/^\/pm/i.test(msg)) {
                 var pid = webclient.players.id(msg.slice(4));
                 if (pid !== -1) {
-                    pms.pm(pid);
+                    webclient.pms.pm(pid).activateTab();
                     return;
                 }
             }
             network.command('chat', {channel: targetid, message: msg});
         } else if (/^send-pm-/.test(idsender)) {
-            pms.pm(targetid).print(webclient.ownId, msg);
+            webclient.pms.pm(targetid).print(webclient.ownId, msg);
             network.command('pm', {to: targetid, message: msg});
         } else if (/^send-battle-/.test(idsender)) {
             var battle = battles.battles[targetid];

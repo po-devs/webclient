@@ -2,6 +2,7 @@
     function ChannelTab(/* id */) {
         //this.id = id;
         //this.shortHand = "channel-tab";
+        $.observable(this);
     }
 
     ChannelTab.prototype.isCurrent = function () {
@@ -13,4 +14,6 @@
             $("#channel-tabs > ul li a[href='#" + this.shortHand + "-" + this.id + "']").addClass("tab-active");
         }
     };
+
+    webclient.classes.ChannelTab = ChannelTab;
 }());

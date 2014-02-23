@@ -108,10 +108,9 @@
             wasFriend = true;
         }
 
+        this.trigger("playerremove", id, wasFriend);
         delete this.names[player.name.toLowerCase()];
         delete this.players[id];
-
-        this.trigger("playerremove", id, wasFriend);
     };
 
     PlayerHolder.prototype.player = function (pid) {

@@ -127,7 +127,7 @@ function Channel(id, name) {
     }
 }
 
-utils.inherits(Channel, ChannelTab);
+utils.inherits(Channel, webclient.classes.ChannelTab);
 
 Channel.prototype.close = function() {
     channels.leaveChannel(this.id);

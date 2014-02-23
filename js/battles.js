@@ -163,7 +163,7 @@ function BattleTab(pid, conf, team) {
     }
 }
 
-utils.inherits(BattleTab, ChannelTab);
+utils.inherits(BattleTab, webclient.classes.ChannelTab);
 
 BattleTab.prototype.pause = function() {
     this.paused = true;

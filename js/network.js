@@ -274,7 +274,7 @@
         pm: function (payload) {
             var params = JSON.parse(payload),
                 src = params.src;
-            pms.pm(src).print(src, params.message);
+            webclient.pms.pm(src).print(src, params.message);
         },
         watchbattle: function (payload) {
             var id = payload.split("|")[0];
