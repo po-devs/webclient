@@ -114,17 +114,16 @@ function Channel(id, name) {
 
     this.chatCount = 0;
 
-    if ($("#channel-" + id).length === 0) {
+    var $chan = $("#channel-" + id);
+    if ($chan.length === 0 || $chan.data('initialized') === false) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id))+'<i class="fa fa-times-circle"></i>');
-        /* Cleaner solution would be appreciated */
-        $("#channel-" + id).html('<div id="chatTextArea" class="textbox"></div>'
-            +'<div class="send_chat_message">\
-            <p>\
-                <input name="message" type="text" history="true" id="send-channel-'+id+'" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />\
-                <i class="fa fa-arrow-circle-o-right fa-2x"></i>\
-            </p>\
-        </div>');
+        if ($chan.length === 0) {
+            $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id)) + '<i class="fa fa-times-circle"></i>');
+        }
+
+        this.chat = new webclient.classes.Chat('send-channel-' + id);
+        this.chat.appendTo($("#channel-" + id));
+        $chan.data('initialized', true);
     }
 }
 
@@ -139,7 +138,9 @@ Channel.prototype.setPlayers = function(players) {
     this.closable &= ~1;
 
     this.players = {};
-    players.forEach(function(id) {this.players[id] = true;}, this);
+    players.forEach(function(id) {
+        this.players[id] = true;
+    }, this);
 
     if (channels.currentId() == this.id) {
         this.generatePlayerList();
@@ -175,14 +176,7 @@ Channel.prototype.hasPlayer = function(player) {
     return player in this.players;
 };
 
-Channel.prototype.chat = function () {
-    return $("#channel-" + this.id + " #chatTextArea");
-};
-
 Channel.prototype.print = function (msg, html, noParse) {
-    var chatTextArea = this.chat()[0];
-    var scrollDown = chatTextArea.scrollTop >= chatTextArea.scrollHeight - chatTextArea.offsetHeight;
-
     if (!noParse) {
         if (html) {
             msg = convertPOLinks($("<div>").html(msg)).html();
@@ -221,17 +215,7 @@ Channel.prototype.print = function (msg, html, noParse) {
         }
     }
 
-    chatTextArea.innerHTML += msg + "<br/>\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-    if (scrollDown) {
-        var chattextarea = $(chatTextArea);
-        chattextarea.animate({scrollTop: chatTextArea.scrollHeight}, "fast");
-        //chatTextArea.scrollTop = chatTextArea.scrollHeight;
-    }
+    this.chat.insertMessage(msg);
 };
 
 Channel.prototype.changeName = function (name) {

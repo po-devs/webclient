@@ -247,8 +247,8 @@ BattleTab.prototype.print = function(msg, args) {
     if (this.chatCount++ % 500 === 0) {
         chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
     }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
 
+    chatTextArea.scrollTop = chatTextArea.scrollHeight;
     this.activateTab();
 };
 

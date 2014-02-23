@@ -183,14 +183,7 @@
                 <a href="#channel-0">Console<i class="fa fa-times-circle"></i></a>
             </li>
         </ul>
-        <div id="channel-0">
-            <div id="chatTextArea" class="textbox"></div>
-            <div class="send_chat_message">
-                <p>
-                    <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
-                    <i class="fa fa-arrow-circle-o-right fa-2x"></i>
-                </p>
-            </div>
+        <div id="channel-0" data-initialized="false">
         </div>
     </div>
 </div>
@@ -217,6 +210,7 @@
 <script src="js/postorage.js"></script>
 <script src="js/utilities.js"></script>
 <script src="js/network.js"></script>
+<script src="js/chat.js"></script>
 <script src="js/channeltab.js"></script>
 <script src="js/battles.js"></script>
 <script src="js/player.js"></script>

@@ -155,7 +155,7 @@ $(function() {
 
         /* Resizes chat area in funciton of the height of the channel tab */
         /* Scrolls down the chat of the current tab */
-        var chattextarea = $(hrefid+" #chatTextArea")[0];
+        var chattextarea = $(hrefid+" .chatTextArea")[0];
         chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
 
         /* The tab is selected now, so any unseen activity is removed */
@@ -208,35 +208,6 @@ $(function() {
         } else {
             /* Make sure link opens in a new window */
             this.target = "_blank";
-        }
-    });
-
-    $(document).on("keydown", "input[history=true],textarea[history=true]", function (event) {
-        var elem = event.currentTarget,
-            maxHistSize = 100;
-        elem.hist = elem.hist || [];
-        elem.histIndex = elem.histIndex || 0;
-        if (event.which == 38) { // Up
-            if (elem.histIndex == elem.hist.length && elem.value.match(/\S/)) {
-                elem.hist.push(elem.value);
-                if (elem.hist.length > maxHistSize) {
-                    elem.hist.shift();
-                }
-            }
-            if (elem.histIndex > 0) {
-                elem.value = elem.hist[--elem.histIndex];
-            }
-        } else if (event.which == 40) { // Down
-            if (elem.histIndex < elem.hist.length) {
-                elem.value = elem.hist[++elem.histIndex] || "";
-            }
-        } else if (event.which == 13) { // Return
-            elem.hist.push(elem.value);
-            if (elem.hist.length > maxHistSize) {
-                elem.hist.shift();
-            }
-            elem.histIndex = elem.hist.length;
-            elem.value = "";
         }
     });
 

@@ -1,4 +1,5 @@
 {
+    "-W014": true,
     "eqnull": true,
     "globals": {
         "$": true

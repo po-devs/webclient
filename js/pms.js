@@ -37,15 +37,10 @@ function PM(pid) {
     if ($("#pm-" + pid).length === 0) {
         /* Create new tab */
         $('#channel-tabs').tabs("add", "#pm-" + pid, (name === "???" ? "Player " + pid : name)+'<i class="icon-remove-circle"></i>');
-        /* Cleaner solution would be appreciated */
-        $("#pm-" + pid).html('<div id="chatTextArea" class="textbox"></div>'
-                                      +'<div class="send_chat_message">\
-            <p>\
-                <input name="message" type="text" history="true" id="send-pm-'+pid+'" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />\
-                <i class="icon-circle-arrow-right icon-large"></i>\
-            </p>\
-        </div>'
-                                      );
+
+        this.chat = new webclient.classes.Chat('send-pm-' + pid);
+        this.chat.appendTo($("#pm-" + pid));
+
         pms.pms[pid] = this;
         switchToTab("#pm-"+pid);
     }
@@ -80,13 +75,7 @@ PM.prototype.reconnect = function() {
     this.disconnected = false;
 };
 
-PM.prototype.chat = function () {
-    return $("#pm-" + this.id + " #chatTextArea");
-};
-
 PM.prototype.print = function(pid, msg) {
-    var chatTextArea = this.chat()[0];
-
     if (pid !== -1) {
         msg = utils.escapeHtml(msg);
         var pref = "<span class='player-message' style='color: " + webclient.players.color(pid) + "'>" + webclient.players.name(pid) + ":</span>";
@@ -95,13 +84,7 @@ PM.prototype.print = function(pid, msg) {
         this.activateTab();
     }
 
-    chatTextArea.innerHTML += msg + "<br/>\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
+    this.chat.insertMessage(msg);
 };
 
 PM.prototype.close = function() {
