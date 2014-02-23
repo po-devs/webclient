@@ -288,6 +288,9 @@ $(function() {
     }).keyup(function () { /* The players list also needs to know the filter, when it adds new elements whether to show them or not */
         webclient.ui.playerList.filter = $(this).val().toLowerCase();
     });
+
+    $("#connect-button").click(connect);
+    $(".find-battle").click(findBattle);
 });
 
 /* Player that is shown in the trainer window */

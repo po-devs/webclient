@@ -127,7 +127,7 @@ function BattleTab(pid, conf, team) {
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
         together with the damage done to the Showdown window.
      */
-    this.damageCause={};
+    this.damageCause = {};
     this.players = [webclient.players.name(conf.players[0]), webclient.players.name(conf.players[1])];
     this.timer = setInterval(function() {
         self.updateTimers()
@@ -137,22 +137,23 @@ function BattleTab(pid, conf, team) {
 
     if ($("#battle-" + pid).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
+        $('#channel-tabs').tabs("add", "#battle-" + pid, name + '<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
         this.$content = $("#battle-" + pid);
         this.$content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
-        switchToTab("#battle-"+pid);
+        switchToTab("#battle-" + pid);
 
         if (team) {
-            this.myself = conf.players[1] == webclient.ownId ? 1 : 0;
+            this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
         }
 
         this.$content.find(".p1_name_content").text(this.name(0));
         this.$content.find(".p2_name_content").text(this.name(1));
-        this.$content.find(".send_battle_message").attr("id", "send-battle-" + this.id);
-        this.$content.find(".send_battle_message").attr("onkeydown","if(event.keyCode==13)sendMessage(this);");
+
+        this.chat = new webclient.classes.Chat('send-battle-' + this.id);
+        this.chat.appendTo(this.$content.find(".battle_chat_content"));
 
         this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
         this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
@@ -209,13 +210,11 @@ BattleTab.prototype.nick = function(spot) {
     }
 };
 
-BattleTab.prototype.chat = function () {
-    return $("#battle-" + this.id + " .scrollable");
-};
-
 BattleTab.prototype.print = function(msg, args) {
+    var linebreak = true;
+
     /* Do not print empty message twice in a row */
-    if (msg.length == 0) {
+    if (msg.length === 0) {
         if (this.blankMessage) {
             return;
         }
@@ -223,8 +222,6 @@ BattleTab.prototype.print = function(msg, args) {
     } else {
         this.blankMessage = false;
     }
-
-    var chatTextArea = this.chat()[0];
 
     if (args) {
         if ("player" in args) {
@@ -234,28 +231,12 @@ BattleTab.prototype.print = function(msg, args) {
             msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
         } else if ("css" in args && args.css == "turn") {
             this.blankMessage = true;
+            linebreak = false;
         }
     }
 
-    if (!msg.contains("<h2")) {
-        msg += "<br/>";
-    }
-
-    chatTextArea.innerHTML += msg + "\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
+    this.chat.insertMessage(msg, linebreak);
     this.activateTab();
-};
-
-BattleTab.onChatKeyDown = function(event, obj) {
-    if(event.keyCode==13) {
-        sendMessage(obj);
-    }
 };
 
 BattleTab.prototype.player = function(spot) {

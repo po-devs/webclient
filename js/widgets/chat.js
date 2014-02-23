@@ -47,23 +47,24 @@ $(function () {
             }
         });
 
-        this.chatTextArea = this.element.find(".chatTextArea")[0];
+        this.chatTextArea = this.element.find(".chatTextArea");
         this.chatCount = 0;
     }
 
-    Chat.prototype.insertMessage = function (msg) {
+    Chat.prototype.insertMessage = function (msg, linebreak) {
         var chatTextArea = this.chatTextArea,
-            scrollDown = chatTextArea.scrollTop >= chatTextArea.scrollHeight - chatTextArea.offsetHeight;
+            cta = chatTextArea[0],
+            scrollDown = cta.scrollTop >= cta.scrollHeight - cta.offsetHeight;
 
-        chatTextArea.innerHTML += msg + "<br/>\n";
+        chatTextArea.append("<div class='chat-line'>" + msg + (linebreak !== false ? "<br/>" : "") + "</div>");
 
         /* Limit number of lines */
         if (this.chatCount++ % 500 === 0) {
-            chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
+            chatTextArea.html(chatTextArea.find(".chat-line").slice(-500));
         }
 
         if (scrollDown) {
-            $(chatTextArea).animate({scrollTop: chatTextArea.scrollHeight}, "fast");
+            $(chatTextArea).animate({scrollTop: cta.scrollHeight}, "fast");
         }
     };
 

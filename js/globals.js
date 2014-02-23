@@ -34,9 +34,3 @@ webclient = {
         return webclient.players ? webclient.players.name(webclient.ownId) : "";
     }
 };
-
-$.jqcache = {};
-// $.c("#password")
-$.c = function (selector) {
-    return $.jqcache[selector] || ($.jqcache[selector] = $(selector));
-};
