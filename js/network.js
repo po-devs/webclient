@@ -180,7 +180,7 @@
         },
         chat: function (payload) {
             var params = JSON.parse(payload),
-                chan = channels.channel(params.channel);
+                chan = webclient.channels.channel(params.channel);
 
             if ((params.channel == -1 && params.message.charAt(0) != "~") || !chan) {
                 displayMessage(params.message, params.html, true);
@@ -219,18 +219,18 @@
             announcement.css("visibility", "visible");
         },
         channels: function (payload) {
-            channels.setNames(JSON.parse(payload));
+            webclient.channels.setNames(JSON.parse(payload));
         },
         newchannel: function (payload) {
             var params = JSON.parse(payload);
-            channels.newChannel(params.id, params.name);
+            webclient.channels.newChannel(params.id, params.name);
         },
         removechannel: function (payload) {
-            channels.removeChannel(payload);
+            webclient.channels.removeChannel(payload);
         },
         channelnamechange: function (payload) {
             var params = JSON.parse(payload);
-            channels.changeChannelName(params.id, params.name);
+            webclient.channels.changeChannelName(params.id, params.name);
         },
         players: function (payload) {
             var params = JSON.parse(payload);
@@ -248,19 +248,19 @@
                 chan = parts[0],
                 player = parts[1];
 
-            channels.channel(chan).newPlayer(player);
+            webclient.channels.channel(chan).newPlayer(player);
         },
         leave: function (payload) {
             var parts = payload.split("|"),
                 chan = parts[0],
                 player = parts[1];
 
-            channels.channel(chan).removePlayer(player);
+            webclient.channels.channel(chan).removePlayer(player);
             webclient.players.testPlayerOnline(player);
         },
         channelplayers: function (payload) {
             var params = JSON.parse(payload);
-            channels.channel(params.channel).setPlayers(params.players);
+            webclient.channels.channel(params.channel).setPlayers(params.players);
         },
         login: function (payload) {
             var params = JSON.parse(payload);

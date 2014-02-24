@@ -128,7 +128,7 @@ $(function() {
             ret;
 
         if (/^#channel-/.test(hrefid)) {
-            ret = channels.hasChannel(id) ? channels.channel(id) : undefined;
+            ret = webclient.channels.hasChannel(id) ? webclient.channels.channel(id) : undefined;
         } else if (/^#pm-/.test(hrefid)) {
             ret = webclient.pms.pm(id);
         } else if (/^#battle-/.test(hrefid)) {
@@ -214,18 +214,19 @@ $(function() {
 
     var $trainerUsername = $("#trainer_username");
 
-    webclient.ui.playerList = new webclient.classes.PlayerList();
     webclient.players = new webclient.classes.PlayerHolder();
     webclient.pms = new webclient.classes.PMHolder();
-    channels = new Channels();
+    webclient.channels = new webclient.classes.ChannelHolder();
     battles = new Battles();
+
+    webclient.ui.playerList = new webclient.classes.PlayerList();
 
     webclient.players.on("login", function (id, info) {
         webclient.ownId = id;
 
         $trainerUsername.text(webclient.ownName()).trigger('received');
     }).on("playeradd", function (player, id, name) {
-        if (webclient.currentChannel() !== -1 && channels.current().hasPlayer(id)) {
+        if (webclient.currentChannel() !== -1 && webclient.channels.current().hasPlayer(id)) {
             webclient.ui.playerList.updatePlayer(id);
         }
 
@@ -241,10 +242,18 @@ $(function() {
         battles.removePlayer(id);
     });
 
+    webclient.channels.on("playerlistadd", function (id) {
+        webclient.ui.playerList.addPlayer(id);
+    }).on("playerlistremove", function (id) {
+        webclient.ui.playerList.removePlayer(id);
+    }).on("generateplayerlist", function (ids) {
+        webclient.ui.playerList.setPlayers(ids);
+    });
+
     $("#join-channel").autocomplete({
         source: function (request, response) {
-            var channelNames = (Object.keys(channels.names).map(function (value, index, array) {
-                return channels.names[value];
+            var channelNames = (Object.keys(webclient.channels.names).map(function (value, index, array) {
+                return webclient.channels.names[value];
             }));
 
             var req = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "gi");
@@ -253,7 +262,7 @@ $(function() {
             channelNames.forEach(function (value, index, array) {
                 /* Limits result to 30 channels. In the future should not limit but instead css the
                  autocomplete so that a long results list would be scrollable */
-                if (req.test(value) && possibleChannels.length <= 29) {
+                if (possibleChannels.length <= 29 && req.test(value)) {
                     possibleChannels.push(value);
                 }
             });
@@ -291,6 +300,9 @@ $(function() {
 
     $("#connect-button").click(connect);
     $(".find-battle").click(findBattle);
+
+    // Make register button disabled
+    $("#register").attr("disabled", true);
 });
 
 /* Player that is shown in the trainer window */
@@ -327,9 +339,15 @@ $("#player-list").on("click", "li", function(event) {
         for (var bid in battles.battlesByPlayer[id]) {
             var battle = battles.battlesByPlayer[id][bid];
             var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
-            dialog.append($(
-                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' onclick='$(\"#player-dialog\").dialog(\"close\");'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
-            ));
+            var element = $(
+                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' class='watch-battle-link'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
+            );
+
+            element.find(".watch-battle-link").click(function () {
+                dialog.dialog('close');
+            });
+
+            dialog.append(element);
         }
     }
     var buttons = [
@@ -370,9 +388,6 @@ $("#player-list").on("click", "li", function(event) {
         .dialog("open");
 });
 
-// Make register button disabled
-$("#register").attr("disabled", true);
-
 function wannaRegister() {
     network.command('register');
 }
@@ -394,8 +409,8 @@ function displayMessage(message, html, parseExtras) {
     var id;
     html = !!html;
 
-    for (id in channels.channels) {
-        channels.channel(id).print(message, html, !parseExtras);
+    for (id in webclient.channels.channels) {
+        webclient.channels.channel(id).print(message, html, !parseExtras);
     }
 }
 

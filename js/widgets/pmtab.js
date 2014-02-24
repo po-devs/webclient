@@ -19,7 +19,7 @@
         }
     }
 
-    utils.inherits(PMTab, webclient.classes.ChannelTab);
+    utils.inherits(PMTab, webclient.classes.BaseTab);
 
     var pmtab = PMTab.prototype;
     pmtab.playerIds = function () {
@@ -54,7 +54,7 @@
         if (pid !== -1) {
             msg = utils.escapeHtml(msg);
             var pref = "<span class='player-message' style='color: " + webclient.players.color(pid) + "'>" + webclient.players.name(pid) + ":</span>";
-            msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
+            msg = pref + " " + utils.addChannelLinks(msg, webclient.channels.channelsByName(true));
 
             this.activateTab();
         }

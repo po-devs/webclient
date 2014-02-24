@@ -147,8 +147,8 @@
             return;
         }
 
-        for (i in channels.channels) {
-            if (player in channels.channel(i).players) {
+        for (i in webclient.channels.channels) {
+            if (player in webclient.channels.channel(i).players) {
                 return;
             }
         }
