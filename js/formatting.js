@@ -61,6 +61,10 @@ function convertPOLinks(element) {
             secureIframe, formattedHtml,
             contentDocument, contentBody;
 
+        if (!elem.length) {
+            return;
+        }
+
         if (containsHtml && hasIframeSandbox) {
             // If we want to format html, we will have to use a sandboxed iframe.
             // Otherwise things like
@@ -68,8 +72,8 @@ function convertPOLinks(element) {
             // Will execute
 
             // To access the contentDocument, we must set allow-same-origin
-            elem.html("<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin'></iframe>");
-            secureIframe = elem.find("iframe")[0];
+            elem[0].innerHTML = "<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin'></iframe>";
+            secureIframe = elem[0].querySelector("iframe")[0];
             if (!secureIframe) {
                 elem.text(html);
                 return;
