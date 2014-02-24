@@ -59,7 +59,7 @@
             <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
             <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
             <br style="clear:both;" />
-            <span class="button" onclick="connect()">Connect</span><br style="clear:both;" />
+            <span class="button" id="connect-button">Connect</span><br style="clear:both;" />
         </div>
     </div>
 </div>
@@ -69,7 +69,7 @@
     <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
     <span id="trainer_username"></span>
     <br style="clear:both;" />
-    <span onclick="findBattle(); return false;" class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
+    <span class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
     <div class="dropdown">
         <span class="dropdown_button" data-teambuilder="true">Teams<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
         <div class="dropdown_content">
@@ -171,10 +171,10 @@
     </ul>
 </div>
 <div class="middle_block" id="user_params">
-    loading...
+    Loading...
 </div>
 <div class="middle_block" id="teambuilder">
-    loading...
+    Loading...
 </div>
 <div class="middle_block" id="content">
     <div id="channel-tabs">
@@ -183,14 +183,7 @@
                 <a href="#channel-0">Console<i class="fa fa-times-circle"></i></a>
             </li>
         </ul>
-        <div id="channel-0">
-            <div id="chatTextArea" class="textbox"></div>
-            <div class="send_chat_message">
-                <p>
-                    <input name="message" type="text" history="true" id="send-channel-0" onkeydown="if(event.keyCode==13)sendMessage(this);" placeholder="Start typing your message here..." />
-                    <i class="fa fa-arrow-circle-o-right fa-2x"></i>
-                </p>
-            </div>
+        <div id="channel-0" data-initialized="false">
         </div>
     </div>
 </div>
@@ -199,30 +192,44 @@
 <div id="battle-html" style="display: none"></div>
 <div id='player-dialog' title='User Menu'></div>
 
-<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>
+
+<!-- Libraries -->
 <script src="libs/js/nprogress.js"></script>
 <script src="libs/jquery.knob.js"></script>
 <script src="libs/jquery.tablesorter.js"></script>
 <script src="libs/jquery.formValues.js"></script>
+<script src="libs/jquery.filterFor.js"></script>
 <script src="libs/farbtastic.js"></script>
 <script src="libs/js/vex.combined.min.js"></script>
 <script src="libs/combobox.js"></script>
 <script src="libs/combobox.utilities.js"></script>
 <script src="libs/js/toggles.js"></script>
 <script src="libs/md5.js"></script>
-<script src="js/configuration.js"></script>
-<script src="js/postorage.js"></script>
+<script src="libs/js/riot.js"></script>
+
+<script src="js/webclient.js"></script>
 <script src="js/utilities.js"></script>
+
+<!-- Widgets -->
+<script src="js/widgets/chat.js"></script>
+<script src="js/widgets/basetab.js"></script>
+<script src="js/widgets/pmtab.js"></script>
+<script src="js/widgets/channeltab.js"></script>
+<script src="js/widgets/playerlist.js"></script>
+
+<!-- Application logic -->
+<script src="js/postorage.js"></script>
 <script src="js/network.js"></script>
-<script src="js/channeltab.js"></script>
 <script src="js/battles.js"></script>
-<script src="js/players.js"></script>
-<script src="js/pms.js"></script>
-<script src="js/channels.js"></script>
+<script src="js/player.js"></script>
+<script src="js/pm.js"></script>
+<script src="js/channel.js"></script>
 <script src="js/formatting.js"></script>
 <script src="js/index.js"></script>
 
+<!-- Battles -->
 <script src="js/battle/anim.js"></script>
 <script src="js/battle/commandshandling.js"></script>
 

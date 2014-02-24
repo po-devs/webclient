@@ -1,4 +1,6 @@
 function Battles() {
+    $.observable(this);
+
     this.battles = {};
     this.battleList = {};
     this.battlesByPlayer = {};
@@ -22,8 +24,8 @@ Battles.prototype.addBattle = function (battles) {
         }
         this.battlesByPlayer[battle.ids[1]][id] = battle;
 
-        playerList.updatePlayer(battle.ids[0]);
-        playerList.updatePlayer(battle.ids[1]);
+        webclient.ui.playerList.updatePlayer(battle.ids[0]);
+        webclient.ui.playerList.updatePlayer(battle.ids[1]);
 
         /* Is it a battle we're taking part in ? */
         if (battle.team) {
@@ -42,8 +44,8 @@ Battles.prototype.battleEnded = function(battleid, result) {
     this.removeBattle(battleid);
 
     /* We do nothing with result yet... no printing channel events?! */
-    playerList.updatePlayer(ids[0]);
-    playerList.updatePlayer(ids[1]);
+    webclient.ui.playerList.updatePlayer(ids[0]);
+    webclient.ui.playerList.updatePlayer(ids[1]);
 };
 
 /* Maybe instead of a direct call from players it should be bound by some kind of event listener and
@@ -53,7 +55,7 @@ Battles.prototype.removePlayer = function(pid) {
     for (var battleid in this.battlesByPlayer[pid]) {
         var battle = this.battlesByPlayer[pid][battleid];
         var ids = battle.ids;
-        if (! players.hasPlayer(ids[0] == pid ? ids[1] : ids[0])) {
+        if (!webclient.players.hasPlayer(ids[0] == pid ? ids[1] : ids[0])) {
             this.removeBattle(battleid);
         }
     }
@@ -94,7 +96,7 @@ function BattleTab(pid, conf, team) {
 
     /* me and meIdent are needed by PS stuff */
     this.me = {
-        name: players.myname()
+        name: webclient.ownName()
     };
 
     this.meIdent = {
@@ -125,30 +127,33 @@ function BattleTab(pid, conf, team) {
     /* PO separates damage message ("hurt by burn") and damage done. So we remember each damage message so we can give it
         together with the damage done to the Showdown window.
      */
-    this.damageCause={};
-    this.players = [players.name(conf.players[0]), players.name(conf.players[1])];
-    this.timer = setInterval(function() {self.updateTimers()}, 1000);
+    this.damageCause = {};
+    this.players = [webclient.players.name(conf.players[0]), webclient.players.name(conf.players[1])];
+    this.timer = setInterval(function() {
+        self.updateTimers()
+    }, 1000);
 
-    var name = players.name(conf.players[0]) + " vs " + players.name(conf.players[1]);
+    var name = webclient.players.name(conf.players[0]) + " vs " + webclient.players.name(conf.players[1]);
 
     if ($("#battle-" + pid).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#battle-" + pid, name+'<i class="icon-remove-circle"></i>');
+        $('#channel-tabs').tabs("add", "#battle-" + pid, name + '<i class="icon-remove-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
         this.$content = $("#battle-" + pid);
         this.$content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
-        switchToTab("#battle-"+pid);
+        switchToTab("#battle-" + pid);
 
         if (team) {
-            this.myself = conf.players[1] == players.myid ? 1 : 0;
+            this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
         }
 
         this.$content.find(".p1_name_content").text(this.name(0));
         this.$content.find(".p2_name_content").text(this.name(1));
-        this.$content.find(".send_battle_message").attr("id", "send-battle-" + this.id);
-        this.$content.find(".send_battle_message").attr("onkeydown","if(event.keyCode==13)sendMessage(this);");
+
+        this.chat = new webclient.classes.Chat('send-battle-' + this.id);
+        this.chat.appendTo(this.$content.find(".battle_chat_content"));
 
         this.print("<strong>Battle between " + this.name(0) + " and " + this.name(1) + " just started!</strong><br />");
         this.print("<strong>Mode:</strong> " + BattleTab.modes[conf.mode]);
@@ -158,7 +163,7 @@ function BattleTab(pid, conf, team) {
     }
 }
 
-utils.inherits(BattleTab, ChannelTab);
+utils.inherits(BattleTab, webclient.classes.BaseTab);
 
 BattleTab.prototype.pause = function() {
     this.paused = true;
@@ -205,13 +210,11 @@ BattleTab.prototype.nick = function(spot) {
     }
 };
 
-BattleTab.prototype.chat = function () {
-    return $("#battle-" + this.id + " .scrollable");
-};
-
 BattleTab.prototype.print = function(msg, args) {
+    var linebreak = true;
+
     /* Do not print empty message twice in a row */
-    if (msg.length == 0) {
+    if (msg.length === 0) {
         if (this.blankMessage) {
             return;
         }
@@ -220,38 +223,20 @@ BattleTab.prototype.print = function(msg, args) {
         this.blankMessage = false;
     }
 
-    var chatTextArea = this.chat().get(0);
-
     if (args) {
         if ("player" in args) {
             msg = escapeHtml(msg);
             var pid = this.conf.players[args.player];
-            var pref = "<span class='player-message' style='color: " + players.color(pid) + "'>" + players.name(pid) + ":</span>";
-            msg = pref + " " + utils.addChannelLinks(msg, channels.channelsByName(true));
+            var pref = "<span class='player-message' style='color: " + webclient.players.color(pid) + "'>" + webclient.players.name(pid) + ":</span>";
+            msg = pref + " " + utils.addChannelLinks(msg, webclient.channels.channelsByName(true));
         } else if ("css" in args && args.css == "turn") {
             this.blankMessage = true;
+            linebreak = false;
         }
     }
 
-    if (!msg.contains("<h2")) {
-        msg += "<br/>";
-    }
-
-    chatTextArea.innerHTML += msg + "\n";
-
-    /* Limit number of lines */
-    if (this.chatCount++ % 500 === 0) {
-        chatTextArea.innerHTML = chatTextArea.innerHTML.split("\n").slice(-500).join("\n");
-    }
-    chatTextArea.scrollTop = chatTextArea.scrollHeight;
-
+    this.chat.insertMessage(msg, linebreak);
     this.activateTab();
-};
-
-BattleTab.onChatKeyDown = function(event, obj) {
-    if(event.keyCode==13) {
-        sendMessage(obj);
-    }
 };
 
 BattleTab.prototype.player = function(spot) {
@@ -404,7 +389,7 @@ BattleTab.prototype.choose = function(choice)
 };
 
 BattleTab.prototype.isBattle = function() {
-    return this.conf.players[0] == players.myid || this.conf.players[1] == players.myid;
+    return this.conf.players[0] == webclient.ownId || this.conf.players[1] == webclient.ownId;
 };
 
 BattleTab.prototype.close = function() {

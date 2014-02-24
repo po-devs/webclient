@@ -92,7 +92,7 @@
         defaultserver: function (payload) {
             /* If the server is on the same IP as the relay, we display the server IP but
                 send localhost */
-            var server = payload.replace("localhost", relayIP),
+            var server = payload.replace("localhost", this.relay),
                 qserver = utils.queryField("server");
 
             $("#advanced-connection").val((qserver && qserver !== "default") ? qserver : server);
@@ -111,7 +111,7 @@
             for (i = 0, len = servers.length; i < len; i += 1) {
                 server = servers[i];
                 html += "<tr><td class='server-name'>" + server.name + "</td><td>" + server.num + ("max" in server ? " / " + server.max : "") + "</td>" + "<td class='server-ip'>" + server.ip + ":" + server.port + "</td></tr>";
-                serverDescriptions[server.name] = server.description;
+                webclient.registry.descriptions[server.name] = server.description;
             }
 
             $("#servers-list tbody").prepend(html);
@@ -180,7 +180,7 @@
         },
         chat: function (payload) {
             var params = JSON.parse(payload),
-                chan = channels.channel(params.channel);
+                chan = webclient.channels.channel(params.channel);
 
             if ((params.channel == -1 && params.message.charAt(0) != "~") || !chan) {
                 displayMessage(params.message, params.html, true);
@@ -215,59 +215,56 @@
             }
         },
         announcement: function (payload) {
-            // TODO: Iframe this?
-            announcement.html(payload);
-            format(announcement);
-
+            showHtmlInFrame(announcement, payload);
             announcement.css("visibility", "visible");
         },
         channels: function (payload) {
-            channels.setNames(JSON.parse(payload));
+            webclient.channels.setNames(JSON.parse(payload));
         },
         newchannel: function (payload) {
             var params = JSON.parse(payload);
-            channels.newChannel(params.id, params.name);
+            webclient.channels.newChannel(params.id, params.name);
         },
         removechannel: function (payload) {
-            channels.removeChannel(payload);
+            webclient.channels.removeChannel(payload);
         },
         channelnamechange: function (payload) {
             var params = JSON.parse(payload);
-            channels.changeChannelName(params.id, params.name);
+            webclient.channels.changeChannelName(params.id, params.name);
         },
         players: function (payload) {
             var params = JSON.parse(payload);
-            players.addPlayer(params);
+            webclient.players.addPlayer(params);
 
-            if (currentOpenPlayer !== -1 && currentOpenPlayer in params && "info" in params[currentOpenPlayer]) {
-                updatePlayerInfo(params[currentOpenPlayer]);
+            if (webclient.shownPlayer !== -1 && webclient.shownPlayer in params && "info" in params[webclient.shownPlayer]) {
+                updatePlayerInfo(params[webclient.shownPlayer]);
             }
         },
         playerlogout: function (payload) {
-            players.removePlayer(payload);
+            webclient.players.removePlayer(payload);
         },
         join: function (payload) {
             var parts = payload.split("|"),
                 chan = parts[0],
                 player = parts[1];
 
-            channels.channel(chan).newPlayer(player);
+            webclient.channels.channel(chan).newPlayer(player);
         },
         leave: function (payload) {
             var parts = payload.split("|"),
                 chan = parts[0],
                 player = parts[1];
 
-            channels.channel(chan).removePlayer(player);
-            players.testPlayerOnline(player);
+            webclient.channels.channel(chan).removePlayer(player);
+            webclient.players.testPlayerOnline(player);
         },
         channelplayers: function (payload) {
             var params = JSON.parse(payload);
-            channels.channel(params.channel).setPlayers(params.players);
+            webclient.channels.channel(params.channel).setPlayers(params.players);
         },
         login: function (payload) {
             var params = JSON.parse(payload);
-            players.login(params.id, params.info);
+            webclient.players.login(params.id, params.info);
 
             this.command('getrankings', {id: params.id});
         },
@@ -277,7 +274,7 @@
         pm: function (payload) {
             var params = JSON.parse(payload),
                 src = params.src;
-            pms.pm(src).print(src, params.message);
+            webclient.pms.pm(src).print(src, params.message);
         },
         watchbattle: function (payload) {
             var id = payload.split("|")[0];
@@ -313,8 +310,8 @@
             battles.addBattle(battle);
 
             /* Update whole player list */
-            if (chanid == currentChannel) {
-                playerList.setPlayers(room.playerIds());
+            if (chanid === webclient.currentChannel()) {
+                webclient.ui.playerList.setPlayers(webclient.channel.playerIds());
             }
         },
         battlefinished: function (payload) {
@@ -348,10 +345,13 @@
     };
 
     function Network() {
-        this.socket = null;
-        this._opened = false;
-
         this.buffer = [];
+        this.socket = null;
+
+        this.relay = '';
+        this.ip = '';
+
+        this._opened = false;
     }
 
     var proto = Network.prototype;
@@ -361,6 +361,9 @@
         }
 
         this.socket = new WebSocket("ws://" + ip);
+        this.ip = ip;
+        this.relay = ip.substr(0, ip.lastIndexOf(":"));
+
         this._opened = true;
         this.socket.onopen = this.onopen(onopen);
         this.socket.onmessage = this.onmessage();

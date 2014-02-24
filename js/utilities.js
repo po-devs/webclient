@@ -55,7 +55,6 @@ utils = {
         }
 
         var str = '', fullChanName, chanName, chr, lastIndex = 0, pos, i;
-
         while (index !== -1) {
             str += line.substring(lastIndex, index);
             lastIndex = index + 1; // Skip over the '#'
