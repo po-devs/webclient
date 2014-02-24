@@ -252,22 +252,26 @@ $(function() {
 
     $("#join-channel").autocomplete({
         source: function (request, response) {
-            var channelNames = (Object.keys(webclient.channels.names).map(function (value, index, array) {
-                return webclient.channels.names[value];
-            }));
+            var channelNames = webclient.channels.channelsByName(),
+                value, len, i;
 
-            var req = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "gi");
-            var possibleChannels = [];
+            var req = new RegExp("^" + $.ui.autocomplete.escapeRegex(request.term), "gi"),
+                possibleChannels = [];
 
-            channelNames.forEach(function (value, index, array) {
+            for (i = 0, len = channelNames.length; i < len; i += 1) {
+                if (possibleChannels.length >= 30) {
+                    break;
+                }
+
                 /* Limits result to 30 channels. In the future should not limit but instead css the
                  autocomplete so that a long results list would be scrollable */
-                if (possibleChannels.length <= 29 && req.test(value)) {
+                value = channelNames[i];
+                if (req.test(value)) {
                     possibleChannels.push(value);
                 }
-            });
-            possibleChannels.sort();
+            }
 
+            possibleChannels.sort();
             response(possibleChannels);
         },
         /* Makes you join the channel as soon as element is selected */

@@ -104,6 +104,7 @@
                     }
 
                     msg = pref + utils.addChannelLinks(msg.slice(msg.indexOf(":") + 1), webclient.channels.channelsByName(true));
+                    // TODO: Add by default, use a toggle css rule somewhere
                     if (poStorage("chat.timestamps", "boolean")) {
                         msg += "<span class='timestamp'>" + utils.timestamp() + "</span>";
                     }

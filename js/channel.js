@@ -113,15 +113,11 @@
     };
 
     channelholder.channelsByName = function (lowercase) {
-        var o = {},
+        var o = [],
             name;
 
-        if (lowercase) {
-            return this.byName;
-        }
-
         for (name in this.byName) {
-            o[name.toLowerCase()] = this.byName[name];
+            o.push(lowercase ? name.toLowerCase() : name)
         }
 
         return o;

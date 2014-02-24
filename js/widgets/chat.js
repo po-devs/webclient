@@ -41,7 +41,7 @@ $(function () {
 
     function Chat(inputid) {
         this.element = $('<div>').html($.render(template, {inputid: inputid}));
-        this.element.find("input").keydown(function () {
+        this.element.find("input").keydown(function (event) {
             if (event.keyCode === 13) {
                 sendMessage(this);
             }

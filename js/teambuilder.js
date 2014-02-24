@@ -152,7 +152,7 @@
                 $this = $(this);
                 pokeid = $this.closest('.pokemon-slot').find('.pokemon-slot-name').data('pokemon_id');
                 formeNum = pokeinfo.forme(pokeid);
-                pokeNum = pokenfo.species(pokeid);
+                pokeNum = pokeinfo.species(pokeid);
 
                 $this.find('.pokemon-slot-shiny').prop('checked', !($this.find('.pokemon-slot-shiny').prop('checked')));
                 $this.find('img').attr('src', pokeinfo.sprite({num: pokeNum, forme: formeNum, gen: +self.getTeamInfo('generation'), shiny: $this.find('.pokemon-slot-shiny').prop('checked')}));
