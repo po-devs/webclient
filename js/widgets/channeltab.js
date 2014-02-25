@@ -72,8 +72,8 @@
         return player in this.players;
     };
 
-    channeltab.print = function (msg, html, noParse) {
-        if (!noParse) {
+    channeltab.print = function (msg, html, raw) {
+        if (raw !== true) {
             if (html) {
                 msg = convertPOLinks($("<div>").html(msg)).html();
             } else {

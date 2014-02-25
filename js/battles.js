@@ -143,7 +143,7 @@ function BattleTab(pid, conf, team) {
         this.$content.html($("#battle-html").html());
 
         battles.battles[pid] = this;
-        switchToTab("#battle-" + pid);
+        webclient.switchToTab("#battle-" + pid);
 
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;

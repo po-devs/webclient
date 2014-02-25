@@ -39,13 +39,12 @@ $(function () {
         + '</p>'
         + '</div>';
 
+    // TODO: A single chat for all the channels.
     function Chat(inputid) {
         this.element = $('<div>').html($.render(template, {inputid: inputid}));
-        this.element.find("input").keydown(function (event) {
-            if (event.keyCode === 13) {
-                sendMessage(this);
-            }
-        });
+        this.element.find("input").keydown(utils.onEnterPressed(function () {
+            sendMessage(this);
+        }));
 
         this.chatTextArea = this.element.find(".chatTextArea");
         this.chatCount = 0;
