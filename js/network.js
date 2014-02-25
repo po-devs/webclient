@@ -215,7 +215,7 @@
             }
         },
         announcement: function (payload) {
-            /*showHtmlInFrame(announcement, payload);
+            /*webclient.sandboxHtml(announcement, payload);
             announcement.css("visibility", "visible");*/
         },
         channels: function (payload) {

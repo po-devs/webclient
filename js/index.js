@@ -90,24 +90,29 @@ $(function() {
 });
 
 $(function() {
+    var $advancedConnection = $("#advanced-connection"),
+        $serverDescription = $("#server-description"),
+        $username = $("#username"),
+        $channeltabs = $("#channel-tabs");
+
     var storedRelayIp = poStorage("relay");
     $("#relay").keydown(utils.onEnterPressed(webclient.connectToRelay))
         .val(storedRelayIp || "server.pokemon-online.eu:10508");
 
     var username = poStorage("player.name");
     if (username) {
-        $("#username").val(username);
+        $username.val(username);
     }
 
     $("#servers-list tbody").on('click', 'tr', function() {
         var $this = $(this);
-        $("#advanced-connection").val($this.find('.server-ip').text());
-        showHtmlInFrame("#server-description", webclient.registry.descriptions[$this.find('.server-name').text()]);
+
+        $advancedConnection.val($this.find('.server-ip').text());
+        webclient.sandboxHtml($serverDescription, webclient.registry.descriptions[$this.find('.server-name').text()]);
     }).on('dblclick', 'tr', webclient.connectToServer);
 
     $("#advanced-connection, #username, #password").keydown(utils.onEnterPressed(webclient.connectToServer));
 
-    var $channeltabs = $("#channel-tabs");
     $channeltabs.tabs()
         .find(".ui-tabs-nav")
         .sortable({
@@ -132,7 +137,7 @@ $(function() {
         return ret;
     };
 
-    $("#channel-tabs").on('tabsselect', function(event, ui) {
+    $channeltabs.on('tabsselect', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
         /* Changes the current object in memory */
@@ -153,53 +158,6 @@ $(function() {
     }).bind('tabscreate', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
         webclient.channel = objFromId(hrefid);
-    });
-
-    $("#colorDialog").dialog({
-        autoOpen: false,
-        beforeClose: function(event) {
-            network.command('teamchange', {
-                color: colorPickerColor,
-                name: $("#trainer-name").val() || webclient.ownName()
-            });
-        }
-    });
-
-    $(document).on("click", "a", function (event) {
-        var href = this.href;
-
-        if (/^po:/.test(href)) {
-            event.preventDefault();
-
-            var params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
-
-            // Add other commands here..
-            var pid = webclient.players.id(params[1]);
-            if (pid === -1)
-                pid = parseInt(params[1]);
-            if (params[0] === "join") {
-                webclient.joinChannel(params[1]);
-            } else if (params[0] == "pm") { // Create pm window
-                if (!isNaN(pid)) {
-                    webclient.pms.pm(pid).activateTab();
-                }
-            } else if (params[0] == "ignore") {
-                // Ignore the user
-                if (!isNaN(pid)) {
-                    if (webclient.players.isIgnored(pid)) {
-                        webclient.players.addIgnore(pid);
-                    } else {
-                        webclient.players.removeIgnore(pid);
-                    }
-                }
-            } else if (params[0] == "watch") {
-                network.command('watch', {battle: params[1]});
-            }
-            // TODO: watchbattle(id/name), reconnect(void)
-        } else {
-            /* Make sure link opens in a new window */
-            this.target = "_blank";
-        }
     });
 
     var $trainerUsername = $("#trainer_username");
@@ -238,6 +196,12 @@ $(function() {
         webclient.ui.playerList.removePlayer(id);
     }).on("generateplayerlist", function (ids) {
         webclient.ui.playerList.setPlayers(ids);
+    }).on("testplayers", function (players) {
+        var id;
+
+        for (id in players) {
+            webclient.players.testPlayerOnline(id);
+        }
     });
 
     $("#join-channel").autocomplete({
@@ -313,7 +277,7 @@ $(function() {
         var id = event.currentTarget.id.split("-")[1],
             dialog = $("#player-dialog"),
             player = webclient.players.id(id),
-            buttons = [],
+            buttons,
             battles, battle, opp, element, bid;
 
         dialog.html('<div class="avatar"></div><div class="trainer-info">Loading...</div>');
@@ -332,6 +296,7 @@ $(function() {
         /* Show the list of battles in the player info */
         if (battles.isBattling(id)) {
             battles = battles.battlesByPlayer[id];
+
             for (bid in battles) {
                 battle = battles[id];
                 opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
@@ -344,35 +309,24 @@ $(function() {
             }
         }
 
-        buttons.push({
-            text: "Private Message",
-            'class': "click_button",
-            click: function() {
-                webclient.pms.pm(id).activateTab();
-                dialog.dialog("close");
+        buttons = [
+            {
+                text: "Private Message",
+                'class': "click_button",
+                click: function() {
+                    webclient.pms.pm(id).activateTab();
+                    dialog.dialog("close");
+                }
+            },
+            {
+                text: webclient.players.isIgnored(id) ? "Unignore" : "Ignore",
+                'class': "click_button",
+                click: function() {
+                    webclient.players.toggleIgnore(id);
+                    dialog.dialog("close");
+                }
             }
-        });
-
-        // TODO: PlayerHolder.prototype.toggleIgnore
-        if (webclient.players.isIgnored(id)) {
-            buttons.push({
-                text: "Unignore",
-                'class': "click_button",
-                click: function() {
-                    webclient.players.removeIgnore(id);
-                    dialog.dialog("close");
-                }
-            });
-        } else {
-            buttons.push({
-                text: "Ignore",
-                'class': "click_button",
-                click: function() {
-                    webclient.players.addIgnore(id);
-                    dialog.dialog("close");
-                }
-            });
-        }
+        ];
 
         dialog
             .dialog("option", "title", webclient.players.name(id))
@@ -405,8 +359,10 @@ webclient.findBattle = function () {
 };
 
 webclient.updatePlayerInfo = function (player) {
-    $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
-    showHtmlInFrame("#player-dialog .trainer-info", player.info);
+    var $dialog = $("#player-dialog");
+
+    dialog.find(".avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
+    webclient.sandboxHtml(dialog.find(".trainer-info"), player.info);
 };
 
 webclient.connectToServer = function () {

@@ -117,7 +117,7 @@
             name;
 
         for (name in this.byName) {
-            o.push(lowercase ? name.toLowerCase() : name)
+            o.push(lowercase ? name.toLowerCase() : name);
         }
 
         return o;
@@ -147,6 +147,8 @@
             if (this.id === self.currentId()) {
                 self.trigger("generateplayerlist", this.playerIds());
             }
+        }).on("disconnect", function () {
+            self.trigger("testplayers", this.players);
         }).on("close", function () {
             self.leaveChannel(this.id);
         }).on("remove", function () {
