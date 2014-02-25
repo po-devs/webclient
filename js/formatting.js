@@ -71,9 +71,9 @@ function convertPOLinks(element) {
             // <img src='xss' onerror='alert("xss");">
             // Will execute
 
-            // To access the contentDocument, we must set allow-same-origin
-            elem[0].innerHTML = "<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin'></iframe>";
-            secureIframe = elem[0].querySelector("iframe")[0];
+            // To access the contentDocument, we must set allow-same-origin and allow-script (we remove allow-scripts once we inject HTML
+            elem[0].innerHTML = "<iframe width='100%' frameborder='0' seamless sandbox='allow-same-origin allow-scripts'></iframe>";
+            secureIframe = elem[0].getElementsByTagName("iframe")[0];
             if (!secureIframe) {
                 elem.text(html);
                 return;
@@ -82,6 +82,7 @@ function convertPOLinks(element) {
             contentDocument = secureIframe.contentDocument;
             contentBody = contentDocument.body;
 
+            secureIframe.sandbox = 'allow-same-origin';
             // There is a really complicated security problem going on here.
             // We can't just run format on html, otherwise events are executed:
             // <img src='xss' onerror='alert("xss");">
@@ -94,8 +95,6 @@ function convertPOLinks(element) {
             convertPOLinks(contentBody);
             formattedHtml = contentBody.innerHTML;
 
-            // Then clear the entire document (probably not necessary but doing it anyway)
-            contentDocument.getElementsByTagName('html')[0].innerHTML = '';
             // Then add the formatted html
             contentBody.innerHTML = "<link rel=\"stylesheet\" href=\"css/style.css\">" + formattedHtml;
 

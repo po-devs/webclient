@@ -235,7 +235,7 @@ BattleTab.prototype.print = function(msg, args) {
         }
     }
 
-    this.chat.insertMessage(msg, linebreak);
+    this.chat.insertMessage(msg, {linebreak: linebreak});
     this.activateTab();
 };
 

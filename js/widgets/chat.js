@@ -38,6 +38,8 @@ $(function () {
         + '<i class="fa fa-arrow-circle-o-right fa-2x"></i>'
         + '</p>'
         + '</div>';
+    // At least Chrome (I assume other browsers do the same) expand <timestamp/> to <timestamp><timestamp/> (as it is an unknown element).
+    var timestampRegex = /<timestamp *\/ *>|<timestamp><\/timestamp>/gi;
 
     // TODO: A single chat for all the channels.
     function Chat(inputid) {
@@ -50,12 +52,28 @@ $(function () {
         this.chatCount = 0;
     }
 
-    Chat.prototype.insertMessage = function (msg, linebreak) {
+    Chat.prototype.insertMessage = function (msg, opts) {
         var chatTextArea = this.chatTextArea,
             cta = chatTextArea[0],
-            scrollDown = cta.scrollTop >= cta.scrollHeight - cta.offsetHeight;
+            scrollDown = cta.scrollTop >= cta.scrollHeight - cta.offsetHeight,
+            timestampPart;
 
-        chatTextArea.append("<div class='chat-line'>" + msg + (linebreak !== false ? "<br/>" : "") + "</div>");
+        opts = opts || {};
+
+        if (opts.timestamps) {
+            timestampPart = "<span class='timestamp-enabled" + (poStorage(opts.timestampCheck, 'boolean') ? ' timestamp' : '') + "'>" + utils.timestamp() + "</span>";
+            if (opts.html) {
+                msg = msg.replace(timestampRegex, timestampPart);
+            } else if (msg) {
+                msg += timestampPart;
+            }
+        }
+
+        if (opts.linebreak !== false) {
+            msg += "<br/>";
+        }
+
+        chatTextArea.append("<div class='chat-line'>" + msg + "</div>");
 
         /* Limit number of lines */
         if (this.chatCount++ % 500 === 0) {
