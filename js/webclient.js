@@ -51,6 +51,8 @@ webclient = {
     * webclient.printRaw(string message, bool html=false)
     * webclient.printHtml(string message)
     * webclient.joinChannel(string channelname)
+    * webclient.sandboxHtml(jQuery|string selector, string html)
+    * webclient.sendProfile(void)
 */
 
 $.observable(webclient);

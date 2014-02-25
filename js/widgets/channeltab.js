@@ -10,7 +10,7 @@
           and the server kicked us out of the channel / destroyed the channel.
 
           We keep track with this variable. */
-        this.closable = 0; //1 = Server close, 2=Player close
+        this.closable = 0; // 1 = Server close, 2=Player close
 
         var $chan = $("#channel-" + id);
         if ($chan.length === 0 || $chan.data('initialized') === false) {
@@ -33,7 +33,7 @@
         this.trigger("close");
     };
 
-    channeltab.setPlayers = function(players) {
+    channeltab.setPlayers = function (players) {
         var len, id, i;
 
         /* The server 'unclosed' us, so removing server close if there */
@@ -49,12 +49,12 @@
         this.trigger("setplayers");
     };
 
-    channeltab.newPlayer = function(player) {
+    channeltab.newPlayer = function (player) {
         this.players[player] = true;
         this.trigger("playeradd", player);
     };
 
-    channeltab.removePlayer = function(player) {
+    channeltab.removePlayer = function (player) {
         this.trigger("playerremove", player);
         delete this.players[player];
 
@@ -124,13 +124,8 @@
     };
 
     channeltab.disconnect = function() {
-        var id;
-
+        this.trigger("disconnect");
         this.players = {};
-
-        for (id in this.players) {
-            webclient.players.testPlayerOnline(id);
-        }
     };
 
     channeltab.remove = function () {

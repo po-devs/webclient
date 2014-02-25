@@ -6,11 +6,12 @@
 
         this.players = {};
         this.names = {};
+        this.ignores = {};
 
         this.friends = [];
     }
 
-    PlayerHolder.prototype.login = function(id, info) {
+    PlayerHolder.prototype.login = function (id, info) {
         var obj = {};
 
         obj[id] = info;
@@ -19,7 +20,7 @@
         this.trigger("login", id, info);
     };
 
-    PlayerHolder.prototype.hasPlayer = function(pid) {
+    PlayerHolder.prototype.hasPlayer = function (pid) {
         return pid in this.players;
     };
 
@@ -52,7 +53,7 @@
         }
     };
 
-    PlayerHolder.prototype.addFriend = function(id) {
+    PlayerHolder.prototype.addFriend = function (id) {
         if (this.friends.indexOf(id) !== -1) {
             return;
         }
@@ -65,7 +66,7 @@
         this.trigger("friendadd", id);
     };
 
-    PlayerHolder.prototype.addIgnore = function(id) {
+    PlayerHolder.prototype.addIgnore = function (id) {
         if (id in this.ignores) {
             return;
         }
@@ -78,7 +79,7 @@
         this.trigger("ignoreadd", id);
     };
 
-    PlayerHolder.prototype.removeIgnore = function(id) {
+    PlayerHolder.prototype.removeIgnore = function (id) {
         if (!(id in this.ignores)) {
             return;
         }
@@ -89,6 +90,17 @@
         }
 
         this.trigger("ignoreremove", id);
+    };
+
+    // Returns true if the player was ignored, false otherwise.
+    PlayerHolder.prototype.toggleIgnore = function (id) {
+        if (id in this.ignores) {
+            this.removeIgnore(id);
+            return false;
+        }
+
+        this.addIgnore(id);
+        return true;
     };
 
     PlayerHolder.prototype.isIgnored = function(id) {
@@ -125,11 +137,11 @@
         return null;
     };
 
-    PlayerHolder.prototype.name = function(pid) {
+    PlayerHolder.prototype.name = function (pid) {
         return ((pid in this.players) ? this.players[pid].name : "???");
     };
 
-    PlayerHolder.prototype.auth = function(pid) {
+    PlayerHolder.prototype.auth = function (pid) {
         return ((pid in this.players) ? this.players[pid].auth : 0);
     };
 
@@ -140,15 +152,16 @@
         return (lname in this.names) ? this.names[lname].id : -1;
     };
 
-    PlayerHolder.prototype.testPlayerOnline = function(player) {
-        var i;
+    PlayerHolder.prototype.testPlayerOnline = function (player) {
+        var channels = webclient.channels.channels,
+            i;
 
         if (this.friends.indexOf(player) !== -1) {
             return;
         }
 
-        for (i in webclient.channels.channels) {
-            if (player in webclient.channels.channel(i).players) {
+        for (i in channels) {
+            if (player in channels[i].players) {
                 return;
             }
         }
@@ -165,7 +178,6 @@
         }
 
         color = player.color;
-
         return color ? color : namecolorlist[id % namecolorlist.length];
     };
 

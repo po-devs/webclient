@@ -1,11 +1,8 @@
 utils = {
     toAlphanumeric: function (text) {
-        text = text || '';
-        if (typeof text === 'number') text = ''+text;
-        if (typeof text !== 'string') return utils.toAlphanumeric(text && text.id);
-        return text.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        return ('' + text).toLowerCase().replace(/[^a-z0-9]+/g, '');
     },
-    /* https://github.com/isaacs/inherits/blob/master/inherits_browser.js */
+    // https://github.com/isaacs/inherits/blob/master/inherits_browser.js
     inherits: function (ctor, superCtor) {
         ctor.super_ = superCtor;
         ctor.prototype = Object.create(superCtor.prototype, {
@@ -31,7 +28,7 @@ utils = {
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/\b((?:https?|ftp):\/\/\S+)/gi, "<a href='$1' target='_blank'>$1</a>")
-            .replace(/&amp;(?=[^\s<]*<\/a>)/gi, "&"); /* Revert &amp;'s to &'s in URLs */
+            .replace(/&amp;(?=[^\s<]*<\/a>)/g, "&"); /* Revert &amp;'s to &'s in URLs */
     },
     // Unused
     stripHtml: function (str) {
@@ -194,17 +191,6 @@ function loadjscssfile(filename, filetype){
 
 // All unused
 /*
-defineOn = function (core, props) {
-    var x;
-    for (x in props) {
-        Object.defineProperty(core, x, {
-            "value": props[x],
-
-            writable: true,
-            configurable: true
-        });
-    }
-};
 //defineOn(String.prototype, {
     format: function () {
         // http://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#4673436

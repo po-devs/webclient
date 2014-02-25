@@ -38,6 +38,9 @@ function convertPOLinks(element) {
                     img.attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
                 }).attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
                 break;
+            case "trainer":
+                img.attr("src", pokeinfo.trainerSprite(query));
+                break;
             case "http":
             case "https":
             case "data": /* base64 */
@@ -50,11 +53,53 @@ function convertPOLinks(element) {
     return element;
 }
 
+$(function () {
+    $(document).on("click", "a", function (event) {
+        var href = this.href,
+            params, pid;
+
+        if (/^po:/.test(href)) {
+            event.preventDefault();
+
+            params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
+
+            // Add other commands here..
+            pid = webclient.players.id(params[1]);
+            if (pid === -1) {
+                pid = parseInt(params[1], 10);
+            }
+
+            if (params[0] === "join") {
+                webclient.joinChannel(params[1]);
+            } else if (params[0] == "pm") { // Create pm window
+                if (!isNaN(pid)) {
+                    webclient.pms.pm(pid).activateTab();
+                }
+            } else if (params[0] == "ignore") {
+                // Ignore the user
+                if (!isNaN(pid)) {
+                    if (webclient.players.isIgnored(pid)) {
+                        webclient.players.addIgnore(pid);
+                    } else {
+                        webclient.players.removeIgnore(pid);
+                    }
+                }
+            } else if (params[0] == "watch") {
+                network.command('watch', {battle: params[1]});
+            }
+            // TODO: watchbattle(id/name), reconnect(void)
+        } else {
+            /* Make sure link opens in a new window */
+            this.target = "_blank";
+        }
+    });
+});
+
 (function () {
     var iframe = document.createElement('iframe');
     var hasIframeSandbox = 'sandbox' in iframe;
 
-    function showHtmlInFrame(selector, html) {
+    function sandboxHtml(selector, html) {
         html = html || '';
         var elem = $(selector),
             containsHtml = html.contains("<"),
@@ -105,5 +150,5 @@ function convertPOLinks(element) {
         }
     }
 
-    window.showHtmlInFrame = showHtmlInFrame;
+    webclient.sandboxHtml = sandboxHtml;
 }());

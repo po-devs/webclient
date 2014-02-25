@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+// Modified to emit the change event when the color is set to the callback
+
 jQuery.fn.farbtastic = function (callback) {
   $.farbtastic(this, callback);
   return this;
@@ -248,6 +250,7 @@ jQuery._farbtastic = function (container, callback) {
       $(fb.callback).each(function() {
         if (this.value && this.value != fb.color) {
           this.value = fb.color;
+          $(this).trigger('change');
         }
       });
     }

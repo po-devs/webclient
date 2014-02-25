@@ -2,6 +2,7 @@
     * player.name: string
     * player.idle: boolean
     * player.avatar: number
+    * player.color: string
     *
     * teams.{num}: object
     *
