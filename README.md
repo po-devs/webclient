@@ -39,14 +39,16 @@ Info
 ====
 
 Libraries used:
-* jQuery (jquery.formValues, jquery.knob, jquery.tablesorter)
-* jQuery UI
+* jQuery (jquery.formValues, jquery.knob, jquery.tablesorter) http://jquery.com
+* jQuery UI http://jqueryui.com
 * jQuery Toggles https://github.com/simontabor/jquery-toggles
 * Vex http://github.hubspot.com/vex/
+* Riot.js https://github.com/moot/riotjs
+* NProgress https://github.com/rstacruz/nprogress
+* Farbtastic color picker http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
 * md5 function http://www.webtoolkit.info/javascript-md5.html
-* farbtastic color plugin http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/
-* loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
 * inherits https://github.com/isaacs/inherits
+* loadcssjsfile: http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
 
 License
 =======
