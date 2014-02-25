@@ -124,6 +124,10 @@ pokeinfo.find = function(id, what, gen) {
     return array[id];
 };
 
+pokeinfo.trainerSprite = function (num) {
+    return 'http://pokemon-online.eu/images/trainers/' + num + '.png';
+};
+
 pokeinfo.sprite = function(poke, params) {
     params = params || {};
     var gen = getGen(params.gen || poke.gen);
@@ -153,7 +157,7 @@ pokeinfo.battlesprite = function(poke, params) {
 };
 
 pokeinfo.spriteData = function(poke, params) {
-    var back = params.back || false;
+    var back = (params || {}).back || false;
     var num = this.toNum(poke);
 
     var ret = (back ? pokedex.pokes.images.back[num] : pokedex.pokes.images[num]);

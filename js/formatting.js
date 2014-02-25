@@ -38,6 +38,9 @@ function convertPOLinks(element) {
                     img.attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
                 }).attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
                 break;
+            case "trainer":
+                img.attr("src", pokeinfo.trainerSprite(query));
+                break;
             case "http":
             case "https":
             case "data": /* base64 */
