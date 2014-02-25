@@ -6,6 +6,7 @@
 
         this.players = {};
         this.names = {};
+        this.ignores = {};
 
         this.friends = [];
     }
@@ -91,12 +92,15 @@
         this.trigger("ignoreremove", id);
     };
 
+    // Returns true if the player was ignored, false otherwise.
     PlayerHolder.prototype.toggleIgnore = function (id) {
         if (id in this.ignores) {
             this.removeIgnore(id);
-        } else {
-            this.addIgnore(id);
+            return false;
         }
+
+        this.addIgnore(id);
+        return true;
     };
 
     PlayerHolder.prototype.isIgnored = function(id) {

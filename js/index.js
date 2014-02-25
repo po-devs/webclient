@@ -45,8 +45,8 @@ $(function() {
     // Type should be one of: content, user_params, teambuilder
     function toggleContent(type, checks) {
         // From user_params
-        if (mode === 'user_params' && checks !== false) {
-            $("#user_params_submit").trigger('click', [true]);
+        if (mode === 'user_params') {
+            webclient.sendProfile();
         }
 
         // From user_params/teambuilder, to content
@@ -93,6 +93,7 @@ $(function() {
     var $advancedConnection = $("#advanced-connection"),
         $serverDescription = $("#server-description"),
         $username = $("#username"),
+        $trainerUsername = $("#trainer_username"),
         $channeltabs = $("#channel-tabs");
 
     var storedRelayIp = poStorage("relay");
@@ -102,6 +103,7 @@ $(function() {
     var username = poStorage("player.name");
     if (username) {
         $username.val(username);
+        $trainerUsername.val(username);
     }
 
     $("#servers-list tbody").on('click', 'tr', function() {
@@ -159,8 +161,6 @@ $(function() {
         var hrefid = $(ui.tab).attr("href");
         webclient.channel = objFromId(hrefid);
     });
-
-    var $trainerUsername = $("#trainer_username");
 
     webclient.players = new webclient.classes.PlayerHolder();
     webclient.pms = new webclient.classes.PMHolder();
@@ -278,7 +278,7 @@ $(function() {
             dialog = $("#player-dialog"),
             player = webclient.players.id(id),
             buttons,
-            battles, battle, opp, element, bid;
+            playerbattles, battle, opp, element, bid;
 
         dialog.html('<div class="avatar"></div><div class="trainer-info">Loading...</div>');
         webclient.shownPlayer = id;
@@ -295,10 +295,10 @@ $(function() {
 
         /* Show the list of battles in the player info */
         if (battles.isBattling(id)) {
-            battles = battles.battlesByPlayer[id];
+            playerbattles = battles.battlesByPlayer[id];
 
-            for (bid in battles) {
-                battle = battles[id];
+            for (bid in playerbattles) {
+                battle = playerbattles[bid];
                 opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
                 element = $(
                     "<div class='player-info-battle'><a href='po:watch/" + bid + "' class='watch-battle-link'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
@@ -361,8 +361,8 @@ webclient.findBattle = function () {
 webclient.updatePlayerInfo = function (player) {
     var $dialog = $("#player-dialog");
 
-    dialog.find(".avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
-    webclient.sandboxHtml(dialog.find(".trainer-info"), player.info);
+    $dialog.find(".avatar").html('<img src="' + pokeinfo.trainerSprite(player.avatar || 1) + '">');
+    webclient.sandboxHtml($dialog.find(".trainer-info"), player.info);
 };
 
 webclient.connectToServer = function () {

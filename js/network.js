@@ -125,30 +125,30 @@
 
             var username = $("#username").val();
             if (username && username.length > 0) {
-                poStorage.set("username", username);
-            } else {
-                poStorage.remove("username");
+                poStorage.set("player.name", username);
             }
 
             var data = {version: 1};
+            data.default = utils.queryField("channel");
+            data.autojoin = utils.queryField("autojoin");
+            if (data.autojoin) {
+                data.autojoin = data.autojoin.split(",");
+            }
+
+            data.ladder = poStorage.get('player.ladder', 'boolean');
+            if (data.ladder == null) {
+                data.ladder = true;
+            }
+
+            data.idle = poStorage.get('player.idle', 'boolean');
+            if (data.idle == null) {
+                data.idle = false;
+            }
+
+            data.color = poStorage.get('player.color');
+
             if (utils.queryField("user") || username) {
                 data.name = utils.queryField("user") || username;
-                data.default = utils.queryField("channel");
-                data.autojoin = utils.queryField("autojoin");
-                if (data.autojoin) {
-                    data.autojoin = data.autojoin.split(",");
-                }
-
-                data.ladder = poStorage.get('player.ladder', 'boolean');
-                if (data.ladder == null) {
-                    data.ladder = true;
-                }
-
-                data.idle = poStorage.get('player.idle', 'boolean');
-                if (data.idle == null) {
-                    data.idle = false;
-                }
-
                 this.command('login', data);
             } else {
                 vex.dialog.open({
