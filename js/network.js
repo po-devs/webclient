@@ -98,7 +98,7 @@
             $("#advanced-connection").val((qserver && qserver !== "default") ? qserver : server);
 
             if (utils.queryField("autoconnect") === "true") {
-                connect();
+                webclient.connectToServer();
             } else {
                 this.command('registry');
             }
@@ -121,7 +121,7 @@
         },
         connected: function () {
             var net = this;
-            displayMessage("Connected to server!");
+            webclient.printHtml("<timestamp/> Connected to server!");
 
             var username = $("#username").val();
             if (username && username.length > 0) {
@@ -169,21 +169,21 @@
             }
         },
         disconnected: function () {
-            displayMessage("Disconnected from server!");
-            announcement.hide("slow");
+            webclient.printHtml("<b>Disconnected from Server! If the disconnect is due to an internet problem, try to <a href='po:reconnect'>reconnect</a> once the issue is solved.</b>");
+            // announcement.hide("slow");
         },
         msg: function (payload) {
-            displayMessage(payload);
+            webclient.print(payload);
         },
         error: function (payload) {
-            displayMessage(payload);
+            webclient.print(payload);
         },
         chat: function (payload) {
             var params = JSON.parse(payload),
                 chan = webclient.channels.channel(params.channel);
 
             if ((params.channel == -1 && params.message.charAt(0) != "~") || !chan) {
-                displayMessage(params.message, params.html, true);
+                webclient.print(params.message, params.html);
             } else {
                 chan.print(params.message, params.html);
             }
@@ -215,8 +215,8 @@
             }
         },
         announcement: function (payload) {
-            showHtmlInFrame(announcement, payload);
-            announcement.css("visibility", "visible");
+            /*showHtmlInFrame(announcement, payload);
+            announcement.css("visibility", "visible");*/
         },
         channels: function (payload) {
             webclient.channels.setNames(JSON.parse(payload));
@@ -237,7 +237,7 @@
             webclient.players.addPlayer(params);
 
             if (webclient.shownPlayer !== -1 && webclient.shownPlayer in params && "info" in params[webclient.shownPlayer]) {
-                updatePlayerInfo(params[webclient.shownPlayer]);
+                webclient.updatePlayerInfo(params[webclient.shownPlayer]);
             }
         },
         playerlogout: function (payload) {
@@ -441,8 +441,8 @@
                 pipe = data.indexOf('|');
 
             if (pipe === -1) {
-                console.log("Received raw message, should be changed in the relay station:", data);
-                displayMessage(data);
+                console.error("Received raw message, should be changed in the relay station:", data);
+                webclient.printRaw(data);
             } else {
                 var cmd = data.substr(0, pipe),
                     payload = data.slice(pipe + 1);

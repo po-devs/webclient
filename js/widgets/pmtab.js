@@ -15,7 +15,7 @@
 
             this.chat = new webclient.classes.Chat('send-pm-' + pid);
             this.chat.appendTo($("#pm-" + pid));
-            switchToTab("#pm-"+pid);
+            webclient.switchToTab("#pm-"+pid);
         }
     }
 

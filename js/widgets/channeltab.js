@@ -72,8 +72,8 @@
         return player in this.players;
     };
 
-    channeltab.print = function (msg, html, noParse) {
-        if (!noParse) {
+    channeltab.print = function (msg, html, raw) {
+        if (raw !== true) {
             if (html) {
                 msg = convertPOLinks($("<div>").html(msg)).html();
             } else {
@@ -104,15 +104,17 @@
                     }
 
                     msg = pref + utils.addChannelLinks(msg.slice(msg.indexOf(":") + 1), webclient.channels.channelsByName(true));
-                    // TODO: Add by default, use a toggle css rule somewhere
-                    if (poStorage("chat.timestamps", "boolean")) {
-                        msg += "<span class='timestamp'>" + utils.timestamp() + "</span>";
-                    }
                 }
             }
         }
 
-        this.chat.insertMessage(msg);
+        this.chat.insertMessage(msg, {
+            timestamps: true,
+            timestampCheck: 'chat.timestamps',
+            html: html,
+            raw: raw,
+            linebreak: true
+         });
     };
 
     channeltab.changeName = function (name) {

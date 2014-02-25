@@ -50,7 +50,7 @@
             len, i;
 
         // make it so the form doesn't get submitted at all and reloads the page
-        $("#team_form").on('submit', function (e) {
+        $("#team_form").submit(function (e) {
             e.preventDefault();
         });
 
@@ -107,19 +107,19 @@
         });
 
         // managing the active tab of the teambuilder
-        $("#pokemon-tabs .pokemon-tab").on('click', function () {
+        $("#pokemon-tabs .pokemon-tab").click(function () {
             var index = $(this).index();
             $('.pokemon-tab').removeClass('active-pokemon-tab').eq(index).addClass('active-pokemon-tab');
             $('.pokemon-slot').removeClass('active-pokemon-slot').eq(index).addClass('active-pokemon-slot');
         });
 
         // toggling the icon gear to be able to show informations regarding the team such as the generation or the name of the team
-        $("#pokemon-parameters .fa-gear").on('click', function () {
+        $("#pokemon-parameters .fa-gear").click(function () {
             $("#team-infos").toggle();
         });
 
         // verifying the team name syntax
-        $("#tb-team-name").on('keypress', function (e) {
+        $("#tb-team-name").keypress(function (e) {
             if ([92, 47, 58, 42, 63, 34, 60, 62, 124].indexOf(e.which) !== -1) {
                 e.preventDefault();
             }
@@ -130,23 +130,21 @@
             source: self.getTiersList()
         });
 
-        $(".pokemon-slot-name").autocomplete().on('click', function (e) {
+        $(".pokemon-slot-name").autocomplete().click(function (e) {
             var $this = $(this);
 
             $this.select();
             if ($this.val() === '') {
                 $this.autocomplete('search', '');
             }
-        }).on('keypress', function (e) {
-            var $this;
-            if (e.which === 13) {
-                $this = $(this);
-                $this.autocomplete('search', $this.val()).autocomplete('close');
-            }
-        }).eq(0).focus();
+        }).keypress(utils.onEnterPressed(function () {
+            var $this = $(this);
+
+            $this.autocomplete('search', $this.val()).autocomplete('close');
+        })).eq(0).focus();
 
         // pokemon sprite reset
-        $(".pokemon-slot-sprite").on('click', function (e) {
+        $(".pokemon-slot-sprite").click(function (e) {
             var pokeNum, formeNum, pokeid, $this;
             if (geninfo.hasOption(self.getTeamInfo('generation'), 'shiny')) {
                 $this = $(this);
@@ -160,7 +158,7 @@
         });
 
         // gender of the pokemon
-        $(".pokemon-slot-gender-radio").on('change', function () {
+        $(".pokemon-slot-gender-radio").change(function () {
             var $this = $(this);
 
             $this.parent().find('.pokemon-slot-gender-checked').removeClass('pokemon-slot-gender-checked');
@@ -290,7 +288,7 @@
         });
 
         // make the advanced button show/hide the advanced options when clicked
-        $(".pokemon-slot-advanced").on('click', function () {
+        $(".pokemon-slot-advanced").click(function () {
             $(this).parent().parent().find('.pokemon-slot-advanced-content').toggle();
         });
 
@@ -318,7 +316,7 @@
                         select_options += '<option value="' + list + '">' + list + '</option>';
                     }
 
-                    var ivs_selection = $('<select size="' + hidden_power_ivs.length + '">' + select_options + '</select>').on('change', function (e) {
+                    var ivs_selection = $('<select size="' + hidden_power_ivs.length + '">' + select_options + '</select>').change(function (e) {
                         var val = $(this).val().split(' ');
                         for (i = 0, len = val.length; i < len; i += 1) {
                             slot.find(".pokemon-ivs.stat-id-" + i + " .pokemon-ivs-value").val(val[i]).trigger('change');
@@ -330,7 +328,7 @@
                         .append('<br/>')
                         .append(
                             $('<input class="click_button pokemon-slot-hidden-power-ivs-selection-close" type="button" name="selected_hp_ivs" value="Done" />')
-                            .on('click', function (e) {
+                            .click(function (e) {
                                 slot.find(".pokemon-hidden-power-ivs-selection").hide();
                             })
                         )
@@ -454,7 +452,7 @@
             }
 
             moves_container.html(moves_block);
-            slot.find(".moves-list-container").html(moves_container).find('.moves-list tr').off('click').on('click', function () {
+            slot.find(".moves-list-container").html(moves_container).find('.moves-list tr').off('click').click(function () {
                 var move_name = $(this).find('.move-name').text(),
                     moves = slot.find('.pokemon-move-selection'),
                     moves_values = moves.formValues();
@@ -483,7 +481,7 @@
             'max-height': moves_list_container_max_height + 'px'
         });
         // saving the team
-        $("#save-team").on('click', function (e) {
+        $("#save-team").click(function (e) {
             self.saveTeam();
             // Return to chat
             $("#po_title").click();

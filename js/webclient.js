@@ -41,4 +41,16 @@ webclient = {
     }
 };
 
+/* Also:
+    * webclient.findBattle(void)
+    * webclient.connectToServer(void)
+    * webclient.connectToRelay(void)
+    * webclient.updatePlayerInfo(int player)
+    * webclient.switchToTab(string selector)
+    * webclient.print(string message, bool html=true, bool raw=false)
+    * webclient.printRaw(string message, bool html=false)
+    * webclient.printHtml(string message)
+    * webclient.joinChannel(string channelname)
+*/
+
 $.observable(webclient);

@@ -114,6 +114,14 @@ utils = {
         }
 
         return (set[auth] || '').replace(/\{name\}/gi, str);
+    },
+    // Shorthand for if (event.which === 13) { callback(); }
+    onEnterPressed: function (callback) {
+        return function (event) {
+            if (event.which === 13) {
+                callback.call(this, event);
+            }
+        };
     }
 };
 

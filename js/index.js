@@ -7,16 +7,23 @@ $(function() {
         $teampreview = $(".team_preview"),
         previewsInit = false;
 
-    $("#tab-titles").on('click', 'li i', function() {
+    function animframe(fn) {
+        return requestAnimationFrame(fn) || setTimeout(fn, 1000 / 60);
+    }
+
+    $("#tab-titles").on('click', 'li i', function () {
+        var dparent, href;
+
         if ($("#tab-titles li").length > 1) {
-            var dparent = $(this).parent().parent();
-            var href = dparent.attr("href");
+            dparent = $(this).parent().parent();
+            href = dparent.attr("href");
             objFromId(href).close();
         }
     });
 
     $(".dropdown_button").click(function() {
         var $this = $(this);
+
         $this.find('i').toggle();
         $this.parent().find('.dropdown_content').toggle();
         if ($this.data('teambuilder') && !previewsInit) {
@@ -26,17 +33,14 @@ $(function() {
     });
 
     $teampreview.click(function () {
-        var $this = $(this);
+        // Remove from all team previews
         $teampreview.removeClass('current_team');
-        $this.addClass('current_team');
+        // Add to the current one
+        $(this).addClass('current_team');
     }).dblclick(function () {
         toggleContent('teambuilder');
         webclient.teambuilder.loadTeamFrom($(this));
     });
-
-    var animframe = function (fn) {
-        return requestAnimationFrame(fn) || setTimeout(fn, 1000 / 60);
-    };
 
     // Type should be one of: content, user_params, teambuilder
     function toggleContent(type, checks) {
@@ -64,7 +68,7 @@ $(function() {
         mode = type;
     }
 
-    $("#trainer_username, #create_team, #po_title").on('click', function() {
+    $("#trainer_username, #create_team, #po_title").click(function () {
         $middle_block.hide();
 
         switch(this.id) {
@@ -87,11 +91,8 @@ $(function() {
 
 $(function() {
     var storedRelayIp = poStorage("relay");
-    $("#relay").keydown(function (e) {
-        if (e.which === 13) { // Enter
-            initWebsocket();
-        }
-    }).val(storedRelayIp || "server.pokemon-online.eu:10508");
+    $("#relay").keydown(utils.onEnterPressed(webclient.connectToRelay))
+        .val(storedRelayIp || "server.pokemon-online.eu:10508");
 
     var username = poStorage("player.name");
     if (username) {
@@ -102,18 +103,12 @@ $(function() {
         var $this = $(this);
         $("#advanced-connection").val($this.find('.server-ip').text());
         showHtmlInFrame("#server-description", webclient.registry.descriptions[$this.find('.server-name').text()]);
-    }).on('dblclick', 'tr', function () {
-        connect();
-    });
+    }).on('dblclick', 'tr', webclient.connectToServer);
 
-    $("#advanced-connection, #username, #password").on("keydown", function (e) {
-        if (e.which === 13) { // Enter
-            connect();
-        }
-    });
+    $("#advanced-connection, #username, #password").keydown(utils.onEnterPressed(webclient.connectToServer));
 
     var $channeltabs = $("#channel-tabs");
-    $('#channel-tabs').tabs()
+    $channeltabs.tabs()
         .find(".ui-tabs-nav")
         .sortable({
             axis: "x",
@@ -135,11 +130,6 @@ $(function() {
             ret = battles.battle(id);
         }
         return ret;
-    };
-
-    switchToTab = function(hrefid) {
-        webclient.channel = objFromId(hrefid);
-        $('#channel-tabs').tabs("select", hrefid);
     };
 
     $("#channel-tabs").on('tabsselect', function(event, ui) {
@@ -188,7 +178,7 @@ $(function() {
             if (pid === -1)
                 pid = parseInt(params[1]);
             if (params[0] === "join") {
-                joinChannel(params[1]);
+                webclient.joinChannel(params[1]);
             } else if (params[0] == "pm") { // Create pm window
                 if (!isNaN(pid)) {
                     webclient.pms.pm(pid).activateTab();
@@ -276,7 +266,7 @@ $(function() {
         },
         /* Makes you join the channel as soon as element is selected */
         select: function(event, ui) {
-            joinChannel(ui.item.value);
+            webclient.joinChannel(ui.item.value);
             return false;
         }
     });
@@ -284,8 +274,8 @@ $(function() {
     var $autoload = $("#autoload");
 
     if (poStorage("autoload", "boolean")) {
-        $autoload.attr("checked", true);
-        initWebsocket();
+        $autoload.prop("checked", true);
+        webclient.connectToRelay();
     }
 
     $autoload.click(function() {
@@ -302,129 +292,138 @@ $(function() {
         webclient.ui.playerList.filter = $(this).val().toLowerCase();
     });
 
-    $("#connect-button").click(connect);
-    $(".find-battle").click(findBattle);
+    $("#connect-button").click(webclient.connectToServer);
+    $("#load-button").click(webclient.connectToRelay);
+    $(".find-battle").click(webclient.findBattle);
 
     // Make register button disabled
     $("#register").attr("disabled", true);
-});
 
-/* Player that is shown in the trainer window */
-$("#player-dialog").dialog({
-    autoOpen: false,
-    modal: true,
-    resizeable: false,
-    close: function() {
-        webclient.shownPlayer = -1;
-    }
-});
-
-var updatePlayerInfo = function(player) {
-    $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
-    showHtmlInFrame("#player-dialog .trainer-info", player.info);
-};
-
-$("#player-list").on("click", "li", function(event) {
-    var id = event.currentTarget.id.split("-")[1];
-    webclient.shownPlayer = id;
-
-    var dialog = $("#player-dialog");
-    dialog.html('<div class="avatar"></div><div class="trainer-info">loading...</div>');
-    var player = webclient.players.id(id);
-
-    if (player.hasOwnProperty("info")) {
-        updatePlayerInfo(player);
-    } else {
-        network.command('player', {id: id});
-    }
-
-    /* Show the list of battles in the player info */
-    if (battles.isBattling(id)) {
-        for (var bid in battles.battlesByPlayer[id]) {
-            var battle = battles.battlesByPlayer[id][bid];
-            var opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
-            var element = $(
-                "<div class='player-info-battle'><a href='po:watch/"+ bid +"' class='watch-battle-link'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
-            );
-
-            element.find(".watch-battle-link").click(function () {
-                dialog.dialog('close');
-            });
-
-            dialog.append(element);
+    /* Player that is shown in the trainer window */
+    $("#player-dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        resizeable: false,
+        close: function() {
+            webclient.shownPlayer = -1;
         }
-    }
-    var buttons = [
-        {
+    });
+
+    $("#player-list").on("click", "li", function(event) {
+        var id = event.currentTarget.id.split("-")[1],
+            dialog = $("#player-dialog"),
+            player = webclient.players.id(id),
+            buttons = [],
+            battles, battle, opp, element, bid;
+
+        dialog.html('<div class="avatar"></div><div class="trainer-info">Loading...</div>');
+        webclient.shownPlayer = id;
+
+        if (player.hasOwnProperty("info")) {
+            webclient.updatePlayerInfo(player);
+        } else {
+            network.command('player', {id: id});
+        }
+
+        function closeOnClick() {
+            dialog.dialog('close');
+        }
+
+        /* Show the list of battles in the player info */
+        if (battles.isBattling(id)) {
+            battles = battles.battlesByPlayer[id];
+            for (bid in battles) {
+                battle = battles[id];
+                opp = (battle.ids[0] == id ? battle.ids[1] : battle.ids[0]);
+                element = $(
+                    "<div class='player-info-battle'><a href='po:watch/" + bid + "' class='watch-battle-link'>Watch</a> battle against " + utils.escapeHtml(webclient.players.name(opp)) + "</div>"
+                );
+
+                element.find(".watch-battle-link").click(closeOnClick);
+                dialog.append(element);
+            }
+        }
+
+        buttons.push({
             text: "Private Message",
             'class': "click_button",
             click: function() {
                 webclient.pms.pm(id).activateTab();
                 dialog.dialog("close");
             }
+        });
+
+        // TODO: PlayerHolder.prototype.toggleIgnore
+        if (webclient.players.isIgnored(id)) {
+            buttons.push({
+                text: "Unignore",
+                'class': "click_button",
+                click: function() {
+                    webclient.players.removeIgnore(id);
+                    dialog.dialog("close");
+                }
+            });
+        } else {
+            buttons.push({
+                text: "Ignore",
+                'class': "click_button",
+                click: function() {
+                    webclient.players.addIgnore(id);
+                    dialog.dialog("close");
+                }
+            });
         }
-    ];
 
-    if (webclient.players.isIgnored(id)) {
-        buttons.push({
-            text: "Unignore",
-            'class': "click_button",
-            click: function() {
-                webclient.players.removeIgnore(id);
-                dialog.dialog("close");
-            }
-        });
-    } else {
-        buttons.push({
-            text: "Ignore",
-            'class': "click_button",
-            click: function() {
-                webclient.players.addIgnore(id);
-                dialog.dialog("close");
-            }
-        });
-    }
-
-    dialog
-        .dialog("option", "title", webclient.players.name(id))
-        .dialog("option", "buttons", buttons)
-        .dialog({ position: { my: "center top", at: "center top+40px", of: window } })
-        .dialog("open");
+        dialog
+            .dialog("option", "title", webclient.players.name(id))
+            .dialog("option", "buttons", buttons)
+            .dialog({ position: { my: "center top", at: "center top+40px", of: window } })
+            .dialog("open");
+    });
 });
 
-function wannaRegister() {
-    network.command('register');
-}
+webclient.print = function (message, html, raw) {
+    var chans = webclient.channels.channels,
+        id;
 
-colorPickerTriggered = false;
-var colorPickerColor;
-function openColorPicker() {
-    $("#colorDialog").dialog("open");
-    var colorPicker = $("#colorPicker");
-    colorPicker.farbtastic(function(color) {
-        colorPickerColor = color;
-    });
-
-    $("#trainer-name").val(webclient.players.name(webclient.ownId));
-}
-
-var announcement = $("#announcement");
-function displayMessage(message, html, parseExtras) {
-    var id;
-    html = !!html;
-
-    for (id in webclient.channels.channels) {
-        webclient.channels.channel(id).print(message, html, !parseExtras);
+    for (id in chans) {
+        chans[id].print(message, html, raw);
     }
-}
+};
 
-function findBattle() {
+webclient.printRaw = function (message, html) {
+    var asHtml = html == null ? false : html;
+    webclient.print(message, html, true);
+};
+
+webclient.printHtml = function (message) {
+    webclient.print(message, true, false);
+};
+
+webclient.findBattle = function () {
     network.command('findbattle', {sameTier: true, range: 300});
-}
+};
+
+webclient.updatePlayerInfo = function (player) {
+    $("#player-dialog .avatar").html("<img src='http://pokemon-online.eu/images/trainers/" + (player.avatar||1) + ".png' />");
+    showHtmlInFrame("#player-dialog .trainer-info", player.info);
+};
+
+webclient.connectToServer = function () {
+    if (network.isOpen()) {
+        network.command('connect', {ip: $("#advanced-connection").val()});
+        $(".page").toggle();
+    }
+};
+
+webclient.switchToTab = function(hrefid) {
+    webclient.channel = objFromId(hrefid);
+    $('#channel-tabs').tabs("select", hrefid);
+};
 
 function sendMessage(sender) {
     if (!network.isOpen()) {
-        displayMessage("ERROR: Connect to the relay station before sending a message.");
+        webclient.printRaw("ERROR: Connect to the relay station before sending a message.");
         return;
     }
 
@@ -458,50 +457,38 @@ function sendMessage(sender) {
     });
 }
 
-function joinChannel(chan) {
+webclient.joinChannel = function (chan) {
     var $inputChannel = $("#join-channel"),
         channel = chan || $inputChannel.val();
 
     $inputChannel.val("");
     network.command('joinchannel', {channel: channel});
-}
+};
 
-function initWebsocket() {
-    try {
-        if (network.isOpen()) {
-            network.close();
-            $("#servers-list tbody").html('');
-        }
-
-        var fullIP = $("#relay").val();
-
-        displayMessage("Connecting to " + fullIP);
-        poStorage.set("relay", fullIP);
-
-        network.open(
-            fullIP,
-            // open
-            function () {
-                displayMessage("Connected to relay.");
-            },
-            // error
-            function (e) {
-                displayMessage("Error: " + e.data);
-            },
-            // close
-            function () {
-                displayMessage("Disconnected from relay.");
-            }
-        );
-    } catch(exception) {
-        console.log('Websocket error:', exception);
-        displayMessage( 'ERROR: ' + exception );
-    }
-}
-
-function connect() {
+webclient.connectToRelay = function () {
     if (network.isOpen()) {
-        network.command('connect', {ip: $("#advanced-connection").val()});
-        $(".page").toggle();
+        network.close();
+        $("#servers-list tbody").html('');
     }
-}
+
+    var fullIP = $("#relay").val();
+
+    console.log("Connecting to relay @ " + fullIP);
+    poStorage.set("relay", fullIP);
+
+    network.open(
+        fullIP,
+        // open
+        function () {
+            console.log("Connected to relay.");
+        },
+        // error
+        function (e) {
+            console.log("Network error:", e.data);
+        },
+        // close
+        function () {
+            console.log("Disconnected from relay.");
+        }
+    );
+};

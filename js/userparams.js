@@ -25,6 +25,7 @@ $(function () {
             break;
         case 'timestamps':
             poStorage.set("chat.timestamps", active);
+            $(".timestamp-enabled").toggleClass("timestamp", active);
             break;
         }
     }
