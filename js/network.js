@@ -1,4 +1,4 @@
-(function (WebSocket) {
+(function (WebSocket, webclient, JSON) {
     var states = {
         Connecting: 0,
         Open: 1,
@@ -459,4 +459,4 @@
 
     window.Network = Network;
     window.network = new Network();
-}(typeof MozWebSocket === 'function' ? MozWebSocket : WebSocket));
+}(typeof MozWebSocket === 'function' ? MozWebSocket : WebSocket, webclient, JSON));

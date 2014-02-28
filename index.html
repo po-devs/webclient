@@ -5,22 +5,32 @@
     <title>Pokémon Online Web Client</title>
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <!--<link rel="stylesheet" href="css/reset.css" />-->
+
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="css/combobox.css" />
-    <link rel="stylesheet" href="libs/farbtastic.css"  />
-    <!--<link rel="stylesheet" href="css/webclient.css" />-->
+
+    <!-- build:css css/libs.css -->
+    <link rel="stylesheet" href="libs/css/combobox.css" />
+    <link rel="stylesheet" href="libs/css/farbtastic.css"  />
     <link rel="stylesheet" href="libs/css/vex.css" />
     <link rel="stylesheet" href="libs/css/vex-theme-os.css" />
     <link rel="stylesheet" href="libs/css/nprogress.css" />
     <link rel="stylesheet" href="libs/css/toggles-light.css" />
-    <link rel="stylesheet" href="css/chat.css" />
+    <!-- endbuild -->
+
+    <!-- Used by iframes -->
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/midreso.css" media="screen and (max-width: 1024px)" />
+
+    <!-- build:css css/app.css -->
     <link rel="stylesheet" href="css/battle.css" />
     <link rel="stylesheet" href="css/registry.css" />
+    <link rel="stylesheet" href="css/chat.css" />
+    <!-- endbuild -->
+
+    <!-- build:css css/midreso.css -->
+    <link rel="stylesheet" href="css/midreso.css" media="screen and (max-width: 1024px)" />
+    <!-- endbuild -->
 </head>
 <body>
 <div id="overlay" style="display:none"></div>
@@ -192,23 +202,26 @@
 <div id="battle-html" style="display: none"></div>
 <div id='player-dialog' title='User Menu'></div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 
 <!-- Libraries -->
+<!-- build:js js/libs.js -->
 <script src="libs/js/nprogress.js"></script>
-<script src="libs/jquery.knob.js"></script>
-<script src="libs/jquery.tablesorter.js"></script>
-<script src="libs/jquery.formValues.js"></script>
-<script src="libs/jquery.filterFor.js"></script>
-<script src="libs/farbtastic.js"></script>
+<script src="libs/js/jquery.knob.js"></script>
+<script src="libs/js/jquery.tablesorter.js"></script>
+<script src="libs/js/jquery.formValues.js"></script>
+<script src="libs/js/jquery.filterFor.js"></script>
+<script src="libs/js/farbtastic.js"></script>
 <script src="libs/js/vex.combined.min.js"></script>
-<script src="libs/combobox.js"></script>
-<script src="libs/combobox.utilities.js"></script>
+<script src="libs/js/combobox.js"></script>
+<script src="libs/js/combobox.utilities.js"></script>
 <script src="libs/js/toggles.js"></script>
-<script src="libs/md5.js"></script>
+<script src="libs/js/md5.js"></script>
 <script src="libs/js/riot.js"></script>
+<!-- endbuild -->
 
+<!-- build:js js/app.js -->
 <script src="js/webclient.js"></script>
 <script src="js/utilities.js"></script>
 
@@ -227,11 +240,81 @@
 <script src="js/pm.js"></script>
 <script src="js/channel.js"></script>
 <script src="js/formatting.js"></script>
+
+<!-- User params -->
+<script src="js/userparams.js"></script>
+
+<!-- Teambuilder -->
+<script src="js/teambuilder.js"></script>
+
 <script src="js/index.js"></script>
+<!-- endbuild -->
+
+<!-- Data files -->
+<!-- build:js js/pokedex.js -->
+<script src="js/db/initpokedex.js"></script>
+
+<script src="js/db/generations.js"></script>
+<script src="js/db/generations.options.js"></script>
+
+<script src="js/db/categories/categories.js"></script>
+
+<script src="js/db/pokes/released.js"></script>
+
+<script src="js/db/pokes/all_moves.js"></script>
+
+<script src="js/db/pokes/stats.js"></script>
+
+<script src="js/db/pokes/type1.js"></script>
+<script src="js/db/pokes/type2.js"></script>
+
+<script src="js/db/pokes/pokemons.js"></script>
+<script src="js/db/pokes/gender.js"></script>
+
+<script src="js/db/pokes/ability1.js"></script>
+<script src="js/db/pokes/ability2.js"></script>
+<script src="js/db/pokes/ability3.js"></script>
+
+<script src="js/db/pokes/images.js"></script>
+<script src="js/db/pokes/images.back.js"></script>
+
+<script src="js/db/pokes/pokemon_items.js"></script>
+
+<script src="js/db/moves/moves.js"></script>
+<script src="js/db/moves/move_message.js"></script>
+
+<script src="js/db/moves/accuracy.js"></script>
+<script src="js/db/moves/damage_class.js"></script>
+<script src="js/db/moves/power.js"></script>
+<script src="js/db/moves/pp.js"></script>
+<script src="js/db/moves/type.js"></script>
+
+<script src="js/db/natures/nature.js"></script>
+
+<script src="js/db/items/items.js"></script>
+<script src="js/db/items/item_messages.js"></script>
+
+<script src="js/db/items/berries.js"></script>
+<script src="js/db/items/berry_messages.js"></script>
+
+<script src="js/db/items/released_items.js"></script>
+<script src="js/db/items/released_berries.js"></script>
+
+<script src="js/db/status/stats.js"></script>
+<script src="js/db/status/status.js"></script>
+
+<script src="js/db/types/types.js"></script>
+
+<script src="js/db/abilities/abilities.js"></script>
+<script src="js/db/abilities/ability_messages.js"></script>
+<script src="js/pokeinfo.js"></script>
+<!-- endbuild -->
 
 <!-- Battles -->
+<!-- build:js js/battle.js -->
 <script src="js/battle/anim.js"></script>
 <script src="js/battle/commandshandling.js"></script>
+<!-- endbuild -->
 
 </body>
 </html>

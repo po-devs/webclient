@@ -85,7 +85,9 @@ $(function() {
     });
 
     $("#battle-html").load("battle.html");
-    $("#user_params").load("user_params.html");
+    $("#user_params").load("user_params.html", function () {
+        webclient.initUserParams();
+    });
     $teambuilder.load("teambuilder.html");
 });
 

@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     function ChannelHolder() {
         $.observable(this);
 
@@ -162,4 +162,4 @@
     };
 
     webclient.classes.ChannelHolder = ChannelHolder;
-}());
+}(webclient));

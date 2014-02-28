@@ -81,7 +81,7 @@ $(function () {
         }
 
         if (scrollDown) {
-            $(chatTextArea).animate({scrollTop: cta.scrollHeight}, "fast");
+            chatTextArea.animate({scrollTop: cta.scrollHeight}, "fast");
         }
     };
 

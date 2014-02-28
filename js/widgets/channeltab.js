@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     function ChannelTab(id, name) {
         $.observable(this);
         this.shortHand = "channel";
@@ -137,4 +137,4 @@
     };
 
     webclient.classes.ChannelTab = ChannelTab;
-}());
+}(webclient));
