@@ -1,27 +1,4 @@
 (function($) {
-    // Unused.
-    /*$.getFirstPropertyIndex = function(object) {
-        var i;
-        for (i in object) {
-            if (object.hasOwnProperty(i)) {
-                return i;
-            }
-        }
-    };*/
-
-    // Unused
-    /*
-    $.updateObjectKeys = function(object, integer) {
-        var obj = {}, i;
-        integer = parseInt(integer, 10);
-
-        for (i in object) {
-            obj[integer + parseInt(i, 10)] = object[i];
-        }
-
-        return obj;
-    };*/
-
     $.fn.fillSelect = function(object){
         var options = "",
             key;

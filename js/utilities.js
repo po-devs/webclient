@@ -159,14 +159,6 @@ utils.unenumerable(Array.prototype, 'dichotomy', function (func) {
 // String.prototype.startsWith = function(str) { return this.lastIndexOf(str, 0) === 0; }
 
 // Unused
-/*function sanitize(str, jsEscapeToo) {
-    str = (str?''+str:'');
-    str = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    if (jsEscapeToo) str = str.replace(/'/g, '\\\'');
-    return str;
-}*/
-
-// Unused
 /*
 function loadjscssfile(filename, filetype){
     if (filetype=="js"){ //if filename is a external JavaScript file
@@ -183,11 +175,6 @@ function loadjscssfile(filename, filetype){
         document.getElementsByTagName("head")[0].appendChild(fileref)
     }
 }*/
-
-
-// Unused - bad practice too
-// mobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-
 
 // All unused
 /*

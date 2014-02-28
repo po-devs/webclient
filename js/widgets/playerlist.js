@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     /* The list of players */
     function PlayerList() {
         this.ids = [];
@@ -93,4 +93,4 @@
     };
 
     webclient.classes.PlayerList = PlayerList;
-}());
+}(webclient));

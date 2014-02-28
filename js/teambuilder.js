@@ -1,4 +1,4 @@
-(function (window, document, pokeinfo, geninfo, poStorage) {
+(function (webclient, poStorage) {
     // teambuilder class
     var defaultSettings = {
         generation: 6,
@@ -1145,4 +1145,4 @@
     Teambuilder.defaultSettings = defaultSettings;
     webclient.teambuilder = new Teambuilder();
     webclient.classes.Teambuilder = Teambuilder;
-}(window, document, pokeinfo, geninfo, poStorage));
+}(webclient, poStorage));

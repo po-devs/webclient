@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     function PMHolder() {
         var self = this;
         $.observable(self);
@@ -41,4 +41,4 @@
     };
 
     webclient.classes.PMHolder = PMHolder;
-}());
+}(webclient));

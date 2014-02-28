@@ -92,4 +92,4 @@
 
         dirty = false;
     };
-}());
+}(webclient));

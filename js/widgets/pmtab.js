@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     function PMTab(pid) {
         $.observable(this);
         var name = webclient.players.name(pid);
@@ -68,4 +68,4 @@
     };
 
     webclient.classes.PMTab = PMTab;
-}());
+}(webclient));

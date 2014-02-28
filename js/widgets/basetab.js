@@ -1,4 +1,4 @@
-(function () {
+(function (webclient) {
     function BaseTab(/* id */) {
         $.observable(this);
     }
@@ -14,4 +14,4 @@
     };
 
     webclient.classes.BaseTab = BaseTab;
-}());
+}(webclient));
