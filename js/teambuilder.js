@@ -89,7 +89,7 @@
             $("#pokemon-tabs .pokemon-tab").each(function (index) {
                 this.id = 'tb_tab_temporary_id_' + index;
                 // TODO: Is the attr necessary here?
-                $(".pokemon-slot").eq(index).attr('id', 'tb_tab_content_temporary_id_' + index);
+                $(".pokemon-slot")[index].id = 'tb_tab_content_temporary_id_' + index;
             });
         }).on('sortupdate', function (event, ui) {
             var element = $("#tb_tab_content_ " + ui.item[0].id.substr(7)),

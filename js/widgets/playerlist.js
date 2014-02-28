@@ -8,7 +8,9 @@
         this.count = $("#players_count");
     }
 
-    PlayerList.prototype.setPlayers = function (playerIds) {
+    var playerlist = PlayerList.prototype;
+
+    playerlist.setPlayers = function (playerIds) {
         var html = "",
             len, i;
 
@@ -26,12 +28,12 @@
         this.updatePlayerCount();
     };
 
-    PlayerList.prototype.updatePlayerCount = function () {
+    playerlist.updatePlayerCount = function () {
         var idl = this.ids.length;
         this.count.text(idl + (idl !== 1 ? " Users" : " User"));
     };
 
-    PlayerList.prototype.createPlayerItem = function (id) {
+    playerlist.createPlayerItem = function (id) {
         var name = webclient.players.name(id),
             ret;
 
@@ -50,7 +52,7 @@
         return ret;
     };
 
-    PlayerList.prototype.addPlayer = function (id) {
+    playerlist.addPlayer = function (id) {
         var name = webclient.players.name(id),
             lname = name.toLowerCase();
 
@@ -72,7 +74,7 @@
         this.updatePlayerCount();
     };
 
-    PlayerList.prototype.removePlayer = function (id) {
+    playerlist.removePlayer = function (id) {
         var pos = this.ids.indexOf(id);
         if (pos !== -1) {
             this.ids.splice(pos, 1);
@@ -83,7 +85,7 @@
         this.updatePlayerCount();
     };
 
-    PlayerList.prototype.updatePlayer = function (id) {
+    playerlist.updatePlayer = function (id) {
         if (this.ids.indexOf(id) !== -1) {
             this.removePlayer(id);
             this.addPlayer(id);

@@ -1,6 +1,4 @@
 (function () {
-    var pmholder = PMHolder.prototype;
-
     function PMHolder() {
         var self = this;
         $.observable(self);
@@ -18,6 +16,7 @@
         });
     }
 
+    var pmholder = PMHolder.prototype;
     pmholder.pm = function (pid) {
         var pm;
         if (pid in this.pms) {
