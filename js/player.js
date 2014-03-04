@@ -25,8 +25,7 @@
     };
 
     PlayerHolder.prototype.addPlayer = function (players) {
-        var activeChannel = webclient.currentChannel(),
-            playerObj,
+        var playerObj,
             player, name,
             id, x;
 

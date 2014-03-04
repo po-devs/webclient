@@ -28,7 +28,7 @@ webclient = {
     // Current channel
     channel: null,
     currentChannel: function () {
-        return webclient.channel ? webclient.channel.id : -1;
+        return (webclient.channel && webclient.channel.shortHand == "channel") ? webclient.channel.id : -1;
     },
 
     // Current player shown in the info dialog
