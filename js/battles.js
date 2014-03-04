@@ -141,6 +141,7 @@ function BattleTab(pid, conf, team) {
         /* Cleaner solution to create the tab would be appreciated */
         this.$content = $("#battle-" + pid);
         this.$content.html($("#battle-html").html());
+        this.$backgrounds = this.$content.find(".backgrounds");
 
         battles.battles[pid] = this;
         webclient.switchToTab("#battle-" + pid);

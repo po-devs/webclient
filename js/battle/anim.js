@@ -5,6 +5,7 @@
 function BattleAnimator(battle) {
     battle.animator = this;
     this.battle = battle;
+    this.pauseCounter = 0;
 }
 
 BattleAnimator.prototype.on = function(what) {
@@ -23,15 +24,23 @@ BattleAnimator.prototype.on = function(what) {
 };
 
 BattleAnimator.prototype.pause = function () {
-    this.battle.pause();
+    this.pauseCounter ++;
+    if (this.pauseCounter == 1) {
+        this.battle.pause();
+        console.log("pausing");
+    }
 };
 
 BattleAnimator.prototype.unpause = function() {
-    this.battle.unpause();
+    this.pauseCounter --;
+    if (this.pauseCounter == 0) {
+        this.battle.unpause();
+        console.log("unpausing");
+    }
 };
 
 BattleAnimator.prototype.finished = function() {
-    this.battle.unpause();
+    this.unpause();
 };
 
 /*
@@ -101,15 +110,19 @@ BattleAnimator.prototype.fullCss = function(img, dict) {
 
 /* Shows an image, starting at beginning, ending at end */
 BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, after, callback, easing) {
+    var self = this;
     var img = this.createImage(spot, effect);
     var begCss = this.fullCss(img, beginning);
     var endCss = this.fullCss(img, end);
     var easing = easing || "ballistic2";
+    var delay = beginning.time || 0;
+    var duration = (end.time - beginning.time) || 400;
 
     img.css(begCss);
     var anim = this.transition(endCss, easing);
 
-    img.animate(anim, function() {
+    this.pause();
+    img.delay(delay).animate(anim, duration, function() {
         if (after == "fade") {
             img.animate({
                 opacity: 0
@@ -123,6 +136,7 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
         if (callback) {
             callback();
         }
+        self.unpause();
     });
 };
 
@@ -145,6 +159,28 @@ BattleAnimator.prototype.psEffect = function(effect, beginning, end, easing, aft
     console.log(JSON.stringify(end) +"   -    " + JSON.stringify(attacker));
 
     this.showEffect(beginning.z > 0 ? 0 : 1, effect, beginning, end, after, null, easing);
+};
+
+BattleAnimator.prototype.backgroundEffect  = function (bg, duration, opacity, delay) {
+    var self = this;
+
+    if (!opacity) {
+        opacity = 1;
+    }
+    if (!delay) delay = 0;
+    self.battle.$backgrounds.append('<div class="background"></div>');
+    var elem = self.battle.$backgrounds.children().last();
+    elem.css({
+        background: bg,
+        display: 'block',
+        opacity: 0
+    });
+    self.pause();
+    elem.delay(delay).animate({
+        opacity: opacity
+    }, 250).delay(duration - 250).animate({
+        opacity: 0
+    }, 250, function() {self.unpause();});
 };
 
 BattleAnimator.prototype.onKo = function(spot) {
@@ -226,9 +262,6 @@ BattleAnimator.prototype.onHpchange = function(spot, oldpercent, newpercent) {
 BattleAnimator.prototype.onAttack = function(spot, move) {
     var self = this;
 
-    //Here for now, until all anims are done
-    self.finished();
-
     var moveid = utils.toAlphanumeric(moveinfo.name(move));
     var animObject = BattleMoveAnims[moveid] || BattleOtherAnims.attack;
 
@@ -240,6 +273,9 @@ BattleAnimator.prototype.onAttack = function(spot, move) {
 
     console.log("Anim for " + moveid + ", original: " + (moveid in BattleMoveAnims));
     animObject.anim(this, [attacker,defender]);
+
+    //Here for now, until all anims are done
+    self.finished();
 };
 
 BattleAnimator.prototype.makeAnimObject = function(spot) {
