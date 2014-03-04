@@ -11,7 +11,7 @@
 
         if ($("#pm-" + pid).length === 0) {
             /* Create new tab */
-            $('#channel-tabs').tabs("add", "#pm-" + pid, (name === "???" ? "Player " + pid : name) + '<i class="icon-remove-circle"></i>');
+            $('#channel-tabs').tabs("add", "#pm-" + pid, (name === "???" ? "Player " + pid : name) + '<i class="fa fa-times-circle"></i>');
 
             this.chat = new webclient.classes.Chat('send-pm-' + pid);
             this.chat.appendTo($("#pm-" + pid));

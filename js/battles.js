@@ -137,7 +137,7 @@ function BattleTab(pid, conf, team) {
 
     if ($("#battle-" + pid).length === 0) {
         /* Create new tab */
-        $('#channel-tabs').tabs("add", "#battle-" + pid, name + '<i class="icon-remove-circle"></i>');
+        $('#channel-tabs').tabs("add", "#battle-" + pid, name + '<i class="fa fa-times-circle"></i>');
         /* Cleaner solution to create the tab would be appreciated */
         this.$content = $("#battle-" + pid);
         this.$content.html($("#battle-html").html());

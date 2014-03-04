@@ -176,7 +176,7 @@ $(function() {
 
         $trainerUsername.text(webclient.ownName()).trigger('received');
     }).on("playeradd", function (player, id, name) {
-        if (webclient.currentChannel() !== -1 && webclient.channels.current().hasPlayer(id)) {
+        if (webclient.currentChannel() !== -1 && webclient.channel.hasPlayer(id)) {
             webclient.ui.playerList.updatePlayer(id);
         }
 
