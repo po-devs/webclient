@@ -108,7 +108,11 @@ BattleAnimator.prototype.fullCss = function(img, dict) {
         dy = dict.y;
     }
 
-    return $.extend(this.move(img, dx, dy), this.zoom(img, zoom));
+    var wh = this.zoom(img, zoom);
+    dx += this.rel(img, (img.w - wh.width)/2);
+    dy += this.rel(img, (img.h - wh.height)/2);
+
+    return $.extend(this.move(img, dx, dy), wh);
 };
 
 BattleAnimator.prototype.makeAnimObject = function(spot) {
@@ -199,7 +203,7 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
     var endCss = this.fullCss(img, end);
     var easing = easing || "ballistic2";
     var delay = beginning.time || 0;
-    var duration = (end.time - beginning.time) || 400;
+    var duration = (end.time - beginning.time) || 500;
 
     img.css(begCss);
     var anim = this.transition(endCss, easing);
@@ -233,6 +237,7 @@ BattleAnimator.prototype.psEffect = function(effect, beginning, end, easing, aft
     /* PS contains the full x/y pos, but we don't want that in this.showEffect */
     var aspot = beginning.z > 0 ? 0 : 1;
     var attacker = this.makeAnimObject(aspot);
+    end = $.extend({}, beginning, end);
     beginning.x -= attacker.x;
     beginning.y -= attacker.y;
     end.x -= attacker.x;
