@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Pokémon Online Web Client</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+
+    <!-- build:css css/libs.css -->
+    <link rel="stylesheet" href="libs/css/combobox.css" />
+    <link rel="stylesheet" href="libs/css/farbtastic.css"  />
+    <link rel="stylesheet" href="libs/css/vex.css" />
+    <link rel="stylesheet" href="libs/css/vex-theme-os.css" />
+    <link rel="stylesheet" href="libs/css/nprogress.css" />
+    <link rel="stylesheet" href="libs/css/toggles-light.css" />
+    <!-- endbuild -->
+
+    <!-- Used by iframes -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- build:css css/app.css -->
+    <link rel="stylesheet" href="css/battle.css" />
+    <link rel="stylesheet" href="css/registry.css" />
+    <link rel="stylesheet" href="css/chat.css" />
+    <!-- endbuild -->
+
+    <!-- build:css css/midreso.css -->
+    <link rel="stylesheet" href="css/midreso.css" media="screen and (max-width: 1024px)" />
+    <!-- endbuild -->
+</head>
+<body>
+<div id="overlay" style="display:none"></div>
+<div id="tooltipwrapper"><div class="tooltipinner"></div></div>
+<div id="foehint"></div>
+
+<div class="page" id="registry-page">
+    <div id="registry-content">
+        <div id="top-content">
+            <label for="relay">Relay</label>
+            <span style="float:right;" class="button" id="load-button">Load</span>
+            <input style="width:60%;" type="text" name="relay" id="relay" value="server.pokemon-online.eu:10508" autofocus="autofocus"/>
+            <br style="clear:both;" />
+            <label style="position:relative;top:-2px;" for="autoload">Load Automatically</label><input type="checkbox" name="autoload" id="autoload" />
+            <div id="servers-list-container">
+                <table id="servers-list">
+                    <thead>
+                    <tr>
+                        <th>Server Name</th>
+                        <th width="100">Players / Max</th>
+                        <th width="200">Advanced Connection</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="hidden-cell"><td colspan="3"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+        </div>
+        <div id="bottom-content">
+            <strong>Server Description</strong><br />
+            <div id="server-description">
+            </div><br />
+            <label for="advanced-connection">Advanced Connection</label><input type="text" name="advanced-connection" id="advanced-connection" /><br style="clear:both;" />
+            <div style="width:50%;float:left;"><label for="username">Username</label><input type="text" name="username" id="username" /><br style="clear:both;" /></div>
+            <div style="width:50%;float:right;"><label for="password">Password</label><input type="password" name="password" id="password" /><br style="clear:both;" /></div>
+            <br style="clear:both;" />
+            <span class="button" id="connect-button">Connect</span><br style="clear:both;" />
+        </div>
+    </div>
+</div>
+<div class="page" style="display: none">
+    <div id="sidebar">
+        <span id="po_title">Pokémon <span>Online</span></span>
+        <img id="trainer_img" src="http://pokemon-online.eu/images/trainers/125.png" alt="" />
+        <span id="trainer_username"></span>
+        <br style="clear:both;" />
+        <span class="click_button find-battle">Find Battle</span><br style="clear:both;"/>
+        <div class="dropdown">
+            <span class="dropdown_button" data-teambuilder="true">Teams<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
+            <div class="dropdown_content">
+                <div class="team_preview current_team" data-teamid='0'>
+                    <div class="team_preview_options">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
+                    </div>
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" /><br />
+                    Tier: <strong class='team_tier'>Challenge Cup</strong>
+                </div>
+                <div class="team_preview" data-teamid='1'>
+                    <div class="team_preview_options">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
+                    </div>
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" /><br />
+                    Tier: <strong>Challenge Cup</strong>
+                </div>
+                <div class="team_preview" data-teamid='2'>
+                    <div class="team_preview_options">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                                <i class="fa fa-cog fa-stack-1x"></i>
+                            </span>
+                    </div>
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" />
+                    <img src="http://pokemon-online.eu/images/poke_icons/0.png" alt="" /><br />
+                    Tier: <strong>Challenge Cup</strong>
+                </div>
+                <div class="push_right">
+                    <span id="create_team" class="click_button">New Team</span>
+                    <span class="click_button">Import</span>
+                </div>
+            </div>
+        </div>
+        <br style="clear:both;" />
+        <div class="dropdown">
+            <span class="dropdown_button">Tiers<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
+            <div class="dropdown_content push_right">
+                Tiers list
+            </div>
+        </div><br />
+        <div class="dropdown">
+            <span class="dropdown_button">Channels<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
+            <div class="dropdown_content push_right">
+                Channels list
+            </div>
+        </div><br />
+        <div class="dropdown">
+            <span class="dropdown_button">Battles<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
+            <div class="dropdown_content push_right">
+                Battles list
+            </div>
+        </div><br />
+        <div class="dropdown">
+            <span class="dropdown_button">Rankings<i class="fa fa-chevron-down fa-lg"></i><i class="fa fa-chevron-up fa-lg"></i></span>
+            <div class="dropdown_content push_right">
+                <ul id="rankings">
+                </ul>
+                <span class="click_button">View All</span>
+            </div>
+        </div><br />
+    </div>
+    <div id="users_list">
+        <span id="players_count">Users</span>
+        <input type="text" id="search_filter" name="search_filter" placeholder="Search..." />
+        <ul id="player-list">
+        </ul>
+    </div>
+    <div class="middle_block" id="user_params">
+        Loading...
+    </div>
+    <div class="middle_block" id="teambuilder">
+        Loading...
+    </div>
+    <div class="middle_block" id="content">
+        <div id="channel-tabs">
+            <ul id="tab-titles">
+                <li>
+                    <a href="#channel-0">Console<i class="fa fa-times-circle"></i></a>
+                </li>
+            </ul>
+            <div id="channel-0" data-initialized="false">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="battle-html" style="display: none"></div>
+<div id='player-dialog' title='User Menu'></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+<!-- Libraries -->
+<!-- build:js js/libs.js -->
+<script src="libs/js/nprogress.js"></script>
+<script src="libs/js/jquery.knob.js"></script>
+<script src="libs/js/jquery.tablesorter.js"></script>
+<script src="libs/js/jquery.formValues.js"></script>
+<script src="libs/js/jquery.filterFor.js"></script>
+<script src="libs/js/farbtastic.js"></script>
+<script src="libs/js/vex.combined.min.js"></script>
+<script src="libs/js/combobox.js"></script>
+<script src="libs/js/combobox.utilities.js"></script>
+<script src="libs/js/toggles.js"></script>
+<script src="libs/js/md5.js"></script>
+<script src="libs/js/riot.js"></script>
+<!-- endbuild -->
+
+<!-- build:js js/app.js -->
+<script src="js/webclient.js"></script>
+<script src="js/utilities.js"></script>
+
+<!-- Widgets -->
+<script src="js/widgets/chat.js"></script>
+<script src="js/widgets/basetab.js"></script>
+<script src="js/widgets/pmtab.js"></script>
+<script src="js/widgets/channeltab.js"></script>
+<script src="js/widgets/playerlist.js"></script>
+
+<!-- Application logic -->
+<script src="js/postorage.js"></script>
+<script src="js/network.js"></script>
+<script src="js/battles.js"></script>
+<script src="js/player.js"></script>
+<script src="js/pm.js"></script>
+<script src="js/channel.js"></script>
+<script src="js/formatting.js"></script>
+
+<!-- User params -->
+<script src="js/userparams.js"></script>
+
+<!-- Teambuilder -->
+<script src="js/teambuilder.js"></script>
+
+<script src="js/index.js"></script>
+<script src="js/testbattles.js"></script>
+<!-- endbuild -->
+
+<!-- Data files -->
+<!-- build:js js/pokedex.js -->
+<script src="js/db/initpokedex.js"></script>
+
+<script src="js/db/generations.js"></script>
+<script src="js/db/generations.options.js"></script>
+
+<script src="js/db/categories/categories.js"></script>
+
+<script src="js/db/pokes/released.js"></script>
+
+<script src="js/db/pokes/all_moves.js"></script>
+
+<script src="js/db/pokes/stats.js"></script>
+
+<script src="js/db/pokes/type1.js"></script>
+<script src="js/db/pokes/type2.js"></script>
+
+<script src="js/db/pokes/pokemons.js"></script>
+<script src="js/db/pokes/gender.js"></script>
+
+<script src="js/db/pokes/ability1.js"></script>
+<script src="js/db/pokes/ability2.js"></script>
+<script src="js/db/pokes/ability3.js"></script>
+
+<script src="js/db/pokes/images.js"></script>
+<script src="js/db/pokes/images.back.js"></script>
+
+<script src="js/db/pokes/pokemon_items.js"></script>
+
+<script src="js/db/moves/moves.js"></script>
+<script src="js/db/moves/move_message.js"></script>
+
+<script src="js/db/moves/accuracy.js"></script>
+<script src="js/db/moves/damage_class.js"></script>
+<script src="js/db/moves/power.js"></script>
+<script src="js/db/moves/pp.js"></script>
+<script src="js/db/moves/type.js"></script>
+
+<script src="js/db/natures/nature.js"></script>
+
+<script src="js/db/items/items.js"></script>
+<script src="js/db/items/item_messages.js"></script>
+
+<script src="js/db/items/berries.js"></script>
+<script src="js/db/items/berry_messages.js"></script>
+
+<script src="js/db/items/released_items.js"></script>
+<script src="js/db/items/released_berries.js"></script>
+
+<script src="js/db/status/stats.js"></script>
+<script src="js/db/status/status.js"></script>
+
+<script src="js/db/types/types.js"></script>
+
+<script src="js/db/abilities/abilities.js"></script>
+<script src="js/db/abilities/ability_messages.js"></script>
+<script src="js/pokeinfo.js"></script>
+<!-- endbuild -->
+
+<!-- Battles -->
+<!-- build:js js/battle.js -->
+<script src="js/battle/anim.js"></script>
+<script src="js/battle/commandshandling.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>
