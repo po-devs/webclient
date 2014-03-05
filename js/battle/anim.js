@@ -73,8 +73,11 @@ BattleAnimator.prototype.rel = function(img, x) {
 
 /* Introduces a new sprite (like a pokeball, or whatever) on the battle screen */
 BattleAnimator.prototype.createImage = function(spot, effect) {
+    if (effect && effect.length)
+        effect = BattleTab.effects[effect];
+
     var b = this.battle;
-    var url = "images/" + BattleTab.effects[effect].url;
+    var url = "images/" + effect.url;
 
     var content = b.$content.find(".battle_window_content");
 
@@ -84,7 +87,6 @@ BattleAnimator.prototype.createImage = function(spot, effect) {
 
     return $img;
 };
-
 
 BattleAnimator.prototype.fullCss = function(img, dict) {
     var dx = 0;
@@ -106,6 +108,86 @@ BattleAnimator.prototype.fullCss = function(img, dict) {
     }
 
     return $.extend(this.move(img, dx, dy), this.zoom(img, zoom));
+};
+
+BattleAnimator.prototype.makeAnimObject = function(spot) {
+    var b = this.battle;
+    var pos = b.pos(spot, "null");
+
+    var content = b.$content.find(".battle_window_content");
+    var width = content.width();
+    var height = content.height();
+
+    var x, y, z;
+    if ("top" in pos) {
+        y = height - pos.top;
+        x = width - pos.right;
+    } else {
+        x = pos.left;
+        y = pos.bottom;
+    }
+
+    var back = spot == 0;
+    z = back ? 100 : - 100;
+
+    return new Sprite(back, x, y, z, this);
+};
+
+function Sprite(back, x, y, z, anim) {
+    this.x = x;
+    this.y = y;
+    /* Overshoot. Use this to make an animation go further */
+    this.z = z;
+    this.back = back;
+    this.spot = back ? 0 : 1;
+    this.animator = anim;
+    this.sp = this.animator.battle.$sprite(this.spot);
+}
+
+Sprite.prototype.anim = function(end, easing) {
+    if (!end) return;
+    var animator = this.animator;
+
+    end = $.extend({
+        x: this.x,
+        y: this.y,
+        z: this.z,
+        scale: 1,
+        opacity: 1,
+        time: 500
+    }, end);
+
+    //if (selfS.subElem && !selfS.duringMove) {
+    //    selfS.subElem.animate(self.posT(end, selfS.subsp, transition, selfS), end.time);
+    //} else {
+    var elem = this.sp;
+    var endCss = animator.fullCss(elem, end);
+    var transition = animator.transition(endCss, easing);
+
+    animator.pause();
+    elem.animate(transition, end.time, function() {animator.unpause();});
+    //}
+};
+
+Sprite.prototype.delay = function(time) {
+    var elem = this.animator.battle.$sprite(this.spot);
+    elem.delay(time);
+};
+
+Sprite.prototype.behind = function(z) {
+    if (this.back) {
+        return this.z - z;
+    } else {
+        return this.z + z;
+    }
+};
+
+Sprite.prototype.leftof = function(x) {
+    if (this.back) {
+        return this.x - x;
+    } else {
+        return this.x + x;
+    }
 };
 
 /* Shows an image, starting at beginning, ending at end */
@@ -155,10 +237,18 @@ BattleAnimator.prototype.psEffect = function(effect, beginning, end, easing, aft
     end.x -= attacker.x;
     end.y -= attacker.y;
 
-    console.log(JSON.stringify(beginning) +"   -    " + JSON.stringify(attacker));
-    console.log(JSON.stringify(end) +"   -    " + JSON.stringify(attacker));
+    //console.log(JSON.stringify(beginning) +"   -    " + JSON.stringify(attacker));
+    //console.log(JSON.stringify(end) +"   -    " + JSON.stringify(attacker));
 
     this.showEffect(beginning.z > 0 ? 0 : 1, effect, beginning, end, after, null, easing);
+};
+
+BattleAnimator.prototype.activityWait = function(time)
+{
+    var self = this;
+    self.pause();
+
+    setTimeout(function(){self.unpause();}, time);
 };
 
 BattleAnimator.prototype.backgroundEffect  = function (bg, duration, opacity, delay) {
@@ -276,55 +366,6 @@ BattleAnimator.prototype.onAttack = function(spot, move) {
 
     //Here for now, until all anims are done
     self.finished();
-};
-
-BattleAnimator.prototype.makeAnimObject = function(spot) {
-    var b = this.battle;
-    var pos = b.pos(spot, "null");
-
-    var content = b.$content.find(".battle_window_content");
-    var width = content.width();
-    var height = content.height();
-
-    var x, y, z;
-    if ("top" in pos) {
-        y = height - pos.top;
-        x = width - pos.right;
-    } else {
-        x = pos.left;
-        y = pos.bottom;
-    }
-
-    var back = spot == 0;
-    z = back ? 100 : - 100;
-
-    return new Sprite(back, x, y, z);
-};
-
-function Sprite(back, x, y, z) {
-    this.x = x;
-    this.y = y;
-    /* Overshoot. Use this to make an animation go further */
-    this.z = z;
-    this.back = back;
-
-    /* Todo: anim, delay */
-}
-
-Sprite.prototype.behind = function(z) {
-    if (this.back) {
-        return this.z - z;
-    } else {
-        return this.z + z;
-    }
-};
-
-Sprite.prototype.leftof = function(x) {
-    if (this.back) {
-        return this.x - x;
-    } else {
-        return this.x + x;
-    }
 };
 
 BattleAnimator.prototype.transition = function (movement, transition) {
