@@ -72,7 +72,8 @@ BattleAnimator.prototype.rel = function(img, x) {
 };
 
 /* Introduces a new sprite (like a pokeball, or whatever) on the battle screen */
-BattleAnimator.prototype.createImage = function(spot, effect) {
+BattleAnimator.prototype.createImage = function(spot, _effect) {
+    var effect = _effect;
     if (effect && effect.length)
         effect = BattleTab.effects[effect];
 
@@ -83,7 +84,7 @@ BattleAnimator.prototype.createImage = function(spot, effect) {
 
     var $img = $("<img src=\"" + url + "\" class=\"sprite\"/>");
     content.append($img);
-    b.setPos($img, spot, effect);
+    b.setPos($img, spot, _effect);
 
     return $img;
 };

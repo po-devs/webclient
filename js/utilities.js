@@ -156,7 +156,7 @@ utils.unenumerable(Array.prototype, 'dichotomy', function (func) {
 });
 
 // Unused
-// String.prototype.startsWith = function(str) { return this.lastIndexOf(str, 0) === 0; }
+String.prototype.startsWith = function(str) { return this.lastIndexOf(str, 0) === 0; }
 
 // Unused
 /*
