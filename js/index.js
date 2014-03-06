@@ -141,7 +141,7 @@ $(function() {
         return ret;
     };
 
-    $channeltabs.on('tabsselect', function(event, ui) {
+    $channeltabs.on('tabsselect', function (event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
         /* Changes the current object in memory */
@@ -149,7 +149,7 @@ $(function() {
 
         /* Update player list when switching channels */
         webclient.ui.playerList.setPlayers(webclient.channel.playerIds());
-    }).bind('tabsshow', function(event, ui) {
+    }).on('tabsshow', function (event, ui) {
         var hrefid = $(ui.tab).attr("href");
 
         /* Resizes chat area in funciton of the height of the channel tab */
@@ -159,7 +159,7 @@ $(function() {
 
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
-    }).bind('tabscreate', function(event, ui) {
+    }).on('tabscreate', function(event, ui) {
         var hrefid = $(ui.tab).attr("href");
         webclient.channel = objFromId(hrefid);
     });
@@ -379,41 +379,20 @@ webclient.switchToTab = function(hrefid) {
     $('#channel-tabs').tabs("select", hrefid);
 };
 
-function sendMessage(sender) {
+webclient.sendMessage = function (message, id) {
     if (!network.isOpen()) {
         webclient.printRaw("ERROR: Connect to the relay station before sending a message.");
         return;
     }
 
-    var $inputText = $(sender),
-        message = $inputText.val().trim().split("\n"),
-        idsender = $inputText[0].id,
-        targetid = idsender.substr(idsender.lastIndexOf("-") + 1);
-
-    message.forEach(function(msg) {
-        if (!msg.length) {
-            return;
-        }
-
-        if (/^send-channel-/.test(idsender)) {
-            /* Temporary until interface is improved */
-            if (/^\/pm/i.test(msg)) {
-                var pid = webclient.players.id(msg.slice(4));
-                if (pid !== -1) {
-                    webclient.pms.pm(pid).activateTab();
-                    return;
-                }
-            }
-            network.command('chat', {channel: targetid, message: msg});
-        } else if (/^send-pm-/.test(idsender)) {
-            webclient.pms.pm(targetid).print(webclient.ownId, msg);
-            network.command('pm', {to: targetid, message: msg});
-        } else if (/^send-battle-/.test(idsender)) {
-            var battle = battles.battles[targetid];
-            network.command((battle.isBattle() ? "battlechat": "spectatingchat"), {battle: targetid, message: msg});
-        }
-    });
-}
+    if (/^send-channel-/.test(id)) {
+        webclient.channels.channel(+id.replace('send-channel-', '')).sendMessage(message);
+    } else if (/^send-pm-/.test(id)) {
+        webclient.pms.pm(+id.replace('send-pm-', '')).sendMessage(message);
+    } else if(/^send-battle-/.test(id)) {
+        battles.battles[(+id.replace('send-channel-', ''))].sendMessage(message);
+    }
+};
 
 webclient.joinChannel = function (chan) {
     var $inputChannel = $("#join-channel"),

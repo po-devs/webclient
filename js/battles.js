@@ -240,6 +240,18 @@ BattleTab.prototype.print = function(msg, args) {
     this.activateTab();
 };
 
+BattleTab.prototype.sendMessage = function (message) {
+    var lines = message.trim().split('\n'),
+        command = (battle.isBattle() ? "battlechat": "spectatingchat"),
+        line, len, i;
+
+    for (i = 0, len = lines.length; i < len; i += 1) {
+        line = lines[i];
+
+        network.command(command, {battle: this.id, message: line});
+    }
+};
+
 BattleTab.prototype.player = function(spot) {
     return spot % 2;
 };

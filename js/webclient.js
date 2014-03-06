@@ -54,6 +54,8 @@ webclient = {
     * webclient.sandboxHtml(jQuery|string selector, string html)
     * webclient.initUserParams(void)
     * webclient.sendProfile(void)
+    * webclient.convertImages(jQuery|string selector)
+    * webclient.sendMessage(string message, string fromid)
 */
 
 $.observable(webclient);

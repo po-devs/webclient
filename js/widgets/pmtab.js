@@ -62,6 +62,18 @@
         this.chat.insertMessage(msg);
     };
 
+    pmtab.sendMessage = function (message) {
+        var lines = message.trim().split('\n'),
+            line, len, i;
+
+        for (i = 0, len = lines.length; i < len; i += 1) {
+            line = lines[i];
+
+            this.print(webclient.ownId, line);
+            network.command('pm', {to: this.id, message: line});
+        }
+    }
+
     pmtab.close = function () {
         this.trigger("close");
         $('#channel-tabs').tabs("remove", "#pm-" + this.id);

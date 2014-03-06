@@ -75,7 +75,7 @@
     channeltab.print = function (msg, html, raw) {
         if (raw !== true) {
             if (html) {
-                msg = convertPOLinks($("<div>").html(msg)).html();
+                msg = webclient.convertImages($("<div>").html(msg)).html();
             } else {
                 var action = false;
                 msg = utils.escapeHtml(msg);
@@ -115,6 +115,25 @@
             raw: raw,
             linebreak: true
          });
+    };
+
+    channeltab.sendMessage = function (message) {
+        var lines = message.trim().split('\n'),
+            line, pid, len, i;
+
+        for (i = 0, len = lines.length; i < len; i += 1) {
+            line = lines[i];
+            // Temporary
+            if (/^\/pm/i.test(line)) {
+                pid = webclient.players.id(line.slice(4));
+                if (pid !== -1) {
+                    webclient.pms.pm(pid).activateTab();
+                    return;
+                }
+            }
+
+            network.command('chat', {channel: this.id, message: line});
+        }
     };
 
     channeltab.changeName = function (name) {
