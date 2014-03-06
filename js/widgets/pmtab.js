@@ -50,16 +50,27 @@
         this.disconnected = false;
     };
 
-    pmtab.print = function(pid, msg) {
-        if (pid !== -1) {
+    pmtab.print = function (id, msg) {
+        var raw = id === -1,
+            auth, pref;
+
+        if (!raw) {
+            auth = webclient.players.auth(id);
+
             msg = utils.escapeHtml(msg);
-            var pref = "<span class='player-message' style='color: " + webclient.players.color(pid) + "'>" + webclient.players.name(pid) + ":</span>";
-            msg = pref + " " + utils.addChannelLinks(msg, webclient.channels.channelsByName(true));
+            msg = "<span class='player-message' style='color: " + webclient.players.color(id) + "'>" + utils.rank(auth) + utils.rankStyle(webclient.players.name(id) + ":", auth) + "</span>"
+                + " " + utils.addChannelLinks(msg, webclient.channels.channelsByName(true));
 
             this.activateTab();
         }
 
-        this.chat.insertMessage(msg);
+        this.chat.insertMessage(msg, {
+            timestamps: true,
+            // TODO: pm.timestamps
+            timestampCheck: 'chat.timestamps',
+            html: raw,
+            linebreak: true
+         });
     };
 
     pmtab.sendMessage = function (message) {

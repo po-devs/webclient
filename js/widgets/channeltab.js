@@ -73,24 +73,24 @@
     };
 
     channeltab.print = function (msg, html, raw) {
+        var pref, id, auth;
+
         if (raw !== true) {
             if (html) {
                 msg = webclient.convertImages($("<div>").html(msg)).html();
             } else {
-                var action = false;
                 msg = utils.escapeHtml(msg);
 
                 if (msg.substr(0, 3) === "***") {
                     msg = "<span class='action'>" + msg + "</span>";
-                    action = true;
-                }
+                } else if (msg.indexOf(":") !== -1) {
+                    pref = msg.substr(0, msg.indexOf(":"));
+                    id = webclient.players.id(pref);
+                    auth = webclient.players.auth(id);
 
-                if (msg.indexOf(":") !== -1 && !action) {
-                    var pref = msg.substr(0, msg.indexOf(":"));
-                    var id = webclient.players.id(pref);
-                    var auth = webclient.players.auth(id);
-                    if (webclient.players.isIgnored(id))
+                    if (webclient.players.isIgnored(id)) {
                         return;
+                    }
 
                     if (pref === "~~Server~~") {
                         pref = "<span class='server-message'>" + pref + ":</span>";
@@ -112,7 +112,6 @@
             timestamps: true,
             timestampCheck: 'chat.timestamps',
             html: html,
-            raw: raw,
             linebreak: true
          });
     };
