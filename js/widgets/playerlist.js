@@ -54,15 +54,16 @@
 
     playerlist.addPlayer = function (id) {
         var name = webclient.players.name(id),
-            lname = name.toLowerCase();
+            lname = name.toLowerCase(),
+            item;
 
         /* Find the place where to put the name - dichotomy */
-        var pos = this.ids.dichotomy(function (id) {
-            return lname.localeCompare(webclient.players.name(id).toLowerCase());
+        var pos = this.ids.dichotomy(function (pid) {
+            return lname.localeCompare(webclient.players.name(pid).toLowerCase());
         });
 
         /* Add the graphical element */
-        var item = this.createPlayerItem(id);
+        item = this.createPlayerItem(id);
         if (pos === this.ids.length) {
             this.element.append(item);
         } else {
@@ -70,6 +71,7 @@
             $(".player-list-item#player-" + this.ids[pos]).before(item);
         }
 
+        // Add the id after the position
         this.ids.splice(pos, 0, id);
         this.updatePlayerCount();
     };

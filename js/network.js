@@ -245,15 +245,15 @@
         },
         join: function (payload) {
             var parts = payload.split("|"),
-                chan = parts[0],
-                player = parts[1];
+                chan = +parts[0],
+                player = +parts[1];
 
             webclient.channels.channel(chan).newPlayer(player);
         },
         leave: function (payload) {
             var parts = payload.split("|"),
-                chan = parts[0],
-                player = parts[1];
+                chan = +parts[0],
+                player = +parts[1];
 
             webclient.channels.channel(chan).removePlayer(player);
             webclient.players.testPlayerOnline(player);

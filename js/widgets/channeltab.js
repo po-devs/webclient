@@ -151,7 +151,13 @@
     };
 
     channeltab.playerIds = function() {
-        return Object.keys(this.players);
+        var ids = [], id;
+
+        for (id in this.players) {
+            ids.push(+id);
+        }
+
+        return ids;
     };
 
     webclient.classes.ChannelTab = ChannelTab;
