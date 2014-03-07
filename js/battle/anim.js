@@ -243,14 +243,19 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
                 opacity: 0
             }, 100, function() {
                 img.remove();
+
+                if (callback) {
+                    callback();
+                }
             });
         } else {
             img.remove();
+
+            if (callback) {
+                callback();
+            }
         }
 
-        if (callback) {
-            callback();
-        }
         self.unpause();
     });
 };
@@ -325,22 +330,24 @@ BattleAnimator.prototype.onSend = function(spot) {
     var $poke = b.$poke(spot);
     var self = this;
 
-    $poke.find(".pokemon_name").text(poke.name);
     $poke.find(".sprite").attr("src", "");
     $poke.find(".sprite").attr("src", pokeinfo.battlesprite(poke, {"gen": b.conf.gen, "back": b.player(spot) == 0}));
     b.setPos(sprite, spot, poke);
-    $poke.find(".battle-stat-value").text(poke.percent + "%");
 
-    var $prog = $poke.find(".battle-stat-progress");
-    $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
-    $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
-    $prog.css("width", poke.percent + "%");
+    sprite.css("opacity", 0);
 
     this.showEffect(spot, "pokeball", {"relx": -100, "y": 60, "zoom": 0.7},
         {"relx": 0, "y": 0}, "fade",
 
         function() {
             sprite.css("opacity", 100);
+            $poke.find(".pokemon_name").text(poke.name);
+            $poke.find(".battle-stat-value").text(poke.percent + "%");
+            var $prog = $poke.find(".battle-stat-progress");
+            $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
+            $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
+            $prog.css("width", poke.percent + "%");
+
             self.finished();
         }
     );
