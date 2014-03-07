@@ -85,6 +85,17 @@
         // id: number
         getrankings: function (payload) {
             return 'getrankings|' + payload.id;
+        },
+        //id: number, tier: string, team: number (of own team slot), clauses: number
+        challengeplayer : function(payload) {
+            /* Convert clauses as an array to a number */
+            var copy = $.extend({}, payload, {"clauses": 0});
+            var mult = 1;
+            for (var i in payload.clauses) {
+                copy.clauses += mult * payload.clauses[i];
+                mult *= 2;
+            }
+            return 'challenge|' + JSON.stringify(copy);
         }
     };
 

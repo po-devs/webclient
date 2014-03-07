@@ -14,11 +14,11 @@ BattleTab.prototype.dealWithSend = function(params) {
 
     if (this.isBattle()) {
         if (params.spot == this.myself) {
-            var tpoke = this.request.side.pokemon[0];
-            this.request.side.pokemon[0] = this.request.side.pokemon[params.slot];
-            this.request.side.pokemon[params.slot] = tpoke;
+            var tpoke = this.request.team[0];
+            this.request.team[0] = this.request.team[params.slot];
+            this.request.team[params.slot] = tpoke;
 
-            $.extend(poke, this.request.side.pokemon[0]);
+            $.extend(poke, this.request.team[0]);
         }
     }
     /* Stores the pokemon in field memory */
@@ -69,7 +69,7 @@ BattleTab.prototype.dealWithTeampreview = function(params) {
 };
 
 BattleTab.prototype.dealWithPpchange = function(params) {
-    this.request.side.pokemon[Math.floor(params.spot/2)].moveDetails[params.move].pp = params.pp;
+    this.request.team[Math.floor(params.spot/2)].moves[params.move].pp = params.pp;
 };
 
 BattleTab.prototype.dealWithOfferchoice = function(params) {
@@ -390,8 +390,7 @@ BattleTab.prototype.dealWithRated = function(params) {
 
 BattleTab.prototype.dealWithChoiceselection = function(params) {
     if (this.request && params.spot%2 == this.myself) {
-        this.loadChoices();
-        this.receiveRequest(this.request);
+        //Todo: deal with choice selection
     }
 };
 

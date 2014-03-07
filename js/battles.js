@@ -148,6 +148,7 @@ function BattleTab(pid, conf, team) {
 
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
+            this.request = {"team": team};
         } else {
             this.$content.find(".battle_options").css("visibility", "hidden");
             this.$content.find(".battle_buttons").css("visibility", "hidden");
@@ -245,7 +246,7 @@ BattleTab.prototype.print = function(msg, args) {
 
 BattleTab.prototype.sendMessage = function (message) {
     var lines = message.trim().split('\n'),
-        command = (battle.isBattle() ? "battlechat": "spectatingchat"),
+        command = (this.isBattle() ? "battlechat": "spectatingchat"),
         line, len, i;
 
     for (i = 0, len = lines.length; i < len; i += 1) {
@@ -379,12 +380,6 @@ BattleTab.prototype.onControlsChooseSwitch = function($obj) {
 BattleTab.prototype.onControlsChooseTeamPreview = function($obj) {
     var choice = {"type":"rearrange", "slot":this.myself, "neworder": neworder};
     this.choose(choice);
-};
-
-/* Loads the choices in PS format in this.request.active[x], x being the pokemon slot */
-BattleTab.prototype.loadChoices = function() {
-    this.request.active[0].moves = this.request.side.pokemon[0].moveDetails;
-    console.log("loaded choices");
 };
 
 BattleTab.prototype.playerIds = function() {

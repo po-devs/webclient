@@ -321,14 +321,34 @@ $(function() {
                 }
             },
             {
+                text: "Challenge",
+                'class': "click_button",
+                click: function() {
+                    /* Send challenge cup challenge, to a random tier of the opponent */
+                    for (var tier in webclient.players.player(id).ratings) {
+                        break;
+                    }
+                    network.send("challengeplayer", {"id": id, "team": 0, "clauses": [0,0,0,0,1],
+                        "tier": tier
+                    });
+                    dialog.dialog("close");
+                }
+            }
+        ];
+
+        /* Send Private message on a PM is redundant, instead offer the possibility
+           to ignore/unignore the person
+         */
+        if (webclient.channel.shortHand == "pm") {
+            buttons[0] = {
                 text: webclient.players.isIgnored(id) ? "Unignore" : "Ignore",
                 'class': "click_button",
                 click: function() {
                     webclient.players.toggleIgnore(id);
                     dialog.dialog("close");
                 }
-            }
-        ];
+            };
+        }
 
         dialog
             .dialog("option", "title", webclient.players.name(id))
@@ -390,7 +410,7 @@ webclient.sendMessage = function (message, id) {
     } else if (/^send-pm-/.test(id)) {
         webclient.pms.pm(+id.replace('send-pm-', '')).sendMessage(message);
     } else if(/^send-battle-/.test(id)) {
-        battles.battles[(+id.replace('send-channel-', ''))].sendMessage(message);
+        battles.battles[(+id.replace('send-battle-', ''))].sendMessage(message);
     }
 };
 
