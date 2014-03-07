@@ -39,7 +39,9 @@ webclient = {
     ownId: -1,
     ownName: function () {
         return webclient.players ? webclient.players.name(webclient.ownId) : "";
-    }
+    },
+
+    connectedToServer: false
 };
 
 /* Also:

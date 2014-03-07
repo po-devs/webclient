@@ -10,6 +10,7 @@
     *
     * relay: string
     * autoload: boolean
+    * exitwarning: boolean
     * passhash-{data}: string
 */
 
@@ -41,6 +42,18 @@
         } else {
             return JSON.parse(value);
         }
+    };
+
+    poStorage.init = function (name, val) {
+        var namespace = window.webclientStorageNamespace || 'po.',
+            value = localStorage.getItem(namespace + name);
+
+        if (value == null) {
+            poStorage.set(name, val);
+            return true;
+        }
+
+        return false;
     };
 
     poStorage.remove = function (name) {

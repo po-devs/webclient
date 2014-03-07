@@ -238,6 +238,9 @@ $(function() {
         }
     });
 
+    poStorage.init('exitwarning', true);
+    poStorage.init('chat.timestamps', true);
+
     var $autoload = $("#autoload");
 
     if (poStorage("autoload", "boolean")) {
@@ -250,6 +253,12 @@ $(function() {
             poStorage.set("autoload", true);
         } else {
             poStorage.remove("autoload");
+        }
+    });
+
+    $(window).on('beforeunload', function () {
+        if (webclient.connectedToServer && poStorage("exitwarning", "boolean")) {
+            return "Are you sure you want to close the Pokémon Online web client?\nYou are currently connected to a server.";
         }
     });
 

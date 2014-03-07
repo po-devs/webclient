@@ -178,9 +178,12 @@
                     }
                 });
             }
+
+            webclient.connectedToServer = true;
         },
         disconnected: function () {
             webclient.printHtml("<b>Disconnected from Server! If the disconnect is due to an internet problem, try to <a href='po:reconnect'>reconnect</a> once the issue is solved.</b>");
+            webclient.connectedToServer = false;
             // announcement.hide("slow");
         },
         msg: function (payload) {

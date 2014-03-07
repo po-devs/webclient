@@ -1200,7 +1200,7 @@ div.player-info-battle {
     margin-left:-30px;
 }
 
-#user_params_idle_text, #user_params_ladder_text, #user_params_timestamps_text {
+.user_params_text {
     width:30%;
     display:block;
     float:left;
@@ -1209,17 +1209,8 @@ div.player-info-battle {
     font-weight:bold;
 }
 
-#user_params_idle, #user_params_ladder, #user_params_timestamps {
+.user_params_setting {
     width:20px;
-    float:left;
-    margin-left:10%;
-
-}
-
-#user_params_idle_status, #user_params_ladder_status, #user_params_timestamps_status {
-    display:block;
-    height:1.2em;
-    line-height:1.2em;
     float:left;
     margin-left:10%;
 }
