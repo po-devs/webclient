@@ -310,7 +310,7 @@ ul#player-list {
     overflow:auto;
 }
 
-.player-list-item  {
+.player-list-item, .channel-list-item  {
     cursor:pointer;
     font-size: 14px;
     font-family: Segoe UI;

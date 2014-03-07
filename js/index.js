@@ -170,6 +170,7 @@ $(function() {
     battles = new Battles();
 
     webclient.ui.playerList = new webclient.classes.PlayerList();
+    webclient.ui.channellist = new webclient.classes.ChannelList();
 
     webclient.players.on("login", function (id, info) {
         webclient.ownId = id;

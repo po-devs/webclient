@@ -33,6 +33,10 @@
         return this.channels[id];
     };
 
+    channelholder.name = function(id) {
+        return this.names[id];
+    };
+
     channelholder.hasChannel = function (id) {
         return id in this.channels;
     };
@@ -51,6 +55,8 @@
                 chan.changeName(names[i]);
             }
         }
+
+        webclient.ui.channellist.setChannels(Object.keys(names));
     };
 
     channelholder.changeChannelName = function (id, name) {
@@ -75,6 +81,8 @@
 
         this.names[id] = name;
         this.byName[name] = id;
+
+        webclient.ui.channellist.addChannel(id);
     };
 
     channelholder.removeChannel = function (id) {
@@ -91,6 +99,7 @@
         }
 
         delete this.names[id];
+        webclient.ui.channellist.removeChannel(id);
     };
 
     channelholder.current = function () {

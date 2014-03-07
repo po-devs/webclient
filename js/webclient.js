@@ -14,7 +14,8 @@ webclient = {
     },
 
     ui: {
-        playerList: null
+        playerList: null,
+        channellist: null
     },
 
     classes: {},
