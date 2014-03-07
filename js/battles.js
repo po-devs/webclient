@@ -148,6 +148,9 @@ function BattleTab(pid, conf, team) {
 
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
+        } else {
+            this.$content.find(".battle_options").css("visibility", "hidden");
+            this.$content.find(".battle_buttons").css("visibility", "hidden");
         }
 
         this.$content.find(".p1_name_content").text(this.name(0));
