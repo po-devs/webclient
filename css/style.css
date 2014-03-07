@@ -293,7 +293,7 @@ ul#tab-titles.ui-tabs-nav.ui-sortable li i:hover {
     border-radius:3px;
 }
 
-ul#player-list, ul#player-list li {
+ul#player-list, ul#player-list li, ul#channel-list li {
     margin:0;
     margin-bottom:10px;
     padding:0;
@@ -308,6 +308,11 @@ ul#player-list {
     right:2px;
     bottom:0px;
     overflow:auto;
+}
+
+ul#channel-list {
+    max-height: 400px;
+    overflow: auto;
 }
 
 .player-list-item, .channel-list-item  {
