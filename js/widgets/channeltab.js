@@ -73,24 +73,24 @@
     };
 
     channeltab.print = function (msg, html, raw) {
+        var pref, id, auth;
+
         if (raw !== true) {
             if (html) {
-                msg = convertPOLinks($("<div>").html(msg)).html();
+                msg = webclient.convertImages($("<div>").html(msg)).html();
             } else {
-                var action = false;
                 msg = utils.escapeHtml(msg);
 
                 if (msg.substr(0, 3) === "***") {
                     msg = "<span class='action'>" + msg + "</span>";
-                    action = true;
-                }
+                } else if (msg.indexOf(":") !== -1) {
+                    pref = msg.substr(0, msg.indexOf(":"));
+                    id = webclient.players.id(pref);
+                    auth = webclient.players.auth(id);
 
-                if (msg.indexOf(":") !== -1 && !action) {
-                    var pref = msg.substr(0, msg.indexOf(":"));
-                    var id = webclient.players.id(pref);
-                    var auth = webclient.players.auth(id);
-                    if (webclient.players.isIgnored(id))
+                    if (webclient.players.isIgnored(id)) {
                         return;
+                    }
 
                     if (pref === "~~Server~~") {
                         pref = "<span class='server-message'>" + pref + ":</span>";
@@ -112,9 +112,27 @@
             timestamps: true,
             timestampCheck: 'chat.timestamps',
             html: html,
-            raw: raw,
             linebreak: true
          });
+    };
+
+    channeltab.sendMessage = function (message) {
+        var lines = message.trim().split('\n'),
+            line, pid, len, i;
+
+        for (i = 0, len = lines.length; i < len; i += 1) {
+            line = lines[i];
+            // Temporary
+            if (/^\/pm/i.test(line)) {
+                pid = webclient.players.id(line.slice(4));
+                if (pid !== -1) {
+                    webclient.pms.pm(pid).activateTab();
+                    return;
+                }
+            }
+
+            network.command('chat', {channel: this.id, message: line});
+        }
     };
 
     channeltab.changeName = function (name) {
@@ -133,7 +151,13 @@
     };
 
     channeltab.playerIds = function() {
-        return Object.keys(this.players);
+        var ids = [], id;
+
+        for (id in this.players) {
+            ids.push(+id);
+        }
+
+        return ids;
     };
 
     webclient.classes.ChannelTab = ChannelTab;

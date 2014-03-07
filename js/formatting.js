@@ -2,57 +2,6 @@
  * This file contains functions to help to format HTML for PO-way
  */
 
-function convertPOLinks(element) {
-    element = $(element);
-    element.find("img").each(function (index, img) {
-        img = $(img);
-        var src = img.attr("src").split(":"),
-            proto = src[0],
-            query = src[1];
-
-        switch (proto) {
-            case "pokemon":
-                query = "?" + query;
-                var poke = utils.queryField("num", query.slice(1).split("&")[0], query) || "1",
-                    gen = utils.queryField("gen", "6", query),
-                    shiny = utils.queryField("shiny", "false", query) === "true",
-                    gender = utils.queryField("gender", "male", query),
-                    back = utils.queryField("back", "false", query) === "true",
-                    cropped = utils.queryField("cropped", "false", query) === "true";
-
-                img.error(function () {
-                    if (gender == "female") {
-                        gender = "male";
-                    } else if (gen < 6) {
-                        gen = 6;
-                    } else if (gen === 6) {
-                        gen = 5;
-                    } else if (shiny) {
-                        shiny = false;
-                    } else if (back) {
-                        back = false;
-                    } else {
-                        return;
-                    }
-
-                    img.attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
-                }).attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
-                break;
-            case "trainer":
-                img.attr("src", pokeinfo.trainerSprite(query));
-                break;
-            case "http":
-            case "https":
-            case "data": /* base64 */
-                break;
-            default:
-                console.log("Unknown protocol: " + proto);
-                break;
-        }
-    });
-    return element;
-}
-
 $(function () {
     $(document).on("click", "a", function (event) {
         var href = this.href,
@@ -99,6 +48,57 @@ $(function () {
     var iframe = document.createElement('iframe');
     var hasIframeSandbox = 'sandbox' in iframe;
 
+    function convertImages(element) {
+        element = $(element);
+        element.find("img").each(function (index, img) {
+            img = $(img);
+            var src = img.attr("src").split(":"),
+                proto = src[0],
+                query = src[1];
+
+            switch (proto) {
+                case "pokemon":
+                    query = "?" + query;
+                    var poke = utils.queryField("num", query.slice(1).split("&")[0], query) || "1",
+                        gen = utils.queryField("gen", "6", query),
+                        shiny = utils.queryField("shiny", "false", query) === "true",
+                        gender = utils.queryField("gender", "male", query),
+                        back = utils.queryField("back", "false", query) === "true",
+                        cropped = utils.queryField("cropped", "false", query) === "true";
+
+                    img.error(function () {
+                        if (gender == "female") {
+                            gender = "male";
+                        } else if (gen < 6) {
+                            gen = 6;
+                        } else if (gen === 6) {
+                            gen = 5;
+                        } else if (shiny) {
+                            shiny = false;
+                        } else if (back) {
+                            back = false;
+                        } else {
+                            return;
+                        }
+
+                        img.attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
+                    }).attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
+                    break;
+                case "trainer":
+                    img.attr("src", pokeinfo.trainerSprite(query));
+                    break;
+                case "http":
+                case "https":
+                case "data": /* base64 */
+                    break;
+                default:
+                    console.log("Unknown protocol: " + proto);
+                    break;
+            }
+        });
+        return element;
+    }
+
     function sandboxHtml(selector, html) {
         html = html || '';
         var elem = $(selector),
@@ -137,7 +137,7 @@ $(function () {
             contentBody.innerHTML = html;
 
             // Then format that
-            convertPOLinks(contentBody);
+            convertImages(contentBody);
             formattedHtml = contentBody.innerHTML;
 
             // Then add the formatted html
@@ -150,5 +150,6 @@ $(function () {
         }
     }
 
+    webclient.convertImages = convertImages;
     webclient.sandboxHtml = sandboxHtml;
 }());

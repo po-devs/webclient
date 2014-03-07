@@ -34,7 +34,7 @@ $(function () {
     var template = '<div class="chatTextArea textbox"></div>'
         + '<div class="send_chat_message">'
         + '<p>'
-        + '<input name="message" type="text" history="true" id="{inputid}" placeholder="Start typing your message here..." />'
+        + '<input name="message" type="text" history="true" id="{id}" placeholder="Start typing your message here..." />'
         + '<i class="fa fa-arrow-circle-o-right fa-2x"></i>'
         + '</p>'
         + '</div>';
@@ -42,10 +42,12 @@ $(function () {
     var timestampRegex = /<timestamp *\/ *>|<timestamp><\/timestamp>/gi;
 
     // TODO: A single chat for all the channels.
-    function Chat(inputid) {
-        this.element = $('<div>').html($.render(template, {inputid: inputid}));
+    function Chat(id) {
+        this.id = id;
+
+        this.element = $('<div>').html($.render(template, {id: id}));
         this.element.find("input").keydown(utils.onEnterPressed(function () {
-            sendMessage(this);
+            webclient.sendMessage($(this).val(), id);
         }));
 
         this.chatTextArea = this.element.find(".chatTextArea");
