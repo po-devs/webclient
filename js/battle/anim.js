@@ -53,7 +53,7 @@ BattleAnimator.prototype.move = function(img, x, y) {
     if (p == 0) {
         return {"bottom": "+=" + y, "left": "+=" + x}
     } else {
-        return {"top": "-=" + y, "right": "-=" + x}
+        return {"top": "+=" + -y, "right": "+=" + -x}
     }
 };
 
@@ -229,10 +229,14 @@ BattleAnimator.prototype.showEffect = function(spot, effect, beginning, end, aft
     var duration = (end.time - beginning.time) || 500;
 
     img.css(begCss);
-    var anim = this.transition(endCss, easing);
+    var anim = this.transition(endCss, easing, begCss);
+
+    console.log(begCss);
+    console.log(endCss);
+    console.log(anim);
 
     this.pause();
-    img.delay(delay).animate(anim, duration, function() {
+    img.hide(0).delay(delay).show(0).animate(anim, duration, function() {
         if (after == "fade") {
             img.animate({
                 opacity: 0
@@ -332,7 +336,7 @@ BattleAnimator.prototype.onSend = function(spot) {
     $prog.css("width", poke.percent + "%");
 
     this.showEffect(spot, "pokeball", {"relx": -100, "y": 60, "zoom": 0.7},
-        {"relx": 100, "y": -60}, "fade",
+        {"relx": 0, "y": 0}, "fade",
 
         function() {
             sprite.css("opacity", 100);
@@ -397,7 +401,7 @@ BattleAnimator.prototype.onAttack = function(spot, move) {
     self.finished();
 };
 
-BattleAnimator.prototype.transition = function (movement, transition) {
+BattleAnimator.prototype.transition = function (movement, transition, start) {
     var transitionMap = {
         left: 'linear',
         top: 'linear',
@@ -440,6 +444,7 @@ BattleAnimator.prototype.transition = function (movement, transition) {
     }
 
     var ret;
+    movement = this.diffMovement(movement, start);
     if (movement.top) {
         ret = {
             right: [movement.right, transitionMap.left],
@@ -461,6 +466,22 @@ BattleAnimator.prototype.transition = function (movement, transition) {
         ret.height = [movement.width, transitionMap.height]
     }
     return ret;
+};
+
+BattleAnimator.prototype.diffMovement = function(end, start) {
+    if (!start) {
+        return end;
+    }
+
+    if (end.top) {
+        end.top = "+=" + (+end.top.slice(2) - (+start.top.slice(2)));
+        end.right = "+=" + (+end.right.slice(2) - (+start.right.slice(2)));
+    } else {
+        end.bottom = "+=" + (+end.bottom.slice(2) - (+start.bottom.slice(2)));
+        end.left = "+=" + (+end.left.slice(2) - (+start.left.slice(2)));
+    }
+
+    return end;
 };
 
 $.extend($.easing, {
