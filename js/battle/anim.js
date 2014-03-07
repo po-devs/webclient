@@ -152,25 +152,48 @@ function Sprite(back, x, y, z, anim) {
 Sprite.prototype.anim = function(end, easing) {
     if (!end) return;
     var animator = this.animator;
+    var self = this;
 
-    end = $.extend({
-        x: this.x,
-        y: this.y,
-        z: this.z,
-        scale: 1,
-        opacity: 1,
-        time: 500
-    }, end);
+    var queued = function(end, easing, next) {
+        end = $.extend({
+            x: self.x,
+            y: self.y,
+            z: self.z,
+            scale: 1,
+            opacity: 1,
+            time: 500
+        }, end);
 
-    //if (selfS.subElem && !selfS.duringMove) {
-    //    selfS.subElem.animate(self.posT(end, selfS.subsp, transition, selfS), end.time);
-    //} else {
-    var elem = this.sp;
-    var endCss = animator.fullCss(elem, end);
-    var transition = animator.transition(endCss, easing);
+        self.sp.dx = self.sp.dx || 0;
+        self.sp.dy = self.sp.dy || 0;
+
+        end.x -= self.x;
+        end.y -= self.y;
+        end.z -= self.z;
+
+        end.x -= self.sp.dx;
+        end.y -= self.sp.dy;
+
+        self.sp.dx += end.x;
+        self.sp.dy += end.y;
+
+        //if (selfS.subElem && !selfS.duringMove) {
+        //    selfS.subElem.animate(self.posT(end, selfS.subsp, transition, selfS), end.time);
+        //} else {
+        var elem = self.sp;
+        var endCss = animator.fullCss(elem, end);
+        var transition = animator.transition(endCss, easing);
+
+        elem.animate(transition, end.time, function() {
+            animator.unpause();
+        });
+        next();
+    };
 
     animator.pause();
-    elem.animate(transition, end.time, function() {animator.unpause();});
+    self.sp.queue(function(next) {
+        queued(end, easing, next);
+    });
     //}
 };
 
