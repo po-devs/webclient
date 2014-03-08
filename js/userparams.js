@@ -11,6 +11,7 @@
         var $idle = $("#user_params_idle"),
             $ladder = $("#user_params_ladder"),
             $timestamps = $("#user_params_timestamps"),
+            $exitWarning = $("#user_params_exitwarning"),
             $username = $("#user_params_username"),
             $avatar = $("#user_params_avatar"),
             $avatarImg = $("#user_params_avatar_image").find("img").add("#trainer_img"),
@@ -36,12 +37,24 @@
                 poStorage.set("chat.timestamps", active);
                 $(".timestamp-enabled").toggleClass("timestamp", active);
                 break;
+            case 'exitwarning':
+                poStorage.set("exitwarning", active);
             }
         }
 
-        $idle.toggles({on: poStorage("player.idle", "boolean"), text: {on: 'YES', off: 'NO'}}).on('toggle', toggle);
-        $ladder.toggles({on: poStorage("player.ladder", "boolean")}).on('toggle', toggle);
-        $timestamps.toggles({on: poStorage("chat.timestamps", "boolean")}).on('toggle', toggle);
+        function createToggle(jq, key, yesno) {
+            var obj = {on: poStorage(key, "boolean")};
+            if (yesno) {
+                obj.text = {on: 'YES', off: 'NO'};
+            }
+
+            jq.toggles(obj).on('toggle', toggle);
+        }
+
+        createToggle($idle, 'player.idle', true);
+        createToggle($ladder, 'player.ladder');
+        createToggle($timestamps, 'chat.timestamps');
+        createToggle($exitWarning, 'exitwarning', true);
 
         // TODO: Validator
         $username.on('keyup change', function () {
