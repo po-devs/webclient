@@ -11,14 +11,15 @@ BattleTab.prototype.dealWithBlank = function(params) {
 
 BattleTab.prototype.dealWithSend = function(params) {
     var poke = params.pokemon;
+    var sl = this.slot(params.spot);
 
     if (this.isBattle()) {
-        if (params.spot == this.myself) {
-            var tpoke = this.request.team[0];
-            this.request.team[0] = this.request.team[params.slot];
+        if (this.player(params.spot) == this.myself) {
+            var tpoke = this.request.team[sl];
+            this.request.team[sl] = this.request.team[params.slot];
             this.request.team[params.slot] = tpoke;
 
-            $.extend(poke, this.request.team[0]);
+            $.extend(poke, this.request.team[this.slot(params.spot)]);
         }
     }
     /* Stores the pokemon in field memory */
@@ -26,8 +27,8 @@ BattleTab.prototype.dealWithSend = function(params) {
 
     /* switch in memory */
     var pl = this.player(params.spot);
-    this.teams[pl][params.slot] = this.teams[pl][this.slot(params.spot)];
-    this.teams[pl][this.slot(params.spot)] = poke;
+    this.teams[pl][params.slot] = this.teams[pl][sl];
+    this.teams[pl][sl] = poke;
 
     this.animator.on("send", params.spot);
 
@@ -35,9 +36,9 @@ BattleTab.prototype.dealWithSend = function(params) {
     this.updateTeamPokes(pl, [this.slot(params.spot), params.slot]);
 
     if (pokeinfo.name(poke) == poke.name) {
-        this.print(this.name(pl) + " sent out " + poke.name);
+        this.print(this.name(pl) + " sent out " + poke.name + "!");
     } else {
-        this.print(this.name(pl) + " sent out " + poke.name + " (" + pokeinfo.name(poke) + ")");
+        this.print(this.name(pl) + " sent out " + poke.name + "! (" + pokeinfo.name(poke) + ")");
     }
 };
 
@@ -97,9 +98,9 @@ BattleTab.prototype.dealWithHpchange = function(params) {
     var current = this.pokes[params.spot].percent;
     if (this.pokes[params.spot].life) {
         this.pokes[params.spot].life = params.newHP;
-        this.pokes[params.spot].percent = params.newHP/this.pokes[params.spot].totalLife;
+        this.pokes[params.spot].percent = Math.floor(params.newHP/this.pokes[params.spot].totalLife*100);
         this.tpoke(params.spot).life = params.newHP;
-        this.tpoke(params.spot).percent = params.newHP/this.pokes[params.spot].totalLife;
+        this.tpoke(params.spot).percent = Math.floor(params.newHP/this.pokes[params.spot].totalLife*100);
     } else {
         this.pokes[params.spot].percent = params.newHP;
     }
@@ -360,11 +361,11 @@ BattleTab.prototype.dealWithSubstitute = function(params) {
 
 BattleTab.prototype.dealWithDamage = function(params)
 {
-    if (!this.isBattle()) {
+    if (!this.isBattle() || this.player(params.spot) != this.myself) {
         this.print(this.nick(params.spot) + " lost " + params.damage + "% of its health!");
     } else {
         this.print(this.nick(params.spot) + " lost " + params.damage + " HP! (" +
-            Math.floor(params.damage*100/this.tpoke(params.spot).totalLife) + "% of its health!");
+            Math.floor(params.damage*100/this.tpoke(params.spot).totalLife) + "% of its health)!");
     }
 };
 

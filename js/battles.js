@@ -149,8 +149,11 @@ function BattleTab(pid, conf, team) {
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
             this.request = {"team": team};
-            this.teams[this.myself] = team;
+            //ugly way to clone, better way at http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+            this.teams[this.myself] = JSON.parse(JSON.stringify(team));
             this.updateTeamPokes(this.myself);
+
+            this.$content.find(".battle_options").on("click", "span", function(event){self.dealWithControlsClick(event)});
         } else {
             this.$content.find(".battle_options").css("visibility", "hidden");
             this.$content.find(".battle_buttons").css("visibility", "hidden");
@@ -354,9 +357,9 @@ BattleTab.prototype.dealWithControlsClick = function(event) {
     while ($obj.length > 0 && $obj != $(this)) {
         var name = $obj.attr("name");
         if (name !== undefined) {
-            var funcName = "onControls"+name[0].toUpperCase()+name.slice(1);
+            var funcName = "onControlsChoose"+name[0].toUpperCase()+name.slice(1);
             if (funcName in BattleTab.prototype) {
-                battle[funcName]($obj);
+                this[funcName]($obj);
                 return true;
             }
         }
