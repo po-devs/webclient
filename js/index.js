@@ -258,7 +258,7 @@ $(function() {
 
     $(window).on('beforeunload', function () {
         if (webclient.connectedToServer && poStorage("exitwarning", "boolean")) {
-            return "Are you sure you want to close the Pokémon Online web client?\nYou are currently connected to a server.";
+            return "You are currently connected to a server.";
         }
     });
 
