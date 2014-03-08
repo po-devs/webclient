@@ -341,12 +341,8 @@ BattleAnimator.prototype.onSend = function(spot) {
 
         function() {
             sprite.css("opacity", 100);
-            $poke.find(".pokemon_name").text(poke.name);
-            $poke.find(".battle-stat-value").text(poke.percent + "%");
-            var $prog = $poke.find(".battle-stat-progress");
-            $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
-            $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
-            $prog.css("width", poke.percent + "%");
+
+            b.updatePokeData(spot);
 
             self.finished();
         }

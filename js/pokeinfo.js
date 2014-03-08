@@ -341,6 +341,10 @@ moveinfo.find = function(id, what, gen) {
         return array[id];
     }
 
+    if (what == "type") {
+        return 0; //Normal type
+    }
+
     while (gennum < lastgen.num && ! (id in array)) {
         array = pokedex.moves[what][++gennum];
     }

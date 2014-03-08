@@ -477,6 +477,33 @@ BattleTab.modes = {
     3: "Rotation"
 };
 
+BattleTab.prototype.updatePokeData = function(spot) {
+    var $poke = this.$poke(spot);
+    var poke = this.pokes[spot];
+
+    $poke.find(".pokemon_name").text(poke.name);
+    $poke.find(".battle-stat-value").text(poke.percent + "%");
+    var $prog = $poke.find(".battle-stat-progress");
+    $prog.removeClass("battle-stat-progress-1x battle-stat-progress-2x battle-stat-progress-3x battle-stat-progress-4x");
+    $prog.addClass("battle-stat-progress-" + (Math.floor(poke.percent*4/100.1)+1) + "x");
+    $prog.css("width", poke.percent + "%");
+
+    if (this.isBattle() && this.player(spot) == this.myself) {
+        for (var i = 0; i < 4; i++) {
+            this.updateMove(i, this.request.team[this.slot(spot)].moves[i]);
+        }
+    }
+};
+
+BattleTab.prototype.updateMove = function(num, move) {
+    var $move = this.$content.find("#move-"+num);
+    $move[0].className = '';
+    $move.addClass("click_button");
+    $move.addClass("type_"+moveinfo.type(move.move));
+    $move.contents().eq(0).replaceWith(moveinfo.name(move.move));
+    $move.find(".battle_move_pp").text(move.pp + "/" + move.totalpp + " PP");
+};
+
 BattleTab.prototype.effects = function(spot, effect) {
     if (typeof effect == "object") {
         return pokeinfo.spriteData(effect, {"back":spot==0});
