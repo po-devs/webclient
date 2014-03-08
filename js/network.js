@@ -50,7 +50,7 @@
         connect: function (payload) {
             return 'connect|' + payload.ip;
         },
-        // channel: number
+        // channel: string
         joinchannel: function (payload) {
             return 'join|' + payload.channel;
         },

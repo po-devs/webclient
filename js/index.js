@@ -285,6 +285,10 @@ $(function() {
         }
     });
 
+    $("#channel-list").on("click", "li", function(event) {
+        var id = event.currentTarget.id.split("-")[2];
+        webclient.joinChannel(webclient.channels.name(id));
+    });
     $("#player-list").on("click", "li", function(event) {
         var id = event.currentTarget.id.split("-")[1],
             dialog = $("#player-dialog"),
