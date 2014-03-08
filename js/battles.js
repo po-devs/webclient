@@ -149,6 +149,8 @@ function BattleTab(pid, conf, team) {
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
             this.request = {"team": team};
+            this.teams[this.myself] = team;
+            this.updateTeamPokes(this.myself);
         } else {
             this.$content.find(".battle_options").css("visibility", "hidden");
             this.$content.find(".battle_buttons").css("visibility", "hidden");
@@ -329,6 +331,17 @@ BattleTab.prototype.updateTeamPokes = function(player, pokes) {
             $img.attr("src", "images/pokeballicon.png");
         }
     }
+
+    if (this.isBattle() && player == this.myself) {
+        var $team = this.$content.find(".battle_options_pokemon");
+        for (var i = 0; i < pokes.length; i++) {
+            var $ct = $team.find(".battle_pokemon_content:eq("+pokes[i]+")");
+            var poke = this.request.team[pokes[i]];
+            $ct.find("img").attr("src", pokeinfo.icon(poke.num));
+            var text = poke.name + "<br/>" + poke.life + "/" + poke.totalLife;
+            $ct.find(".battle_pokemon_content_text").html(text);
+        }
+    }
 };
 
 /** Calls the onXxxxXxxx functions where xxxxXxxx is the name attribute of the button
@@ -490,7 +503,7 @@ BattleTab.prototype.updatePokeData = function(spot) {
 
     if (this.isBattle() && this.player(spot) == this.myself) {
         for (var i = 0; i < 4; i++) {
-            this.updateMove(i, this.request.team[this.slot(spot)].moves[i]);
+            this.updateMove(i, poke.moves[i]);
         }
     }
 };
@@ -500,7 +513,7 @@ BattleTab.prototype.updateMove = function(num, move) {
     $move[0].className = '';
     $move.addClass("click_button");
     $move.addClass("type_"+moveinfo.type(move.move));
-    $move.contents().eq(0).replaceWith(moveinfo.name(move.move));
+    $move.find(".battle-move-name").text(moveinfo.name(move.move));
     $move.find(".battle_move_pp").text(move.pp + "/" + move.totalpp + " PP");
 };
 
