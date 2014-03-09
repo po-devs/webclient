@@ -4,7 +4,6 @@ $(function() {
         $user_params = $("#user_params"),
         $content = $("#content"),
         $middle_block = $(".middle_block"),
-        $teampreview = $(".team_preview"),
         previewsInit = false;
 
     function animframe(fn) {
@@ -28,16 +27,25 @@ $(function() {
         $this.parent().find('.dropdown_content').toggle();
         if ($this.data('teambuilder') && !previewsInit) {
             previewsInit = true;
+
+            if (!webclient.teambuilder.initialized) {
+                NProgress.start();
+                webclient.teambuilder.init();
+                animframe(function () {
+                    NProgress.done();
+                });
+            }
+
             webclient.teambuilder.loadTeamPreviews();
         }
     });
 
-    $teampreview.click(function () {
+    $("#team_previews").on("click", ".team_preview", function () {
         // Remove from all team previews
-        $teampreview.removeClass('current_team');
+        $(".team_preview").removeClass('current_team');
         // Add to the current one
         $(this).addClass('current_team');
-    }).dblclick(function () {
+    }).on("dblclick", ".team_preview", function () {
         toggleContent('teambuilder');
         webclient.teambuilder.loadTeamFrom($(this));
     });
@@ -56,12 +64,7 @@ $(function() {
         } else if (type === 'user_params') { // To user_params
             $user_params.show();
         } else if (mode === 'content' || type === 'teambuilder') { // From content, to teambuilder
-            NProgress.start();
-            webclient.teambuilder.init();
-            animframe(function () {
-                $teambuilder.show();
-                NProgress.done();
-            });
+            $teambuilder.show();
             type = 'teambuilder';
         }
 
@@ -76,6 +79,7 @@ $(function() {
             toggleContent('user_params');
             break;
         case 'create_team':
+            webclient.teambuilder.loadTeamFrom(webclient.teambuilder.freeTeamId(), true);
             toggleContent('teambuilder');
             break;
         case 'po_title':
