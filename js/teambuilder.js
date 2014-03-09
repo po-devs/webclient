@@ -493,12 +493,24 @@
     };
 
     Teambuilder.prototype.saveTeam = function () {
-        if (this.team === -1) {
-            this.team = $(".current_team").data('teamid');
-        }
+        var $currentTeam = $(".current_team"),
+            loadedTeam = this.getLoadedTeam(),
+            teams, elem;
 
-        poStorage.set("teams." + this.team, this.getLoadedTeam());
-        this.updateTeamPreview(this.team);
+        if (!$currentTeam.length) {
+            this.team = 0;
+            this.createTeam(0, loadedTeam, true);
+        } else {
+            if (this.team === -1) {
+                this.team = $currentTeam.data('teamid');
+            }
+
+            teams = poStorage('tb.teams', 'object');
+            teams[this.team] = loadedTeam;
+            poStorage.set('tb.teams', teams);
+
+            this.updateTeamPreview(teams[this.team], $currentTeam);
+        }
     };
 
     Teambuilder.prototype.setGeneration = function (generation) {
@@ -1068,68 +1080,73 @@
     Teambuilder.prototype.loadTeamObject = function (teamId) {
         var teamObj;
         try {
-            teamObj = poStorage.get('teams.' + teamId, 'object');
+            teamObj = poStorage.get('tb.teams', 'object')[teamId];
         } catch (ex) {
             teamObj = null;
-            console.error('Could not load team ' + teamId + ':', ex);
-            console.log(poStorage.get('teams.' + teamId));
+            console.error('Could not load team ' + teamId + '.', ex);
         }
 
         return teamObj;
     };
 
-    Teambuilder.prototype.loadTeamFrom = function (element) {
-        var teamId = element.data('teamid');
+    // Accepts a jQuery element or number
+    Teambuilder.prototype.loadTeamFrom = function (element, activeTeam) {
+        var teamId = (element.data ? element.data('teamid') : element);
         var teamObj = this.loadTeamObject(teamId);
 
         this.team = teamId;
-        teamObj = teamObj || {
-            infos: {
-                tier: 'Challenge Cup',
-                name: 'Unnamed',
-                generation: 6
-            },
-            pokemon: {
-                '0': {pokemonId: 0},
-                '1': {pokemonId: 0},
-                '2': {pokemonId: 0},
-                '3': {pokemonId: 0},
-                '4': {pokemonId: 0},
-                '5': {pokemonId: 0}
-            }
-        };
+        if (!teamObj) {
+            teamObj = {
+                infos: {
+                    tier: 'Challenge Cup',
+                    name: 'Unnamed',
+                    generation: 6
+                },
+                pokemon: {
+                    '0': {pokemonId: 0},
+                    '1': {pokemonId: 0},
+                    '2': {pokemonId: 0},
+                    '3': {pokemonId: 0},
+                    '4': {pokemonId: 0},
+                    '5': {pokemonId: 0}
+                }
+            };
+
+            this.createTeam(teamId, teamObj, activeTeam);
+        }
 
         this.loadTeam(teamObj);
     };
 
     Teambuilder.prototype.loadTeamPreviews = function () {
-        var teams = $(".team_preview");
-        var self = this, elem;
-        teams.each(function () {
-            elem = $(this);
-            self.updateTeamPreview(elem.data('teamid'), elem);
-        });
+        var teamsHtml = $($.parseHTML($("#template_team_preview").html())[1]),
+            $container = $("#team_previews"),
+            teams = poStorage.get('tb.teams', 'object'),
+            team, firstNode, elem;
+
+        $container.empty();
+        for (team in teams) {
+            elem = teamsHtml.clone();
+            elem.data('teamid', team);
+
+            this.updateTeamPreview(teams[team], elem);
+            $container.append(elem);
+
+            if (!firstNode) {
+                firstNode = elem;
+            }
+        }
+
+        if (firstNode) {
+            firstNode.addClass("current_team");
+        }
     };
 
-    Teambuilder.prototype.updateTeamPreview = function (teamId, $element) {
-        var images, team, poke;
-        var elem = $element || $("[data-teamid='" + teamId + "']");
+    Teambuilder.prototype.updateTeamPreview = function (teamObj, elem) {
+        var images = elem.find("img");
 
-        try {
-            teamObj = poStorage.get('teams.' + teamId, 'object');
-        } catch (ex) {
-            teamObj = null;
-            console.error('Could not load team ' + teamId + ':', ex);
-            console.log(poStorage.get('teams.' + teamId));
-        }
-
-        if (!teamObj) {
-            return;
-        }
-
-        images = elem.find("img");
         images.each(function (i) {
-            poke = teamObj.pokemon[i];
+            var poke = teamObj.pokemon[i];
             if (!poke) {
                 return;
             }
@@ -1142,7 +1159,93 @@
         }
     };
 
+    Teambuilder.prototype.freeTeamId = function () {
+        var teams = poStorage('tb.teams', 'object'),
+            teamId = 0;
+
+        while (teams.hasOwnProperty(teamId)) {
+            teamId += 1;
+        }
+
+        return teamId;
+    };
+
+    Teambuilder.prototype.createTeam = function (teamId, teamObj, activeTeam) {
+        var elem = $($.parseHTML($("#template_team_preview").html())[1]),
+            teams = poStorage('tb.teams', 'object');
+
+        teams[teamId] = teamObj;
+        poStorage.set('tb.teams', teams);
+
+        elem.data('teamid', teamId);
+
+        if (activeTeam) {
+            $(".current_team").removeClass("current_team");
+            elem.addClass('current_team');
+        }
+
+        this.updateTeamPreview(teamObj, elem);
+        $("#team_previews").append(elem);
+        return elem;
+    };
+
+    poStorage.init('tb.teams', '{}');
     Teambuilder.defaultSettings = defaultSettings;
     webclient.teambuilder = new Teambuilder();
     webclient.classes.Teambuilder = Teambuilder;
 }(webclient, poStorage));
+
+$(function () {
+    $("#team_previews").on("click", ".team_preview_team_options", function (e) {
+        var $teamPreview = $(this).parent().parent().parent();
+
+        e.stopPropagation();
+
+        // Click on the team preview div, opening the teambuilder and the team
+        // Only do this if it isn't the loaded team
+        if (webclient.teambuilder.team !== $teamPreview.data('teamid')) {
+            $teamPreview.click();
+        }
+
+        $("#pokemon-parameters .fa-gear").click();
+    });
+
+    $("#team_previews").on("click", ".team_preview_delete_team", function (e) {
+        var $teamPreview = $(this).parent().parent().parent(),
+            teamId = $teamPreview.data('teamid');
+
+        e.stopPropagation();
+
+        vex.dialog.confirm({
+            message: 'Are you sure you want to delete this team?',
+            callback: function (yes) {
+                var teams, team = null;
+
+                if (yes) {
+                    teams = poStorage('tb.teams', 'object');
+
+                    // Load the first possible team
+                    for (team in teams) {
+                        webclient.teambuilder.loadTeamFrom(team);
+                        break;
+                    }
+
+                    // If there are no other teams, load the default one.
+                    if (team === null) {
+                        webclient.teambuilder.loadTeamFrom(0);
+                    }
+
+                    // Delete old team
+                    delete teams[teamId];
+                    poStorage.set('tb.teams', teams);
+
+                    // Close teambuilder view
+                    $("#po_title").click();
+
+                    // Re-render team previews
+                    webclient.teambuilder.loadTeamPreviews();
+                }
+            }
+        });
+    });
+});
