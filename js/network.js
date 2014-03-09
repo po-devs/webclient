@@ -371,7 +371,13 @@
             return;
         }
 
-        this.socket = new WebSocket("ws://" + ip);
+        try {
+            this.socket = new WebSocket("ws://" + ip);
+        } catch (ex) {
+            vex.dialog.alert("Invalid relay IP.");
+            throw ex;
+        }
+
         this.ip = ip;
         this.relay = ip.substr(0, ip.lastIndexOf(":"));
 
@@ -449,14 +455,14 @@
         var net = this;
         return function (evt) {
             var data = evt.data,
-                pipe = data.indexOf('|');
+                pipe = data.indexOf('|'),
+                cmd, payload;
 
             if (pipe === -1) {
                 console.error("Received raw message, should be changed in the relay station:", data);
-                webclient.printRaw(data);
             } else {
-                var cmd = data.substr(0, pipe),
-                    payload = data.slice(pipe + 1);
+                cmd = data.substr(0, pipe);
+                payload = data.slice(pipe + 1);
                 if (parsers.hasOwnProperty(cmd)) {
                     parsers[cmd].call(net, payload);
                 }
