@@ -12,6 +12,7 @@
     * autoload: boolean
     * exitwarning: boolean
     * passhash-{data}: string
+    * auto-join-[serverip/port]: array
 */
 
 (function () {

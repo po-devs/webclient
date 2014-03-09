@@ -403,9 +403,13 @@ webclient.updatePlayerInfo = function (player) {
 
 webclient.connectToServer = function () {
     if (network.isOpen()) {
-        network.command('connect', {ip: $("#advanced-connection").val()});
+        network.command('connect', {ip: webclient.serverIp()});
         $(".page").toggle();
     }
+};
+
+webclient.serverIp = function() {
+    return $("#advanced-connection").val();
 };
 
 webclient.switchToTab = function(hrefid) {

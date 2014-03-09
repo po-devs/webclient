@@ -141,10 +141,7 @@
 
             var data = {version: 1};
             data.default = utils.queryField("channel");
-            data.autojoin = utils.queryField("autojoin");
-            if (data.autojoin) {
-                data.autojoin = data.autojoin.split(",");
-            }
+            data.autojoin = poStorage("auto-join-"+webclient.serverIp(), "array");
 
             data.ladder = poStorage.get('player.ladder', 'boolean');
             if (data.ladder == null) {

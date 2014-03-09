@@ -28,6 +28,10 @@
             if (this.channelCount === 1) {
                 webclient.channel = chan;
             }
+
+            if (id != 0) {
+                this.updateAutoJoin();
+            }
         }
 
         return this.channels[id];
@@ -39,6 +43,17 @@
 
     channelholder.hasChannel = function (id) {
         return id in this.channels;
+    };
+
+    channelholder.updateAutoJoin = function() {
+        var names = [];
+        for (var id in this.channels) {
+            if (id != 0) {
+                names.push(this.name(id));
+            }
+        }
+
+        poStorage.set("auto-join-"+ webclient.serverIp(), names);
     };
 
     channelholder.setNames = function (names) {
@@ -167,6 +182,7 @@
             this.disconnect();
 
             delete self.channels[id];
+            webclient.channels.updateAutoJoin();
         });
     };
 
