@@ -127,8 +127,8 @@ input:focus:-ms-input-placeholder {
     display:block;
 }
 
-.tab-active {
-    color:#ffffff;
+.tab-active .channel-title {
+    color:#2658b7 !important;
 }
 
 div#channel-tabs {

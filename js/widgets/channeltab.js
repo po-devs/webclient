@@ -16,7 +16,7 @@
         if ($chan.length === 0 || $chan.data('initialized') === false) {
             /* Create new tab */
             if ($chan.length === 0) {
-                $('#channel-tabs').tabs("add", "#channel-" + id, (name || ("channel " + id)) + '<i class="fa fa-times-circle"></i>');
+                $('#channel-tabs').tabs("add", "#channel-" + id, webclient.classes.BaseTab.makeName(name || ("channel " + id)));
             }
 
             this.chat = new webclient.classes.Chat('send-channel-' + id);
@@ -138,7 +138,7 @@
     channeltab.changeName = function (name) {
         this.name = name;
 
-        $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html("<span>" + name + '<i class="fa fa-times-circle"></i></span>');
+        $("#channel-tabs > ul a[href=\"#channel-" + this.id + "\"]").html("<span>" + webclient.classes.BaseTab.makeName(name) + '</span>');
     };
 
     channeltab.disconnect = function() {

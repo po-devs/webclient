@@ -13,5 +13,9 @@
         }
     };
 
+    BaseTab.makeName = function(name) {
+        return "<span class='channel-title'>"+name+"</span>" + '<i class="fa fa-times-circle"></i>'
+    };
+
     webclient.classes.BaseTab = BaseTab;
 }(webclient));
