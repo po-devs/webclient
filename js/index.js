@@ -159,7 +159,7 @@ $(function() {
         /* Resizes chat area in funciton of the height of the channel tab */
         /* Scrolls down the chat of the current tab */
         var chattextarea = $(hrefid + " .chatTextArea");
-        chattextarea.animate({scrollTop: chattextarea.height()}, "fast");
+        chattextarea.animate({scrollTop: chattextarea.prop("scrollHeight")}, "fast");
 
         /* The tab is selected now, so any unseen activity is removed */
         $(ui.tab).removeClass("tab-active tab-flashing");
@@ -416,9 +416,9 @@ webclient.serverIp = function() {
     return $("#advanced-connection").val();
 };
 
-webclient.switchToTab = function(hrefid) {
+webclient.switchToTab = function(hrefid, obj) {
     webclient.channel = objFromId(hrefid);
-    $('#channel-tabs').tabs("select", hrefid);
+    $('#channel-tabs').tabs("option", "active", $('a[href="'+hrefid+'"]').parent().index());
 };
 
 webclient.sendMessage = function (message, id) {

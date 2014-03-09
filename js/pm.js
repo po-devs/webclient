@@ -19,6 +19,7 @@
     var pmholder = PMHolder.prototype;
     pmholder.pm = function (pid) {
         var pm;
+        pid = +pid;
         if (pid in this.pms) {
             return this.pms[pid];
         }
@@ -29,6 +30,9 @@
 
         pm = this.pms[pid] = new webclient.classes.PMTab(pid);
         this.observe(pm);
+
+        webclient.switchToTab("#pm-"+pid);
+        
         return pm;
     };
 

@@ -89,6 +89,7 @@ Battles.prototype.watchBattle = function(bid, conf) {
         return;
     }
     new BattleTab(bid, conf);
+    webclient.switchToTab("#battle-" + bid);
 };
 
 function BattleTab(pid, conf, team) {
@@ -144,7 +145,6 @@ function BattleTab(pid, conf, team) {
         this.$backgrounds = this.$content.find(".backgrounds");
 
         battles.battles[pid] = this;
-        webclient.switchToTab("#battle-" + pid);
 
         if (team) {
             this.myself = conf.players[1] === webclient.ownId ? 1 : 0;
