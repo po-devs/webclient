@@ -1,6 +1,6 @@
 $(function () {
     var maxHistSize = 100;
-    $(document).on("keydown", "input[history=true],textarea[history=true]", function (event) {
+    $(document).on("keydown", "[history]", function (event) {
         var elem = event.currentTarget;
 
         elem.hist = elem.hist || [];
@@ -34,7 +34,7 @@ $(function () {
     var template = '<div class="chatTextArea textbox"></div>'
         + '<div class="send_chat_message">'
         + '<p>'
-        + '<input name="message" type="text" history="true" id="{id}" placeholder="Start typing your message here..." />'
+        + '<input class="chatTextInput" id="{id}" placeholder="Start typing your message here..." history>'
         + '<i class="fa fa-arrow-circle-o-right fa-2x"></i>'
         + '</p>'
         + '</div>';
@@ -46,7 +46,8 @@ $(function () {
         this.id = id;
 
         this.element = $('<div>').html($.render(template, {id: id}));
-        this.element.find("input").keydown(utils.onEnterPressed(function () {
+        this.input = this.element.find(".chatTextInput");
+        this.input.keydown(utils.onEnterPressed(function () {
             webclient.sendMessage($(this).val(), id);
         }));
 
