@@ -1119,14 +1119,14 @@
     };
 
     Teambuilder.prototype.loadTeamPreviews = function () {
-        var teamsHtml = $($.parseHTML($("#template_team_preview").html())[1]),
-            $container = $("#team_previews"),
+        var $container = $("#team_previews"),
             teams = poStorage.get('tb.teams', 'object'),
             team, firstNode, elem;
 
         $container.empty();
         for (team in teams) {
-            elem = teamsHtml.clone();
+            // Has to be cloned everytime
+            elem = $.tmpl("#template_team_preview");
             elem.data('teamid', team);
 
             this.updateTeamPreview(teams[team], elem);
@@ -1171,8 +1171,8 @@
     };
 
     Teambuilder.prototype.createTeam = function (teamId, teamObj, activeTeam) {
-        var elem = $($.parseHTML($("#template_team_preview").html())[1]),
-            teams = poStorage('tb.teams', 'object');
+        var teams = poStorage('tb.teams', 'object'),
+            elem = $.tmpl("#template_team_preview");
 
         teams[teamId] = teamObj;
         poStorage.set('tb.teams', teams);

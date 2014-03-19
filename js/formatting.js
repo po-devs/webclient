@@ -2,29 +2,40 @@
  * This file contains functions to help to format HTML for PO-way
  */
 
+$.tmpls = {};
+$.tmpl = function (selector) {
+    if (!$.tmpls.hasOwnProperty(selector)) {
+        $.tmpls[selector] = $($.parseHTML($(selector).html())[1]);
+    }
+
+    return $.tmpls[selector].clone();
+};
+
 $(function () {
     $(document).on("click", "a", function (event) {
         var href = this.href,
-            params, pid;
+            sep, cmd, payload, pid;
 
         if (/^po:/.test(href)) {
             event.preventDefault();
 
-            params = [href.slice(3, href.indexOf("/")), decodeURIComponent(href.slice(href.indexOf("/")+1))];
+            sep = href.indexOf("/");
+            cmd = href.slice(3, sep);
+            payload = decodeURIComponent(href.slice(sep + 1));
 
             // Add other commands here..
-            pid = webclient.players.id(params[1]);
+            pid = webclient.players.id(payload);
             if (pid === -1) {
-                pid = parseInt(params[1], 10);
+                pid = parseInt(payload, 10);
             }
 
-            if (params[0] === "join") {
-                webclient.joinChannel(params[1]);
-            } else if (params[0] == "pm") { // Create pm window
+            if (cmd === "join") {
+                webclient.joinChannel(payload);
+            } else if (cmd === "pm") { // Create pm window
                 if (!isNaN(pid)) {
                     webclient.pms.pm(pid).activateTab();
                 }
-            } else if (params[0] == "ignore") {
+            } else if (cmd === "ignore") {
                 // Ignore the user
                 if (!isNaN(pid)) {
                     if (webclient.players.isIgnored(pid)) {
@@ -33,8 +44,14 @@ $(function () {
                         webclient.players.removeIgnore(pid);
                     }
                 }
-            } else if (params[0] == "watch") {
-                network.command('watch', {battle: params[1]});
+            } else if (cmd === "watch") {
+                network.command('watch', {battle: +payload});
+            } else if (cmd === "send") {
+                webclient.channel.sendMessage(payload);
+            } else if (cmd === "setmsg") {
+                webclient.channel.chat.input.val(payload);
+            } else if (cmd === "appendmsg") {
+                webclient.channel.chat.input.val(webclient.channel.chat.input.val() + payload);
             }
             // TODO: watchbattle(id/name), reconnect(void)
         } else {
