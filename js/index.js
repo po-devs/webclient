@@ -313,6 +313,37 @@ $(function() {
             dialog.dialog('close');
         }
 
+        /* Display the clauses and make the challenge button actually challenge the foe */
+        function showChallenge() {
+            var $challengeInfo = $("<div class='challenge-info'></div>");
+            dialog.append($challengeInfo);
+
+            var htmls = [];
+            for (var i in BattleTab.clauses) {
+                var name = "clause-" + i;
+                htmls.push('<input type="checkbox" name="' + name + '" id="' + name + '"/><label for="' + name + '">' + BattleTab.clauses[i] + "</label>");
+            }
+
+            $challengeInfo.html(htmls.join("<br/>\n"));
+            buttons[1].click = function() {
+                /* Send challenge cup challenge, to a random tier of the opponent */
+                for (var tier in webclient.players.player(id).ratings) {
+                    break;
+                }
+                var clauses = [];
+                for (var i in BattleTab.clauses) {
+                    if ($challengeInfo.find("clause-" + i).prop("checked")) {
+                        clauses.push(1);
+                    } else {
+                        clauses.push(0);
+                    }
+                }
+                network.send("challengeplayer", {"id": id, "team": 0, "clauses": clauses, "tier": tier });
+                dialog.dialog("close");
+            };
+            dialog.dialog("option", "buttons", buttons)
+        }
+
         /* Show the list of battles in the player info */
         if (battles.isBattling(id)) {
             playerbattles = battles.battlesByPlayer[id];
@@ -342,14 +373,7 @@ $(function() {
                 text: "Challenge",
                 'class': "click_button",
                 click: function() {
-                    /* Send challenge cup challenge, to a random tier of the opponent */
-                    for (var tier in webclient.players.player(id).ratings) {
-                        break;
-                    }
-                    network.send("challengeplayer", {"id": id, "team": 0, "clauses": [0,0,0,0,1],
-                        "tier": tier
-                    });
-                    dialog.dialog("close");
+                    showChallenge();
                 }
             }
         ];
