@@ -318,21 +318,33 @@ $(function() {
             var $challengeInfo = $("<div class='challenge-info'></div>");
             dialog.append($challengeInfo);
 
-            var htmls = [];
+            var clauses = [];
             for (var i in BattleTab.clauses) {
                 var name = "clause-" + i;
-                htmls.push('<input type="checkbox" name="' + name + '" id="' + name + '"/><label for="' + name + '">' + BattleTab.clauses[i] + "</label>");
+                clauses.push('<input type="checkbox" name="' + name + '" id="' + name + '"/><label for="' + name + '">' + BattleTab.clauses[i] + "</label>");
             }
 
-            $challengeInfo.html(htmls.join("<br/>\n"));
+            var tiers = [];
+            var ratings = webclient.players.player(id).ratings;
+            for (var tier in ratings) {
+                var name = "tier-" + i;
+                tiers.push('<input type="radio" name="' + tier + '" id="' + name + '"/><label for="' + name + '">' + tier + "</label>");
+            }
+
+            $challengeInfo.append($("<div class='tiers'></div>").html(tiers.join("<br/>\n")));
+            $challengeInfo.append($("<div class='clauses'></div>").html(clauses.join("<br/>\n")));
+
             buttons[1].click = function() {
-                /* Send challenge cup challenge, to a random tier of the opponent */
-                for (var tier in webclient.players.player(id).ratings) {
-                    break;
+                /* Which tier was selected? */
+                for (var i in tiers) {
+                    if ($challengeInfo.find("#tier-" + i).prop("checked")) {
+                        tier = $challengeInfo.find("#tier-" + i).attr("name");
+                    }
                 }
+                /* Which clause? */
                 var clauses = [];
                 for (var i in BattleTab.clauses) {
-                    if ($challengeInfo.find("clause-" + i).prop("checked")) {
+                    if ($challengeInfo.find("#clause-" + i).prop("checked")) {
                         clauses.push(1);
                     } else {
                         clauses.push(0);
