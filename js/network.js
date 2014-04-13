@@ -225,6 +225,25 @@
                 });
             }
         },
+        battlechallenge: function(payload) {
+            var params = JSON.parse(payload);
+            var clauses = [];
+            for (var i in BattleTab.clauses) {
+                if (params.clauses & (1 << i)) {
+                    clauses.push(1);
+                } else {
+                    clauses.push(0);
+                }
+            }
+            params.clauses = clauses;
+
+            if (params.desc == "sent") {
+                showChallenge(params);
+            } else {
+                webclient.print("<b>info on challenge with " + webclient.players.name(params.id) + ": " + params.desc
+                    + "</b>", true);
+            }
+        },
         announcement: function (payload) {
             /*webclient.sandboxHtml(announcement, payload);
             announcement.css("visibility", "visible");*/
@@ -249,6 +268,16 @@
 
             if (webclient.shownPlayer !== -1 && webclient.shownPlayer in params && "info" in params[webclient.shownPlayer]) {
                 webclient.updatePlayerInfo(params[webclient.shownPlayer]);
+            }
+            for (var player in params) {
+                if ("info" in params[player]) {
+                    if (webclient.shownPlayer == player) {
+                        webclient.updatePlayerInfo(params[player]);
+                    } else if (player in webclient.dialogs) {
+                        webclient.updatePlayerInfo(params[player], webclient.dialogs[player]);
+                        delete webclient.dialogs[player];
+                    }
+                }
             }
         },
         playerlogout: function (payload) {
