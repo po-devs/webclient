@@ -326,19 +326,23 @@ $(function() {
 
             var tiers = [];
             var ratings = webclient.players.player(id).ratings;
+            var checked = "checked=true";
+            i = 0;
             for (var tier in ratings) {
                 var name = "tier-" + i;
-                tiers.push('<input type="radio" name="' + tier + '" id="' + name + '"/><label for="' + name + '">' + tier + "</label>");
+                tiers.push('<input type="radio" name="tier" value="' + tier + '" id="' + name + '" ' + checked +'/><label for="' + name + '">' + tier + "</label>");
+                i++; checked = "";
             }
 
-            $challengeInfo.append($("<div class='tiers'></div>").html(tiers.join("<br/>\n")));
-            $challengeInfo.append($("<div class='clauses'></div>").html(clauses.join("<br/>\n")));
+            var html = "<table><tr><td>" + $("<form class='tiers'></form>").html(tiers.join("<br/>\n"))[0].outerHTML + "</td>"
+                + "<td>" + $("<div class='clauses'></div>").html(clauses.join("<br/>\n"))[0].outerHTML + "</td></tr></table>";
+            $challengeInfo.append(html);
 
             buttons[1].click = function() {
                 /* Which tier was selected? */
                 for (var i in tiers) {
                     if ($challengeInfo.find("#tier-" + i).prop("checked")) {
-                        tier = $challengeInfo.find("#tier-" + i).attr("name");
+                        tier = $challengeInfo.find("#tier-" + i).attr("value");
                     }
                 }
                 /* Which clause? */
