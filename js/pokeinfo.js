@@ -70,12 +70,43 @@ geninfo.hasOption = function (gen, option) {
     return !!geninfo.option(gen)[option];
 };
 
-pokeinfo.toNum = function(poke) {
+pokeinfo.toNum = function (poke) {
     if (typeof poke == "object") {
         return poke.num + ( (poke.forme || 0) << 16);
     }
 
     return poke;
+};
+
+pokeinfo.toArray = function (num) {
+    var pokenum = 0,
+        formenum = 0,
+        poke;
+
+    if (typeof num === 'number') {
+        poke = ["" + num];
+    } else if (typeof num === 'string') {
+        poke = num.split("-");
+    } else if (Array.isArray(num)) {
+        poke = num;
+    }
+
+    if (poke.length === 1) {
+        pokenum = pokeinfo.species(+poke[0]);
+        formenum = pokeinfo.forme(+poke[0]);
+    } else if (poke.length === 2) {
+        pokenum = pokeinfo.species(+poke[0]);
+        formenum = pokeinfo.species(+poke[1]);
+    }
+
+    if (isNaN(pokenum)) {
+        pokenum = 0;
+    }
+    if (isNaN(formenum)) {
+        formenum = 0;
+    }
+
+    return [pokenum, formenum];
 };
 
 pokeinfo.species = function(poke) {
