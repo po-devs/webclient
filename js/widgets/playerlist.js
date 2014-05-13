@@ -44,6 +44,10 @@
 
         ret = "<li class='player-list-item player-auth-" + webclient.players.auth(id);
 
+        if (webclient.players.away(id)) {
+            ret += ' player-away';
+        }
+
         if (battles.isBattling(id)) {
             ret += ' player-battling';
         }
