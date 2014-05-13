@@ -11,6 +11,21 @@ describe('pokeinfo', function () {
         });
     });
 
+    describe('.toArray', function () {
+        it('should convert numbers to arrays', function () {
+            pokeinfo.toArray(493).should.eql([493, 0]);
+            pokeinfo.toArray(200).should.eql([200, 0]);
+        });
+        it('should convert strings to arrays', function () {
+            pokeinfo.toArray("493").should.eql([493, 0]);
+            pokeinfo.toArray("493-2").should.eql([493, 2]);
+            pokeinfo.toArray("262637").should.eql([493, 4]);
+        });
+        it('should fix up arrays', function () {
+            pokeinfo.toArray(["493", "0"]).should.eql([493, 0]);
+        });
+    });
+
     describe('.types', function () {
         it('should resolve data from older/newer gens when not found', function () {
             // Pidgeot

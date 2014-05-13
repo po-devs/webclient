@@ -76,7 +76,7 @@ $(function () {
             switch (proto) {
                 case "pokemon":
                     query = "?" + query;
-                    var poke = utils.queryField("num", query.slice(1).split("&")[0], query) || "1",
+                    var poke = pokeinfo.toArray(utils.queryField("num", query.slice(1).split("&")[0], query) || "1"),
                         gen = utils.queryField("gen", "6", query),
                         shiny = utils.queryField("shiny", "false", query) === "true",
                         gender = utils.queryField("gender", "male", query),
@@ -98,8 +98,8 @@ $(function () {
                             return;
                         }
 
-                        img.attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
-                    }).attr("src", pokeinfo.sprite({num: poke, female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
+                        img.attr("src", pokeinfo.sprite({num: pokenum, forme: poke[1], female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
+                    }).attr("src", pokeinfo.sprite({num: poke[0], forme: poke[1], female: gender === "female", shiny: shiny}, {gen: gen, back: back}));
                     break;
                 case "trainer":
                     img.attr("src", pokeinfo.trainerSprite(query));

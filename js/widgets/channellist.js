@@ -41,7 +41,7 @@
 
         /* Find the place where to put the name - dichotomy */
         var pos = this.ids.dichotomy(function (pid) {
-            return lname.localeCompare(webclient.channels.name(pid).toLowerCase());
+            return lname.localeCompare((webclient.channels.name(pid) || "").toLowerCase());
         });
 
         /* Add the graphical element */
