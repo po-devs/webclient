@@ -322,6 +322,10 @@ ul#channel-list {
     color: rgb(30,30,30)
 }
 
+.player-away {
+    color: gray;
+}
+
 .player-battling {
     color: #2658b7;
 }

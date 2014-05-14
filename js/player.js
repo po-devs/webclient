@@ -180,5 +180,10 @@
         return color ? color : namecolorlist[id % namecolorlist.length];
     };
 
+    PlayerHolder.prototype.away = function (id) {
+        var player = this.player(id);
+        return player ? player.away : false;
+    };
+
     webclient.classes.PlayerHolder = PlayerHolder;
 }(webclient));
