@@ -455,8 +455,10 @@ moveinfo.getHiddenPowerBP = function (generation, hp_ivs, atk_ivs, def_ivs, satk
     generation = getGen(generation).num;
     var hpbp = geninfo.option(generation).hidden_power_bp, bp;
     if (!hpbp) {
-        if (generation >= 3) {
+        if (generation >= 3 && generation <= 5) {
             bp = Math.floor(((hp_ivs % 2 + (2 * (atk_ivs % 2)) + (4 * (def_ivs % 2)) + (8 * (spe_ivs % 2)) + (16 * (satk_ivs % 2)) + (32 * (sdef_ivs % 2))) * 40) / 63) + 30;
+        } else if (generation >= 6) {
+            bp = 60;
         } else {
             bp = Math.floor(((5 * ((satk_ivs % 8 ? 1 : 0) + (2 * (spe_ivs % 8 ? 1 : 0)) + (4 * (def_ivs % 8 ? 1 : 0)) + (8 * (atk_ivs % 8 ? 1 : 0))) + (satk_ivs < 3 ? satk_ivs : 3)) / 2) + 31);
         }
