@@ -21,7 +21,7 @@ If you're cloning this repository, test locally with Firefox, as Chrome blocks s
 Test suite
 ==========
 
-This uses [Mocha](http://visionmedia.github.io/mocha/) to run tests. Those tests are run for each commit on the
+This uses [Mocha](http://mochajs.org/) to run tests. Those tests are run for each commit on the
 Travis-CI platform (check out the build icon!).
 
 If you want to run them manually, have [Node.js](http://nodejs.com) installed and type `npm test` in a terminal. If you haven't installed Mocha yet, do that first (after you install node): `npm install`.
